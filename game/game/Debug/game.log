@@ -1,0 +1,16 @@
+﻿game.obj : error LNK2019: unresolved external symbol _SDL_GetError referenced in function "bool __cdecl init(void)" (?init@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_RWFromFile referenced in function "bool __cdecl loadMedia(void)" (?loadMedia@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_FreeSurface referenced in function "void __cdecl close(void)" (?close@@YAXXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_LoadBMP_RW referenced in function "bool __cdecl loadMedia(void)" (?loadMedia@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_UpperBlit referenced in function _SDL_main
+game.obj : error LNK2019: unresolved external symbol _SDL_CreateWindow referenced in function "bool __cdecl init(void)" (?init@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_GetWindowSurface referenced in function "bool __cdecl init(void)" (?init@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_UpdateWindowSurface referenced in function _SDL_main
+game.obj : error LNK2019: unresolved external symbol _SDL_DestroyWindow referenced in function "void __cdecl close(void)" (?close@@YAXXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_Delay referenced in function _SDL_main
+game.obj : error LNK2019: unresolved external symbol _SDL_Init referenced in function "bool __cdecl init(void)" (?init@@YA_NXZ)
+game.obj : error LNK2019: unresolved external symbol _SDL_Quit referenced in function "void __cdecl close(void)" (?close@@YAXXZ)
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol _main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+C:\libs\sdl22\lib\x64\SDL2.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+C:\libs\sdl22\lib\x64\SDL2main.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+C:\Users\asos\Documents\VS\Projects\game\Debug\game.exe : fatal error LNK1120: 13 unresolved externals
