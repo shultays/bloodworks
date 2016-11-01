@@ -12,7 +12,6 @@ void cInput::init()
 
 void cInput::pressKey(int key)
 {
-	printf("press %d %c\n", key, (char)key);
 	keyStates[key] = 1;
 	keyTime[key] = time.getTime();
 }
@@ -24,7 +23,6 @@ void cInput::tick()
 
 void cInput::releaseKey(int key)
 {
-	printf("release %d %c\n", key, (char)key);
 	keyStates[key] = 0;
 	keyTime[key] = time.getTime();
 }

@@ -52,7 +52,15 @@ inline const T& abs(const T& a)
 	return a > 0 ? a : -a;
 }
 
-
 bool textFileRead(const char *fileName, std::string &data);
 
 void sleepMS(int ms);
+
+float randFloat();
+int randInt();
+bool randBool();
+int randInt(int limit);
+int randInt(int begin, int end);
+float randFloat(float limit);
+float randFloat(float begin, float end);
+

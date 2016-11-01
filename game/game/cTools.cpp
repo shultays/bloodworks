@@ -34,3 +34,39 @@ void sleepMS(int ms)
 	SDL_Delay(ms);
 #endif
 }
+
+
+int randInt()
+{
+	return rand();
+}
+
+float randFloat()
+{
+	return randInt() / (float)RAND_MAX;
+}
+
+bool randBool()
+{
+	return (randInt() & 1) == 0;
+}
+
+int randInt(int limit)
+{
+	return randInt() % limit;
+}
+
+int randInt(int begin, int end)
+{
+	return randInt() % (end - begin + 1) + begin;
+}
+
+float randFloat(float limit)
+{
+	return randFloat() * limit;
+}
+
+float randFloat(float begin, float end)
+{
+	return randFloat() * (end - begin) + begin;
+}

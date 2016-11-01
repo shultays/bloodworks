@@ -7,6 +7,8 @@
 
 #include "cGlobals.h"
 
+#include "Bloodworks.h"
+
 std::string programName = "Hola";
 
 SDL_Window *mainWindow;
@@ -57,8 +59,8 @@ bool SetOpenGLAttributes()
 
 void InitGame()
 {
-	game = new cGame();
-	game->init();
+	game = new Bloodworks();
+	game->initInternal();
 	coral.init();
 }
 
@@ -66,6 +68,9 @@ int main(int argc, char *argv[])
 {
 	if (!Init())
 		return -1;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.0, 0.0, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -99,11 +104,11 @@ void RunGame()
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
-				input.pressKey(event.button.button + MOUSE_START);
+				input.pressKey(event.button.button + mouse_start);
 			}
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
-				input.releaseKey(event.button.button + MOUSE_START);
+				input.releaseKey(event.button.button + mouse_start);
 			}
 			else if (event.type == SDL_KEYDOWN)
 			{

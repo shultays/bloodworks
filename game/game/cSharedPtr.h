@@ -143,4 +143,14 @@ public:
 	void setCustomDeallocator(cCustomDeallocator<T> *deallocator) {
 		this->deallocator = deallocator;
 	}
+
+	bool operator==(const cSharedPtr<T>& other) const
+	{
+		return this->object == other.object;
+	}
+
+	bool operator!=(const cSharedPtr<T>& other) const
+	{
+		return this->object != other.object;
+	}
 };
