@@ -1,3 +1,15 @@
 ﻿  Player.cpp
-  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\game\x64\Debug\game.exe
-  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\game\x64\Debug\game.pdb (Full PDB)
+  Monster.cpp
+  cTools.cpp
+  cTime.cpp
+  main.cpp
+  cRenderable.cpp
+  cMat.cpp
+  cGame.cpp
+  Coral.cpp
+  cInput.cpp
+  cGlobals.cpp
+  Bloodworks.cpp
+  Generating Code...
+  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.exe
+  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.pdb (Full PDB)
