@@ -53,7 +53,7 @@ class cSharedPtr {
 				}
 				else 
 				{
-					SAFE_DELETE(object);
+					object->deleteSelf();
 					SAFE_DELETE(counter);
 				}
 			}
@@ -62,6 +62,8 @@ class cSharedPtr {
 		counter = nullptr;
 		deallocator = nullptr;
 	}
+
+	void freeObject(T* object);
 
 public:
 	cSharedPtr() 

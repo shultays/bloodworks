@@ -44,9 +44,7 @@ void Bloodworks::tick(float dt)
 		monster->tick(dt);
 	}
 
-
 	q->setPosition(player->getPos());
-
 
 	tickCount++;
 	if (time.getTime() - lastSetTickTime > 1.0f)

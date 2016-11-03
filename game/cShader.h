@@ -499,5 +499,10 @@ public:
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
+
+	void deleteSelf()
+	{
+		delete this;
+	}
 };
 

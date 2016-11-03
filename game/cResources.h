@@ -4,6 +4,7 @@
 
 #include "cSharedPtr.h"
 #include <unordered_map>
+
 class cShader;
 class cTexture;
 class cFont;

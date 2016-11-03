@@ -43,7 +43,6 @@ public:
 	void bindTexture() const
 	{
 		glBindTexture(GL_TEXTURE_2D, gTexture);
-		glEnable(GL_TEXTURE_2D);
 	}
 
 	const char* getName() const
@@ -54,5 +53,10 @@ public:
 	const IntVec2 getDimensions()
 	{
 		return dimensions;
+	}
+
+	void deleteSelf()
+	{
+		delete this;
 	}
 };

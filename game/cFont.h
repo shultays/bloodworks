@@ -102,6 +102,11 @@ public:
 	{
 		return fontData;
 	}
+
+	void deleteSelf()
+	{
+		delete this;
+	}
 };
 
 class cTextRenderable : public cRenderableWithShader

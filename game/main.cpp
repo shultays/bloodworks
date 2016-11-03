@@ -70,9 +70,11 @@ int main(int argc, char *argv[])
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
 
-	glClearColor(0.0, 0.0, 1.0, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	SDL_GL_SwapWindow(mainWindow);
 	SDL_GL_SetSwapInterval(0);
 	debugRenderer.init();
