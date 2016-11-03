@@ -1,7 +1,11 @@
 #pragma once
 
 #include "cGlobals.h"
+#include "cGame.h"
+#include "cShader.h"
+#include "cTexture.h"
 #include <string>
+#include <GL/glew.h>
 
 
 extern GLuint quad;
@@ -10,7 +14,7 @@ class cRenderable
 {
 	friend class cGame;
 	friend class cRenderableGroup;
-
+	friend class cDebugRenderable;
 protected:
 	cGame *game;
 	virtual void render() = 0;
@@ -167,7 +171,6 @@ protected:
 		shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 		shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
 
 		texture->bindTexture();
 		shader->setWorldMatrix(worldMatrix);

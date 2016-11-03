@@ -2,6 +2,7 @@
 
 #include "cMat.h"
 #include "cResources.h"
+#include "cShader.h"
 
 class cRenderable;
 
@@ -12,7 +13,7 @@ class cGame
 	float cameraAngle;
 	float cameraZoom;
 
-	void render();
+	void renderInternal();
 	void tickInternal();
 	void initInternal();
 
@@ -25,8 +26,9 @@ class cGame
 
 	std::vector<cRenderable*> renderables;
 public:
-	virtual void init() = 0;
-	virtual void tick(float dt) = 0;
+	virtual void init() {}
+	virtual void render() {}
+	virtual void tick(float dt) {}
 
 	void setCameraPos(const Vec2& newPos);
 	void setCameraAngle(float angle);

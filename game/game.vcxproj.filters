@@ -51,6 +51,12 @@
     <ClCompile Include="Monster.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="cResources.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="cDebugRenderable.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -106,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="Monster.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="cFont.h">
+      <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cDebugRenderable.h">
+      <Filter>Coral\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

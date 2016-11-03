@@ -11,9 +11,13 @@ class Bloodworks : public cGame
 	Player *player;
 
 	std::vector<Monster*> monsters;
+
+	int tickCount;
+	int renderCount;
+	float lastSetTickTime;
+	float lastSetRenderTime;
 protected:
-	virtual void tick(float dt);
-
-	virtual void init();
-
+	virtual void render() override;
+	virtual void tick(float dt) override;
+	virtual void init() override;
 };

@@ -1,6 +1,5 @@
 #pragma once
 
-#pragma once
 
 #include "cTools.h"
 
@@ -40,15 +39,20 @@ class cSharedPtr {
 	cCustomDeallocator<T> *deallocator;
 	cSharedPtrCounter *counter;
 
-	void reset() {
-		if (counter) {
+	void reset() 
+	{
+		if (counter) 
+		{
 			counter->decrement();
 
-			if (counter->getCount() == (deallocator ? 1 : 0)) {
-				if (deallocator) {
+			if (counter->getCount() == (deallocator ? 1 : 0)) 
+			{
+				if (deallocator) 
+				{
 					deallocator->objectFreed(object);
 				}
-				else {
+				else 
+				{
 					SAFE_DELETE(object);
 					SAFE_DELETE(counter);
 				}
@@ -60,11 +64,13 @@ class cSharedPtr {
 	}
 
 public:
-	cSharedPtr() {
+	cSharedPtr() 
+	{
 		this->object = nullptr;
 		this->counter = nullptr;
 		this->deallocator = nullptr;
 	}
+
 	~cSharedPtr() {
 		reset();
 	}

@@ -6,7 +6,6 @@
 #include <SDL.h>
 
 #include "cGlobals.h"
-
 #include "Bloodworks.h"
 
 std::string programName = "Hola";
@@ -75,8 +74,8 @@ int main(int argc, char *argv[])
 	glClearColor(0.0, 0.0, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	SDL_GL_SwapWindow(mainWindow);
-
-
+	SDL_GL_SetSwapInterval(0);
+	debugRenderer.init();
 	InitGame();
 	RunGame();
 

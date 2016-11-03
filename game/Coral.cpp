@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 
 #include "cGlobals.h"
+#include "cGame.h"
 #include "cTools.h"
 
 extern SDL_Window *mainWindow;
@@ -21,21 +22,24 @@ void Coral::tick()
 
 	time.dt = t - lastDrawTime;
 
-	if (t - lastUpdateTime >= update_interval) {
-		lastUpdateTime = t;
-		game->tick(time.getDt());
+	if (t - lastUpdateTime >= update_interval) 
+	{
+		lastUpdateTime += update_interval;
+		debugRenderer.tick(time.getDt());
+		game->tickInternal();
 		input.tick();
 	}
 
-	if (t - lastDrawTime >= draw_interval) {
+	if (t - lastDrawTime >= draw_interval) 
+	{
+		lastDrawTime += draw_interval;
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		game->render();
-		lastDrawTime = t;
+		game->renderInternal();
 
 		SDL_GL_SwapWindow(mainWindow);
 	}
-
+	
 	t = time.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.0f) 

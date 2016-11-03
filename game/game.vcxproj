@@ -155,12 +155,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bloodworks.cpp" />
+    <ClCompile Include="cDebugRenderable.cpp" />
     <ClCompile Include="cGlobals.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="Coral.cpp" />
     <ClCompile Include="cGame.cpp" />
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
+    <ClCompile Include="cResources.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
     <ClCompile Include="cTools.cpp" />
@@ -170,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="Bloodworks.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
+    <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cMat.h" />
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="cTools.h" />
     <ClInclude Include="cVec.h" />
     <ClInclude Include="cVecImp.h" />
+    <ClInclude Include="cFont.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>

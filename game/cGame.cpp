@@ -17,10 +17,10 @@ void cGame::initInternal()
 
 	GLfloat vertexData[] =
 	{
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f,  -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		-1.0f,  -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f,  -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 	};
 
 
@@ -40,7 +40,7 @@ void cGame::tickInternal()
 	tick(time.getDt());
 }
 
-void cGame::render()
+void cGame::renderInternal()
 {
 	Vec2 windowSize = getScreenDimensions().toVec();
 	float halfWidth = windowSize.w * 0.5f;
@@ -55,7 +55,9 @@ void cGame::render()
 	{
 		renderable->render();
 	}
+	debugRenderer.render();
 
+	render();
 }
 
 void cGame::setCameraPos(const Vec2& newPos)
