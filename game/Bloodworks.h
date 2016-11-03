@@ -8,8 +8,9 @@ class Monster;
 class Bloodworks : public cGame
 {
 	cTexturedQuadRenderable *bg;
-	Monster *monster;
 	Player *player;
+
+	std::vector<Monster*> monsters;
 protected:
 	virtual void tick(float dt);
 

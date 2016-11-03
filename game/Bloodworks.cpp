@@ -14,16 +14,19 @@ void Bloodworks::init()
 	q->setSize(1);
 	addRenderable(q);
 
-	player = new Player(this);
-	monster = new Monster(this);
 
+	for (int i = 0; i < 5; i++)
+	{
+		monsters.push_back(new Monster(this));
+	}
+
+	player = new Player(this);
 	input.hideMouse();
 }
 
 void Bloodworks::tick(float dt)
 {
 	player->tick(dt);
-	monster->tick(dt);
 	q->setPosition(player->getPos());
 }
 

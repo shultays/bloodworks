@@ -29,8 +29,16 @@ Monster::Monster(Bloodworks *bloodworks)
 		.addFrame("resources/monster/11.png", 0.1f);
 
 	renderable->setSize(Vec2(24.0f, 34.0f) * 0.6f);
-	renderable->playAnimation("walk");
 	bloodworks->addRenderable(renderable);
+
+
+
+	Mat3 mat = Mat3::identity();
+	mat.scaleBy(Vec2(24.0f, 34.0f) * randFloat(0.5f, 0.9f));
+	mat.rotateBy(randFloat(-pi, pi));
+	mat.translateBy(Vec2(randFloat(-400, 400), randFloat(-300, 300)));
+	renderable->setWorldMatrix(mat);
+	renderable->playAnimation("walk", randFloat());
 }
 
 void Monster::tick(float dt)

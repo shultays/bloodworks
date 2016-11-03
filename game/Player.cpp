@@ -164,6 +164,4 @@ void Player::tick(float dt)
 	mat.rotateBy(angle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
-
-
 }
