@@ -31,7 +31,10 @@ public:
 	virtual ~cGame()
 	{
 		lastShader = nullptr;
-		asd
+		if (renderables.size() > 0)
+		{
+			assert("there are some non-removed renderables");
+		}
 	}
 
 	void setCameraPos(const Vec2& newPos);

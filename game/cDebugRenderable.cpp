@@ -187,6 +187,7 @@ void cDebugRenderable::render()
 		glDrawArrays(GL_LINES, 0, (int)lineData.size() * 2);
 
 	}
+	textRenderable->game = nullptr;
 }
 
 void cDebugRenderable::tick(float dt)

@@ -38,7 +38,7 @@ void cRenderableGroup::addRenderable(cRenderable *child, Mat3 localMatrix)
 
 cRenderable::~cRenderable()
 {
-	if (game != game)
+	if (game != nullptr)
 	{
 		game->removeRenderable(this);
 	}
