@@ -1,8 +1,8 @@
 #include "cGame.h"
 #include "cTools.h"
 #include "cGlobals.h"
-#include "stdio.h"
 #include "cResources.h"
+#include "cShader.h"
 #include "cRenderable.h"
 
 extern SDL_Window *mainWindow;
@@ -85,4 +85,20 @@ IntVec2 cGame::getScreenDimensions() const
 void cGame::addRenderable(cRenderable* renderable)
 {
 	renderables.push_back(renderable);
+}
+
+void cGame::removeRenderable(cRenderable* renderable)
+{
+	auto iter = renderables.begin();
+	while (iter != renderables.end())
+	{
+		if (*iter == renderable)
+		{
+			iter = renderables.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
 }

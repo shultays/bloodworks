@@ -1,2 +1,14 @@
-﻿  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.exe
+﻿  cResources.cpp
+  cRenderable.cpp
+  cFont.cpp
+  cDebugRenderable.cpp
+  cAnimatedRenderable.cpp
+  Player.cpp
+  Generating Code...
+  Compiling...
+  cGame.cpp
+  Monster.cpp
+  Bloodworks.cpp
+  Generating Code...
+  game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.pdb (Full PDB)

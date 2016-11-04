@@ -155,7 +155,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bloodworks.cpp" />
+    <ClCompile Include="cAnimatedRenderable.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
+    <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cGlobals.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="Coral.cpp" />

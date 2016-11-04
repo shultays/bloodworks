@@ -2,7 +2,6 @@
 
 #include "cMat.h"
 #include "cResources.h"
-#include "cShader.h"
 
 class cRenderable;
 
@@ -29,6 +28,11 @@ public:
 	virtual void init() {}
 	virtual void render() {}
 	virtual void tick(float dt) {}
+	virtual ~cGame()
+	{
+		lastShader = nullptr;
+		asd
+	}
 
 	void setCameraPos(const Vec2& newPos);
 	void setCameraAngle(float angle);
@@ -38,4 +42,5 @@ public:
 
 	void addRenderable(cRenderable* renderable);
 
+	void removeRenderable(cRenderable* renderable);
 };

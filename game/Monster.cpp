@@ -41,6 +41,11 @@ Monster::Monster(Bloodworks *bloodworks)
 	renderable->playAnimation("walk", randFloat());
 }
 
+Monster::~Monster()
+{
+	SAFE_DELETE(renderable);
+}
+
 void Monster::tick(float dt)
 {
 	if (input.isKeyPressed(key_1))

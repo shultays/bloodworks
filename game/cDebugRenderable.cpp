@@ -1,41 +1,18 @@
 #include "cDebugRenderable.h"
 #include "cFont.h"
 #include "cGlobals.h"
+#include "cShader.h"
+#include "cTexture.h"
+#include "cGame.h"
 
 
 #define MAX_ID 0xFFFFFF
 #define MIN_ID 0x0FFFFF
 
-#define MAX_LINE 1000
+#define MAX_LINE 2048
 
-cShaderShr lineShader; // todo move
-cTextureShr whiteTexture; // todo move
 
-cDebugRenderable::cDebugRenderable()
-{
-	nextId = MIN_ID;
-	lineGPUData = new LinetGPUData[MAX_LINE];
-}
-
-void cDebugRenderable::init()
-{
-	textRenderable = new cTextRenderable(nullptr, resources.getFont("resources/fontData.txt"));
-
-	lineShader = resources.getShader("resources/default.vs", "resources/default.ps");
-	whiteTexture = resources.getTexture("resources/white.png");
-
-	glGenBuffers(1, &lineGPUBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, lineGPUBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(LinetGPUData) * MAX_LINE, nullptr, GL_DYNAMIC_DRAW);
-
-}
-
-int cDebugRenderable::addTextData(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
-{
-	return addTextData(-1, string, x, y, time, color, size);
-}
-
-int cDebugRenderable::addTextData(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+int cDebugRenderable::addTextInternal(int id, const std::string &string, bool isScreen, float x, float y, float time, Vec4 color, float size)
 {
 	TextData data;
 	data.text = string;
@@ -43,6 +20,7 @@ int cDebugRenderable::addTextData(int id, const std::string &string, float x, fl
 	data.time = time;
 	data.color = color;
 	data.size = size;
+	data.isScreen = isScreen;
 	if (id == -1)
 	{
 		id = data.id = nextId++;
@@ -68,7 +46,63 @@ int cDebugRenderable::addTextData(int id, const std::string &string, float x, fl
 	return id;
 }
 
-int cDebugRenderable::addLineData(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+cDebugRenderable::cDebugRenderable()
+{
+	nextId = MIN_ID;
+	lineGPUData = new LinetGPUData[MAX_LINE];
+	lineGPUBuffer = -1;
+}
+
+cDebugRenderable::~cDebugRenderable()
+{
+	freeAll();
+}
+
+void cDebugRenderable::freeAll()
+{
+	SAFE_DELETE(textRenderable);
+	SAFE_DELETE(lineGPUData);
+	if (lineGPUBuffer != -1)
+	{
+		glDeleteBuffers(1, &lineGPUBuffer);
+	}
+	lineShader = nullptr;
+	textRenderable = nullptr;
+	whiteTexture = nullptr;
+}
+
+void cDebugRenderable::init()
+{
+	textRenderable = new cTextRenderable(nullptr, resources.getFont("resources/fontData.txt"));
+	lineShader = resources.getShader("resources/default.vs", "resources/default.ps");
+	whiteTexture = resources.getTexture("resources/white.png");
+
+	glGenBuffers(1, &lineGPUBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, lineGPUBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(LinetGPUData) * MAX_LINE, nullptr, GL_DYNAMIC_DRAW);
+}
+
+int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+{
+	return addTextInternal(-1, string, false, x, y, time, color, size);
+}
+
+int cDebugRenderable::addText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+{
+	return addTextInternal(id, string, false, x, y, time, color, size);
+}
+
+int cDebugRenderable::addScreenText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+{
+	return addTextInternal(-1, string, true, x, y, time, color, size);
+}
+
+int cDebugRenderable::addScreenText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+{
+	return addTextInternal(id, string, true, x, y, time, color, size);
+}
+
+int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
 {
 	LineData data;
 	data.pos0 = pos0;
@@ -101,9 +135,9 @@ int cDebugRenderable::addLineData(int id, const Vec2& pos0, const Vec2& pos1, fl
 	return id;
 }
 
-int cDebugRenderable::addLineData(const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+int cDebugRenderable::addLine(const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
 {
-	return addLineData(-1, pos0, pos1, time, color);
+	return addLine(-1, pos0, pos1, time, color);
 }
 
 void cDebugRenderable::render()
@@ -119,7 +153,14 @@ void cDebugRenderable::render()
 		textRenderable->setText(textData.text);
 		textRenderable->setTextColor(textData.color);
 		textRenderable->setTextSize(textData.size);
-		textRenderable->setPosition(Vec2(textData.pos.x - halfScreen.w, - textData.pos.y + halfScreen.h - textData.size));
+		if (textData.isScreen)
+		{
+			textRenderable->setPosition(Vec2(textData.pos.x - halfScreen.w, -textData.pos.y + halfScreen.h - textData.size));
+		}
+		else
+		{
+			textRenderable->setPosition(textData.pos);
+		}
 		textRenderable->render();
 	}
 

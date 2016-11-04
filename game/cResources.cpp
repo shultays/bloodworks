@@ -49,6 +49,21 @@ std::string cResources::fontId(const char* textureName) const
 	return ID;
 }
 
+void cResources::deleteObject(cShader* object)
+{
+	delete object;
+}
+
+void cResources::deleteObject(cFont* object)
+{
+	delete object;
+}
+
+void cResources::deleteObject(cTexture* object)
+{
+	delete object;
+}
+
 cResources::cResources()
 {
 
@@ -56,29 +71,7 @@ cResources::cResources()
 
 cResources::~cResources()
 {
-	for (unsigned i = 0; i < shaders.bucket_count(); ++i)
-	{
-		for (auto local_it = shaders.begin(i); local_it != shaders.end(i); ++local_it)
-		{
-			local_it->second.setCustomDeallocator(nullptr);
-		}
-	}
-
-	for (unsigned i = 0; i < textures.bucket_count(); ++i)
-	{
-		for (auto local_it = textures.begin(i); local_it != textures.end(i); ++local_it)
-		{
-			local_it->second.setCustomDeallocator(nullptr);
-		}
-	}
-
-	for (unsigned i = 0; i < fonts.bucket_count(); ++i)
-	{
-		for (auto local_it = fonts.begin(i); local_it != fonts.end(i); ++local_it)
-		{
-			local_it->second.setCustomDeallocator(nullptr);
-		}
-	}
+	freeAll();
 }
 
 cShaderShr cResources::getShader(const char* vertexShaderFile, const char* pixelShaderFile)
@@ -128,5 +121,53 @@ cFontShr cResources::getFont(const char* fontDataPath)
 
 	fonts[ID] = font;
 	return font;
+}
+
+void cResources::freeAll()
+{
+	bool err = false;
+	for (unsigned i = 0; i < shaders.bucket_count(); ++i)
+	{
+		for (auto local_it = shaders.begin(i); local_it != shaders.end(i); ++local_it)
+		{
+			local_it->second.setCustomDeallocator(nullptr);
+			if (local_it->second.counter->getCount() != 1)
+			{
+				printf("Warning shader %s is not released after resource cleanup\n", local_it->first.c_str());
+				err = true;
+			}
+		}
+	}
+
+	for (unsigned i = 0; i < textures.bucket_count(); ++i)
+	{
+		for (auto local_it = textures.begin(i); local_it != textures.end(i); ++local_it)
+		{
+			local_it->second.setCustomDeallocator(nullptr);
+			if (local_it->second.counter->getCount() != 1)
+			{
+				printf("Warning texture %s is not released after resource cleanup\n", local_it->first.c_str());
+				err = true;
+			}
+		}
+	}
+
+	for (unsigned i = 0; i < fonts.bucket_count(); ++i)
+	{
+		for (auto local_it = fonts.begin(i); local_it != fonts.end(i); ++local_it)
+		{
+			local_it->second.setCustomDeallocator(nullptr);
+			if (local_it->second.counter->getCount() != 1)
+			{
+				printf("Warning font %s is not released after resource cleanup\n", local_it->first.c_str());
+				err = true;
+			}
+		}
+	}
+
+	if (err)
+	{
+		assert(false);
+	}
 }
 

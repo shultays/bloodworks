@@ -57,6 +57,12 @@
     <ClCompile Include="cDebugRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="cFont.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimatedRenderable.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">

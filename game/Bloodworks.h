@@ -16,8 +16,12 @@ class Bloodworks : public cGame
 	int renderCount;
 	float lastSetTickTime;
 	float lastSetRenderTime;
+
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
 	virtual void init() override;
+
+public:
+	virtual ~Bloodworks();
 };

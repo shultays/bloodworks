@@ -5,30 +5,38 @@
 
 
 template <class T>
-class cCustomDeallocator {
+class cCustomDeallocator 
+{
 public:
 	virtual void objectFreed(T* object) = 0;
 };
 
 
 template <class T>
-class cSharedPtr {
-	class cSharedPtrCounter {
+class cSharedPtr 
+{
+	friend class cResources;
+	class cSharedPtrCounter 
+	{
 		int referenceCount;
 	public:
-		cSharedPtrCounter() {
+		cSharedPtrCounter() 
+		{
 			referenceCount = 0;
 		}
 
-		int getCount() const {
+		int getCount() const 
+		{
 			return referenceCount;
 		}
 
-		void increment() {
+		void increment() 
+		{
 			referenceCount++;
 		}
 
-		void decrement() {
+		void decrement() 
+		{
 			assert(referenceCount);
 			referenceCount--;
 		}
@@ -53,7 +61,7 @@ class cSharedPtr {
 				}
 				else 
 				{
-					object->deleteSelf();
+					cResources::deleteObject(object);
 					SAFE_DELETE(counter);
 				}
 			}
@@ -63,8 +71,6 @@ class cSharedPtr {
 		deallocator = nullptr;
 	}
 
-	void freeObject(T* object);
-
 public:
 	cSharedPtr() 
 	{
@@ -73,32 +79,38 @@ public:
 		this->deallocator = nullptr;
 	}
 
-	~cSharedPtr() {
+	~cSharedPtr() 
+	{
 		reset();
 	}
 
-	cSharedPtr(const cSharedPtr<T>& other) {
+	cSharedPtr(const cSharedPtr<T>& other) 
+	{
 		this->object = nullptr;
 		this->counter = nullptr;
 		this->deallocator = nullptr;
 		*this = other;
 	}
-	cSharedPtr(cSharedPtr<T>&& other) {
+	cSharedPtr(cSharedPtr<T>&& other) 
+	{
 		this->object = nullptr;
 		this->counter = nullptr;
 		this->deallocator = nullptr;
 		*this = other;
 	}
 
-	cSharedPtr(T* object) {
+	cSharedPtr(T* object) 
+	{
 		this->object = nullptr;
 		this->counter = nullptr;
 		this->deallocator = nullptr;
 		*this = object;
 	}
 
-	cSharedPtr<T>& operator=(const T*& object) {
-		if (object != nullptr) {
+	cSharedPtr<T>& operator=(const T*& object) 
+	{
+		if (object != nullptr) 
+		{
 			this->object = object;
 			counter = new cSharedPtrCounter();
 			counter->increment();
@@ -106,9 +118,11 @@ public:
 		return *this;
 	}
 
-	cSharedPtr<T>& operator=(T* object) {
+	cSharedPtr<T>& operator=(T* object) 
+	{
 		reset();
-		if (object != nullptr) {
+		if (object != nullptr) 
+		{
 			this->object = object;
 			counter = new cSharedPtrCounter();
 			counter->increment();
@@ -116,39 +130,47 @@ public:
 		return *this;
 	}
 
-	cSharedPtr<T>& operator=(const cSharedPtr<T>& other) {
-		if (this != &other) {
+	cSharedPtr<T>& operator=(const cSharedPtr<T>& other) 
+	{
+		if (this != &other) 
+		{
 			reset();
 			object = other.object;
 			counter = other.counter;
 			deallocator = other.deallocator;
-			if (counter) {
+			if (counter) 
+			{
 				counter->increment();
 			}
 		}
 		return *this;
 	}
 
-	cSharedPtr<T>& operator=(cSharedPtr<T>&& other) {
+	cSharedPtr<T>& operator=(cSharedPtr<T>&& other) 
+	{
 		object = other.object;
 		counter = other.counter;
 		deallocator = other.deallocator;
 
-		if (counter) {
+		if (counter) 
+		{
 			counter->increment();
 		}
 		return *this;
 	}
 
-	T* operator->() {
+	T* operator->() 
+	{
 		return object;
 	}
 
-	T* getObject() {
+	T* getObject() 
+	{
 		return object;
 	}
 
-	void setCustomDeallocator(cCustomDeallocator<T> *deallocator) {
+	void setCustomDeallocator(cCustomDeallocator<T> *deallocator) 
+	{
 		this->deallocator = deallocator;
 	}
 

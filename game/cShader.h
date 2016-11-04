@@ -246,14 +246,31 @@ class cShader {
 		}
 		return buildShader(shaderSource, shaderType);
 	}
-public:
 	GLuint shaderProgram;
 
 	std::unordered_map<std::string, Uniform> uniforms;
 	std::unordered_map<std::string, Attribute> attributes;
 
-	cShader() {
+public:
+	cShader() 
+	{
+		shaderProgram = pixelShader = vertexShader = -1;
+	}
 
+	~cShader() 
+	{
+		if (pixelShader != -1)
+		{
+			glDeleteShader(pixelShader);
+		}
+		if (vertexShader != -1)
+		{
+			glDeleteShader(vertexShader);
+		}
+		if (shaderProgram != -1)
+		{
+			glDeleteProgram(shaderProgram);
+		}
 	}
 
 	const char* getVertexShaderFileName() const 

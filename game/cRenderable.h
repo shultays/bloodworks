@@ -1,13 +1,10 @@
 #pragma once
 
 #include "cGlobals.h"
-#include "cGame.h"
-#include "cShader.h"
-#include "cTexture.h"
 #include <string>
 #include <GL/glew.h>
 
-
+class cGame;
 extern GLuint quad;
 
 class cRenderable
@@ -27,7 +24,7 @@ public:
 		worldMatrix.makeIdentity();
 	}
 
-	virtual ~cRenderable() {}
+	virtual ~cRenderable();
 
 	void setPosition(float x, float y)
 	{
@@ -67,7 +64,6 @@ public:
 	void setWorldMatrix(const Mat3& worldMatrix);
 };
 
-
 class cRenderableGroup : public cRenderable
 {
 	struct ChildData
@@ -84,6 +80,13 @@ protected:
 public:
 	void addRenderable(cRenderable *child, Mat3 localMatrix);
 	cRenderableGroup(cGame *game, int initialCapacity = 2);
+	~cRenderableGroup()
+	{
+		for (auto& childData : renderables)
+		{
+			SAFE_DELETE(childData.child);
+		}
+	}
 
 	void setPosition(float x, float y)
 	{
@@ -120,15 +123,7 @@ class cRenderableWithShader : public cRenderable
 {
 protected:
 	cShaderShr shader;
-	virtual void render() override
-	{
-		if (game->lastShader != shader)
-		{
-			game->lastShader = shader;
-			shader->begin();
-			shader->setViewMatrix(game->worldViewMatrix);
-		}
-	}
+	virtual void render() override;
 public:
 	cRenderableWithShader(cGame *game, const char* shaderPath) : cRenderable(game)
 	{
@@ -137,6 +132,11 @@ public:
 		std::string ps = shaderPath;
 		ps.append(".ps");
 		shader = resources.getShader(vs.c_str(), ps.c_str());
+	}
+
+	virtual ~cRenderableWithShader()
+	{
+		shader = nullptr;
 	}
 
 	cRenderableWithShader(cShaderShr shader) : cRenderable(game)
@@ -148,11 +148,6 @@ public:
 	{
 		shader = resources.getShader(vs, ps);
 	}
-
-	virtual ~cRenderableWithShader() 
-	{
-		shader = nullptr;
-	}
 };
 
 class cTexturedQuadRenderable : public cRenderableWithShader
@@ -160,29 +155,16 @@ class cTexturedQuadRenderable : public cRenderableWithShader
 protected:
 	cTextureShr texture;
 
-	virtual void render() override
-	{
-		cRenderableWithShader::render();
-
-		glBindBuffer(GL_ARRAY_BUFFER, quad);
-
-		shader->bindPosition(sizeof(float) * 8, 0);
-		shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
-		shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
-
-		shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-		texture->bindTexture();
-		shader->setWorldMatrix(worldMatrix);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-		glDisableVertexAttribArray(0);
-
-		glDisable(GL_TEXTURE_2D);
-	}
+	virtual void render() override;
 public:
 	cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
 	{
 		texture = resources.getTexture(texturePath);
 	}
+
+	virtual ~cTexturedQuadRenderable()
+	{
+		texture = nullptr;
+	}
+
 };

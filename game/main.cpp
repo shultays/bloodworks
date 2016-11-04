@@ -132,10 +132,12 @@ void RunGame()
 
 void Cleanup()
 {
-	delete game;
+	SAFE_DELETE(game);
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow);
 	SDL_Quit();
+	debugRenderer.freeAll();
+	resources.freeAll();
 }
 
 void CheckSDLError(int line = -1)

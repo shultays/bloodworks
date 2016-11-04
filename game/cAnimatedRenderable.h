@@ -48,32 +48,7 @@ class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 		}
 	}
 
-	virtual void render() override
-	{
-		cRenderableWithShader::render();
-
-		glBindBuffer(GL_ARRAY_BUFFER, quad);
-
-		shader->bindPosition(sizeof(float) * 8, 0);
-		shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
-		shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
-
-		shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-
-		currentAnimationTime += time.getDt();
-		checkAnimationTime();
-
-		cTextureShr texture = animations[currentAnimation].frames[currentAnimationFrame].texture;
-
-		texture->bindTexture();
-		shader->setWorldMatrix(worldMatrix);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-		glDisableVertexAttribArray(0);
-
-		glDisable(GL_TEXTURE_2D);
-	}
+	virtual void render() override;
 
 public:
 
@@ -120,6 +95,19 @@ public:
 		currentAnimation = 0;
 		currentAnimationFrame = 0;
 		currentAnimationTime = 0.0f;
+	}
+
+	virtual ~cAnimatedTexturedQuadRenderable()
+	{
+		for (auto& animation : animations)
+		{
+			for (auto& frame : animation.frames)
+			{
+				frame.texture = nullptr;
+			}
+			animation.frames.clear();
+		}
+		animations.clear();
 	}
 
 	AnimationData& addAnimation(const char *name, bool looping = false)

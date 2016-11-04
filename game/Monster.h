@@ -6,9 +6,10 @@ class cAnimatedTexturedQuadRenderable;
 class Monster
 {
 	cAnimatedTexturedQuadRenderable *renderable;
-	Bloodworks * bloodworks;
+	Bloodworks *bloodworks;
 
 public:
 	Monster(Bloodworks *bloodworks);
+	~Monster();
 	void tick(float dt);
 };

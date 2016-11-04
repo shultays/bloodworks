@@ -11,7 +11,10 @@ class cTexture
 
 	IntVec2 dimensions;
 public:
-	cTexture(){};
+	cTexture() 
+	{
+		gTexture = -1;
+	};
 
 	cTexture(const char *fileName)
 	{
@@ -39,7 +42,13 @@ public:
 
 		name = fileName;
 	}
-
+	~cTexture()
+	{
+		if (gTexture != -1)
+		{
+			glDeleteTextures(1, &gTexture);
+		}
+	}
 	void bindTexture() const
 	{
 		glBindTexture(GL_TEXTURE_2D, gTexture);

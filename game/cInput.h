@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "cMat.h"
 #include "cVec.h"
+
 enum Key
 {
 	key_a = SDL_SCANCODE_A,

@@ -30,6 +30,7 @@ class cResources : public cCustomDeallocator<cShader>, public cCustomDeallocator
 	std::string textureID(const char* textureName) const;
 
 	std::string fontId(const char* textureName) const;
+
 public:
 	cResources();
 
@@ -40,5 +41,11 @@ public:
 	cTextureShr getTexture(const char* textureName);
 
 	cFontShr getFont(const char* fontDataPath);
+
+	void freeAll();
+
+	static void deleteObject(cShader* object);
+	static void deleteObject(cTexture* object);
+	static void deleteObject(cFont* object);
 };
 

@@ -36,7 +36,8 @@ Player::Player(Bloodworks *bloodworks)
 
 Player::~Player()
 {
-
+	SAFE_DELETE(crosshair);
+	SAFE_DELETE(renderable);
 }
 
 void Player::tick(float dt)
