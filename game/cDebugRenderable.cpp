@@ -4,6 +4,7 @@
 #include "cShader.h"
 #include "cTexture.h"
 #include "cGame.h"
+#include <assert.h>
 
 
 #define MAX_ID 0xFFFFFF
@@ -117,6 +118,7 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 		{
 			nextId = MIN_ID;
 		}
+		assert(lineData.size() < MAX_LINE);
 		lineData.push_back(data);
 	}
 	else
@@ -130,6 +132,7 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 				return id;
 			}
 		}
+		assert(lineData.size() < MAX_LINE);
 		lineData.push_back(data);
 	}
 	return id;
@@ -138,6 +141,20 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 int cDebugRenderable::addLine(const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
 {
 	return addLine(-1, pos0, pos1, time, color);
+}
+
+void cDebugRenderable::addCircle(const Vec2& center, float radius, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+{
+	int lineCount = 7 + (int)round(radius / 8);
+
+	Vec2 oldVec = Vec2::fromAngle(-1 * pi_2 / lineCount) * radius;
+	for (int i = 0; i < lineCount; i++)
+	{
+		Vec2 newVec = Vec2::fromAngle(i * pi_2 / lineCount) * radius;
+		addLine(center + newVec, center + oldVec, time, color);
+		oldVec = newVec;
+	}
+
 }
 
 void cDebugRenderable::render()

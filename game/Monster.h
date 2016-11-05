@@ -15,20 +15,23 @@ class MonsterTemplate
 	Vec2 textureShift;
 	std::string name;
 	float hitPoint;
-
+	float collisionRadius;
+	float bulletRadius;
 	std::string script;
 	sol::table scriptTable;
 
+	std::string defaultAnimation;
 	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
-
 public:
 	MonsterTemplate(const std::string& monsterData);
-
 };
 
 class Monster
 {
+	friend class MonsterController;
+
 	cAnimatedTexturedQuadRenderable *renderable;
+	cTextRenderable *healthRenderable;
 	Bloodworks *bloodworks;
 
 
@@ -40,18 +43,44 @@ class Monster
 	Vec2 textureShift;
 	std::string name;
 	float hitPoint;
-
+	float collisionRadius;
+	float bulletRadius;
 	int index;
 	static int nextId;
 
-	sol::table luaMonster;
 
 	void setMonsterData();
 	void getMonsterData();
 
+	sol::table luaMonster;
 	sol::table scriptTable;
+	struct Timer
+	{
+		bool looped;
+		float time;
+		std::string func;
+		sol::table args;
+	};
+	std::vector<Timer> timers;
 public:
-	Monster(Bloodworks *bloodworks, const MonsterTemplate& monsterTemplate);
+	Monster(Bloodworks *bloodworks);
+	void init(const MonsterTemplate& monsterTemplate);
 	~Monster();
 	void tick(float dt);
+	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
+	void playAnimation(const std::string& anim);
+
+	const Vec2& getPosition()
+	{
+		return position;
+	}
+
+	float getRadius()
+	{
+		return bulletRadius;
+	}
+
+	IntVec2 gridStart;
+	IntVec2 gridEnd;
+	void doDamage(int param1);
 };

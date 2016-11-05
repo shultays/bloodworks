@@ -7,8 +7,15 @@ img = Image.open("fonthelper.png")
 w = img.size[0]
 h = img.size[1]
 
-c = ord('!')
+c = ord(' ')
 b = -1
+
+for i in range(3):
+	for j in range(32):
+		print(str(chr(c) + "\t" + str(5*j) + "\t" + str(7*i + 7) + "\t5\t7"))
+		c+=1
+
+c = ord('!')
 for z in range(9):
 
 	for i in range(w):

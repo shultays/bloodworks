@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bloodworks.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="cAnimatedRenderable.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
     <ClCompile Include="cFont.cpp" />
@@ -174,9 +175,12 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Array2d.h" />
     <ClInclude Include="Bloodworks.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
     <ClInclude Include="cDebugRenderable.h" />
+    <ClInclude Include="cGrid.h" />
     <ClInclude Include="cMat.h" />
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />

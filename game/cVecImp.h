@@ -484,6 +484,11 @@ public:
 	{
 		return G_VEC_IMP_NAME(cos(angle), sin(angle));
 	}
+
+	float toAngle() const
+	{
+		return (float)std::atan2(y, x);
+	}
 #endif
 #endif
 

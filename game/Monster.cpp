@@ -4,6 +4,7 @@
 #include "cGlobals.h"
 #include "cTools.h"
 #include "json.h"
+#include "cFont.h"
 
 using json = nlohmann::json;
 
@@ -12,21 +13,32 @@ sol::table script;
 
 int Monster::nextId = 0;
 
-Monster::Monster(Bloodworks *bloodworks, const MonsterTemplate& monsterTemplate)
+Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-
 	index = nextId++;
+}
 
+void Monster::init(const MonsterTemplate& monsterTemplate)
+{
 	name = monsterTemplate.name;
 
 	size = monsterTemplate.size;
 	textureShift = monsterTemplate.textureShift;
 	hitPoint = monsterTemplate.hitPoint;
 
+
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate.animationData);
 	bloodworks->addRenderable(renderable);
+
+	if (monsterTemplate.defaultAnimation.size())
+	{
+		renderable->setDefaultAnimation(renderable->getAnimationIndex(monsterTemplate.defaultAnimation));
+	}
+
+	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
+	bloodworks->addRenderable(healthRenderable);
 
 	renderable->playAnimation("walk", randFloat());
 
@@ -42,37 +54,50 @@ Monster::Monster(Bloodworks *bloodworks, const MonsterTemplate& monsterTemplate)
 	setMonsterData();
 	lua["monsterId"] = index;
 	scriptTable["init"]();
+	bulletRadius = monsterTemplate.bulletRadius;
+	collisionRadius = monsterTemplate.collisionRadius;
 	if (luaMonster["scale"])
 	{
 		float scale = luaMonster["scale"].get<float>();
 		size = size * scale;
 		textureShift = textureShift * scale;
+		bulletRadius *= scale;
+		collisionRadius *= scale;
 	}
+
+	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
 	getMonsterData();
+
+	hitPoint *= randFloat();
 }
 
 Monster::~Monster()
 {
 	SAFE_DELETE(renderable);
+	SAFE_DELETE(healthRenderable);
 }
 
 void Monster::tick(float dt)
 {
-	if (input.isKeyPressed(key_1))
-	{
-		renderable->playAnimation("stand");
-	}
-	if (input.isKeyPressed(key_2))
-	{
-		renderable->playAnimation("walk");
-	}
-	if (input.isKeyPressed(key_3))
-	{
-		renderable->playAnimation("attack", 0.0f, 1);
-	}
-
 	lua["monsterId"] = index;
 	scriptTable["onTick"](dt);
+
+	std::vector<int> toTrigger;
+	for (int i = (int)timers.size() - 1; i >= 0; i--)
+	{
+		if (timers[i].time < timer.getTime())
+		{
+			toTrigger.push_back(i);
+		}
+	}
+
+	for (auto& i : toTrigger)
+	{
+		Timer t = timers[i];
+		timers[i] = timers[(int)timers.size() - 1];
+		timers.resize(timers.size() - 1);
+		scriptTable[t.func](t.args);
+	}
 
 	getMonsterData();
 	if (moveSpeed > 0.0f)
@@ -81,6 +106,11 @@ void Monster::tick(float dt)
 		setMonsterData();
 	}
 
+	std::stringstream ss;
+	ss << (int)hitPoint;
+
+	healthRenderable->setText(ss.str());
+	healthRenderable->setPosition(position + Vec2(-15 + (hitPoint<100 ? 5.0f : 0.0f) + (hitPoint<10 ? 5.0f : 0.0f), bulletRadius + 10.0f));
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(size);
 	mat.translateBy(textureShift);
@@ -88,7 +118,34 @@ void Monster::tick(float dt)
 	mat.translateBy(position);
 	renderable->setWorldMatrix(mat);
 
-	debugRenderer.addLine(position, position + Vec2::fromAngle(moveAngle) * 50);
+	//debugRenderer.addLine(position, position + Vec2::fromAngle(moveAngle) * 50);
+}
+
+
+void Monster::addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped /*= false*/)
+{
+	Timer t;
+	t.time = timeToTrigger + timer.getTime();
+	t.func = func;
+	t.args = args;
+	t.looped = looped;
+	timers.push_back(t);
+}
+
+void Monster::playAnimation(const std::string& anim)
+{
+	renderable->playAnimation(anim);
+}
+
+void Monster::doDamage(int damage)
+{
+	hitPoint -= damage;
+	if (hitPoint <= 1.0f)
+	{
+		hitPoint = 100;
+		lua["monsterId"] = index;
+		scriptTable["init"]();
+	}
 }
 
 void Monster::setMonsterData()
@@ -116,7 +173,9 @@ MonsterTemplate::MonsterTemplate(const std::string& monsterData)
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
 	textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
-	hitPoint = j["hitpoint"].get<float>();
+	hitPoint = j["hitPoint"].get<float>();
+	bulletRadius = j["bulletRadius"].get<float>();
+	collisionRadius = j["collisionRadius"].get<float>();
 
 	std::string monsterPath = "resources/monster/";
 	std::string artFolder = j["artFolder"];
@@ -134,6 +193,13 @@ MonsterTemplate::MonsterTemplate(const std::string& monsterData)
 			looped = animData["looped"].get<bool>();
 		}
 
+		if (animData.count("default"))
+		{
+			if (animData["default"].get<bool>())
+			{
+				defaultAnimation = it.key();
+			}
+		}
 		cAnimatedTexturedQuadRenderable::AnimationData animation(it.key(), looped);
 
 		float frameDuration = 0.1f;

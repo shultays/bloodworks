@@ -72,6 +72,9 @@
     <ClCompile Include="MonsterController.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -144,6 +147,15 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="MonsterController.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="cGrid.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="Array2d.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

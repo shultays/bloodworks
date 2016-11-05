@@ -5,7 +5,7 @@
 #include <string>
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
-#define SAFE_DELETE_array(x) do{delete[] x; x = nullptr;} while(0);
+#define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
 
 #define E_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062
 

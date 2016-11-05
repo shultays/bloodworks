@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Bloodworks.h"
+#include "Bullet.h"
 
 
 Player::Player(Bloodworks *bloodworks)
@@ -171,6 +172,12 @@ void Player::tick(float dt)
 	mat.rotateBy(angle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
+
+	if (input.isKeyPressed(mouse_button_left))
+	{
+		Vec2 dir = Vec2::fromAngle(pi_d2 - angle);
+		bloodworks->addBullet(new Bullet(bloodworks, pos + dir * 22.0f, dir * 250.0f, 2.0f));
+	}
 
 
 	sol::table table = lua["player"];

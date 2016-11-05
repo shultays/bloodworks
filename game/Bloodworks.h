@@ -8,6 +8,8 @@
 class cTexturedQuadRenderable;
 class Player;
 class Monster;
+class Bullet;
+
 class Bloodworks : public cGame
 {
 	cTexturedQuadRenderable *bg;
@@ -19,12 +21,15 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
-	MonsterController monsterController;
+
+	std::vector<Bullet*> bullets;
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
 	virtual void init() override;
 
 public:
+	MonsterController monsterController;
 	virtual ~Bloodworks();
+	void addBullet(Bullet *bullet);
 };

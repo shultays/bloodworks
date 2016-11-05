@@ -1,10 +1,24 @@
 ﻿  Bloodworks.cpp
-  Monster.cpp
   cAnimatedRenderable.cpp
+  cDebugRenderable.cpp
+  cFont.cpp
+  cGlobals.cpp
+  cInput.cpp
+  cLuaWorld.cpp
+  Coral.cpp
+  cGame.cpp
+  cMat.cpp
+  cRenderable.cpp
+  cResources.cpp
+  main.cpp
+  cTools.cpp
+  Monster.cpp
+  MonsterController.cpp
+  Player.cpp
   Generating code
-  410 of 3542 functions (11.6%) were compiled, the rest were copied from previous compilation.
-    37 functions were new in current compilation
-    196 functions had inline decision re-evaluated but remain unchanged
+  1159 of 4298 functions (27.0%) were compiled, the rest were copied from previous compilation.
+    780 functions were new in current compilation
+    629 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.pdb (Full PDB)

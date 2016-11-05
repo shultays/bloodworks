@@ -43,6 +43,8 @@ class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 						currentAnimation = nextAnimation;
 						nextAnimation = -1;
 					}
+					currentAnimationFrame = 0;
+					currentAnimationTime = 0.0f;
 				}
 			}
 		}
@@ -104,6 +106,8 @@ private:
 public:
 	cAnimatedTexturedQuadRenderable(cGame *game, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
 	{
+		defaultAnimation = 0;
+		nextAnimation = 0;
 		currentAnimation = 0;
 		currentAnimationFrame = 0;
 		currentAnimationTime = 0.0f;
@@ -122,6 +126,17 @@ public:
 		animations.clear();
 	}
 
+	int getAnimationIndex(const std::string& animation) const
+	{
+		for (int i = 0; i < animations.size(); i++)
+		{
+			if (animations[i].name == animation)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 	void addAnimation(const AnimationData& animation)
 	{
 		animations.push_back(animation);

@@ -69,6 +69,8 @@ public:
 	int addLine(int id, const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
 	int addLine(const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
 
+	void addCircle(const Vec2& center, float radius, float time = 0.0f, Vec4 color = Vec4(1.0f));
+
 	void render();
 	void tick(float dt);
 };

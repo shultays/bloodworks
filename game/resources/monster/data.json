@@ -1,14 +1,17 @@
 {
   "name": "Monster",
-  "hitpoint": 100,
+  "hitPoint": 100,
   "artFolder" : "art",
   "size" : [24.0, 34.0],
-  "textureShift" : [0.0, -14.0],
+  "textureShift" : [0.0, -16.0],
+  "bulletRadius" : 16.0,
+  "collisionRadius" : 12.0,
   
   "animations" : 
   {
 	"stand" : 
 	{
+		"default" : true,
 		"looped" : true,
 		"frameDuration" : 0.5,
 		"frames":
