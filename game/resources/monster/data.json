@@ -1,0 +1,53 @@
+{
+  "name": "Monster",
+  "hitpoint": 100,
+  "artFolder" : "art",
+  "size" : [24.0, 34.0],
+  "textureShift" : [0.0, -14.0],
+  
+  "animations" : 
+  {
+	"stand" : 
+	{
+		"looped" : true,
+		"frameDuration" : 0.5,
+		"frames":
+		[
+			"0.png"
+		]
+	},
+	
+	"walk" : 
+	{
+		"looped" : true,
+		"frameDuration" : 0.1,
+		"frames":
+		[
+			"0.png",
+			"1.png",
+			"2.png",
+			"3.png",
+			"0.png",
+			"4.png",
+			"5.png",
+			"6.png"
+		]
+	},
+	
+	"attack" : 
+	{
+		"frameDuration" : 0.1,
+		"frames":
+		[
+			"7.png",
+			"8.png",
+			"9.png",
+			"11.png",
+			"10.png"
+		]
+	}
+  },
+  
+  "scriptFile" : "monster.lua",
+  "scriptName" : "Monster"
+}

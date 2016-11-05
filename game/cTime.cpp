@@ -6,7 +6,7 @@ void cTime::init()
 {
 	currentTime = getRealTime();
 	dt = 0.0f;
-	fixedDt = 0.0f;
+	renderDt = 0.0f;
 }
 
 void cTime::tick()

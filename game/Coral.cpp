@@ -16,22 +16,23 @@ Coral::Coral()
 
 void Coral::tick()
 {
-	time.tick();
+	timer.tick();
 
-	float t = time.getTime();
+	float t = timer.getTime();
 
-	time.dt = t - lastDrawTime;
 
 	if (t - lastUpdateTime >= update_interval) 
 	{
+		timer.dt = update_interval;
 		lastUpdateTime += update_interval;
-		debugRenderer.tick(time.getDt());
+		debugRenderer.tick(timer.getDt());
 		game->tickInternal();
 		input.tick();
 	}
 
 	if (t - lastDrawTime >= draw_interval) 
 	{
+		timer.renderDt = t - lastDrawTime;
 		lastDrawTime += draw_interval;
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -40,7 +41,7 @@ void Coral::tick()
 		SDL_GL_SwapWindow(mainWindow);
 	}
 	
-	t = time.getRealTime();
+	t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.0f) 
 	{
@@ -50,9 +51,9 @@ void Coral::tick()
 
 void Coral::init()
 {
-	time.init();
+	timer.init();
 	input.init();
 
-	lastDrawTime = time.getTime() - draw_interval;
-	lastUpdateTime = time.getTime() - update_interval;
+	lastDrawTime = timer.getTime() - draw_interval;
+	lastUpdateTime = timer.getTime() - update_interval;
 }

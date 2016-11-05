@@ -67,6 +67,18 @@ public:
 			animationDuration = 0.0f;
 		}
 
+		AnimationData(const std::string& name, bool looping)
+		{
+			animationDuration = 0.0f;
+			this->name = name;
+			this->looping = looping;
+		}
+
+		AnimationData& addFrame(const std::string& texturePath, float duration)
+		{
+			return addFrame(texturePath.c_str(), duration);
+		}
+
 		AnimationData& addFrame(const char *texturePath, float duration)
 		{
 
@@ -110,6 +122,25 @@ public:
 		animations.clear();
 	}
 
+	void addAnimation(const AnimationData& animation)
+	{
+		animations.push_back(animation);
+		animations[animations.size() - 1].index = (int) animations.size() - 1;
+	}
+
+	void addAnimation(std::vector<AnimationData> animations)
+	{
+		for (auto& animation : animations)
+		{
+			addAnimation(animation);
+		}
+	}
+
+	AnimationData& addAnimation(const std::string name, bool looping = false)
+	{
+		return addAnimation(name.c_str(), looping);
+	}
+
 	AnimationData& addAnimation(const char *name, bool looping = false)
 	{
 		AnimationData animationData;
@@ -134,7 +165,7 @@ public:
 		playAnimation(animationData.index, startTime, nextAnimation);
 	}
 
-	void playAnimation(const char *animationName, float startTime = 0.0f, int nextAnimation = -1)
+	void playAnimation(const std::string& animationName, float startTime = 0.0f, int nextAnimation = -1)
 	{
 		for (auto& animation : animations)
 		{

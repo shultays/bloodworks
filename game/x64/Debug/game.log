@@ -1,3 +1,17 @@
-﻿  cDebugRenderable.cpp
+﻿  main.cpp
+  cResources.cpp
+  cRenderable.cpp
+  cInput.cpp
+  cGlobals.cpp
+  cGame.cpp
+  cFont.cpp
+  cDebugRenderable.cpp
+  cAnimatedRenderable.cpp
+  Player.cpp
+  MonsterController.cpp
+  Monster.cpp
+  Coral.cpp
+  Bloodworks.cpp
+  Generating Code...
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.pdb (Full PDB)

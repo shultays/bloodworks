@@ -1,8 +1,9 @@
 #include "cGlobals.h"
 
 cInput input;
-cTime time;
+cTime timer;
 Coral gears;
 cResources resources;
 cDebugRenderable debugRenderer;
 cGame *game;
+cLuaWorld lua;

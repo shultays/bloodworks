@@ -27,6 +27,4 @@ public:
 	{
 		return pos;
 	}
-
-
 };

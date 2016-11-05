@@ -16,7 +16,7 @@ void cInput::init()
 void cInput::pressKey(int key)
 {
 	keyStates[key] = 1;
-	keyTime[key] = time.getTime();
+	keyTime[key] = timer.getTime();
 }
 
 void cInput::tick()
@@ -28,5 +28,5 @@ void cInput::tick()
 void cInput::releaseKey(int key)
 {
 	keyStates[key] = 0;
-	keyTime[key] = time.getTime();
+	keyTime[key] = timer.getTime();
 }

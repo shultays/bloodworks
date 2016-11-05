@@ -13,6 +13,9 @@
     <Filter Include="Coral\Renderable">
       <UniqueIdentifier>{50484395-6c63-42ff-9227-2689ceedb244}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Coral\Lua">
+      <UniqueIdentifier>{9bac67f8-0865-4a36-9351-3b1be0747c02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cMat.cpp">
@@ -62,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="cAnimatedRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="cLuaWorld.cpp">
+      <Filter>Coral\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterController.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +133,18 @@
     </ClInclude>
     <ClInclude Include="cDebugRenderable.h">
       <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cLuaWorld.h">
+      <Filter>Coral\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Sol.h">
+      <Filter>Coral\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterController.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

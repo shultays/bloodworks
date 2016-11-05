@@ -32,6 +32,13 @@ Player::Player(Bloodworks *bloodworks)
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
+
+	lua["player"] = lua.create_table_with(
+		"x", pos.x, 
+		"y", pos.y,
+		"moveAngle", moveAngle,
+		"moveSpeed", moveSpeed);
+
 }
 
 Player::~Player()
@@ -142,7 +149,6 @@ void Player::tick(float dt)
 		moveSpeed = max(moveSpeed, 0.0f);
 	}
 
-
 	pos += Vec2::fromAngle(moveAngle) * moveSpeed * dt;
 
 
@@ -165,4 +171,11 @@ void Player::tick(float dt)
 	mat.rotateBy(angle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
+
+
+	sol::table table = lua["player"];
+	table["x"] = pos.x;
+	table["y"] = pos.y;
+	table["moveAngle"] = moveAngle;
+	table["moveSpeed"] = moveSpeed;
 }

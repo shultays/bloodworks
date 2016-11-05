@@ -15,7 +15,7 @@ void cAnimatedTexturedQuadRenderable::render()
 	shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 
-	currentAnimationTime += time.getDt();
+	currentAnimationTime += timer.getRender_dt();
 	checkAnimationTime();
 
 	cTextureShr texture = animations[currentAnimation].frames[currentAnimationFrame].texture;

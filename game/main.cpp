@@ -38,6 +38,9 @@ bool Init()
 		return false;
 	}
 
+	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math);
+	lua.require_file("vector", "resources/vector.luac");
+
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
 	SDL_GL_SetSwapInterval(1);

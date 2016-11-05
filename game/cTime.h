@@ -8,7 +8,7 @@ friend class Coral;
 
 	float currentTime;
 	float dt;
-	float fixedDt;
+	float renderDt;
 
 public:
 	float getTime() 
@@ -21,9 +21,9 @@ public:
 		return dt;
 	}
 
-	float getFixed_dt() 
+	float getRender_dt() 
 	{
-		return fixedDt;
+		return renderDt;
 	}
 
 	void tick();

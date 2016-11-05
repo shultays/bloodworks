@@ -32,12 +32,15 @@ void cGame::initInternal()
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
+
+	lua["monsters"] = lua.create_table();
+
 	init();
 }
 
 void cGame::tickInternal()
 {
-	tick(time.getDt());
+	tick(timer.getDt());
 }
 
 void cGame::renderInternal()
