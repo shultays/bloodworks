@@ -7,7 +7,6 @@ function Monster.init()
 	
 	monster.scale = math.random() * 0.4 + 0.5
 
-	addTimer(monsterId, 0.5, "timeTest", {})
 	monster.moving = true
 	monster.lastHitTime = 0.0
 end
@@ -45,8 +44,3 @@ function Monster.onTick()
 	
 	end
 end
-
-function Monster.timeTest(args)
-	addTimer(monsterId, 0.5, "timeTest", {})
-end
-

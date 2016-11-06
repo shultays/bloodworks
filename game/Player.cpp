@@ -164,17 +164,17 @@ void Player::tick(float dt)
 
 	if (lengthSquared > 0.01f)
 	{
-		angle = atan2f(-crosshairPos.y, crosshairPos.x) + pi_d2;
+		angle = atan2f(crosshairPos.y, crosshairPos.x);
 	}
 
 	Mat3 mat = Mat3::identity();
-	mat.rotateBy(angle);
+	mat.rotateBy(pi_d2 - angle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 
 	if (input.isKeyPressed(mouse_button_left))
 	{
-		Vec2 dir = Vec2::fromAngle(pi_d2 - angle);
+		Vec2 dir = crosshairPos.normalized();
 		bloodworks->getBulletController()->addBullet(new Bullet(bloodworks, pos + dir * 22.0f, dir * 250.0f, 2.0f));
 	}
 

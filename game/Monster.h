@@ -14,7 +14,7 @@ class MonsterTemplate
 	Vec2 size;
 	Vec2 textureShift;
 	std::string name;
-	float hitPoint;
+	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
 	std::string script;
@@ -42,7 +42,7 @@ class Monster
 	Vec2 size;
 	Vec2 textureShift;
 	std::string name;
-	float hitPoint;
+	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
 	int index;

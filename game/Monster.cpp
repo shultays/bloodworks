@@ -68,7 +68,7 @@ void Monster::init(const MonsterTemplate& monsterTemplate)
 	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
 	getMonsterData();
 
-	hitPoint *= randFloat();
+	hitPoint = (int)(hitPoint * randFloat(0.05f, 0.95f));
 }
 
 Monster::~Monster()
@@ -173,7 +173,7 @@ MonsterTemplate::MonsterTemplate(const std::string& monsterData)
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
 	textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
-	hitPoint = j["hitPoint"].get<float>();
+	hitPoint = j["hitPoint"].get<int>();
 	bulletRadius = j["bulletRadius"].get<float>();
 	collisionRadius = j["collisionRadius"].get<float>();
 
