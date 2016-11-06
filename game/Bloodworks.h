@@ -3,7 +3,7 @@
 #include "cGame.h"
 #include "cSharedPtr.h"
 #include "MonsterController.h"
-
+#include "BulletController.h"
 
 class cTexturedQuadRenderable;
 class Player;
@@ -21,15 +21,25 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
+	MonsterController monsterController;
+	BulletController bulletController;
 
-	std::vector<Bullet*> bullets;
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
 	virtual void init() override;
 
 public:
-	MonsterController monsterController;
+	Bloodworks() {}
 	virtual ~Bloodworks();
-	void addBullet(Bullet *bullet);
+
+	MonsterController* getMonsterController()
+	{
+		return &monsterController;
+	}
+
+	BulletController* getBulletController()
+	{
+		return &bulletController;
+	}
 };

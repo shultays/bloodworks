@@ -19,5 +19,5 @@ public:
 	void init(Bloodworks *bloodworks);
 	void tick(float dt);
 	void clear();
-	const std::vector<Monster*> getMonsterAt(const Vec2& pos);
+	const std::vector<Monster*> getMonsterAt(const Vec2& pos) const;
 };

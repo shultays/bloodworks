@@ -26,36 +26,16 @@ Bloodworks::~Bloodworks()
 {
 	SAFE_DELETE(bg);
 	SAFE_DELETE(player);
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		SAFE_DELETE(bullets[i]);
-	}
 	monsterController.clear();
 }
 
-void Bloodworks::addBullet(Bullet *bullet)
-{
-	bullets.push_back(bullet);
-}
 
 void Bloodworks::tick(float dt)
 {
 	player->tick(dt);
 
 	monsterController.tick(dt);
-
-
-	for (int i=0; i<bullets.size(); i++)
-	{
-		bullets[i]->tick(dt);
-		if (bullets[i]->isDead)
-		{
-			SAFE_DELETE(bullets[i]);
-			bullets[i] = bullets[bullets.size() - 1];
-			bullets.resize(bullets.size() - 1);
-			i--;
-		}
-	}
+	bulletController.tick(dt);
 
 	tickCount++;
 	if (timer.getTime() - lastSetTickTime > 1.0f)

@@ -38,7 +38,7 @@ void Bullet::tick(float dt)
 	renderable->setWorldMatrix(mat);
 	
 
-	const auto& monsters = bloodworks->monsterController.getMonsterAt(pos);
+	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
 
 	for (auto& monster : monsters)
 	{
@@ -46,7 +46,7 @@ void Bullet::tick(float dt)
 		float radiusToCheck = monster->getRadius() + radius;
 		if (pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck)
 		{
-			monster->doDamage(5);
+			monster->doDamage(randInt(10, 30));
 			isDead = true;
 		}
 	}

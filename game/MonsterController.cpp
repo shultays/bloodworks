@@ -56,7 +56,7 @@ void MonsterController::clear()
 	}
 }
 
-const std::vector<Monster*> MonsterController::getMonsterAt(const Vec2& pos) 
+const std::vector<Monster*> MonsterController::getMonsterAt(const Vec2& pos)  const
 {
 	return grid.getNodeAtPos(pos);
 }

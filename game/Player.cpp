@@ -50,7 +50,6 @@ Player::~Player()
 
 void Player::tick(float dt)
 {
-
 	float wantedAngle = moveAngle;
 
 	bool moving = false;
@@ -176,7 +175,7 @@ void Player::tick(float dt)
 	if (input.isKeyPressed(mouse_button_left))
 	{
 		Vec2 dir = Vec2::fromAngle(pi_d2 - angle);
-		bloodworks->addBullet(new Bullet(bloodworks, pos + dir * 22.0f, dir * 250.0f, 2.0f));
+		bloodworks->getBulletController()->addBullet(new Bullet(bloodworks, pos + dir * 22.0f, dir * 250.0f, 2.0f));
 	}
 
 

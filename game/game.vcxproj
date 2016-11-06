@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="Bloodworks.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="cAnimatedRenderable.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
     <ClCompile Include="cFont.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Array2d.h" />
     <ClInclude Include="Bloodworks.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletController.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="cVecImp.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cLuaWorld.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />

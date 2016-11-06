@@ -5,9 +5,10 @@
 
 class cTexturedQuadRenderable;
 class Bloodworks;
+
 class Bullet
 {
-	friend class Bloodworks;
+	friend class BulletController;
 
 	bool isDead;
 	Bloodworks *bloodworks;
@@ -16,9 +17,9 @@ class Bullet
 	Vec2 speed;
 	float radius;
 	cTexturedQuadRenderable *renderable;
+
 public:
 	Bullet(Bloodworks *bloodworks, const Vec2& pos, const Vec2& speed, float radius = 0.0f);
 	~Bullet();
 	void tick(float dt);
-
 };

@@ -42,7 +42,7 @@ public:
 		data.init(nodeCount);
 	}
 
-	IntVec2 getNodeIndex(const Vec2& pos)
+	IntVec2 getNodeIndex(const Vec2& pos) const
 	{
 		Vec2 diff = pos - gridStart;
 		return IntVec2((int)floor(diff.x / nodeSize.x), (int)floor(diff.y / nodeSize.y));
@@ -135,10 +135,8 @@ public:
 	}
 
 
-	std::vector<Monster *> getNodeAtPos(const Vec2& pos) 
+	std::vector<Monster*> getNodeAtPos(const Vec2& pos) const
 	{
 		return data[getNodeIndex(pos)];
 	}
-
-
 };

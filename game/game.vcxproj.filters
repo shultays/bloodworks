@@ -7,14 +7,14 @@
     <Filter Include="Coral\Math">
       <UniqueIdentifier>{a7e2633e-982b-4d3c-94e1-c589247855ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{e0b470c8-0387-4bfd-80ca-81fe66917caa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Coral\Renderable">
       <UniqueIdentifier>{50484395-6c63-42ff-9227-2689ceedb244}</UniqueIdentifier>
     </Filter>
     <Filter Include="Coral\Lua">
       <UniqueIdentifier>{9bac67f8-0865-4a36-9351-3b1be0747c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bloodworks">
+      <UniqueIdentifier>{e0b470c8-0387-4bfd-80ca-81fe66917caa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,16 +43,16 @@
       <Filter>Coral</Filter>
     </ClCompile>
     <ClCompile Include="Bloodworks.cpp">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClCompile>
     <ClCompile Include="cRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClCompile>
     <ClCompile Include="Monster.cpp">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClCompile>
     <ClCompile Include="cResources.cpp">
       <Filter>Coral</Filter>
@@ -70,10 +70,13 @@
       <Filter>Coral\Lua</Filter>
     </ClCompile>
     <ClCompile Include="MonsterController.cpp">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletController.cpp">
+      <Filter>Bloodworks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,19 +120,19 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="Bloodworks.h">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cAnimatedRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
     <ClInclude Include="Monster.h">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cFont.h">
       <Filter>Coral\Renderable</Filter>
@@ -147,7 +150,7 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="MonsterController.h">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cGrid.h">
       <Filter>Coral</Filter>
@@ -156,7 +159,13 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Game</Filter>
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletController.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
