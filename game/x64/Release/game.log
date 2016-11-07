@@ -1,27 +1,8 @@
-﻿  Bloodworks.cpp
-  Bullet.cpp
-  BulletController.cpp
-  cAnimatedRenderable.cpp
-  cDebugRenderable.cpp
-  cFont.cpp
-  cGlobals.cpp
-  cInput.cpp
-  cLuaWorld.cpp
-  Coral.cpp
-  cGame.cpp
-  cMat.cpp
-  cRenderable.cpp
-  cResources.cpp
-  Gun.cpp
-  main.cpp
-  cTools.cpp
-  Monster.cpp
-  MonsterController.cpp
-  Player.cpp
+﻿  MonsterController.cpp
   Generating code
-  405 of 4436 functions ( 9.1%) were compiled, the rest were copied from previous compilation.
-    138 functions were new in current compilation
-    203 functions had inline decision re-evaluated but remain unchanged
+  243 of 4719 functions ( 5.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    36 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.pdb (Full PDB)

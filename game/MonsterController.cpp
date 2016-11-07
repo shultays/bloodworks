@@ -21,7 +21,7 @@ void MonsterController::init(Bloodworks *bloodworks)
 	grid.init(Vec2(-500, -400), Vec2(1000, 800), Vec2(50, 50));
 
 	MonsterTemplate monsterTemplate("resources/monster/data.json");
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		Monster *newMonster = new Monster(bloodworks);
 		monstersMap[newMonster->index] = newMonster;
