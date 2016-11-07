@@ -8,9 +8,6 @@
 
 using json = nlohmann::json;
 
-
-sol::table script;
-
 int Monster::nextId = 0;
 
 Monster::Monster(Bloodworks *bloodworks)
@@ -30,7 +27,7 @@ void Monster::init(const MonsterTemplate& monsterTemplate)
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate.animationData);
-	bloodworks->addRenderable(renderable);
+	bloodworks->addRenderable(renderable, 100);
 
 	if (monsterTemplate.defaultAnimation.size())
 	{
@@ -38,7 +35,7 @@ void Monster::init(const MonsterTemplate& monsterTemplate)
 	}
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
-	bloodworks->addRenderable(healthRenderable);
+	bloodworks->addRenderable(healthRenderable, 101);
 
 	renderable->playAnimation("walk", randFloat());
 
@@ -177,11 +174,8 @@ MonsterTemplate::MonsterTemplate(const std::string& monsterData)
 	bulletRadius = j["bulletRadius"].get<float>();
 	collisionRadius = j["collisionRadius"].get<float>();
 
-	std::string monsterPath = "resources/monster/";
-	std::string artFolder = j["artFolder"];
-	artFolder = monsterPath + artFolder + "/";
-
-
+	std::string artFolder = j["artFolder"].get<std::string>();
+	fixFolderPath(artFolder);
 	auto& animations = j["animations"];
 
 	for (json::iterator it = animations.begin(); it != animations.end(); ++it)
@@ -226,6 +220,6 @@ MonsterTemplate::MonsterTemplate(const std::string& monsterData)
 	}
 
 	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
-	script = monsterPath + j["scriptFile"].get<std::string>();
+	script = j["scriptFile"].get<std::string>();
 	lua.require_file(name, script);
 }

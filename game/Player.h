@@ -5,6 +5,7 @@
 #include "cRenderable.h"
 
 class Bloodworks;
+class Gun;
 
 class Player
 {
@@ -18,6 +19,9 @@ class Player
 	cRenderableGroup *renderable;
 	cRenderable *crosshair;
 	Vec2 crosshairPos;
+	Gun *gun;
+	Vec2 aimDir;
+
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -27,4 +31,11 @@ public:
 	{
 		return pos;
 	}
+
+	const Vec2& getAimDir() const
+	{
+		return aimDir;
+	}
+
+	void setGun(Gun* gun);
 };

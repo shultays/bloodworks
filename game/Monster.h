@@ -34,7 +34,6 @@ class Monster
 	cTextRenderable *healthRenderable;
 	Bloodworks *bloodworks;
 
-
 	Vec2 position;
 	float moveSpeed;
 	float moveAngle;
@@ -49,6 +48,7 @@ class Monster
 	static int nextId;
 
 
+	//lua
 	void setMonsterData();
 	void getMonsterData();
 
@@ -62,6 +62,7 @@ class Monster
 		sol::table args;
 	};
 	std::vector<Timer> timers;
+	//~lua
 public:
 	Monster(Bloodworks *bloodworks);
 	void init(const MonsterTemplate& monsterTemplate);
@@ -69,6 +70,7 @@ public:
 	void tick(float dt);
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(const std::string& anim);
+	void doDamage(int damage);
 
 	const Vec2& getPosition()
 	{
@@ -82,5 +84,4 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
-	void doDamage(int param1);
 };

@@ -7,6 +7,14 @@
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
 
+template <class T>
+inline void swapt(T& a, T& b)
+{
+	T temp = a;
+	a = b;
+	b = temp;
+}
+
 #define E_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062
 
 const float pi = (float)E_PI;
@@ -72,3 +80,5 @@ int randInt(int begin, int end);
 float randFloat(float limit);
 float randFloat(float begin, float end);
 
+void fixFolderPath(std::string& path);
+void fixFilePath(std::string& path);

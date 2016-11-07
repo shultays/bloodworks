@@ -1,0 +1,10 @@
+{
+  "name": "Basic",
+  "artFolder" : "resources/basicgun/",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 2.0,
+  
+  "scriptFile" : "resources/basicgun/basic.lua",
+  "scriptName" : "BasicGun"
+}

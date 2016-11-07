@@ -3,20 +3,17 @@
 #include "Monster.h"
 #include "Bloodworks.h"
 
-Bullet::Bullet(Bloodworks *bloodworks, const Vec2& pos, const Vec2& speed, float radius /*= 0.0f*/)
+Bullet::Bullet(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	this->pos = pos;
-	this->speed = speed;
-	this->radius = radius;
-
-	renderable = new cTexturedQuadRenderable(bloodworks, "resources/bullet.png", "resources/default");
-	bloodworks->addRenderable(renderable);
-
-	rotation = speed.toAngle();
+	renderable = new cRenderableGroup(bloodworks);
+	bloodworks->addRenderable(renderable, 501);
 	isDead = false;
-	tick(0.0f);
+}
 
+void Bullet::init()
+{
+	tick(0.0f);
 }
 
 Bullet::~Bullet()
@@ -55,4 +52,9 @@ void Bullet::tick(float dt)
 	{
 		isDead = true;
 	}
+}
+
+void Bullet::addRenderable(cRenderable *renderable)
+{
+	this->renderable->addRenderable(renderable, Mat3::identity());
 }

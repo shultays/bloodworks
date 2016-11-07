@@ -1,7 +1,7 @@
 {
   "name": "Monster",
   "hitPoint": 100,
-  "artFolder" : "art",
+  "artFolder" : "resources/monster/art",
   "size" : [24.0, 34.0],
   "textureShift" : [0.0, -16.0],
   "bulletRadius" : 16.0,
@@ -51,6 +51,6 @@
 	}
   },
   
-  "scriptFile" : "monster.lua",
+  "scriptFile" : "resources/monster/monster.lua",
   "scriptName" : "Monster"
 }

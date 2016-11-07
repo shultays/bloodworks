@@ -3,12 +3,14 @@
 #include "cMat.h"
 #include "cVec.h"
 
-class cTexturedQuadRenderable;
+class cRenderableGroup;
 class Bloodworks;
+class cRenderable;
 
 class Bullet
 {
 	friend class BulletController;
+	friend class Gun;
 
 	bool isDead;
 	Bloodworks *bloodworks;
@@ -16,10 +18,12 @@ class Bullet
 	float rotation;
 	Vec2 speed;
 	float radius;
-	cTexturedQuadRenderable *renderable;
-
+	cRenderableGroup *renderable;
 public:
-	Bullet(Bloodworks *bloodworks, const Vec2& pos, const Vec2& speed, float radius = 0.0f);
+	Bullet(Bloodworks *bloodworks);
+	void init();
 	~Bullet();
 	void tick(float dt);
+	void addRenderable(cRenderable *renderable);
+
 };

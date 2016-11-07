@@ -32,9 +32,6 @@ void cGame::initInternal()
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-
-	lua["monsters"] = lua.create_table();
-
 	init();
 }
 
@@ -54,9 +51,9 @@ void cGame::renderInternal()
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
 
-	for (auto& renderable : renderables)
+	for (int i=0; i<renderables.size(); i++)
 	{
-		renderable->render();
+		renderables[i]->render();
 	}
 	debugRenderer.render();
 
@@ -85,23 +82,12 @@ IntVec2 cGame::getScreenDimensions() const
 	return ret;
 }
 
-void cGame::addRenderable(cRenderable* renderable)
+void cGame::addRenderable(cRenderable* renderable, int level)
 {
-	renderables.push_back(renderable);
+	renderables.insert(renderable, level);
 }
 
 void cGame::removeRenderable(cRenderable* renderable)
 {
-	auto iter = renderables.begin();
-	while (iter != renderables.end())
-	{
-		if (*iter == renderable)
-		{
-			iter = renderables.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
+	renderables.remove(renderable);
 }

@@ -9,6 +9,7 @@ function Monster.init()
 
 	monster.moving = true
 	monster.lastHitTime = 0.0
+	playAnimation(monsterId, "walk")
 end
 
 function Monster.onTick()
@@ -41,6 +42,5 @@ function Monster.onTick()
 		monster.moveSpeed = 20;
 	else
 		monster.moveSpeed = 0;
-	
 	end
 end

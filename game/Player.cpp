@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Bloodworks.h"
 #include "Bullet.h"
+#include "Gun.h"
 
 
 Player::Player(Bloodworks *bloodworks)
@@ -23,16 +24,17 @@ Player::Player(Bloodworks *bloodworks)
 	renderable->addRenderable(hands, mat);
 
 	renderable->setWorldMatrix(Mat3::identity());
-	bloodworks->addRenderable(renderable);
+	bloodworks->addRenderable(renderable, 500);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
 	crosshair->setSize(20.0f);
-	bloodworks->addRenderable(crosshair);
+	bloodworks->addRenderable(crosshair, 502);
 
 	crosshairPos = Vec2(10.0f);
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
+	aimDir = Vec2::zero();
 
 	lua["player"] = lua.create_table_with(
 		"x", pos.x, 
@@ -40,6 +42,7 @@ Player::Player(Bloodworks *bloodworks)
 		"moveAngle", moveAngle,
 		"moveSpeed", moveSpeed);
 
+	this->gun = nullptr;
 }
 
 Player::~Player()
@@ -154,13 +157,18 @@ void Player::tick(float dt)
 
 	crosshairPos += input.getDeltaMousePos();
 
-	const float maxCrosshairDistance = 200.0f;
+	float maxCrosshairDistance = gun->getMaxCrosshairDistance();
 	float lengthSquared = crosshairPos.lengthSquared();
 	if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
 	{
 		crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
 	}
 	crosshair->setPosition(pos + crosshairPos);
+
+	if (gun)
+	{
+		crosshair->setSize(gun->getSpreadAngle() * 100.0f + 10.0f);
+	}
 
 	if (lengthSquared > 0.01f)
 	{
@@ -172,16 +180,31 @@ void Player::tick(float dt)
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 
-	if (input.isKeyPressed(mouse_button_left))
-	{
-		Vec2 dir = crosshairPos.normalized();
-		bloodworks->getBulletController()->addBullet(new Bullet(bloodworks, pos + dir * 22.0f, dir * 250.0f, 2.0f));
-	}
+	aimDir = crosshairPos.normalized();
 
+	if (gun)
+	{
+		gun->tick(dt);
+	}
 
 	sol::table table = lua["player"];
 	table["x"] = pos.x;
 	table["y"] = pos.y;
 	table["moveAngle"] = moveAngle;
 	table["moveSpeed"] = moveSpeed;
+}
+
+void Player::setGun(Gun *gun)
+{
+	if (gun)
+	{
+		gun->stop();
+	}
+
+	this->gun = gun;
+
+	if (gun)
+	{
+		gun->start();
+	}
 }

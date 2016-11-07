@@ -33,8 +33,6 @@ void MonsterController::init(Bloodworks *bloodworks)
 
 void MonsterController::tick(float dt)
 {
-	lua["dt"] = dt;
-	lua["time"] = timer.getTime();
 	for (auto& monster : monsters)
 	{
 		monster->tick(dt);

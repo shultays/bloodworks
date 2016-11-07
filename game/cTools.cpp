@@ -4,6 +4,7 @@
 #include <fstream>
 #include <streambuf>
 #include <SDL.h>
+#include <algorithm>
 
 #ifdef WINDOWS
 #undef APIENTRY
@@ -58,6 +59,20 @@ int randInt()
 float randFloat()
 {
 	return randInt() / (float)RAND_MAX;
+}
+
+void fixFolderPath(std::string& path)
+{
+	fixFilePath(path);
+	if (path[path.size() - 1] != '/')
+	{
+		path = path + '/';
+	}
+}
+
+void fixFilePath(std::string& path)
+{
+	std::replace(path.begin(), path.end(), '\\', '/');
 }
 
 bool randBool()

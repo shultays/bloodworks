@@ -9,6 +9,7 @@ class cTexturedQuadRenderable;
 class Player;
 class Monster;
 class Bullet;
+class Gun;
 
 class Bloodworks : public cGame
 {
@@ -23,7 +24,7 @@ class Bloodworks : public cGame
 
 	MonsterController monsterController;
 	BulletController bulletController;
-
+	Gun *gun;
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -41,5 +42,10 @@ public:
 	BulletController* getBulletController()
 	{
 		return &bulletController;
+	}
+
+	Player* getPlayer()
+	{
+		return player;
 	}
 };

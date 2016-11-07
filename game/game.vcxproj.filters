@@ -78,6 +78,9 @@
     <ClCompile Include="BulletController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="BulletController.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="cPriorityVector.h">
+      <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

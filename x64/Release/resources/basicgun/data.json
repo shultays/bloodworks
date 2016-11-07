@@ -1,0 +1,10 @@
+{
+  "name": "Basic",
+  "artFolder" : "art",
+  "bullet" : "bullet",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 2.0,
+  
+  "scriptFile" : "basic.lua",
+  "scriptName" : "BasicGun"
+}

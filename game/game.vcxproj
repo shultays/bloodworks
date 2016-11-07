@@ -168,6 +168,7 @@
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
     <ClCompile Include="cTools.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />
+    <ClInclude Include="cPriorityVector.h" />
     <ClInclude Include="cRenderable.h" />
     <ClInclude Include="cResources.h" />
     <ClInclude Include="cShader.h" />

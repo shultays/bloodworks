@@ -2,6 +2,7 @@
 
 #include "cMat.h"
 #include "cResources.h"
+#include "cPriorityVector.h"
 
 class cRenderable;
 
@@ -23,7 +24,7 @@ class cGame
 	friend class cRenderableWithShader;
 	cShaderShr lastShader;
 
-	std::vector<cRenderable*> renderables;
+	cPriorityVector<cRenderable*> renderables;
 public:
 	virtual void init() {}
 	virtual void render() {}
@@ -43,7 +44,7 @@ public:
 
 	IntVec2 getScreenDimensions() const;
 
-	void addRenderable(cRenderable* renderable);
+	void addRenderable(cRenderable* renderable, int level);
 
 	void removeRenderable(cRenderable* renderable);
 };
