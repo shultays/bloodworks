@@ -16,12 +16,14 @@ protected:
 	cGame *game;
 	virtual void render() = 0;
 	Mat3 worldMatrix;
+	Vec4 color;
 
 public:
 	cRenderable(cGame *game)
 	{
 		this->game = game;
 		worldMatrix.makeIdentity();
+		color = Vec4(1.0f);
 	}
 
 	virtual ~cRenderable();
@@ -61,7 +63,13 @@ public:
 	{
 		return worldMatrix;
 	}
+
 	void setWorldMatrix(const Mat3& worldMatrix);
+
+	void setColor(const Vec4& color)
+	{
+		this->color = color;
+	}
 };
 
 class cRenderableGroup : public cRenderable
@@ -116,6 +124,16 @@ public:
 	{
 		cRenderable::setWorldMatrix(worldMatrix);
 		dirty = true;
+	}
+
+	void setColor(const Vec4& color)
+	{
+		cRenderable::setColor(color);
+
+		for (auto& childData : renderables)
+		{
+			childData.child->setColor(color);
+		}
 	}
 };
 

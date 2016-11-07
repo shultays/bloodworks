@@ -39,7 +39,7 @@ bool Init()
 	}
 
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math);
-	lua.require_file("vector", "resources/vector.luac");
+	lua.require_file("vector", "resources/vector.lua");
 
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();

@@ -17,6 +17,7 @@ class Gun
 	cTextureShr bulletTexture;
 	Vec2 bulletSize;
 	float bulletRadius;
+	float bulletSpeed;
 
 	static int nextGunId;
 
@@ -26,10 +27,11 @@ class Gun
 
 	sol::table luaGun;
 
-	void addBullet();
+	int addBullet();
 
 	float spreadAngle;
 	float crosshairDistance;
+	IntVec2 damage;
 public:
 	Gun() {}
 	~Gun();
@@ -40,4 +42,6 @@ public:
 
 	float getMaxCrosshairDistance();
 	float getSpreadAngle();
+	int getId();
+	sol::table& getScriptTable();
 };

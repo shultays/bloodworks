@@ -69,7 +69,7 @@ void cTexturedQuadRenderable::render()
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
-	shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	shader->setColor(color);
 
 	texture->bindTexture();
 	shader->setWorldMatrix(worldMatrix);

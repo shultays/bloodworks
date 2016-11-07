@@ -81,6 +81,9 @@
     <ClCompile Include="Gun.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="MissionController.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -172,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="cPriorityVector.h">
       <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionController.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterTemplate.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

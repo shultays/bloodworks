@@ -3,10 +3,7 @@
 #include "cAnimatedRenderable.h"
 #include "cGlobals.h"
 #include "cTools.h"
-#include "json.h"
 #include "cFont.h"
-
-using json = nlohmann::json;
 
 int Monster::nextId = 0;
 
@@ -16,22 +13,25 @@ Monster::Monster(Bloodworks *bloodworks)
 	index = nextId++;
 }
 
-void Monster::init(const MonsterTemplate& monsterTemplate)
+void Monster::init(const MonsterTemplate* monsterTemplate)
 {
-	name = monsterTemplate.name;
+	this->monsterTemplate = monsterTemplate;
+	name = monsterTemplate->name;
 
-	size = monsterTemplate.size;
-	textureShift = monsterTemplate.textureShift;
-	hitPoint = monsterTemplate.hitPoint;
+	isDead = false;
+
+	size = monsterTemplate->size;
+	textureShift = monsterTemplate->textureShift;
+	hitPoint = monsterTemplate->hitPoint;
 
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
-	renderable->addAnimation(monsterTemplate.animationData);
+	renderable->addAnimation(monsterTemplate->animationData);
 	bloodworks->addRenderable(renderable, 100);
 
-	if (monsterTemplate.defaultAnimation.size())
+	if (monsterTemplate->defaultAnimation.size())
 	{
-		renderable->setDefaultAnimation(renderable->getAnimationIndex(monsterTemplate.defaultAnimation));
+		renderable->setDefaultAnimation(renderable->getAnimationIndex(monsterTemplate->defaultAnimation));
 	}
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
@@ -44,28 +44,38 @@ void Monster::init(const MonsterTemplate& monsterTemplate)
 
 
 	auto monsters = lua["monsters"];
-	luaMonster = monsters[index] = lua.create_table_with("x", 0, "y", 0, "moveAngle", 0, "moveSpeed", 0);
+	luaMonster = monsters[index] = lua.create_table_with();
 
+	scriptTable = monsterTemplate->scriptTable;
 
-	scriptTable = monsterTemplate.scriptTable;
-	setMonsterData();
+	bulletRadius = monsterTemplate->bulletRadius;
+	collisionRadius = monsterTemplate->collisionRadius;
+	position = 100.0f;
+	reset();
+}
+
+void Monster::reset()
+{
 	lua["monsterId"] = index;
-	scriptTable["init"]();
-	bulletRadius = monsterTemplate.bulletRadius;
-	collisionRadius = monsterTemplate.collisionRadius;
+	scriptTable["init"](false);
 	if (luaMonster["scale"])
 	{
 		float scale = luaMonster["scale"].get<float>();
-		size = size * scale;
-		textureShift = textureShift * scale;
-		bulletRadius *= scale;
-		collisionRadius *= scale;
+		size = monsterTemplate->size * scale;
+		textureShift = monsterTemplate->textureShift * scale;
+		bulletRadius = monsterTemplate->bulletRadius * scale;
+		collisionRadius = monsterTemplate->collisionRadius * scale;
+	}
+
+	if (luaMonster["color"])
+	{
+		renderable->setColor(Vec4::fromColor(luaMonster["color"].get<int>()));
 	}
 
 	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
-	getMonsterData();
 
-	hitPoint = (int)(hitPoint * randFloat(0.05f, 0.95f));
+	position = 100.0f;
+	getMonsterData();
 }
 
 Monster::~Monster()
@@ -139,9 +149,22 @@ void Monster::doDamage(int damage)
 	hitPoint -= damage;
 	if (hitPoint <= 1.0f)
 	{
-		hitPoint = 100;
-		lua["monsterId"] = index;
-		scriptTable["init"]();
+		killSelf();
+	}
+}
+
+int Monster::getId()
+{
+	return index;
+}
+
+void Monster::killSelf()
+{
+	assert(isDead == false);
+	isDead = true;
+	if (scriptTable["onKilled"])
+	{
+		scriptTable["onKilled"]();
 	}
 }
 
@@ -159,67 +182,4 @@ void Monster::getMonsterData()
 	position.y = luaMonster["y"];
 	moveAngle = luaMonster["moveAngle"];
 	moveSpeed = luaMonster["moveSpeed"];
-}
-
-MonsterTemplate::MonsterTemplate(const std::string& monsterData)
-{
-	std::string jsonFile;
-	textFileRead(monsterData.c_str(), jsonFile);
-	json j = json::parse(jsonFile.c_str());
-
-	name = j["name"].get<std::string>();
-	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
-	textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
-	hitPoint = j["hitPoint"].get<int>();
-	bulletRadius = j["bulletRadius"].get<float>();
-	collisionRadius = j["collisionRadius"].get<float>();
-
-	std::string artFolder = j["artFolder"].get<std::string>();
-	fixFolderPath(artFolder);
-	auto& animations = j["animations"];
-
-	for (json::iterator it = animations.begin(); it != animations.end(); ++it)
-	{
-		auto& animData = it.value();
-		bool looped = false;
-		if (animData.count("looped"))
-		{
-			looped = animData["looped"].get<bool>();
-		}
-
-		if (animData.count("default"))
-		{
-			if (animData["default"].get<bool>())
-			{
-				defaultAnimation = it.key();
-			}
-		}
-		cAnimatedTexturedQuadRenderable::AnimationData animation(it.key(), looped);
-
-		float frameDuration = 0.1f;
-
-		if (animData.count("frameDuration"))
-		{
-			frameDuration = animData["frameDuration"].get<float>();
-		}
-
-		for (auto& frame : animData["frames"])
-		{
-			if (frame.is_string())
-			{
-				animation.addFrame(artFolder + frame.get<std::string>(), frameDuration);
-			}
-			else
-			{
-				float duration = frame["frameDuration"].get<float>();
-				animation.addFrame(artFolder + frame["frame"].get<std::string>(), duration);
-			}
-		}
-
-		animationData.push_back(animation);
-	}
-
-	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
-	script = j["scriptFile"].get<std::string>();
-	lua.require_file(name, script);
 }

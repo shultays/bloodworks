@@ -5,6 +5,7 @@
 
 class Monster;
 class Bloodworks;
+class MonsterTemplate;
 
 #include "cGrid.h"
 
@@ -15,6 +16,7 @@ class MonsterController
 	Bloodworks *bloodworks;
 
 	cGrid<Monster> grid;
+	std::unordered_map<std::string, MonsterTemplate*> monsterTemplates;
 public:
 	void init(Bloodworks *bloodworks);
 	void tick(float dt);

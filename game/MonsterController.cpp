@@ -18,21 +18,49 @@ void MonsterController::init(Bloodworks *bloodworks)
 		monstersMap[monsterIndex]->playAnimation(anim);
 	});
 
-	grid.init(Vec2(-500, -400), Vec2(1000, 800), Vec2(50, 50));
+	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 
-	MonsterTemplate monsterTemplate("resources/monster/data.json");
-	for (int i = 0; i < 1000; i++)
+	lua.set_function("addMonster",
+		[&](std::string monsterTemplate) -> int
 	{
-		Monster *newMonster = new Monster(bloodworks);
+		Monster *newMonster = new Monster(this->bloodworks);
 		monstersMap[newMonster->index] = newMonster;
-		newMonster->init(monsterTemplate);
 		monsters.push_back(newMonster);
+		newMonster->init(monsterTemplates[monsterTemplate]);
 		grid.insertToGrid(newMonster);
-	}
+		return newMonster->getId();
+	});
+
+	lua.set_function("resetMonster",
+		[&](int monsterIndex)
+	{
+		monstersMap[monsterIndex]->reset();
+	});
+
+	lua.set_function("getMonsterCount",
+		[&]() -> int
+	{
+		return (int)monsters.size();
+	});
+
+	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
 }
 
 void MonsterController::tick(float dt)
 {
+	for (int i = 0; i < monsters.size(); i++)
+	{
+		if (monsters[i]->isDead)
+		{
+			grid.removeFromGrid(monsters[i]);
+			monstersMap.erase(monsters[i]->getId());
+			SAFE_DELETE(monsters[i]);
+			monsters[i] = monsters[monsters.size() - 1];
+			monsters.resize(monsters.size() - 1);
+			i--;
+		}
+	}
+
 	for (auto& monster : monsters)
 	{
 		monster->tick(dt);
@@ -52,6 +80,13 @@ void MonsterController::clear()
 		grid.removeFromGrid(monster);
 		SAFE_DELETE(monster);
 	}
+
+	for (auto& monsterTemplate : monsterTemplates)
+	{
+		auto& m = monsterTemplate.second;
+		SAFE_DELETE(m);
+	}
+	monsterTemplates.clear();
 }
 
 const std::vector<Monster*> MonsterController::getMonsterAt(const Vec2& pos)  const

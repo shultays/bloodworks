@@ -1,8 +1,10 @@
-﻿  MonsterController.cpp
+﻿  Bloodworks.cpp
+  Gun.cpp
+  Player.cpp
   Generating code
-  243 of 4719 functions ( 5.1%) were compiled, the rest were copied from previous compilation.
+  259 of 4719 functions ( 5.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    36 functions had inline decision re-evaluated but remain unchanged
+    17 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.pdb (Full PDB)

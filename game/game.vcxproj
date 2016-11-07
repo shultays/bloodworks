@@ -172,6 +172,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
     <ClCompile Include="cTools.cpp" />
+    <ClCompile Include="MissionController.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterController.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -203,8 +204,10 @@
     <ClInclude Include="cLuaWorld.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />
+    <ClInclude Include="MissionController.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />
+    <ClInclude Include="MonsterTemplate.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sol.h" />
   </ItemGroup>

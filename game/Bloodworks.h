@@ -4,12 +4,14 @@
 #include "cSharedPtr.h"
 #include "MonsterController.h"
 #include "BulletController.h"
+#include "MissionController.h"
 
 class cTexturedQuadRenderable;
 class Player;
 class Monster;
 class Bullet;
 class Gun;
+class MissionController;
 
 class Bloodworks : public cGame
 {
@@ -22,6 +24,7 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
+	MissionController missionController;
 	MonsterController monsterController;
 	BulletController bulletController;
 	Gun *gun;

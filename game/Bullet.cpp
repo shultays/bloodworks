@@ -2,22 +2,30 @@
 #include "cRenderable.h"
 #include "Monster.h"
 #include "Bloodworks.h"
+#include "Gun.h"
 
-Bullet::Bullet(Bloodworks *bloodworks)
+int Bullet::nextId = 0;
+
+Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 {
 	this->bloodworks = bloodworks;
+	this->gun = gun;
 	renderable = new cRenderableGroup(bloodworks);
 	bloodworks->addRenderable(renderable, 501);
 	isDead = false;
+	id = nextId++;
+	damage = 10;
 }
 
 void Bullet::init()
 {
+	lua["bullets"][id] = lua.create_table_with("bulletId", id, "gunId", gun ? gun->getId() : -1);
 	tick(0.0f);
 }
 
 Bullet::~Bullet()
 {
+	lua["bullets"][id] = nullptr;
 	SAFE_DELETE(renderable);
 }
 
@@ -41,9 +49,19 @@ void Bullet::tick(float dt)
 	{
 		Vec2 monsterPos = monster->getPosition();
 		float radiusToCheck = monster->getRadius() + radius;
-		if (pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck)
+		if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck)
 		{
-			monster->doDamage(randInt(10, 30));
+			if (gun->getScriptTable()["onBulletHit"])
+			{
+				gun->getScriptTable()["onBulletHit"](id, monster->getId());
+			}
+
+			if (onHitCallback.length())
+			{
+				lua[onHitCallback](id, monster->getId());
+			}
+
+			monster->doDamage(damage);
 			isDead = true;
 		}
 	}
@@ -57,4 +75,9 @@ void Bullet::tick(float dt)
 void Bullet::addRenderable(cRenderable *renderable)
 {
 	this->renderable->addRenderable(renderable, Mat3::identity());
+}
+
+void Bullet::addBulletOnHitCallback(const std::string& onHitCallback)
+{
+	this->onHitCallback = onHitCallback;
 }

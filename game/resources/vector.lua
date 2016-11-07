@@ -143,6 +143,12 @@ function vector:rotated(phi)
 	return new(c * self.x - s * self.y, s * self.x + c * self.y)
 end
 
+function vector:setToAngle(phi)
+	local c, s = cos(phi), sin(phi)
+	self.x = c
+	self.y = s
+end
+
 function vector:perpendicular()
 	return new(-self.y, self.x)
 end

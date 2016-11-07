@@ -201,4 +201,9 @@ public:
 	{
 		defaultAnimation = index;
 	}
+
+	void setColor(const Vec4& color)
+	{
+		this->color = color;
+	}
 };

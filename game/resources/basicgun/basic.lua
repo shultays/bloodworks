@@ -16,11 +16,11 @@ function BasicGun.onTick()
 	if leftMouseDown then
 		if gun.timeToNextShoot < time then
 			gun.timeToNextShoot = time + 0.25
-			gun.spreadAngle = gun.spreadAngle + 0.25
-			if gun.spreadAngle > 0.20 then
-				gun.spreadAngle = 0.20
+			gun.spreadAngle = gun.spreadAngle + 0.05
+			if gun.spreadAngle > 0.15 then
+				gun.spreadAngle = 0.15
 			end
-			addBullet();
+			local bulletId = addBullet();
 		end
 	end
 end

@@ -27,6 +27,7 @@ float angleDiff(float a, float b)
 
 bool textFileRead(const char *fileName, std::string &data) 
 {
+	data = "";
 	std::ifstream t(fileName);
 	if (!t.good()) {
 		return false;

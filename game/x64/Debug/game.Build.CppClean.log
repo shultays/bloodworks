@@ -1,6 +1,7 @@
 c:\users\asos\documents\github\game\game\x64\debug\vc140.pdb
 c:\users\asos\documents\github\game\game\x64\debug\vc140.idb
-c:\users\asos\documents\github\game\game\x64\debug\bloodworks.obj
+c:\users\asos\documents\github\game\game\x64\debug\bullet.obj
+c:\users\asos\documents\github\game\game\x64\debug\bulletcontroller.obj
 c:\users\asos\documents\github\game\game\x64\debug\canimatedrenderable.obj
 c:\users\asos\documents\github\game\game\x64\debug\cdebugrenderable.obj
 c:\users\asos\documents\github\game\game\x64\debug\cfont.obj
@@ -12,15 +13,14 @@ c:\users\asos\documents\github\game\game\x64\debug\cgame.obj
 c:\users\asos\documents\github\game\game\x64\debug\cmat.obj
 c:\users\asos\documents\github\game\game\x64\debug\crenderable.obj
 c:\users\asos\documents\github\game\game\x64\debug\cresources.obj
+c:\users\asos\documents\github\game\game\x64\debug\gun.obj
 c:\users\asos\documents\github\game\game\x64\debug\main.obj
 c:\users\asos\documents\github\game\game\x64\debug\ctime.obj
 c:\users\asos\documents\github\game\game\x64\debug\ctools.obj
 c:\users\asos\documents\github\game\game\x64\debug\monster.obj
 c:\users\asos\documents\github\game\game\x64\debug\monstercontroller.obj
 c:\users\asos\documents\github\game\game\x64\debug\player.obj
-c:\users\asos\documents\github\game\game\x64\debug\bullet.obj
-c:\users\asos\documents\github\game\game\x64\debug\bulletcontroller.obj
-c:\users\asos\documents\github\game\game\x64\debug\gun.obj
+c:\users\asos\documents\github\game\game\x64\debug\bloodworks.obj
 c:\users\asos\documents\github\game\x64\debug\game.ilk
 c:\users\asos\documents\github\game\x64\debug\game.exe
 c:\users\asos\documents\github\game\x64\debug\game.pdb

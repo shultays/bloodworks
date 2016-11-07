@@ -1,12 +1,25 @@
 
-function Monster.init()
+function Monster.init(randomize)
 	local monster = monsters[monsterId]
-
-	monster.x = math.random() * 800 - 400;
-	monster.y = math.random() * 600 - 300;
 	
-	monster.scale = math.random() * 0.4 + 0.5
-
+	if randomize or monster.x == nil then
+		monster.x = math.random() * 800 - 400
+	end
+	
+	if randomize or monster.y == nil then
+		monster.y = math.random() * 600 - 300
+	end
+	
+	if randomize or monster.scale == nil then
+		monster.scale = math.random() * 0.4 + 0.5
+	end
+	
+	if randomize or monster.color == nil then
+		monster.color = 0xFFFFFFFF
+	end
+	
+	monster.moveAngle = 0
+	monster.moveSpeed = 0
 	monster.moving = true
 	monster.lastHitTime = 0.0
 	playAnimation(monsterId, "walk")
@@ -44,3 +57,4 @@ function Monster.onTick()
 		monster.moveSpeed = 0;
 	end
 end
+

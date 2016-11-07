@@ -12,7 +12,7 @@ void cAnimatedTexturedQuadRenderable::render()
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
-	shader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	shader->setColor(color);
 
 
 	currentAnimationTime += timer.getRender_dt();
@@ -28,5 +28,3 @@ void cAnimatedTexturedQuadRenderable::render()
 
 	glDisable(GL_TEXTURE_2D);
 }
-
-

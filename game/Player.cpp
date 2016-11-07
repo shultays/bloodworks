@@ -138,7 +138,6 @@ void Player::tick(float dt)
 				moveAngle = wantedAngle;
 			}
 		}
-
 	}
 
 	if (moving)
@@ -165,9 +164,13 @@ void Player::tick(float dt)
 	}
 	crosshair->setPosition(pos + crosshairPos);
 
+	aimDir = crosshairPos;
+
+	float length = aimDir.normalize();
+
 	if (gun)
 	{
-		crosshair->setSize(gun->getSpreadAngle() * 100.0f + 10.0f);
+		crosshair->setSize(sin(gun->getSpreadAngle()) * length + 10.0f);
 	}
 
 	if (lengthSquared > 0.01f)
@@ -180,7 +183,6 @@ void Player::tick(float dt)
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 
-	aimDir = crosshairPos.normalized();
 
 	if (gun)
 	{

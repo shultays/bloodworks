@@ -10,6 +10,12 @@
 
 void Bloodworks::init()
 {
+	lua["mission"] = lua.create_table();
+	lua["guns"] = lua.create_table();
+	lua["bullets"] = lua.create_table();
+	lua["monsters"] = lua.create_table();
+
+
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
 	bg->setSize(512, 512);
 	addRenderable(bg, 0);
@@ -19,14 +25,15 @@ void Bloodworks::init()
 	lastSetTickTime = lastSetRenderTime = 0.0f;
 	tickCount = renderCount = 0;
 
-	lua["monsters"] = lua.create_table();
-	lua["guns"] = lua.create_table();
-
 	player = new Player(this);
-	monsterController.init(this);
 	gun = new Gun();
 	gun->init(this, "resources/basicgun/data.json");
 	player->setGun(gun);
+	monsterController.init(this);
+	bulletController.init(this);
+
+	missionController.init(this);
+	missionController.loadMissionController("resources/missions/survival/data.json");
 }
 
 Bloodworks::~Bloodworks()
@@ -36,6 +43,8 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(player);
 	SAFE_DELETE(gun);
 	monsterController.clear();
+	bulletController.clear();
+	missionController.clear();
 }
 
 
@@ -43,6 +52,8 @@ void Bloodworks::tick(float dt)
 {
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
+
+	missionController.tick(dt);
 
 	player->tick(dt);
 

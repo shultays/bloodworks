@@ -25,6 +25,9 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	bulletSize.w = j["bulletSize"].at(0).get<float>();
 	bulletSize.h = j["bulletSize"].at(0).get<float>();
 	bulletRadius = j["bulletRadius"].get<float>();
+	bulletSpeed = j["bulletSpeed"].get<float>();
+
+	damage = IntVec2(j["bulletDamage"].at(0).get<int>(), j["bulletDamage"].at(1).get<int>());
 
 	std::string scriptFilePath = j["scriptFile"].get<std::string>();
 	fixFilePath(scriptFilePath);
@@ -35,8 +38,7 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 
 	auto guns = lua["guns"];
 	luaGun = guns[gunId] = lua.create_table_with("spreadAngle", 0, "maxCrossHairRange", 50);
-
-	lua.require_file(name, scriptFilePath);
+	lua.script_file(scriptFilePath);
 	lua["gunId"] = gunId;
 	scriptTable["init"]();
 
@@ -52,9 +54,9 @@ void Gun::stop()
 void Gun::start()
 {
 	lua.set_function("addBullet",
-		[&](int monsterIndex)
+		[&](int monsterIndex) -> int
 	{
-		addBullet();
+		return addBullet();
 	});
 }
 
@@ -88,24 +90,37 @@ float Gun::getSpreadAngle()
 	return spreadAngle;
 }
 
+int Gun::getId()
+{
+	return gunId;
+}
+
+sol::table& Gun::getScriptTable()
+{
+	return scriptTable;
+}
+
 Gun::~Gun()
 {
 	bulletTexture = nullptr;
 }
 
-void Gun::addBullet()
+int Gun::addBullet()
 {
 	Vec2 dir = bloodworks->getPlayer()->getAimDir();
-	Bullet *bullet = new Bullet(bloodworks);
+	Bullet *bullet = new Bullet(bloodworks, this);
 	Player *player = bloodworks->getPlayer();
-	bullet->pos = player->getPos();
-	bullet->speed = player->getAimDir() * 250.0f;
+	bullet->pos = player->getPos() + player->getAimDir() * 20;
+	bullet->speed = player->getAimDir() * bulletSpeed;
 	bullet->speed *= Mat2::rotation(randFloat(-spreadAngle, spreadAngle));
 	bullet->rotation = bullet->speed.toAngle();
 	bullet->radius = bulletRadius;
+	bullet->damage = randInt(damage.x, damage.y);
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
 	renderable->setSize(bulletSize);
 	bullet->addRenderable(renderable);
 	bullet->init();
 	bloodworks->getBulletController()->addBullet(bullet);
+
+	return bullet->getId();
 }

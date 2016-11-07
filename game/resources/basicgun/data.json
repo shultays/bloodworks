@@ -4,6 +4,8 @@
   "bulletTexture" : "bullet.png",
   "bulletSize" : [15.0, 15.0],
   "bulletRadius" : 2.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [30, 70],
   
   "scriptFile" : "resources/basicgun/basic.lua",
   "scriptName" : "BasicGun"

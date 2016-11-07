@@ -3,6 +3,7 @@
 #include "cVec.h"
 #include "cMat.h"
 #include <string>
+#include <assert.h>
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);

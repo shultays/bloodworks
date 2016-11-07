@@ -6,25 +6,7 @@ class Bloodworks;
 #include "cVec.h"
 #include "cLuaWorld.h"
 #include "cAnimatedRenderable.h"
-
-
-class MonsterTemplate
-{
-	friend class Monster;
-	Vec2 size;
-	Vec2 textureShift;
-	std::string name;
-	int hitPoint;
-	float collisionRadius;
-	float bulletRadius;
-	std::string script;
-	sol::table scriptTable;
-
-	std::string defaultAnimation;
-	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
-public:
-	MonsterTemplate(const std::string& monsterData);
-};
+#include "MonsterTemplate.h"
 
 class Monster
 {
@@ -47,6 +29,9 @@ class Monster
 	int index;
 	static int nextId;
 
+	bool isDead;
+
+	const MonsterTemplate* monsterTemplate;
 
 	//lua
 	void setMonsterData();
@@ -65,12 +50,18 @@ class Monster
 	//~lua
 public:
 	Monster(Bloodworks *bloodworks);
-	void init(const MonsterTemplate& monsterTemplate);
+	void init(const MonsterTemplate* monsterTemplate);
+	void reset();
 	~Monster();
 	void tick(float dt);
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(const std::string& anim);
 	void doDamage(int damage);
+
+	bool isRemoved()
+	{
+		return isDead;
+	}
 
 	const Vec2& getPosition()
 	{
@@ -84,4 +75,7 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
+	int getId();
+private:
+	void killSelf();
 };
