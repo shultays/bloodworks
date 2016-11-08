@@ -50,15 +50,6 @@ Bloodworks::~Bloodworks()
 
 void Bloodworks::tick(float dt)
 {
-	static bool start = false;
-	if (input.isKeyPressed(key_space))
-	{
-		start = !start;
-	}
-	if (start == false)
-	{
-		return;
-	}
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
 

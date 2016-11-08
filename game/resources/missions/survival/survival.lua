@@ -8,7 +8,7 @@ function Survival.onTick()
 		local v = vector(math.random() * 600 - 300, math.random() * 500 - 250)
 		local ang = math.pi * 2.0 * math.random()
 		local vShift = vector(math.cos(ang), math.sin(ang)) * 50.0
-		for i = 1, 1000 do
+		for i = 1, 5 do
 			local index = addMonster("monster")
 			local monster = monsters[index]
 			monster.x = v.x
