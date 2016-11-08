@@ -5,10 +5,10 @@ end
 
 function Survival.onTick()
 	if getMonsterCount() == 0 then
-		local v = vector(0, 0)
+		local v = vector(math.random() * 600 - 300, math.random() * 500 - 250)
 		local ang = math.pi * 2.0 * math.random()
 		local vShift = vector(math.cos(ang), math.sin(ang)) * 50.0
-		for i = 1, 5 do
+		for i = 1, 1000 do
 			local index = addMonster("monster")
 			local monster = monsters[index]
 			monster.x = v.x
