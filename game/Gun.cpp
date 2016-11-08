@@ -74,6 +74,7 @@ void Gun::tick(float dt)
 	lua["rightMouseDown"] = input.isKeyDown(mouse_button_right);
 	lua["rightMousePressed"] = input.isKeyReleased(mouse_button_right);
 
+	lua["gunId"] = gunId;
 	scriptTable["onTick"](dt);
 
 	spreadAngle = luaGun["spreadAngle"];

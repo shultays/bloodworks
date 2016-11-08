@@ -171,18 +171,31 @@ public:
 class cTexturedQuadRenderable : public cRenderableWithShader
 {
 protected:
-	cTextureShr texture;
+	cTextureShr texture[4];
 
 	virtual void render() override;
 public:
 	cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
 	{
-		texture = resources.getTexture(texturePath);
+		setTexture(texturePath);
 	}
 
 	virtual ~cTexturedQuadRenderable()
 	{
-		texture = nullptr;
+		for (int i = 0; i < 4; i++)
+		{
+			texture[i] = nullptr;
+		}
+	}
+
+	void setTexture(const char* texturePath)
+	{
+		setTexture(0, texturePath);
+	}
+
+	void setTexture(int i, const char* texturePath)
+	{
+		texture[i] = resources.getTexture(texturePath);
 	}
 
 };

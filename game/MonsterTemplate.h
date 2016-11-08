@@ -19,6 +19,7 @@ class MonsterTemplate
 	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
+	bool hasBlood;
 	std::string scriptPath;
 	sol::table scriptTable;
 
@@ -43,6 +44,14 @@ public:
 		bulletRadius = j["bulletRadius"].get<float>();
 		collisionRadius = j["collisionRadius"].get<float>();
 
+		if (j["hasBlood"])
+		{
+			hasBlood = j["hasBlood"].get<bool>();
+		}
+		else
+		{
+			hasBlood = true;
+		}
 		std::string artFolder = j["artFolder"].get<std::string>();
 		fixFolderPath(artFolder);
 		auto& animations = j["animations"];

@@ -385,6 +385,7 @@ public:
 		addUniform("uViewMatrix", TypeMat3);
 		addUniform("uColor", TypeVec4);
 		addUniform("uTexture", TypeInt);
+		addUniform("uTexture2", TypeInt);
 	}
 
 	void addUniform(char* name, int uniformType) 

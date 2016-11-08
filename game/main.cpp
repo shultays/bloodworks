@@ -43,7 +43,6 @@ bool Init()
 
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
-	SDL_GL_SetSwapInterval(1);
 	glewInit();
 	return true;
 }

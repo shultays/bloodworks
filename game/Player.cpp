@@ -210,3 +210,8 @@ void Player::setGun(Gun *gun)
 		gun->start();
 	}
 }
+
+Gun* Player::getGun()
+{
+	return gun;
+}

@@ -12,6 +12,7 @@ class Monster;
 class Bullet;
 class Gun;
 class MissionController;
+class BloodRenderable;
 
 class Bloodworks : public cGame
 {
@@ -27,7 +28,18 @@ class Bloodworks : public cGame
 	MissionController missionController;
 	MonsterController monsterController;
 	BulletController bulletController;
-	Gun *gun;
+	std::vector<Gun*> guns;
+	BloodRenderable *bloodRenderable;
+
+	struct Drop
+	{
+		Gun *gun;
+		Vec2 pos;
+		cRenderable *renderable;
+	};
+
+	std::vector<Drop> drops;
+
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -51,4 +63,9 @@ public:
 	{
 		return player;
 	}
+
+	BloodRenderable* getBloodRenderable();
+
+	void createGun(const Vec2& pos);
+	void addDrop(const Vec2& position);
 };

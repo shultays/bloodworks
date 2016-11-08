@@ -70,12 +70,34 @@ void cTexturedQuadRenderable::render()
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 	shader->setColor(color);
+	shader->setUniform("uTexture", 0);
+	shader->setUniform("uTexture2", 1);
 
-	texture->bindTexture();
+	for (int i = 0; i < 4; i++)
+	{
+		if (texture[i] != nullptr)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			texture[i]->bindTexture();
+		}
+	}
+
 	shader->setWorldMatrix(worldMatrix);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glDisableVertexAttribArray(0);
 
 	glDisable(GL_TEXTURE_2D);
+
+
+	for (int i = 3; i >= 0; i--)
+	{
+		if (texture[i] != nullptr)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	}
+
+	glActiveTexture(GL_TEXTURE0);
 }

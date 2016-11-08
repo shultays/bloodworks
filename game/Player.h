@@ -38,4 +38,5 @@ public:
 	}
 
 	void setGun(Gun* gun);
+	Gun* getGun();
 };

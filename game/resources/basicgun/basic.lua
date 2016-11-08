@@ -16,7 +16,7 @@ function BasicGun.onTick()
 	if leftMouseDown then
 		if gun.timeToNextShoot < time then
 			gun.timeToNextShoot = time + 0.25
-			gun.spreadAngle = gun.spreadAngle + 0.05
+			gun.spreadAngle = gun.spreadAngle + 0.35
 			if gun.spreadAngle > 0.15 then
 				gun.spreadAngle = 0.15
 			end

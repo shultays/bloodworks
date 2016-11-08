@@ -4,6 +4,7 @@
 #include "cGlobals.h"
 #include "cTools.h"
 #include "cFont.h"
+#include "BloodRenderable.h"
 
 int Monster::nextId = 0;
 
@@ -23,7 +24,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	size = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
-
+	hasBlood = monsterTemplate->hasBlood;
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate->animationData);
@@ -165,6 +166,12 @@ void Monster::killSelf()
 	if (scriptTable["onKilled"])
 	{
 		scriptTable["onKilled"]();
+	}
+	bloodworks->getBloodRenderable()->addBlood(position);
+
+	if (randFloat() < 0.1f || input.isKeyDown(key_1))
+	{
+		bloodworks->addDrop(position);
 	}
 }
 

@@ -44,4 +44,8 @@ public:
 	float getSpreadAngle();
 	int getId();
 	sol::table& getScriptTable();
+	const std::string& getName()
+	{
+		return name;
+	}
 };

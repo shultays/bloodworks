@@ -30,6 +30,7 @@ class Monster
 	static int nextId;
 
 	bool isDead;
+	bool hasBlood;
 
 	const MonsterTemplate* monsterTemplate;
 

@@ -17,7 +17,7 @@ cFont::cFont(const char *fontData)
 	ifs >> fontImagePath;
 
 	ifs >> leftPadding >> rightPadding >> topPadding >> bottomPadding;
-
+	ifs >> defaultSize;
 	texture = resources.getTexture(fontImagePath.c_str());
 
 	Vec2 size = texture->getDimensions().toVec();
@@ -91,15 +91,20 @@ cFont::~cFont()
 
 void cTextRenderable::render()
 {
-	shader->setColor(textColor);
+	cRenderableWithShader::render();
 	font->texture->bindTexture();
 	Mat3 mat = worldMatrix;
 	mat.row0.x *= textSize;
 	mat.row1.y *= textSize;
 	mat.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
 
+	glActiveTexture(GL_TEXTURE0);
+	shader->setColor(textColor);
+	shader->setUniform("uTexture", 0);
+
 	for (int i = 0; i < text.size(); i++)
 	{
+		float charSize = font->defaultSize;
 		if (font->charInfos[text[i]].x >= 0)
 		{
 			shader->setWorldMatrix(mat);
@@ -111,9 +116,11 @@ void cTextRenderable::render()
 			shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+			charSize = (float)font->charInfos[text[i]].w;
 		}
 
-		mat.translateBy((float)font->charInfos[text[i]].w * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
+		mat.translateBy(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
 	}
 
 	glDisableVertexAttribArray(0);

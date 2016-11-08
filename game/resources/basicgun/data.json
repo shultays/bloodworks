@@ -1,5 +1,5 @@
 {
-  "name": "Basic",
+  "name": "Basic Gun",
   "artFolder" : "resources/basicgun/",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [15.0, 15.0],

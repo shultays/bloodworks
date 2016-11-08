@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BloodRenderable.cpp" />
     <ClCompile Include="Bloodworks.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletController.cpp" />
@@ -179,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array2d.h" />
+    <ClInclude Include="BloodRenderable.h" />
     <ClInclude Include="Bloodworks.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />

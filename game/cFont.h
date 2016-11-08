@@ -24,6 +24,7 @@ class cFont
 	const char *fontData;
 
 	friend class cTextRenderable;
+	float defaultSize;
 public:
 	cFont(const char *fontData);
 	~cFont();
@@ -47,7 +48,6 @@ class cTextRenderable : public cRenderableWithShader
 	Vec4 textColor;
 	friend class cDebugRenderable;
 	virtual void render() override;
-
 public:
 	cTextRenderable(cGame *game, cFontShr font, std::string text = "", float textSize = 38.0f, Vec4 textColor = Vec4(1.0f)) : cRenderableWithShader(game, "resources/default.vs", "resources/default.ps")
 	{

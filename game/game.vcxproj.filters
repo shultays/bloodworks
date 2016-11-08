@@ -84,6 +84,9 @@
     <ClCompile Include="MissionController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="BloodRenderable.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -180,6 +183,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="MonsterTemplate.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

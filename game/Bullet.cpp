@@ -63,6 +63,7 @@ void Bullet::tick(float dt)
 
 			monster->doDamage(damage);
 			isDead = true;
+			break;
 		}
 	}
 
