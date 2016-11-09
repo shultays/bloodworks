@@ -26,6 +26,7 @@ class Bullet
 	static int nextId;
 
 	std::string onHitCallback;
+
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	void init();
@@ -37,4 +38,18 @@ public:
 	{
 		return id;
 	}
+
+	const Vec2& getPosition()
+	{
+		return pos;
+	}
+
+	float getRadius()
+	{
+		return radius;
+	}
+
+	IntVec2 gridStart;
+	IntVec2 gridEnd;
+
 };

@@ -21,6 +21,7 @@ class Player
 	Vec2 crosshairPos;
 	Gun *gun;
 	Vec2 aimDir;
+	float oldSpreadAngle;
 
 public:
 	Player(Bloodworks *bloodworks);

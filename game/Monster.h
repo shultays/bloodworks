@@ -51,12 +51,13 @@ class Monster
 	//~lua
 public:
 	Monster(Bloodworks *bloodworks);
-	void init(const MonsterTemplate* monsterTemplate);
-	void reset();
 	~Monster();
+	void init(const MonsterTemplate* monsterTemplate);
+	int getId();
+	void reset();
 	void tick(float dt);
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
-	void playAnimation(const std::string& anim);
+	void playAnimation(const std::string& anim, float startPercentage);
 	void doDamage(int damage);
 
 	bool isRemoved()
@@ -76,7 +77,6 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
-	int getId();
 private:
 	void killSelf();
 };

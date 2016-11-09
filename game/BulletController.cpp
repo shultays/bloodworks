@@ -13,6 +13,8 @@ void BulletController::init(Bloodworks *bloodworks)
 	{
 		bulletMap[bulletIndex]->addBulletOnHitCallback(func);
 	});
+
+	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 }
 
 void BulletController::clear()
@@ -34,6 +36,7 @@ void BulletController::addBullet(Bullet* bullet)
 {
 	bullets.push_back(bullet);
 	bulletMap[bullet->getId()] = bullet;
+	grid.insertToGrid(bullet);
 }
 
 void BulletController::tick(float dt)
@@ -43,6 +46,7 @@ void BulletController::tick(float dt)
 		bullets[i]->tick(dt);
 		if (bullets[i]->isDead)
 		{
+			grid.removeFromGrid(bullets[i]);
 			int id = bullets[i]->getId();
 			SAFE_DELETE(bullets[i]);
 			bulletMap.erase(id);
@@ -50,6 +54,15 @@ void BulletController::tick(float dt)
 			bullets.resize(bullets.size() - 1);
 			i--;
 		}
+		else
+		{
+			grid.relocate(bullets[i]);
+		}
+	}
+
+	if (input.isKeyDown(key_f2))
+	{
+		grid.drawDebug();
 	}
 }
 

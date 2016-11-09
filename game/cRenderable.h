@@ -175,10 +175,7 @@ protected:
 
 	virtual void render() override;
 public:
-	cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
-	{
-		setTexture(texturePath);
-	}
+	cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath);
 
 	virtual ~cTexturedQuadRenderable()
 	{

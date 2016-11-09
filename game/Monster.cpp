@@ -39,8 +39,6 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	healthRenderable->setAlignment(cTextRenderable::center);
 	bloodworks->addRenderable(healthRenderable, 101);
 
-	renderable->playAnimation("walk", randFloat());
-
 	moveAngle = randFloat(-pi, pi);
 	moveSpeed = 0.0f;
 
@@ -141,9 +139,9 @@ void Monster::addTimer(float timeToTrigger, const std::string& func, sol::table 
 	timers.push_back(t);
 }
 
-void Monster::playAnimation(const std::string& anim)
+void Monster::playAnimation(const std::string& anim, float startPercentage)
 {
-	renderable->playAnimation(anim);
+	renderable->playAnimation(anim, startPercentage);
 }
 
 void Monster::doDamage(int damage)

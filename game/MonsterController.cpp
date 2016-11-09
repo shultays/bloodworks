@@ -13,9 +13,9 @@ void MonsterController::init(Bloodworks *bloodworks)
 	});
 
 	lua.set_function("playAnimation",
-		[&](int monsterIndex, const std::string& anim)
+		[&](int monsterIndex, const std::string& anim, float startPercentage)
 	{
-		monstersMap[monsterIndex]->playAnimation(anim);
+		monstersMap[monsterIndex]->playAnimation(anim, startPercentage);
 	});
 
 	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));

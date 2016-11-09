@@ -101,3 +101,9 @@ void cTexturedQuadRenderable::render()
 
 	glActiveTexture(GL_TEXTURE0);
 }
+
+cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
+{
+	setTexture(texturePath);
+	setSize(texture[0]->getDimensions().toVec());
+}

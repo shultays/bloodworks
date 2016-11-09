@@ -22,7 +22,7 @@ function Monster.init(randomize)
 	monster.moveSpeed = 0
 	monster.moving = true
 	monster.lastHitTime = 0.0
-	playAnimation(monsterId, "walk")
+	playAnimation(monsterId, "walk", math.random())
 end
 
 function Monster.onTick()
@@ -43,7 +43,7 @@ function Monster.onTick()
 	
 		if monster.moving == false then
 			monster.moving = true
-			playAnimation(monsterId, "walk")
+			playAnimation(monsterId, "walk", math.random())
 		end
 	
 	end
@@ -52,7 +52,7 @@ function Monster.onTick()
 	monster.moveAngle = diff:angle()
 	
 	if monster.moving then
-		monster.moveSpeed = 20;
+		monster.moveSpeed = 40;
 	else
 		monster.moveSpeed = 0;
 	end

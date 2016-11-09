@@ -8,6 +8,7 @@ Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	angle = 0.0f;
+	oldSpreadAngle = 0.0f;
 	pos = Vec2::zero();
 	renderable = new cRenderableGroup(bloodworks);
 
@@ -170,7 +171,28 @@ void Player::tick(float dt)
 
 	if (gun)
 	{
-		crosshair->setSize(sin(gun->getSpreadAngle()) * length + 10.0f);
+		float newSpreadAngle = gun->getSpreadAngle();
+		const float maxAngleChange = 1.0f * dt;
+		if (newSpreadAngle > oldSpreadAngle)
+		{
+			float spreadAngleDiff = newSpreadAngle - oldSpreadAngle;
+
+			if (spreadAngleDiff > maxAngleChange)
+			{
+				newSpreadAngle = oldSpreadAngle + maxAngleChange;
+			}
+		}
+		else
+		{
+			float spreadAngleDiff = newSpreadAngle - oldSpreadAngle;
+
+			if (spreadAngleDiff < -maxAngleChange)
+			{
+				newSpreadAngle = oldSpreadAngle - maxAngleChange;
+			}
+		}
+		crosshair->setSize(sin(newSpreadAngle) * length + 10.0f);
+		oldSpreadAngle = newSpreadAngle;
 	}
 
 	if (lengthSquared > 0.01f)

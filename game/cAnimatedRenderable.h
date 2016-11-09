@@ -166,11 +166,11 @@ public:
 		return animations[animations.size()-1];
 	}
 
-	void playAnimation(int index, float startTime = 0.0f, int nextAnimation = -1)
+	void playAnimation(int index, float startPercentage = 0.0f, int nextAnimation = -1)
 	{
 		currentAnimation = index;
-		currentAnimationTime = startTime;
-		currentAnimationFrame = 0; //todo
+		currentAnimationTime = startPercentage * animations[index].animationDuration;
+		currentAnimationFrame = 0;
 		checkAnimationTime();
 		this->nextAnimation = nextAnimation;
 	}

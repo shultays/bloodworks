@@ -2,15 +2,17 @@
 
 #include <vector>
 #include <unordered_map>
+#include "cGrid.h"
+#include "Bullet.h"
 
 class Bloodworks;
-class Bullet;
 
 class BulletController
 {
 	Bloodworks *bloodworks;
 	std::vector<Bullet*> bullets;
 	std::unordered_map<int, Bullet*> bulletMap;
+	cGrid<Bullet> grid;
 public:
 	BulletController() {}
 	void init(Bloodworks *bloodworks);

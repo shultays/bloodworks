@@ -135,7 +135,7 @@ public:
 	}
 
 
-	std::vector<Monster*> getNodeAtPos(const Vec2& pos) const
+	std::vector<T*> getNodeAtPos(const Vec2& pos) const
 	{
 		return data[getNodeIndex(pos)];
 	}

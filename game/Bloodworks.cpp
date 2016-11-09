@@ -84,6 +84,7 @@ void Bloodworks::createGun(const Vec2& pos)
 	{
 		drop.gun = guns[randInt((int)guns.size())];
 	} while (drop.gun == player->getGun());
+
 	drop.pos = pos;
 	cTextRenderable *renderable;
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
@@ -104,15 +105,6 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick(float dt)
 {
-	lua["dt"] = dt;
-	lua["time"] = timer.getTime();
-
-	missionController.tick(dt);
-
-	player->tick(dt);
-
-	monsterController.tick(dt);
-	bulletController.tick(dt);
 
 	tickCount++;
 	if (timer.getTime() - lastSetTickTime > 1.0f)
@@ -124,6 +116,23 @@ void Bloodworks::tick(float dt)
 
 		tickCount = 0;
 	}
+
+	static bool start = false;
+	if (input.isKeyPressed(key_space))
+	{
+		start = !start;
+	}
+	if (start == false) return;
+
+	lua["dt"] = dt;
+	lua["time"] = timer.getTime();
+
+	missionController.tick(dt);
+
+	player->tick(dt);
+
+	monsterController.tick(dt);
+	bulletController.tick(dt);
 
 
 	for(int i=0; i< drops.size(); i++)
