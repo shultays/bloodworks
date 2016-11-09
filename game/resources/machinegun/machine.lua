@@ -1,5 +1,5 @@
 
-function MachineGun.init()
+function MachineGun.init(gunId)
 	local gun = guns[gunId]
 	gun.timeToNextShoot = 0.0
 	gun.spreadAngle = 0.10
@@ -7,7 +7,7 @@ function MachineGun.init()
 end
 
 
-function MachineGun.onTick()
+function MachineGun.onTick(gunId)
 	local gun = guns[gunId]
 	
 	if leftMouseDown then

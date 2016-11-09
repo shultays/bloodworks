@@ -1,5 +1,5 @@
 
-function BasicGun.init()
+function BasicGun.init(gunId)
 	local gun = guns[gunId]
 	gun.timeToNextShoot = 0.0
 	gun.spreadAngle = 0.0
@@ -7,7 +7,7 @@ function BasicGun.init()
 end
 
 
-function BasicGun.onTick()
+function BasicGun.onTick(gunId)
 	local gun = guns[gunId]
 	
 	if gun.timeToNextShoot < time - 0.1 then

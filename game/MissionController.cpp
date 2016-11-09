@@ -6,6 +6,7 @@
 #include "cTexture.h"
 #include "cFont.h"
 #include "Bloodworks.h"
+#include "Player.h"
 
 using json = nlohmann::json;
 
@@ -80,6 +81,13 @@ void MissionController::init(Bloodworks *bloodworks)
 	{
 		removeGameObject(gameObject);
 	});
+
+
+	lua.set_function("addCustomBullet",
+		[&](const sol::table& params) -> int
+	{
+		return addCustomBullet(params);
+	});
 }
 
 void MissionController::tick(float dt)
@@ -92,8 +100,7 @@ void MissionController::tick(float dt)
 		auto& gameObject = g.second;
 		if (gameObject.hasOnTick)
 		{
-			lua["gameObjectId"] = gameObject.id;
-			lua[gameObject.script]["onTick"]();
+			lua[gameObject.script]["onTick"](gameObject.id);
 			if (g.second.gameObject["toBeRemoved"])
 			{
 				toBeRemoved.push_back(g.first);
@@ -116,8 +123,6 @@ int MissionController::addGameObject(const std::string& name, const std::string&
 	gameObject["script"] = script;
 	gameObject["id"] = id;
 
-	lua["gameObjectId"] = id;
-	lua[script]["init"]();
 
 	GameObject object;
 	object.gameObject = gameObject;
@@ -129,6 +134,7 @@ int MissionController::addGameObject(const std::string& name, const std::string&
 	object.script = script;
 	gameObjects[id] = object;
 
+	lua[script]["init"](id);
 	return id;
 }
 
@@ -251,5 +257,80 @@ void MissionController::updateRenderableParams(int gameObject, int renderableId,
 			textRenderable->setAlignment(alignment);
 		}
 	}
+}
+
+int MissionController::addCustomBullet(const sol::table& params)
+{
+	Vec2 dir = bloodworks->getPlayer()->getAimDir();
+	Bullet *bullet = new Bullet(bloodworks, nullptr);
+	Player *player = bloodworks->getPlayer();
+
+	bullet->pos = player->getPos() + player->getAimDir() * 20;
+	if (params["position"])
+	{
+		bullet->pos = Vec2(params["position"][1].get<float>(), params["position"][2].get<float>());
+	}
+
+	bullet->speed = player->getAimDir() * 20.0f;
+	if (params["speed"])
+	{
+		bullet->speed = Vec2(params["speed"][1].get<float>(), params["speed"][2].get<float>());
+	}
+
+	bullet->rotation = bullet->speed.toAngle();
+	if (params["rotation"])
+	{
+		bullet->rotation = params["rotation"].get<float>();
+	}
+
+	bullet->radius = 2.0f;
+	if (params["radius"])
+	{
+		bullet->radius = params["radius"].get<float>();
+	}
+
+	bullet->damage = 10;
+	if (params["damage"])
+	{
+		bullet->damage = params["damage"].get<int>();
+	}
+
+	std::string resource = "resources/basicgun/bullet.png";
+	if (params["image"])
+	{
+		resource = params["image"].get<std::string>();
+	}
+
+	std::string shader = "resources/default";
+	if (params["shader"])
+	{
+		shader = params["shader"].get<std::string>();
+	}
+
+
+	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, resource.c_str(), shader.c_str());
+
+	Vec2 bulletSize(10.0f);
+	if (params["imageSize"])
+	{
+		bulletSize = Vec2(params["imageSize"][1].get<float>(), params["imageSize"][2].get<float>());
+	}
+	renderable->setSize(bulletSize);
+	bullet->addRenderable(renderable);
+
+	if (params["onHitCallback"])
+	{
+		bullet->onHitCallback = params["onHitCallback"].get<std::string>();
+	}
+
+	if (params["onTickCallback"])
+	{
+		bullet->onTickCallback = params["onTickCallback"].get<std::string>();
+	}
+
+	bullet->init();
+	bloodworks->getBulletController()->addBullet(bullet);
+
+	return bullet->getId();
 }
 

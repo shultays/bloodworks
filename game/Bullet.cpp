@@ -33,6 +33,11 @@ void Bullet::tick(float dt)
 {
 	Vec2 oldPos = pos;
 
+	if (onTickCallback.size())
+	{
+		lua[onHitCallback](id);
+	}
+
 	pos += speed * dt;
 
 	Mat3 mat = Mat3::identity();
@@ -51,9 +56,12 @@ void Bullet::tick(float dt)
 		float radiusToCheck = monster->getRadius() + radius;
 		if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck)
 		{
-			if (gun->getScriptTable()["onBulletHit"])
+			if (gun != nullptr)
 			{
-				gun->getScriptTable()["onBulletHit"](id, monster->getId());
+				if (gun->getScriptTable()["onBulletHit"])
+				{
+					gun->getScriptTable()["onBulletHit"](id, monster->getId());
+				}
 			}
 
 			if (onHitCallback.length())

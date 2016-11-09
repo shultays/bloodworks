@@ -1,5 +1,5 @@
 
-function Monster.init(randomize)
+function Monster.init(monsterId, randomize)
 	local monster = monsters[monsterId]
 	
 	if randomize or monster.x == nil then
@@ -25,7 +25,7 @@ function Monster.init(randomize)
 	playAnimation(monsterId, "walk", math.random())
 end
 
-function Monster.onTick()
+function Monster.onTick(monsterId)
 	local monster = monsters[monsterId]
 
 	local vPlayer = vector(player.x, player.y)

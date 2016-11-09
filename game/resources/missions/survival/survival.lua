@@ -45,7 +45,7 @@ end
 
 FadeOutImage = {}
 
-function FadeOutImage.init()
+function FadeOutImage.init(gameObjectId)
 	local image = gameObjects[gameObjectId]
 	if image.args.fadeOutStartTime == nil then
 		image.args.fadeOutStartTime = 1.0
@@ -59,7 +59,7 @@ function FadeOutImage.init()
 end
 
 
-function FadeOutImage.onTick()
+function FadeOutImage.onTick(gameObjectId)
 	local image = gameObjects[gameObjectId]
 	local timeDiff = time - image.args.startTime
 	local alpha
@@ -79,6 +79,6 @@ function FadeOutImage.onTick()
 	updateRenderableParams(gameObjectId, -1, args);
 end
 
-function FadeOutImage.clear()
+function FadeOutImage.clear(gameObjectId)
 
 end

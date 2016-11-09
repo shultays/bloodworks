@@ -56,8 +56,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 void Monster::reset()
 {
-	lua["monsterId"] = index;
-	scriptTable["init"](false);
+	scriptTable["init"](index, false);
 	if (luaMonster["scale"])
 	{
 		float scale = luaMonster["scale"].get<float>();
@@ -86,8 +85,7 @@ Monster::~Monster()
 
 void Monster::tick(float dt)
 {
-	lua["monsterId"] = index;
-	scriptTable["onTick"](dt);
+	scriptTable["onTick"](index, dt);
 
 	std::vector<int> toTrigger;
 	for (int i = (int)timers.size() - 1; i >= 0; i--)
@@ -164,7 +162,7 @@ void Monster::killSelf()
 	isDead = true;
 	if (scriptTable["onKilled"])
 	{
-		scriptTable["onKilled"]();
+		scriptTable["onKilled"](index);
 	}
 	bloodworks->getBloodRenderable()->addBlood(position);
 

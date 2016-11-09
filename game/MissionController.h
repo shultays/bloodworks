@@ -62,4 +62,6 @@ public:
 	int addTextureToGameObject(int gameObject, const sol::table& params, const std::string& texture, const std::string& shader);
 	int addTextToGameObject(int gameObject, const sol::table& params, const std::string& text, const std::string& font);
 	void updateRenderableParams(int gameObject, int renderableId, const sol::table& params);
+private:
+	int addCustomBullet(const sol::table& params);
 };

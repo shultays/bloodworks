@@ -10,6 +10,7 @@ class cRenderable;
 class Bullet
 {
 	friend class BulletController;
+	friend class MissionController;
 	friend class Gun;
 
 	Bloodworks *bloodworks;
@@ -26,11 +27,12 @@ class Bullet
 	static int nextId;
 
 	std::string onHitCallback;
+	std::string onTickCallback;
 
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
-	void init();
 	~Bullet();
+	void init();
 	void tick(float dt);
 	void addRenderable(cRenderable *renderable);
 	void addBulletOnHitCallback(const std::string& onHitCallback);

@@ -39,8 +39,7 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	auto guns = lua["guns"];
 	luaGun = guns[gunId] = lua.create_table_with("spreadAngle", 0, "maxCrossHairRange", 50);
 	lua.script_file(scriptFilePath);
-	lua["gunId"] = gunId;
-	scriptTable["init"]();
+	scriptTable["init"](gunId);
 
 	spreadAngle = luaGun["spreadAngle"];
 	crosshairDistance = luaGun["maxCrosshairRange"];
@@ -54,7 +53,7 @@ void Gun::stop()
 void Gun::start()
 {
 	lua.set_function("addBullet",
-		[&](int monsterIndex) -> int
+		[&]() -> int
 	{
 		return addBullet();
 	});
@@ -74,8 +73,7 @@ void Gun::tick(float dt)
 	lua["rightMouseDown"] = input.isKeyDown(mouse_button_right);
 	lua["rightMousePressed"] = input.isKeyReleased(mouse_button_right);
 
-	lua["gunId"] = gunId;
-	scriptTable["onTick"](dt);
+	scriptTable["onTick"](gunId);
 
 	spreadAngle = luaGun["spreadAngle"];
 	crosshairDistance = luaGun["maxCrosshairRange"];

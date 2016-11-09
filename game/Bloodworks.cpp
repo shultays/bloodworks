@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "Monster.h"
 #include "Gun.h"
+#include "Bonus.h"
 #include "BloodRenderable.h"
 #include "cFont.h"
 
@@ -37,6 +38,9 @@ void Bloodworks::init()
 	gun->init(this, "resources/machinegun/data.json");
 	guns.push_back(gun);
 
+	Bonus *bonus = new Bonus("resources/bonuses/circle_fire/data.json");
+	bonuses.push_back(bonus);
+
 	monsterController.init(this);
 	bulletController.init(this);
 
@@ -59,6 +63,11 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(gun);
 	}
 	guns.clear();
+	for (auto& bonus : bonuses)
+	{
+		SAFE_DELETE(bonus);
+	}
+	bonuses.clear();
 
 	for (auto& drop : drops)
 	{
@@ -79,6 +88,7 @@ BloodRenderable* Bloodworks::getBloodRenderable()
 void Bloodworks::createGun(const Vec2& pos)
 {
 	Drop drop;
+	drop.bonus = nullptr;
 
 	do 
 	{
@@ -95,9 +105,31 @@ void Bloodworks::createGun(const Vec2& pos)
 	drops.push_back(drop);
 }
 
+void Bloodworks::createBonus(const Vec2& position)
+{
+
+	Drop drop;
+	drop.bonus = bonuses[randInt((int)bonuses.size())];
+	drop.gun = nullptr;
+
+	drop.pos = position;
+	cTextRenderable *renderable;
+	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
+	renderable->setAlignment(cTextRenderable::center);
+	renderable->setPosition(position - Vec2(0.0f, 5.0f));
+	addRenderable(renderable, 400);
+
+	drops.push_back(drop);
+}
+
+
 void Bloodworks::addDrop(const Vec2& position)
 {
-	if (drops.size() == 0)
+	if (randBool())
+	{
+		createBonus(position);
+	}
+	else
 	{
 		createGun(position);
 	}
@@ -116,13 +148,13 @@ void Bloodworks::tick(float dt)
 
 		tickCount = 0;
 	}
-
+	/*
 	static bool start = false;
 	if (input.isKeyPressed(key_space))
 	{
 		start = !start;
 	}
-	if (start == false) return;
+	if (start == false) return;*/
 
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
@@ -140,7 +172,14 @@ void Bloodworks::tick(float dt)
 		auto& drop = drops[i];
 		if (drop.pos.distanceSquared(player->getPos()) < 20.0f * 20.0f)
 		{
-			player->setGun(drop.gun);
+			if (drop.gun)
+			{
+				player->setGun(drop.gun);
+			}
+			else
+			{
+				lua[drop.bonus->scriptName]["spawn"](drop.pos.x, drop.pos.y);
+			}
 			SAFE_DELETE(drop.renderable);
 			drops[i] = drops[(int)drops.size() - 1];
 			drops.resize((int)drops.size() - 1);
