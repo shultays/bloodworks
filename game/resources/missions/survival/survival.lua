@@ -5,6 +5,7 @@ end
 
 function Survival.onTick()
 	if getMonsterCount() == 0 then
+		addGameObject("hi", "FadeOutImage", {1})
 		local v = vector(math.random() * 600 - 300, math.random() * 500 - 250)
 		local ang = math.pi * 2.0 * math.random()
 		local vShift = vector(math.cos(ang), math.sin(ang)) * 50.0
@@ -36,5 +37,16 @@ end
 
 function Survival.clear()
 
+
+end
+
+FadeOutImage = {}
+
+function FadeOutImage.init(id, name, args)
+
+end
+
+
+function FadeOutImage.clear()
 
 end

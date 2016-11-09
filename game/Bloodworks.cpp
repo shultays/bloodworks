@@ -85,9 +85,11 @@ void Bloodworks::createGun(const Vec2& pos)
 		drop.gun = guns[randInt((int)guns.size())];
 	} while (drop.gun == player->getGun());
 	drop.pos = pos;
-	drop.renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	drop.renderable->setPosition(pos - Vec2(drop.gun->getName().size() * 5.0f, 5.0f));
-	addRenderable(drop.renderable, 400);
+	cTextRenderable *renderable;
+	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
+	renderable->setAlignment(cTextRenderable::center);
+	renderable->setPosition(pos - Vec2(0.0f, 5.0f));
+	addRenderable(renderable, 400);
 
 	drops.push_back(drop);
 }

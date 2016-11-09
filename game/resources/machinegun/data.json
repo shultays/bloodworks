@@ -7,6 +7,6 @@
   "bulletSpeed" : 450.0,
   "bulletDamage" : [10, 25],
   
-  "scriptFile" : "resources/machinegun/basic.lua",
+  "scriptFile" : "resources/machinegun/machine.lua",
   "scriptName" : "MachineGun"
 }

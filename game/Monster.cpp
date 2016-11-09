@@ -36,6 +36,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	}
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
+	healthRenderable->setAlignment(cTextRenderable::center);
 	bloodworks->addRenderable(healthRenderable, 101);
 
 	renderable->playAnimation("walk", randFloat());
@@ -118,7 +119,7 @@ void Monster::tick(float dt)
 	ss << (int)hitPoint;
 
 	healthRenderable->setText(ss.str());
-	healthRenderable->setPosition(position + Vec2(-15 + (hitPoint<100 ? 5.0f : 0.0f) + (hitPoint<10 ? 5.0f : 0.0f), bulletRadius + 10.0f));
+	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(size);
 	mat.translateBy(textureShift);

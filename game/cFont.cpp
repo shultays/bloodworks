@@ -91,6 +91,23 @@ cFont::~cFont()
 
 void cTextRenderable::render()
 {
+	if (lengthDirty)
+	{
+		lengthDirty = false;
+		length = 0.0f;
+
+		for (int i = 0; i < text.size(); i++)
+		{
+			float charSize = font->defaultSize;
+			if (font->charInfos[text[i]].x >= 0)
+			{
+				charSize = (float)font->charInfos[text[i]].w;
+			}
+			float t = charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding;
+			length += t;
+		}
+	}
+
 	cRenderableWithShader::render();
 	font->texture->bindTexture();
 	Mat3 mat = worldMatrix;
@@ -98,6 +115,14 @@ void cTextRenderable::render()
 	mat.row1.y *= textSize;
 	mat.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
 
+	if (alignment == center)
+	{
+		mat.row2.x -= length * 0.5f;
+	}
+	else if (alignment == right)
+	{
+		mat.row2.x -= length;
+	}
 	glActiveTexture(GL_TEXTURE0);
 	shader->setColor(textColor);
 	shader->setUniform("uTexture", 0);
