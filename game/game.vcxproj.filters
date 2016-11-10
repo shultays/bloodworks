@@ -90,6 +90,9 @@
     <ClCompile Include="Bonus.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -192,6 +195,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="Bonus.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

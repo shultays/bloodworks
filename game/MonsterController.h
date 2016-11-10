@@ -22,4 +22,9 @@ public:
 	void tick(float dt);
 	void clear();
 	const std::vector<Monster*> getMonsterAt(const Vec2& pos) const;
+
+	Monster* getClosestMonster(const Vec2& pos);
+	Monster* getClosestMonsterInRange(const Vec2& pos, float range);
+	std::vector<Monster*> getAllMonstersInRange(const Vec2& pos, float range);
+
 };

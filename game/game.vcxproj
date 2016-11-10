@@ -170,6 +170,7 @@
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="cVecImp.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cLuaWorld.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="MissionController.h" />

@@ -1,0 +1,5 @@
+{
+  "name": "Homing Orb",
+  "scriptFile" : "resources/bonuses/homing/homing.lua",
+  "scriptName" : "HomingOrb"
+}

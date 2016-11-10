@@ -1,8 +1,8 @@
-﻿  Bloodworks.cpp
+﻿  cRenderable.cpp
   Generating code
-  278 of 5720 functions ( 4.9%) were compiled, the rest were copied from previous compilation.
+  399 of 11030 functions ( 3.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    37 functions had inline decision re-evaluated but remain unchanged
+    72 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Release\game.pdb (Full PDB)

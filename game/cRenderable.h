@@ -195,4 +195,10 @@ public:
 		texture[i] = resources.getTexture(texturePath);
 	}
 
+	cTextureShr& getTexture()
+	{
+		return getTexture(0);
+	}
+
+	cTextureShr& getTexture(int i);
 };

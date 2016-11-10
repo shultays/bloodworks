@@ -10,7 +10,6 @@ class Gun;
 class Player
 {
 	Vec2 pos;
-	float angle;
 
 	float moveAngle;
 	float moveSpeed;
@@ -21,6 +20,7 @@ class Player
 	Vec2 crosshairPos;
 	Gun *gun;
 	Vec2 aimDir;
+	float aimAngle;
 	float oldSpreadAngle;
 
 public:

@@ -1,35 +1,36 @@
 
-function CircleFire.spawn(x, y)
-	local t = addGameObject("level", "CircleFire", {position = {x, y}})
+function CircleFire.spawn(pos)
+	local t = addGameObject("CircleFire")
+	t.data.position = Vec2.new(pos.x, pos.y)
 end
 
 
-function CircleFire.init(gameObjectId)
-	local gameObject = gameObjects[gameObjectId]
-	gameObject.startTime = time
-	gameObject.lastShootTime = 0.0
-	gameObject.lastShootIndex = 0
-	
+function CircleFire.init(gameObject)
+	gameObject.data.startTime = time
+	gameObject.data.lastShootTime = 0.0
+	gameObject.data.lastShootIndex = 0
 end
 
-function CircleFire.onTick(gameObjectId)
-	local gameObject = gameObjects[gameObjectId]
-	
-	if time - gameObject.startTime > 0.02 * gameObject.lastShootIndex
+function CircleFire.onTick(gameObject)
+	if time - gameObject.data.startTime > 0.02 * gameObject.data.lastShootIndex
 	then
-		local shift = math.floor(gameObject.lastShootIndex/10)*0.25
+		local shift = math.floor(gameObject.data.lastShootIndex/10)*0.25
 		for i = 0, 3 do
-			local angle = math.pi * 2.0 * (gameObject.lastShootIndex + i * 10 + shift) / 40
-			addCustomBullet({
-				damage = math.floor(math.random() * 30.0 + 30), 
-				position = gameObject.args.position, 
-				speed = {math.cos(angle) * 450, math.sin(angle) * 450}
-			})
+			local angle = math.pi * 2.0 * (gameObject.data.lastShootIndex + i * 10 + shift) / 40
+			
+			local bullet = addCustomBullet()
+			bullet.damage = math.floor(math.random() * 30.0 + 30)
+			bullet.position = gameObject.data.position
+			bullet.moveSpeed = 450.0
+			bullet.moveAngle = angle
+			
+			bullet:addRenderableTexture("resources/bonuses/circle_fire/bullet.png")
+			
 		end
 		
-		gameObject.lastShootIndex = gameObject.lastShootIndex + 1
+		gameObject.data.lastShootIndex = gameObject.data.lastShootIndex + 1
 		
-		if gameObject.lastShootIndex == 40
+		if gameObject.data.lastShootIndex == 40
 		then
 			gameObject.toBeRemoved = true
 		end

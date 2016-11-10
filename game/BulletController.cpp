@@ -3,16 +3,29 @@
 
 #include "cGlobals.h"
 #include "lua.h"
+#include "Gun.h"
 
 void BulletController::init(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	lua.set_function("addBulletOnHitCallback",
-			[&](int bulletIndex, const std::string& func)
-	{
-		bulletMap[bulletIndex]->addBulletOnHitCallback(func);
-	});
+	lua.new_usertype<Bullet>("Bullet",
+		"index", sol::readonly(&Bullet::id),
+
+		"position", &Bullet::pos,
+		"moveSpeed", &Bullet::speed,
+		"moveAngle", &Bullet::rotation,
+
+		"radius", &Bullet::radius,
+		"damage", &Bullet::damage,
+
+		"onHitCallback", &Bullet::onHitCallback,
+		"onTickCallback", &Bullet::onTickCallback,
+		"ignoreMonsterCallback", &Bullet::ignoreMonsterCallback,
+
+		"addRenderableTexture", &Bullet::addRenderableTexture
+		);
+
 
 	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 }

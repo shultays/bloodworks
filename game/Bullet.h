@@ -19,7 +19,8 @@ class Bullet
 	bool isDead;
 	Vec2 pos;
 	float rotation;
-	Vec2 speed;
+	float speed;
+
 	float radius;
 	int damage;
 	cRenderableGroup *renderable;
@@ -28,14 +29,13 @@ class Bullet
 
 	std::string onHitCallback;
 	std::string onTickCallback;
-
+	std::string ignoreMonsterCallback;
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
 	void init();
 	void tick(float dt);
 	void addRenderable(cRenderable *renderable);
-	void addBulletOnHitCallback(const std::string& onHitCallback);
 	int getId()
 	{
 		return id;
@@ -53,5 +53,7 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
+
+	void addRenderableTexture(const std::string& texture);
 
 };

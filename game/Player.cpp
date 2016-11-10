@@ -7,11 +7,20 @@
 Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	angle = 0.0f;
+
+	lua.new_usertype<Player>("Player",
+		"position", &Player::pos,
+		"moveSpeed", &Player::moveSpeed,
+		"moveAngle", &Player::moveAngle,
+		"crosshairPos", &Player::crosshairPos,
+		"aimDir", sol::readonly(&Player::aimDir)
+		);
+
 	oldSpreadAngle = 0.0f;
 	pos = Vec2::zero();
 	renderable = new cRenderableGroup(bloodworks);
-
+	aimAngle = 0.0f;
+	aimDir = Vec2::fromAngle(aimAngle);
 
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(15.7f, 22.9f);
@@ -35,13 +44,8 @@ Player::Player(Bloodworks *bloodworks)
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
-	aimDir = Vec2::zero();
 
-	lua["player"] = lua.create_table_with(
-		"x", pos.x, 
-		"y", pos.y,
-		"moveAngle", moveAngle,
-		"moveSpeed", moveSpeed);
+	lua["player"] = this;
 
 	this->gun = nullptr;
 }
@@ -165,9 +169,13 @@ void Player::tick(float dt)
 	}
 	crosshair->setPosition(pos + crosshairPos);
 
-	aimDir = crosshairPos;
-
-	float length = aimDir.normalize();
+	float length = 0.0f;
+	if (crosshairPos.lengthSquared() > 0.01f)
+	{
+		aimDir = crosshairPos;
+		length = aimDir.normalize();
+		aimAngle = aimDir.toAngle();
+	}
 
 	if (gun)
 	{
@@ -195,27 +203,15 @@ void Player::tick(float dt)
 		oldSpreadAngle = newSpreadAngle;
 	}
 
-	if (lengthSquared > 0.01f)
-	{
-		angle = atan2f(crosshairPos.y, crosshairPos.x);
-	}
-
 	Mat3 mat = Mat3::identity();
-	mat.rotateBy(pi_d2 - angle);
+	mat.rotateBy(pi_d2 - aimAngle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
-
 
 	if (gun)
 	{
 		gun->tick(dt);
 	}
-
-	sol::table table = lua["player"];
-	table["x"] = pos.x;
-	table["y"] = pos.y;
-	table["moveAngle"] = moveAngle;
-	table["moveSpeed"] = moveSpeed;
 }
 
 void Player::setGun(Gun *gun)

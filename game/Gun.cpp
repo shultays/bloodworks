@@ -33,16 +33,16 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	fixFilePath(scriptFilePath);
 	scriptName = j["scriptName"].get<std::string>();
 	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+	data = lua.create_table();
+	id = nextGunId++;
 
-	gunId = nextGunId++;
 
-	auto guns = lua["guns"];
-	luaGun = guns[gunId] = lua.create_table_with("spreadAngle", 0, "maxCrossHairRange", 50);
+	spreadAngle = 0.0f;
+	crosshairDistance = 400.0f;
+
 	lua.script_file(scriptFilePath);
-	scriptTable["init"](gunId);
+	scriptTable["init"](this);
 
-	spreadAngle = luaGun["spreadAngle"];
-	crosshairDistance = luaGun["maxCrosshairRange"];
 }
 
 void Gun::stop()
@@ -52,31 +52,23 @@ void Gun::stop()
 
 void Gun::start()
 {
-	lua.set_function("addBullet",
-		[&]() -> int
-	{
-		return addBullet();
-	});
 }
 
 void Gun::tick(float dt)
 {
-	lua["leftMousePressed"] = input.isKeyPressed(mouse_button_left);
-	lua["leftMouseDown"] = input.isKeyDown(mouse_button_left);
-	lua["leftMousePressed"] = input.isKeyReleased(mouse_button_left);
+	leftMousePressed = input.isKeyPressed(mouse_button_left);
+	leftMouseDown = input.isKeyDown(mouse_button_left);
+	leftMouseReleased = input.isKeyReleased(mouse_button_left);
 
-	lua["middleMousePressed"] = input.isKeyPressed(mouse_button_middle);
-	lua["middleMouseDown"] = input.isKeyDown(mouse_button_middle);
-	lua["middleMousePressed"] = input.isKeyReleased(mouse_button_middle);
+	middleMousePressed = input.isKeyPressed(mouse_button_middle);
+	middleMouseDown = input.isKeyDown(mouse_button_middle);
+	middleMouseReleased = input.isKeyReleased(mouse_button_middle);
 
-	lua["rightMousePressed"] = input.isKeyPressed(mouse_button_right);
-	lua["rightMouseDown"] = input.isKeyDown(mouse_button_right);
-	lua["rightMousePressed"] = input.isKeyReleased(mouse_button_right);
+	rightMousePressed = input.isKeyPressed(mouse_button_right);
+	rightMouseDown = input.isKeyDown(mouse_button_right);
+	rightMouseReleased = input.isKeyReleased(mouse_button_right);
 
-	scriptTable["onTick"](gunId);
-
-	spreadAngle = luaGun["spreadAngle"];
-	crosshairDistance = luaGun["maxCrosshairRange"];
+	scriptTable["onTick"](this);
 }
 
 float Gun::getMaxCrosshairDistance()
@@ -91,7 +83,7 @@ float Gun::getSpreadAngle()
 
 int Gun::getId()
 {
-	return gunId;
+	return id;
 }
 
 sol::table& Gun::getScriptTable()
@@ -104,15 +96,14 @@ Gun::~Gun()
 	bulletTexture = nullptr;
 }
 
-int Gun::addBullet()
+Bullet* Gun::addBullet()
 {
 	Vec2 dir = bloodworks->getPlayer()->getAimDir();
 	Bullet *bullet = new Bullet(bloodworks, this);
 	Player *player = bloodworks->getPlayer();
 	bullet->pos = player->getPos() + player->getAimDir() * 20;
-	bullet->speed = player->getAimDir() * bulletSpeed;
-	bullet->speed *= Mat2::rotation(randFloat(-spreadAngle, spreadAngle));
-	bullet->rotation = bullet->speed.toAngle();
+	bullet->speed = bulletSpeed;
+	bullet->rotation = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
@@ -121,5 +112,5 @@ int Gun::addBullet()
 	bullet->init();
 	bloodworks->getBulletController()->addBullet(bullet);
 
-	return bullet->getId();
+	return bullet;
 }

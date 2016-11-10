@@ -456,7 +456,7 @@ public:
 		return d;
 	}
 
-	G_VEC_IMP_NAME normalized() 
+	G_VEC_IMP_NAME normalized()  const
 	{
 		return G_VEC_IMP_NAME::normalize(*this);
 	}

@@ -139,4 +139,21 @@ public:
 	{
 		return data[getNodeIndex(pos)];
 	}
+
+	const IntVec2& getNodeCount() const
+	{
+		return nodeCount;
+	}
+
+
+	const std::vector<T*> getNodeAtIndex(int i, int j) const
+	{
+		return data[i][j];
+	}
+
+	const std::vector<T*> getNodeAtIndex(const IntVec2& pos) const
+	{
+		return data[i];
+	}
+
 };

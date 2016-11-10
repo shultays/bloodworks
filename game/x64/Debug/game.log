@@ -1,3 +1,10 @@
-﻿  MonsterController.cpp
+﻿  Gun.cpp
+  Bullet.cpp
+  Bloodworks.cpp
+  Generating Code...
+  Compiling...
+  Player.cpp
+  BulletController.cpp
+  Generating Code...
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.exe
   game.vcxproj -> C:\Users\asos\Documents\GitHub\game\x64\Debug\game.pdb (Full PDB)

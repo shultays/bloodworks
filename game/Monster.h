@@ -36,7 +36,7 @@ class Monster
 	const MonsterTemplate* monsterTemplate;
 
 	//lua
-	sol::table luaMonster;
+	sol::table data;
 	sol::table scriptTable;
 	struct Timer
 	{

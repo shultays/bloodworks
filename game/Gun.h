@@ -7,9 +7,11 @@
 #include "sol.h"
 
 class Bloodworks;
+class Bullet;
 
 class Gun
 {
+	friend class Bloodworks;
 	Bloodworks *bloodworks;
 	std::string name;
 	std::string artFolder;
@@ -23,15 +25,26 @@ class Gun
 
 	std::string scriptName;
 	sol::table scriptTable;
-	int gunId;
+	int id;
 
-	sol::table luaGun;
+	sol::table data;
 
-	int addBullet();
+	Bullet* addBullet();
 
 	float spreadAngle;
 	float crosshairDistance;
 	IntVec2 damage;
+
+	bool leftMousePressed;
+	bool leftMouseDown;
+	bool leftMouseReleased;
+	bool middleMousePressed;
+	bool middleMouseDown;
+	bool middleMouseReleased;
+	bool rightMousePressed;
+	bool rightMouseDown;
+	bool rightMouseReleased;
+
 public:
 	Gun() {}
 	~Gun();

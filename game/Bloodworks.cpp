@@ -13,10 +13,61 @@
 
 void Bloodworks::init()
 {
+	lua.new_usertype<Vec2>("Vec2",
+
+		sol::constructors<sol::types<>, sol::types<float, float>>(),
+		"x", &Vec2::x,
+		"y", &Vec2::y,
+
+		sol::meta_function::addition, [](const Vec2& a, const Vec2& b) { return a + b; },
+		sol::meta_function::subtraction, [](const Vec2& a, const Vec2& b) { return a - b; },
+		sol::meta_function::multiplication, [](const Vec2& a, const Vec2& b) { return a * b; },
+		sol::meta_function::multiplication, [](const Vec2& a, float b) { return a * b; },
+		sol::meta_function::division, [](const Vec2& a, const Vec2& b) { return a / b; },
+		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
+
+		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
+		"getAngle", &Vec2::toAngle,
+
+		"normalize", [](Vec2& a) { a.normalize(); },
+		"normalized", [](const Vec2& a) { return a.normalized(); },
+
+		"distance", [](const Vec2& a, const Vec2& b) { return a.distance(b); },
+		"distanceSquared", [](const Vec2& a, const Vec2& b) { return a.distanceSquared(b); },
+
+		"length", [](const Vec2& a) { return a.length(); },
+		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); }
+	);
+
+
 	lua["mission"] = lua.create_table();
-	lua["guns"] = lua.create_table();
-	lua["bullets"] = lua.create_table();
-	lua["monsters"] = lua.create_table();
+
+	lua.new_usertype<Gun>("Gun",
+		"index", sol::readonly(&Gun::id),
+		"data", &Gun::data,
+
+		"bulletSpeed", &Gun::bulletSpeed,
+		"bulletRadius", &Gun::bulletRadius,
+		"bulletSpeed", &Gun::bulletSpeed,
+		"scriptTable", &Gun::scriptTable,
+
+		"spreadAngle", &Gun::spreadAngle,
+		"crosshairDistance", &Gun::crosshairDistance,
+
+		"leftMousePressed", &Gun::leftMousePressed,
+		"leftMouseDown", &Gun::leftMouseDown,
+		"leftMouseReleased", &Gun::leftMouseReleased,
+
+		"middleMousePressed", &Gun::middleMousePressed,
+		"middleMouseDown", &Gun::middleMouseDown,
+		"middleMouseReleased", &Gun::middleMouseReleased,
+		"rightMousePressed", &Gun::rightMousePressed,
+		"rightMouseDown", &Gun::rightMouseDown,
+		"rightMouseReleased", &Gun::rightMouseReleased,
+
+		"addBullet", &Gun::addBullet
+	);
+
 
 
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
@@ -122,7 +173,6 @@ void Bloodworks::createBonus(const Vec2& position)
 	drops.push_back(drop);
 }
 
-
 void Bloodworks::addDrop(const Vec2& position)
 {
 	if (randBool())
@@ -137,7 +187,6 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick(float dt)
 {
-
 	tickCount++;
 	if (timer.getTime() - lastSetTickTime > 1.0f)
 	{
@@ -154,7 +203,8 @@ void Bloodworks::tick(float dt)
 	{
 		start = !start;
 	}
-	if (start == false) return;*/
+	if (start == false) return;
+	*/
 
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
@@ -178,7 +228,7 @@ void Bloodworks::tick(float dt)
 			}
 			else
 			{
-				lua[drop.bonus->scriptName]["spawn"](drop.pos.x, drop.pos.y);
+				lua[drop.bonus->scriptName]["spawn"](drop.pos);
 			}
 			SAFE_DELETE(drop.renderable);
 			drops[i] = drops[(int)drops.size() - 1];

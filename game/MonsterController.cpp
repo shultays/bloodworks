@@ -4,33 +4,9 @@
 #include "sol.h"
 
 
-struct vec {
-	float x;
-	float y;
-
-	vec() : x(0), y(0) {}
-	vec(float x, float y) : x(x), y(y) {}
-
-	vec operator-(const vec& right) const {
-		return vec(x - right.x, y - right.y);
-	}
-};
-
 void MonsterController::init(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-
-	lua.set_function("addTimer",
-		[&](int monsterIndex, float time, const std::string& func, sol::table table)
-	{
-		monstersMap[monsterIndex]->addTimer(time, func, table);
-	});
-
-	lua.set_function("playAnimation",
-		[&](int monsterIndex, const std::string& anim, float startPercentage)
-	{
-		monstersMap[monsterIndex]->playAnimation(anim, startPercentage);
-	});
 
 	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 
@@ -51,22 +27,26 @@ void MonsterController::init(Bloodworks *bloodworks)
 		return (int)monsters.size();
 	});
 
+	lua.set_function("getMonster",
+		[&](int i) -> Monster*
+	{
+		return monstersMap[i];
+	});
+
+	lua.set_function("getClosestMonster",
+		[&](const Vec2& pos) -> Monster*
+	{
+		return getClosestMonster(pos);
+	});
+	lua.set_function("getClosestMonsterInRange",
+		[&](const Vec2& pos, float range) -> Monster*
+	{
+		return getClosestMonsterInRange(pos, range);
+	});
+
+
 	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
 
-
-	lua.new_usertype<vec>("vec",
-		sol::constructors<sol::types<>, sol::types<float, float>>(),
-		sol::meta_function::subtraction, &vec::operator-
-		);
-	asd
-	/*
-
-	lua.new_usertype<Vec2>("Vec2",
-		"x", &Vec2::x,
-		"y", &Vec2::y
-
-	);
-	*/
 	lua.new_usertype<Monster>("Monster",
 		"name", &Monster::name,
 		"index", sol::readonly(&Monster::id),
@@ -83,11 +63,16 @@ void MonsterController::init(Bloodworks *bloodworks)
 		"collisionRadius", &Monster::collisionRadius,
 		"bulletRadius", &Monster::bulletRadius,
 
+		"data", &Monster::data,
+
 		"isDead", sol::readonly(&Monster::isDead),
 
 		"playAnimation", &Monster::playAnimation,
+		"addTimer", &Monster::addTimer,
 		"setScale", &Monster::setScale,
-		"setColor", &Monster::setColor
+		"setColor", &Monster::setColor,
+
+		"doDamage", &Monster::doDamage
 	);
 
 }
@@ -140,3 +125,149 @@ const std::vector<Monster*> MonsterController::getMonsterAt(const Vec2& pos)  co
 	return grid.getNodeAtPos(pos);
 }
 
+Monster* MonsterController::getClosestMonster(const Vec2& pos)
+{
+	float closest = FLT_MAX;
+	Monster *closestMonster = nullptr;
+	for (auto& monster : monsters)
+	{
+		float d;
+		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
+		{
+			closest = d;
+			closestMonster = monster;
+		}
+	}
+
+	return closestMonster;
+}
+
+
+Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float range)
+{
+	float closest = range * range;
+	Monster *closestMonster = nullptr;
+
+	if (range > 200)
+	{
+		Vec2 min = pos - range;
+		Vec2 max = pos + range;
+
+		IntVec2 minIndex = grid.getNodeIndex(min);
+		IntVec2 maxIndex = grid.getNodeIndex(max);
+
+		if (minIndex.x < 0)
+		{
+			minIndex.x = 0;
+		}
+		if (minIndex.y < 0)
+		{
+			minIndex.y = 0;
+		}
+
+		if (maxIndex.x > grid.getNodeCount().x - 1)
+		{
+			maxIndex.x = grid.getNodeCount().x - 1;
+		}
+		if (maxIndex.y < grid.getNodeCount().y - 1)
+		{
+			maxIndex.y = grid.getNodeCount().y - 1;
+		}
+
+		for (int i = minIndex.x; i <= maxIndex.x; i++)
+		{
+			for (int j = minIndex.y; j <= maxIndex.y; j++)
+			{
+				for (auto& monster : grid.getNodeAtIndex(i, j))
+				{
+					float d;
+					if (monster->isDead == false 
+						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y) 
+						&& (d = monster->getPosition().distanceSquared(pos)) < closest)
+					{
+						closest = d;
+						closestMonster = monster;
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		for (auto& monster : monsters)
+		{
+			float d;
+			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
+			{
+				closest = d;
+				closestMonster = monster;
+			}
+		}
+	}
+
+	return closestMonster;
+}
+
+std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, float range)
+{
+	float maxDistanceSquared = range * range;
+
+	std::vector<Monster*> foundMonsters;
+
+	if (range > 200)
+	{
+		Vec2 min = pos - range;
+		Vec2 max = pos + range;
+
+		IntVec2 minIndex = grid.getNodeIndex(min);
+		IntVec2 maxIndex = grid.getNodeIndex(max);
+
+		if (minIndex.x < 0)
+		{
+			minIndex.x = 0;
+		}
+		if (minIndex.y < 0)
+		{
+			minIndex.y = 0;
+		}
+
+		if (maxIndex.x > grid.getNodeCount().x - 1)
+		{
+			maxIndex.x = grid.getNodeCount().x - 1;
+		}
+		if (maxIndex.y < grid.getNodeCount().y - 1)
+		{
+			maxIndex.y = grid.getNodeCount().y - 1;
+		}
+
+		for (int i = minIndex.x; i <= maxIndex.x; i++)
+		{
+			for (int j = minIndex.y; j <= maxIndex.y; j++)
+			{
+				IntVec2 index(i, j);
+				for (auto& monster : grid.getNodeAtIndex(i, j))
+				{
+					if (monster->isDead == false 
+						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
+						&& monster->getPosition().distanceSquared(pos) < maxDistanceSquared)
+					{
+						foundMonsters.push_back(monster);
+					}
+				}
+			}
+		}
+
+	}
+	else
+	{
+		for (auto& monster : monsters)
+		{
+			if (monster->getPosition().distanceSquared(pos) < maxDistanceSquared)
+			{
+				foundMonsters.push_back(monster);
+			}
+		}
+	}
+
+	return foundMonsters;
+}

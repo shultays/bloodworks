@@ -42,9 +42,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	moveAngle = randFloat(-pi, pi);
 	moveSpeed = 0.0f;
 
-
-	auto monsters = lua["monsters"];
-	luaMonster = monsters[id] = lua.create_table_with();
+	data = lua.create_table_with();
 
 	scriptTable = monsterTemplate->scriptTable;
 

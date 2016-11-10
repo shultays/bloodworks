@@ -1,7 +1,5 @@
 
 function Monster.init(monster)
-	local luaMonster = monsters[monster.index]
-
 	monster:setScale(math.random() * 0.4 + 0.5)
 
 	local r = math.floor(255 * math.random())
@@ -21,38 +19,35 @@ function Monster.init(monster)
 	monster.moveAngle = 0
 	monster.moveSpeed = 0
 	
-	luaMonster.moving = true
-	luaMonster.lastHitTime = 0.0
+	monster.data.moving = true
+	monster.data.lastHitTime = 0.0
 	
 	
 	monster:playAnimation("walk", math.random())
 end
 
 function Monster.onTick(monster)
-	local luaMonster = monsters[monster.index]
-	
-	local vPlayer = vector(player.x, player.y)
-	local diff = vector(vPlayer.x - monster.position.x, vPlayer.y - monster.position.y)
-	local length = diff:len()
+	local diff = player.position - monster.position
+	local length = diff:length()
 	
 	if length < 20 + monster.collisionRadius then
-		if luaMonster.moving or luaMonster.lastHitTime + 1.5 < time then
-			luaMonster.lastHitTime = time
-			luaMonster.moving = false
+		if monster.data.moving or monster.data.lastHitTime + 1.5 < time then
+			monster.data.lastHitTime = time
+			monster.data.moving = false
 			monster:playAnimation("attack")
 		end
 	else
 	
-		if luaMonster.moving == false then
-			luaMonster.moving = true
+		if monster.data.moving == false then
+			monster.data.moving = true
 			monster:playAnimation("walk", math.random())
 		end
 	
 	end
 	
-	monster.moveAngle = diff:angle()
+	monster.moveAngle = diff:getAngle()
 	
-	if luaMonster.moving then
+	if monster.data.moving then
 		monster.moveSpeed = 40;
 	else
 		monster.moveSpeed = 0;

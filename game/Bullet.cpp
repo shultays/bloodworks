@@ -19,13 +19,11 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 
 void Bullet::init()
 {
-	lua["bullets"][id] = lua.create_table_with("bulletId", id, "gunId", gun ? gun->getId() : -1);
 	tick(0.0f);
 }
 
 Bullet::~Bullet()
 {
-	lua["bullets"][id] = nullptr;
 	SAFE_DELETE(renderable);
 }
 
@@ -35,10 +33,10 @@ void Bullet::tick(float dt)
 
 	if (onTickCallback.size())
 	{
-		lua[onHitCallback](id);
+		lua[onTickCallback](this);
 	}
-
-	pos += speed * dt;
+	Vec2 dir = Vec2::fromAngle(rotation);
+	pos += dir * speed * dt;
 
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(15.0f);
@@ -47,8 +45,17 @@ void Bullet::tick(float dt)
 
 	renderable->setWorldMatrix(mat);
 	
-
 	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
+
+	if (pos.x > 400 || pos.x < -400 || pos.y > 300 || pos.y < -300)
+	{
+		isDead = true;
+	}
+
+	if (isDead)
+	{
+		return;
+	}
 
 	for (auto& monster : monsters)
 	{
@@ -60,13 +67,13 @@ void Bullet::tick(float dt)
 			{
 				if (gun->getScriptTable()["onBulletHit"])
 				{
-					gun->getScriptTable()["onBulletHit"](id, monster->getId());
+					gun->getScriptTable()["onBulletHit"](this, monster);
 				}
 			}
 
 			if (onHitCallback.length())
 			{
-				lua[onHitCallback](id, monster->getId());
+				lua[onHitCallback](this, monster);
 			}
 
 			monster->doDamage(damage);
@@ -75,10 +82,6 @@ void Bullet::tick(float dt)
 		}
 	}
 
-	if (pos.x > 400 || pos.x < -400 || pos.y > 300 || pos.y < -300)
-	{
-		isDead = true;
-	}
 }
 
 void Bullet::addRenderable(cRenderable *renderable)
@@ -86,7 +89,7 @@ void Bullet::addRenderable(cRenderable *renderable)
 	this->renderable->addRenderable(renderable, Mat3::identity());
 }
 
-void Bullet::addBulletOnHitCallback(const std::string& onHitCallback)
+void Bullet::addRenderableTexture(const std::string& texture)
 {
-	this->onHitCallback = onHitCallback;
+	addRenderable(new cTexturedQuadRenderable(bloodworks, texture.c_str(), "resources/default"));
 }

@@ -34,6 +34,7 @@ void cRenderableGroup::addRenderable(cRenderable *child, Mat3 localMatrix)
 	childData.child = child;
 	childData.localMatrix = localMatrix;
 	renderables.push_back(childData);
+	dirty = true;
 }
 
 cRenderable::~cRenderable()
@@ -106,4 +107,10 @@ cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const char* textur
 {
 	setTexture(texturePath);
 	setSize(texture[0]->getDimensions().toVec());
+}
+
+
+cTextureShr& cTexturedQuadRenderable::getTexture(int i)
+{
+	return texture[i];
 }
