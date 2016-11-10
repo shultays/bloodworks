@@ -1,9 +1,9 @@
 
 function HomingOrb.spawn(pos)
-	--[[--
-	local t = addGameObject("level", "FadeOutImage", {startTime = time, fadeOutStartTime = 2.0, fadeInDuration = 0.5})
-	addTextureToGameObject(t, {}, "resources/bonuses/homing/bullet")
-	--]]--
+	local gameObject = addGameObject("HomingOrb")
+	local texture = gameObject:addTexture("resources/bonuses/homing/bullet.png", "resources/default")
+	texture.textureSize = Vec2.new(50, 50)
+	texture:update()
 end
 
 

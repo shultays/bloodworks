@@ -92,6 +92,9 @@ void Bloodworks::init()
 	Bonus *bonus = new Bonus("resources/bonuses/circle_fire/data.json");
 	bonuses.push_back(bonus);
 
+	bonus = new Bonus("resources/bonuses/homing/data.json");
+	bonuses.push_back(bonus);
+
 	monsterController.init(this);
 	bulletController.init(this);
 
@@ -160,7 +163,7 @@ void Bloodworks::createBonus(const Vec2& position)
 {
 
 	Drop drop;
-	drop.bonus = bonuses[randInt((int)bonuses.size())];
+	drop.bonus = bonuses[1];
 	drop.gun = nullptr;
 
 	drop.pos = position;
@@ -197,6 +200,12 @@ void Bloodworks::tick(float dt)
 
 		tickCount = 0;
 	}
+
+	if (input.isKeyPressed(mouse_button_right))
+	{
+		createBonus(player->getAimDir() * 20.0f);
+	}
+
 	/*
 	static bool start = false;
 	if (input.isKeyPressed(key_space))
