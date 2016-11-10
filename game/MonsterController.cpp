@@ -1,6 +1,20 @@
 #include "MonsterController.h"
 #include "Bloodworks.h"
 #include "Monster.h"
+#include "sol.h"
+
+
+struct vec {
+	float x;
+	float y;
+
+	vec() : x(0), y(0) {}
+	vec(float x, float y) : x(x), y(y) {}
+
+	vec operator-(const vec& right) const {
+		return vec(x - right.x, y - right.y);
+	}
+};
 
 void MonsterController::init(Bloodworks *bloodworks)
 {
@@ -21,20 +35,14 @@ void MonsterController::init(Bloodworks *bloodworks)
 	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 
 	lua.set_function("addMonster",
-		[&](std::string monsterTemplate) -> int
+		[&](std::string monsterTemplate) -> Monster*
 	{
 		Monster *newMonster = new Monster(this->bloodworks);
-		monstersMap[newMonster->index] = newMonster;
+		monstersMap[newMonster->id] = newMonster;
 		monsters.push_back(newMonster);
 		newMonster->init(monsterTemplates[monsterTemplate]);
 		grid.insertToGrid(newMonster);
-		return newMonster->getId();
-	});
-
-	lua.set_function("resetMonster",
-		[&](int monsterIndex)
-	{
-		monstersMap[monsterIndex]->reset();
+		return newMonster;
 	});
 
 	lua.set_function("getMonsterCount",
@@ -44,6 +52,44 @@ void MonsterController::init(Bloodworks *bloodworks)
 	});
 
 	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
+
+
+	lua.new_usertype<vec>("vec",
+		sol::constructors<sol::types<>, sol::types<float, float>>(),
+		sol::meta_function::subtraction, &vec::operator-
+		);
+	asd
+	/*
+
+	lua.new_usertype<Vec2>("Vec2",
+		"x", &Vec2::x,
+		"y", &Vec2::y
+
+	);
+	*/
+	lua.new_usertype<Monster>("Monster",
+		"name", &Monster::name,
+		"index", sol::readonly(&Monster::id),
+
+		"position", &Monster::position,
+		"moveSpeed", &Monster::moveSpeed,
+		"moveAngle", &Monster::moveAngle,
+
+		"textureShift", &Monster::textureShift,
+		"textureSize", &Monster::textureSize,
+
+		"hitPoint", &Monster::hitPoint,
+
+		"collisionRadius", &Monster::collisionRadius,
+		"bulletRadius", &Monster::bulletRadius,
+
+		"isDead", sol::readonly(&Monster::isDead),
+
+		"playAnimation", &Monster::playAnimation,
+		"setScale", &Monster::setScale,
+		"setColor", &Monster::setColor
+	);
+
 }
 
 void MonsterController::tick(float dt)

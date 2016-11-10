@@ -146,7 +146,7 @@ public:
 		return cpy;
 	}
 
-	G_VEC_IMP_NAME operator-(const G_VEC_IMP_NAME& other) const 
+	G_VEC_IMP_NAME operator-(const G_VEC_IMP_NAME& other) const
 	{
 		G_VEC_IMP_NAME cpy = *this;
 		for (int i = 0; i < GVEC_N; ++i)

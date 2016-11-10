@@ -1,57 +1,58 @@
 
-function Monster.init(monsterId, randomize)
-	local monster = monsters[monsterId]
-	
-	if randomize or monster.x == nil then
-		monster.x = math.random() * 800 - 400
+function Monster.init(monster)
+	local luaMonster = monsters[monster.index]
+
+	monster:setScale(math.random() * 0.4 + 0.5)
+
+	local r = math.floor(255 * math.random())
+	local g = math.floor(255 * math.random())
+	local b = math.floor(255 * math.random())
+	local ra = math.random()
+	if ra < 0.333 then
+		r = 0xff
+	elseif ra < 0.666 then
+		g = 0xff
+	else
+		b = 0xff
 	end
+	monster:setColor(0xFF000000 | (r << 16) | (g << 8) | b)
 	
-	if randomize or monster.y == nil then
-		monster.y = math.random() * 600 - 300
-	end
-	
-	if randomize or monster.scale == nil then
-		monster.scale = math.random() * 0.4 + 0.5
-	end
-	
-	if randomize or monster.color == nil then
-		monster.color = 0xFFFFFFFF
-	end
 	
 	monster.moveAngle = 0
 	monster.moveSpeed = 0
-	monster.moving = true
-	monster.lastHitTime = 0.0
-	playAnimation(monsterId, "walk", math.random())
+	
+	luaMonster.moving = true
+	luaMonster.lastHitTime = 0.0
+	
+	
+	monster:playAnimation("walk", math.random())
 end
 
-function Monster.onTick(monsterId)
-	local monster = monsters[monsterId]
-
+function Monster.onTick(monster)
+	local luaMonster = monsters[monster.index]
+	
 	local vPlayer = vector(player.x, player.y)
-	local vMonster = vector(monster.x, monster.y)
-	local diff = vPlayer - vMonster
+	local diff = vector(vPlayer.x - monster.position.x, vPlayer.y - monster.position.y)
 	local length = diff:len()
 	
-	if length < 20 + 20 * monster.scale then
-		if monster.moving or monster.lastHitTime + 1.5 < time then
-			monster.lastHitTime = time
-			monster.moving = false
-			playAnimation(monsterId, "attack")
+	if length < 20 + monster.collisionRadius then
+		if luaMonster.moving or luaMonster.lastHitTime + 1.5 < time then
+			luaMonster.lastHitTime = time
+			luaMonster.moving = false
+			monster:playAnimation("attack")
 		end
 	else
 	
-		if monster.moving == false then
-			monster.moving = true
-			playAnimation(monsterId, "walk", math.random())
+		if luaMonster.moving == false then
+			luaMonster.moving = true
+			monster:playAnimation("walk", math.random())
 		end
 	
 	end
 	
-	
 	monster.moveAngle = diff:angle()
 	
-	if monster.moving then
+	if luaMonster.moving then
 		monster.moveSpeed = 40;
 	else
 		monster.moveSpeed = 0;

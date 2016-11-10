@@ -16,17 +16,18 @@ class Monster
 	cTextRenderable *healthRenderable;
 	Bloodworks *bloodworks;
 
+	std::string name;
+	int id;
+
 	Vec2 position;
 	float moveSpeed;
 	float moveAngle;
 
-	Vec2 size;
+	Vec2 textureSize;
 	Vec2 textureShift;
-	std::string name;
 	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
-	int index;
 	static int nextId;
 
 	bool isDead;
@@ -35,9 +36,6 @@ class Monster
 	const MonsterTemplate* monsterTemplate;
 
 	//lua
-	void setMonsterData();
-	void getMonsterData();
-
 	sol::table luaMonster;
 	sol::table scriptTable;
 	struct Timer
@@ -48,16 +46,19 @@ class Monster
 		sol::table args;
 	};
 	std::vector<Timer> timers;
+
+	sol::function luaTick;
 	//~lua
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
 	void init(const MonsterTemplate* monsterTemplate);
 	int getId();
-	void reset();
+	void setScale(float scale);
+	void setColor(int color);
 	void tick(float dt);
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
-	void playAnimation(const std::string& anim, float startPercentage);
+	void playAnimation(std::string anim, float startPercentage);
 	void doDamage(int damage);
 
 	bool isRemoved()

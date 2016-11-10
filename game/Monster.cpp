@@ -11,7 +11,7 @@ int Monster::nextId = 0;
 Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	index = nextId++;
+	id = nextId++;
 }
 
 void Monster::init(const MonsterTemplate* monsterTemplate)
@@ -21,7 +21,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	isDead = false;
 
-	size = monsterTemplate->size;
+	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
 	hasBlood = monsterTemplate->hasBlood;
@@ -44,37 +44,28 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 
 	auto monsters = lua["monsters"];
-	luaMonster = monsters[index] = lua.create_table_with();
+	luaMonster = monsters[id] = lua.create_table_with();
 
 	scriptTable = monsterTemplate->scriptTable;
 
 	bulletRadius = monsterTemplate->bulletRadius;
 	collisionRadius = monsterTemplate->collisionRadius;
 	position = 100.0f;
-	reset();
+
+	scriptTable["init"](this);
 }
 
-void Monster::reset()
+void Monster::setScale(float scale)
 {
-	scriptTable["init"](index, false);
-	if (luaMonster["scale"])
-	{
-		float scale = luaMonster["scale"].get<float>();
-		size = monsterTemplate->size * scale;
-		textureShift = monsterTemplate->textureShift * scale;
-		bulletRadius = monsterTemplate->bulletRadius * scale;
-		collisionRadius = monsterTemplate->collisionRadius * scale;
-	}
+	textureSize = monsterTemplate->size * scale;
+	textureShift = monsterTemplate->textureShift * scale;
+	bulletRadius = monsterTemplate->bulletRadius * scale;
+	collisionRadius = monsterTemplate->collisionRadius * scale;
+}
 
-	if (luaMonster["color"])
-	{
-		renderable->setColor(Vec4::fromColor(luaMonster["color"].get<int>()));
-	}
-
-	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
-
-	position = 100.0f;
-	getMonsterData();
+void Monster::setColor(int color)
+{
+	renderable->setColor(Vec4::fromColor(color));
 }
 
 Monster::~Monster()
@@ -85,7 +76,7 @@ Monster::~Monster()
 
 void Monster::tick(float dt)
 {
-	scriptTable["onTick"](index, dt);
+	scriptTable["onTick"](this);
 
 	std::vector<int> toTrigger;
 	for (int i = (int)timers.size() - 1; i >= 0; i--)
@@ -104,11 +95,9 @@ void Monster::tick(float dt)
 		scriptTable[t.func](t.args);
 	}
 
-	getMonsterData();
 	if (moveSpeed > 0.0f)
 	{
 		position += Vec2::fromAngle(moveAngle) * moveSpeed * dt;
-		setMonsterData();
 	}
 
 	std::stringstream ss;
@@ -117,7 +106,7 @@ void Monster::tick(float dt)
 	healthRenderable->setText(ss.str());
 	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
 	Mat3 mat = Mat3::identity();
-	mat.scaleBy(size);
+	mat.scaleBy(textureSize);
 	mat.translateBy(textureShift);
 	mat.rotateBy(-pi_d2 - moveAngle);
 	mat.translateBy(position);
@@ -137,7 +126,7 @@ void Monster::addTimer(float timeToTrigger, const std::string& func, sol::table 
 	timers.push_back(t);
 }
 
-void Monster::playAnimation(const std::string& anim, float startPercentage)
+void Monster::playAnimation(std::string anim, float startPercentage)
 {
 	renderable->playAnimation(anim, startPercentage);
 }
@@ -153,7 +142,7 @@ void Monster::doDamage(int damage)
 
 int Monster::getId()
 {
-	return index;
+	return id;
 }
 
 void Monster::killSelf()
@@ -162,7 +151,7 @@ void Monster::killSelf()
 	isDead = true;
 	if (scriptTable["onKilled"])
 	{
-		scriptTable["onKilled"](index);
+		scriptTable["onKilled"](id);
 	}
 	bloodworks->getBloodRenderable()->addBlood(position);
 
@@ -170,20 +159,4 @@ void Monster::killSelf()
 	{
 		bloodworks->addDrop(position);
 	}
-}
-
-void Monster::setMonsterData()
-{
-	luaMonster["x"] = position.x;
-	luaMonster["y"] = position.y;
-	luaMonster["moveAngle"] = moveAngle;
-	luaMonster["moveSpeed"] = moveSpeed;
-}
-
-void Monster::getMonsterData()
-{
-	position.x = luaMonster["x"];
-	position.y = luaMonster["y"];
-	moveAngle = luaMonster["moveAngle"];
-	moveSpeed = luaMonster["moveSpeed"];
 }
