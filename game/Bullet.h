@@ -2,6 +2,7 @@
 
 #include "cMat.h"
 #include "cVec.h"
+#include "sol.h"
 
 class cRenderableGroup;
 class Bloodworks;
@@ -27,9 +28,15 @@ class Bullet
 	int id;
 	static int nextId;
 
+	sol::table script;
+
 	std::string onHitCallback;
 	std::string onTickCallback;
-	std::string ignoreMonsterCallback;
+	std::string shouldHitMonsterTest;
+
+	sol::table data;
+
+	bool diesOnHit;
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
@@ -55,5 +62,9 @@ public:
 	IntVec2 gridEnd;
 
 	void addRenderableTexture(const std::string& texture);
+	void addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions);
+	void addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions);
 
+private:
+	void updateDrawable();
 };

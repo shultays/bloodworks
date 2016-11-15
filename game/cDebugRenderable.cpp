@@ -172,13 +172,13 @@ void cDebugRenderable::render()
 		textRenderable->setTextSize(textData.size);
 		if (textData.isScreen)
 		{
-			textRenderable->setPosition(Vec2(textData.pos.x - halfScreen.w, -textData.pos.y + halfScreen.h - textData.size));
+			textRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(textData.pos.x - halfScreen.w, -textData.pos.y + halfScreen.h - textData.size)));
 		}
 		else
 		{
-			textRenderable->setPosition(textData.pos);
+			textRenderable->setWorldMatrix(Mat3::translationMatrix(textData.pos));
 		}
-		textRenderable->render();
+		textRenderable->render(false, Mat3::identity());
 	}
 
 	if (lineData.size() > 0)

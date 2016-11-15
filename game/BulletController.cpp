@@ -19,11 +19,20 @@ void BulletController::init(Bloodworks *bloodworks)
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
 
+		"diesOnHit", &Bullet::diesOnHit,
+		"updateDrawable", &Bullet::updateDrawable,
+
+		"script", &Bullet::script,
+
 		"onHitCallback", &Bullet::onHitCallback,
 		"onTickCallback", &Bullet::onTickCallback,
-		"ignoreMonsterCallback", &Bullet::ignoreMonsterCallback,
+		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
 
-		"addRenderableTexture", &Bullet::addRenderableTexture
+		"data", &Bullet::data,
+
+		"addRenderableTexture", &Bullet::addRenderableTexture,
+		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
+		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize
 		);
 
 

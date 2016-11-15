@@ -24,7 +24,14 @@ void Coral::tick()
 	if (t - lastUpdateTime >= update_interval) 
 	{
 		timer.dt = update_interval;
-		lastUpdateTime += update_interval;
+		if (t - lastUpdateTime < update_interval * 2.0f)
+		{
+			lastUpdateTime += update_interval;
+		}
+		else
+		{
+			lastUpdateTime = t;
+		}
 		debugRenderer.tick(timer.getDt());
 		game->tickInternal();
 		input.tick();
@@ -33,7 +40,7 @@ void Coral::tick()
 	if (t - lastDrawTime >= draw_interval) 
 	{
 		timer.renderDt = t - lastDrawTime;
-		lastDrawTime += draw_interval;
+		lastDrawTime = t;
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		game->renderInternal();

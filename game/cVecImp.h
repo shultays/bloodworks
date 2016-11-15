@@ -489,6 +489,12 @@ public:
 	{
 		return (float)std::atan2(y, x);
 	}
+
+	G_VEC_IMP_NAME sideVec() const
+	{
+		return G_VEC_IMP_NAME(-y, x);
+	}
+
 #endif
 #endif
 

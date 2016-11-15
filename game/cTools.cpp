@@ -25,6 +25,29 @@ float angleDiff(float a, float b)
 	return diff;
 }
 
+float approachAngle(float moveAngle, float wantedAngle, float rotation)
+{
+	if (wantedAngle != moveAngle)
+	{
+		float diff = angleDiff(moveAngle, wantedAngle);
+
+		if (diff < -rotation)
+		{
+			moveAngle += rotation;
+		}
+		else if (diff > rotation)
+		{
+			moveAngle -= rotation;
+		}
+		else
+		{
+			moveAngle = wantedAngle;
+		}
+	}
+
+	return moveAngle;
+}
+
 bool textFileRead(const char *fileName, std::string &data) 
 {
 	data = "";

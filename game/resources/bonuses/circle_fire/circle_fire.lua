@@ -24,7 +24,7 @@ function CircleFire.onTick(gameObject)
 			bullet.moveSpeed = 450.0
 			bullet.moveAngle = angle
 			
-			bullet:addRenderableTexture("resources/bonuses/circle_fire/bullet.png")
+			bullet:addRenderableTextureWithSize("resources/bonuses/circle_fire/bullet.png", Vec2.new(14.0, 14.0))
 			
 		end
 		
@@ -35,5 +35,4 @@ function CircleFire.onTick(gameObject)
 			gameObject.toBeRemoved = true
 		end
 	end
-	
 end

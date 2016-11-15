@@ -2,9 +2,9 @@
 #include "cShader.h"
 #include "cTexture.h"
 
-void cAnimatedTexturedQuadRenderable::render()
+void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	cRenderableWithShader::render();
+	cRenderableWithShader::render(isIdentity, mat);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 

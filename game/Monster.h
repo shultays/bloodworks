@@ -48,6 +48,7 @@ class Monster
 	std::vector<Timer> timers;
 
 	sol::function luaTick;
+	float scale;
 	//~lua
 public:
 	Monster(Bloodworks *bloodworks);
@@ -59,7 +60,7 @@ public:
 	void tick(float dt);
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(std::string anim, float startPercentage);
-	void doDamage(int damage);
+	void doDamage(int damage, const Vec2& dir);
 
 	bool isRemoved()
 	{
@@ -79,5 +80,5 @@ public:
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
 private:
-	void killSelf();
+	void killSelf(const Vec2& blowDir);
 };

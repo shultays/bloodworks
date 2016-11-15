@@ -46,12 +46,23 @@
 			"7.png",
 			"8.png",
 			"9.png",
-			"11.png",
-			"10.png"
+			"10.png",
+			"11.png"
 		]
 	}
   },
   
   "scriptFile" : "resources/monster/monster.lua",
-  "scriptName" : "Monster"
+  "scriptName" : "Monster",
+  
+  "bodyParts" : [
+  "head.png", 
+  ["arm1.png", 15.0, 6.0],
+  ["arm2.png", -15.0, 6.0],
+  ["part1.png", 13.0, -3.0],
+  ["part2.png", -15.0, 6.0],
+  ["part3.png", -5.0, -4.0],
+  ["part4.png", 13.0, 9.0],
+  ["part5.png", -14.0, 7.0]
+  ]
 }

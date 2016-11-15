@@ -25,6 +25,13 @@ class MonsterTemplate
 
 	std::string defaultAnimation;
 	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
+
+	struct BodyPartData
+	{
+		cTextureShr texture;
+		Vec2 shift;
+	};
+	std::vector<BodyPartData> bodyParts;
 public:
 	MonsterTemplate(){}
 	MonsterTemplate(const std::string& monsterData)
@@ -100,6 +107,25 @@ public:
 		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
 		scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
+
+		auto& parts = j["bodyParts"];
+
+		for (json::iterator it = parts.begin(); it != parts.end(); ++it)
+		{
+			auto& val = it.value();
+			BodyPartData data;
+			if (val.is_array())
+			{
+				data.texture = resources.getTexture((artFolder + val[0].get<std::string>()).c_str());
+				data.shift = Vec2(val[1].get<float>(), val[2].get<float>());
+			}
+			else
+			{
+				data.texture = resources.getTexture((artFolder + it.value().get<std::string>()).c_str());
+				data.shift.setZero();
+			}
+			bodyParts.push_back(data);
+		}
 	}
 
 };

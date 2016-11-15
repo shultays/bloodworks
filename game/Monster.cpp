@@ -4,6 +4,7 @@
 #include "cGlobals.h"
 #include "cTools.h"
 #include "cFont.h"
+#include "cTexture.h"
 #include "BloodRenderable.h"
 
 int Monster::nextId = 0;
@@ -49,12 +50,13 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	bulletRadius = monsterTemplate->bulletRadius;
 	collisionRadius = monsterTemplate->collisionRadius;
 	position = 100.0f;
-
+	scale = 1.0f;
 	scriptTable["init"](this);
 }
 
 void Monster::setScale(float scale)
 {
+	this->scale = scale;
 	textureSize = monsterTemplate->size * scale;
 	textureShift = monsterTemplate->textureShift * scale;
 	bulletRadius = monsterTemplate->bulletRadius * scale;
@@ -102,7 +104,7 @@ void Monster::tick(float dt)
 	ss << (int)hitPoint;
 
 	healthRenderable->setText(ss.str());
-	healthRenderable->setPosition(position + Vec2(0.0f, bulletRadius + 10.0f));
+	healthRenderable->setWorldMatrix(Mat3::translationMatrix(position + Vec2(0.0f, bulletRadius + 10.0f)));
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(textureSize);
 	mat.translateBy(textureShift);
@@ -129,12 +131,19 @@ void Monster::playAnimation(std::string anim, float startPercentage)
 	renderable->playAnimation(anim, startPercentage);
 }
 
-void Monster::doDamage(int damage)
+void Monster::doDamage(int damage, const Vec2& dir)
 {
 	hitPoint -= damage;
 	if (hitPoint <= 1.0f)
 	{
-		killSelf();
+		killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+	}
+	else
+	{
+		if (randFloat() < 0.7f)
+		{
+			bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 7.0f);
+		}
 	}
 }
 
@@ -143,7 +152,7 @@ int Monster::getId()
 	return id;
 }
 
-void Monster::killSelf()
+void Monster::killSelf(const Vec2& blowDir)
 {
 	assert(isDead == false);
 	isDead = true;
@@ -151,10 +160,50 @@ void Monster::killSelf()
 	{
 		scriptTable["onKilled"](id);
 	}
-	bloodworks->getBloodRenderable()->addBlood(position);
+	bloodworks->getBloodRenderable()->addBlood(position, blowDir);
 
 	if (randFloat() < 0.1f || input.isKeyDown(key_1))
 	{
 		bloodworks->addDrop(position);
+	}
+
+	std::vector<int> parts;
+	int maxCount = (int)monsterTemplate->bodyParts.size();
+	int partCount = randInt(2, maxCount - 2);
+	if (partCount > maxCount)
+	{
+		partCount = maxCount;
+	}
+
+	for (int i = 0; i < partCount; i++)
+	{
+		int t = randInt(maxCount);
+		for (int j = 0; j < parts.size(); j++)
+		{
+			if (parts[j] == t)
+			{
+				i--;
+				t = -1;
+				break;
+			}
+		}
+		if (t != -1)
+		{
+			parts.push_back(t);
+		}
+	}
+	for (int i : parts)
+	{
+		cTextureShr s = monsterTemplate->bodyParts[i].texture;
+		cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
+		partRenderable->setColor(renderable->getColor());
+		Mat3 mat = renderable->getWorldMatrix();
+		partRenderable->setWorldMatrix(mat);
+		bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
+			position - (monsterTemplate->bodyParts[i].shift * scale) * Mat2::rotation(moveAngle - pi_d2),
+			textureSize,
+			moveAngle - pi_d2, 
+			textureShift + monsterTemplate->bodyParts[i].shift * scale, 
+			blowDir * 2.0f);
 	}
 }

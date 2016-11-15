@@ -29,6 +29,7 @@ GameObject::RenderableData& GameObject::addTexture(const std::string& texture, c
 	renderableData.type = RenderableDataType::texture;
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable((cGame*)bloodworks, texture.c_str(), shader.length() > 0 ? shader.c_str() : "resources/default");
+	renderable->setWorldMatrix(Mat3::identity());
 	renderableData.renderable = renderable;
 	renderableData.pos = Vec2::zero();
 	renderableData.textureSize = renderable->getTexture()->getDimensions().toVec();
@@ -38,7 +39,7 @@ GameObject::RenderableData& GameObject::addTexture(const std::string& texture, c
 	renderableData.alignment = 0;
 	renderableData.gameObject = this;
 
-	renderableGroup->addRenderable(renderable, Mat3::identity());
+	renderableGroup->addRenderable(renderable);
 
 	renderables.push_back(renderableData);
 
@@ -63,7 +64,7 @@ GameObject::RenderableData& GameObject::addText(const std::string& text, const s
 
 	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font.c_str() : "resources/fontData.txt"), text);
 	renderableData.renderable = renderable;
-	renderableGroup->addRenderable(renderable, Mat3::identity());
+	renderableGroup->addRenderable(renderable);
 	updateMatrix();
 	renderables.push_back(renderableData);
 
@@ -76,8 +77,7 @@ void GameObject::checkRenderable()
 	if (renderableGroup == nullptr)
 	{
 		renderableGroup = new cRenderableGroup(bloodworks);
-		renderableGroup->setPosition(Vec2::zero());
-		renderableGroup->setSize(1.0f);
+		renderableGroup->setWorldMatrix(Mat3::translationMatrix(Vec2::zero()));
 		bloodworks->addRenderable(renderableGroup, 500);
 	}
 }
@@ -85,7 +85,6 @@ void GameObject::checkRenderable()
 
 void GameObject::RenderableData::update()
 {
-	// todo fix text in group
 	if (type == RenderableDataType::texture)
 	{
 		cTexturedQuadRenderable *quadRenderable = (cTexturedQuadRenderable*)renderable;
@@ -96,7 +95,7 @@ void GameObject::RenderableData::update()
 	else if (type == RenderableDataType::text)
 	{
 		cTextRenderable *textRenderable = (cTextRenderable*)renderable;
-		textRenderable->setPosition(pos);
+		textRenderable->setWorldMatrix(Mat3::translationMatrix(pos));
 		textRenderable->setTextColor(Vec4::fromColor(color));
 		textRenderable->setTextSize(textSize);
 		textRenderable->setAlignment((cTextRenderable::Alignment)alignment);

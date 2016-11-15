@@ -13,19 +13,35 @@ class BloodRenderable : public cRenderable
 		float time;
 		Vec2 pos;
 		float rotation;
-		float scale;
+		float size;
+		Vec2 moveSpeed;
 	};
-protected:
-	virtual void render() override;
+	struct BodyPartData
+	{
+		cRenderable *renderable;
+		Vec2 pos;
+		Vec2 size;
+		float rotation;
+		Vec2 moveSpeed;
+		Vec2 rotatePoint;
+		float time;
+		float timeScale;
+		float rotateSpeed;
+	};
 
+	std::vector<BodyPartData> bodyParts;
 	std::vector<BloodData> bloods;
-	std::vector<cTexturedQuadRenderable*> restingBloods;
 	std::vector<cTextureShr> cachedBloods;
 	cShaderShr cachedShader;
+	cShaderShr bloodRenderShader;
 	Bloodworks *bloodworks;
 public:
 	BloodRenderable(Bloodworks *bloodworks);
 	~BloodRenderable();
 	void init();
-	void addBlood(const Vec2& pos);
+	void addBlood(const Vec2& pos, const Vec2& moveSpeed, float size = 17.5f);
+	void addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& rotatePoint, const Vec2& blowDir);
+
+	virtual void render(bool isIdentity, const Mat3& mat) override;
+	void tick();
 };

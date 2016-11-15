@@ -10,31 +10,19 @@ cRenderableGroup::cRenderableGroup(cGame *game, int initialCapacity /*= 2*/) : c
 	renderables.reserve(initialCapacity);
 }
 
-void cRenderableGroup::render()
+void cRenderableGroup::render(bool isIdentity, const Mat3& mat)
 {
-	if (dirty)
-	{
-		dirty = false;
-
-		for (auto& childData : renderables)
-		{
-			childData.child->setWorldMatrix(childData.localMatrix * worldMatrix);
-		}
-	}
-
 	for (auto& childData : renderables)
 	{
-		childData.child->render();
+		childData.child->render(false, isIdentity ? worldMatrix : mat * worldMatrix);
 	}
 }
 
-void cRenderableGroup::addRenderable(cRenderable *child, Mat3 localMatrix)
+void cRenderableGroup::addRenderable(cRenderable *child)
 {
 	ChildData childData;
 	childData.child = child;
-	childData.localMatrix = localMatrix;
 	renderables.push_back(childData);
-	dirty = true;
 }
 
 cRenderable::~cRenderable()
@@ -50,7 +38,7 @@ void cRenderable::setWorldMatrix(const Mat3& worldMatrix)
 	this->worldMatrix = worldMatrix;
 }
 
-void cRenderableWithShader::render()
+void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 {
 	if (game->lastShader != shader)
 	{
@@ -60,9 +48,9 @@ void cRenderableWithShader::render()
 	}
 }
 
-void cTexturedQuadRenderable::render()
+void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	cRenderableWithShader::render();
+	cRenderableWithShader::render(isIdentity, mat);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 
@@ -83,7 +71,7 @@ void cTexturedQuadRenderable::render()
 		}
 	}
 
-	shader->setWorldMatrix(worldMatrix);
+	shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glDisableVertexAttribArray(0);
@@ -106,11 +94,6 @@ void cTexturedQuadRenderable::render()
 cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
 {
 	setTexture(texturePath);
-	setSize(texture[0]->getDimensions().toVec());
+	setWorldMatrix(Mat3::translationMatrix(texture[0]->getDimensions().toVec()));
 }
 
-
-cTextureShr& cTexturedQuadRenderable::getTexture(int i)
-{
-	return texture[i];
-}

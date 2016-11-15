@@ -8,6 +8,7 @@ class cRenderable;
 
 class cGame
 {
+protected:
 	Mat3 worldViewMatrix;
 	Vec2 cameraPos;
 	float cameraAngle;
@@ -22,10 +23,10 @@ class cGame
 	friend class Coral;
 
 	friend class cRenderableWithShader;
-	cShaderShr lastShader;
 
 	cPriorityVector<cRenderable*> renderables;
 public:
+	cShaderShr lastShader;
 	virtual void init() {}
 	virtual void render() {}
 	virtual void tick(float dt) {}

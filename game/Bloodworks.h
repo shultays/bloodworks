@@ -76,4 +76,6 @@ public:
 	void addDrop(const Vec2& position);
 private:
 	void createBonus(const Vec2& position);
+public:
+	const Mat3& getViewMatrix() const;
 };

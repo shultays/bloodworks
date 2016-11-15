@@ -10,11 +10,11 @@
 
 #include <sstream>
 
+#pragma warning( disable : 4503 )  
 
 void Bloodworks::init()
 {
 	lua.new_usertype<Vec2>("Vec2",
-
 		sol::constructors<sol::types<>, sol::types<float, float>>(),
 		"x", &Vec2::x,
 		"y", &Vec2::y,
@@ -36,8 +36,27 @@ void Bloodworks::init()
 		"distanceSquared", [](const Vec2& a, const Vec2& b) { return a.distanceSquared(b); },
 
 		"length", [](const Vec2& a) { return a.length(); },
-		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); }
+		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); },
+
+		"sideVec", &Vec2::sideVec,
+
+		"dot", [](const Vec2& a, const Vec2& b) { return a.dot(b); }
 	);
+
+
+
+	lua.set_function("approachAngle",
+		[&](float angle, float angleToApproach, float maxRotation) -> float
+	{
+		return approachAngle(angle, angleToApproach, maxRotation);
+	});
+
+
+	lua.set_function("addLine",
+		[&](const Vec2& pos0, const Vec2& pos1)
+	{
+		debugRenderer.addLine(pos0, pos1);
+	});
 
 
 	lua["mission"] = lua.create_table();
@@ -68,10 +87,8 @@ void Bloodworks::init()
 		"addBullet", &Gun::addBullet
 	);
 
-
-
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
-	bg->setSize(512, 512);
+	bg->setWorldMatrix(Mat3::scaleMatrix(512.0f));
 	addRenderable(bg, 0);
 
 	input.hideMouse();
@@ -139,7 +156,7 @@ BloodRenderable* Bloodworks::getBloodRenderable()
 	return bloodRenderable;
 }
 
-void Bloodworks::createGun(const Vec2& pos)
+void Bloodworks::createGun(const Vec2& position)
 {
 	Drop drop;
 	drop.bonus = nullptr;
@@ -149,11 +166,11 @@ void Bloodworks::createGun(const Vec2& pos)
 		drop.gun = guns[randInt((int)guns.size())];
 	} while (drop.gun == player->getGun());
 
-	drop.pos = pos;
+	drop.pos = position;
 	cTextRenderable *renderable;
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
 	renderable->setAlignment(cTextRenderable::center);
-	renderable->setPosition(pos - Vec2(0.0f, 5.0f));
+	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
 	addRenderable(renderable, 400);
 
 	drops.push_back(drop);
@@ -161,19 +178,23 @@ void Bloodworks::createGun(const Vec2& pos)
 
 void Bloodworks::createBonus(const Vec2& position)
 {
-
 	Drop drop;
-	drop.bonus = bonuses[1];
+	drop.bonus = bonuses[randInt((int)bonuses.size())];
 	drop.gun = nullptr;
 
 	drop.pos = position;
 	cTextRenderable *renderable;
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
 	renderable->setAlignment(cTextRenderable::center);
-	renderable->setPosition(position - Vec2(0.0f, 5.0f));
+	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
 	addRenderable(renderable, 400);
 
 	drops.push_back(drop);
+}
+
+const Mat3& Bloodworks::getViewMatrix() const
+{
+	return worldViewMatrix;
 }
 
 void Bloodworks::addDrop(const Vec2& position)
@@ -201,11 +222,6 @@ void Bloodworks::tick(float dt)
 		tickCount = 0;
 	}
 
-	if (input.isKeyPressed(mouse_button_right))
-	{
-		createBonus(player->getAimDir() * 20.0f);
-	}
-
 	/*
 	static bool start = false;
 	if (input.isKeyPressed(key_space))
@@ -214,9 +230,11 @@ void Bloodworks::tick(float dt)
 	}
 	if (start == false) return;
 	*/
-
+	
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
+
+	bloodRenderable->tick();
 
 	missionController.tick(dt);
 
@@ -245,13 +263,6 @@ void Bloodworks::tick(float dt)
 			i--;
 		}
 	}
-
-	/*
-	if (input.isKeyPressed(mouse_button_right))
-	{
-		bloodRenderable->addBlood(player->getPos() + Vec2(0.0f, 100.0f));
-	}
-	*/
 }
 
 void Bloodworks::render()
@@ -261,7 +272,7 @@ void Bloodworks::render()
 	{
 		lastSetRenderTime += 1.0f;
 		std::stringstream ss;
-		ss << "render " << renderCount;
+		ss << "Render " << renderCount;
 		debugRenderer.addScreenText(1, ss.str(), 5.0f, 35.0f, FLT_MAX);
 
 		renderCount = 0;

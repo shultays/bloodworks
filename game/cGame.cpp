@@ -53,7 +53,10 @@ void cGame::renderInternal()
 
 	for (int i=0; i<renderables.size(); i++)
 	{
-		renderables[i]->render();
+		if (renderables[i]->visible)
+		{
+			renderables[i]->render();
+		}
 	}
 	debugRenderer.render();
 

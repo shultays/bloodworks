@@ -2,6 +2,8 @@
 #include "Bloodworks.h"
 #include "Bullet.h"
 #include "Gun.h"
+#include "cFont.h"
+#include <sstream>
 
 
 Player::Player(Bloodworks *bloodworks)
@@ -13,7 +15,10 @@ Player::Player(Bloodworks *bloodworks)
 		"moveSpeed", &Player::moveSpeed,
 		"moveAngle", &Player::moveAngle,
 		"crosshairPos", &Player::crosshairPos,
-		"aimDir", sol::readonly(&Player::aimDir)
+		"aimDir", sol::readonly(&Player::aimDir),
+		"hitPoints", sol::readonly(&Player::hitPoints),
+		"doDamage", &Player::doDamage,
+		"slowdown", &Player::slowdown
 		);
 
 	oldSpreadAngle = 0.0f;
@@ -28,25 +33,39 @@ Player::Player(Bloodworks *bloodworks)
 
 
 	cTexturedQuadRenderable *body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
-	renderable->addRenderable(body, mat);
+	body->setWorldMatrix(mat);
+	renderable->addRenderable(body);
 
 	cTexturedQuadRenderable *hands = new cTexturedQuadRenderable(bloodworks, "resources/assault/hands.png", "resources/default");
-	renderable->addRenderable(hands, mat);
+	hands->setWorldMatrix(mat);
+	renderable->addRenderable(hands);
+
+	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
+	healthRenderable->setAlignment(cTextRenderable::center);
+	healthRenderable->setWorldMatrix(Mat3::identity());
+	bloodworks->addRenderable(healthRenderable, 505);
+
 
 	renderable->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(renderable, 500);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
-	crosshair->setSize(20.0f);
-	bloodworks->addRenderable(crosshair, 502);
+	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f));
+	bloodworks->addRenderable(crosshair, 503);
+
+	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
+	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
+	bloodworks->addRenderable(spread, 502);
+
+	slowdownAmount = 0.0f;
 
 	crosshairPos = Vec2(10.0f);
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
-
+	hitPoints = 100;
 	lua["player"] = this;
-
+	updateHitPoints();
 	this->gun = nullptr;
 }
 
@@ -54,6 +73,8 @@ Player::~Player()
 {
 	SAFE_DELETE(crosshair);
 	SAFE_DELETE(renderable);
+	SAFE_DELETE(spread);
+	SAFE_DELETE(healthRenderable);
 }
 
 void Player::tick(float dt)
@@ -105,7 +126,17 @@ void Player::tick(float dt)
 
 	const float acceleration = 800.0f;
 	const float decceleration = 1000.0f;
-	const float maxSpeed = 150.0f;
+	float maxSpeed = 150.0f;
+
+	if (slowdownAmount > 0.0f)
+	{
+		maxSpeed *= 1.0f - slowdownAmount;
+		slowdownDuration -= dt;
+		if (slowdownDuration < 0.0f)
+		{
+			slowdownAmount -= dt * 3;
+		}
+	}
 
 	float minRotation = pi * 2.0f;
 	float maxRotation = pi * 10.0f;
@@ -167,7 +198,6 @@ void Player::tick(float dt)
 	{
 		crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
 	}
-	crosshair->setPosition(pos + crosshairPos);
 
 	float length = 0.0f;
 	if (crosshairPos.lengthSquared() > 0.01f)
@@ -199,9 +229,17 @@ void Player::tick(float dt)
 				newSpreadAngle = oldSpreadAngle - maxAngleChange;
 			}
 		}
-		crosshair->setSize(sin(newSpreadAngle) * length + 10.0f);
 		oldSpreadAngle = newSpreadAngle;
 	}
+
+	crosshair->setWorldMatrix(Mat3::scaleMatrix(14.0f).translateBy(pos + crosshairPos));
+	crosshair->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.7f));
+	
+	spread->setWorldMatrix(Mat3::scaleMatrix(sin(oldSpreadAngle) * length + 10.0f).translateBy(pos + crosshairPos));
+	spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4, 0.0f, 0.4f)));
+
+	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
+
 
 	Mat3 mat = Mat3::identity();
 	mat.rotateBy(pi_d2 - aimAngle);
@@ -232,4 +270,27 @@ void Player::setGun(Gun *gun)
 Gun* Player::getGun()
 {
 	return gun;
+}
+
+void Player::doDamage(int damage)
+{
+	hitPoints -= damage;
+	if (hitPoints <= 0)
+	{
+		hitPoints = 100;
+	}
+	updateHitPoints();
+}
+
+void Player::slowdown(float slowdownAmount, float slowdownDuration)
+{
+	this->slowdownAmount = slowdownAmount;
+	this->slowdownDuration = slowdownDuration;
+}
+
+void Player::updateHitPoints()
+{
+	std::stringstream ss;
+	ss << hitPoints;
+	healthRenderable->setText(ss.str().c_str());
 }

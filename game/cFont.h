@@ -60,7 +60,7 @@ private:
 	bool lengthDirty;
 	Alignment alignment;
 
-	virtual void render() override;
+	virtual void render(bool isIdentity, const Mat3& mat) override;
 public:
 
 	cTextRenderable(cGame *game, cFontShr font, std::string text = "", float textSize = 38.0f, Vec4 textColor = Vec4(1.0f)) : cRenderableWithShader(game, "resources/default.vs", "resources/default.ps")

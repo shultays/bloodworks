@@ -34,6 +34,12 @@ inline const T& min(const T& a, const T& b)
 	return a < b ? a : b;
 }
 
+template <class T>
+inline const T& clamped(const T& a, const T& min, const T& max)
+{
+	return a < min ? min : (a > max ? max : a);
+}
+
 
 template <class T>
 inline const T& min(const T& a, const T& b, const T& c)
@@ -68,6 +74,9 @@ inline T lerp(const T& a, const T& b, float lerpAmount)
 }
 
 float angleDiff(float a, float b);
+
+
+float approachAngle(float moveAngle, float wantedAngle, float rotation);
 
 bool textFileRead(const char *fileName, std::string &data);
 

@@ -1,0 +1,6 @@
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.pdb filter=lfs diff=lfs merge=lfs -text
+*.ilk filter=lfs diff=lfs merge=lfs -text
+*.ipdb filter=lfs diff=lfs merge=lfs -text
+*.iobj filter=lfs diff=lfs merge=lfs -text
+*.obj filter=lfs diff=lfs merge=lfs -text

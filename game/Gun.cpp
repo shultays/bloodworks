@@ -107,7 +107,7 @@ Bullet* Gun::addBullet()
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
-	renderable->setSize(bulletSize);
+	renderable->setWorldMatrix(Mat3::scaleMatrix(bulletSize));
 	bullet->addRenderable(renderable);
 	bullet->init();
 	bloodworks->getBulletController()->addBullet(bullet);

@@ -89,7 +89,7 @@ cFont::~cFont()
 	}
 }
 
-void cTextRenderable::render()
+void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 {
 	if (lengthDirty)
 	{
@@ -108,20 +108,31 @@ void cTextRenderable::render()
 		}
 	}
 
-	cRenderableWithShader::render();
+	cRenderableWithShader::render(isIdentity, mat);
 	font->texture->bindTexture();
-	Mat3 mat = worldMatrix;
-	mat.row0.x *= textSize;
-	mat.row1.y *= textSize;
-	mat.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
+	Mat3 temp2 = worldMatrix;
+	temp2.row0.x *= textSize;
+	temp2.row1.y *= textSize;
+	temp2.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
 
 	if (alignment == center)
 	{
-		mat.row2.x -= length * 0.5f;
+		temp2.row2.x -= length;
 	}
 	else if (alignment == right)
 	{
-		mat.row2.x -= length;
+		temp2.row2.x -= length * 2.0f;
+	}
+
+	Mat3 temp = isIdentity ? temp2 : temp2 * mat;
+
+	if (alignment == center)
+	{
+		temp.translateBy(Vec2(length * 0.5f, 0.0f));
+	}
+	else if (alignment == right)
+	{
+		temp.translateBy(Vec2(length, 0.0f));
 	}
 	glActiveTexture(GL_TEXTURE0);
 	shader->setColor(textColor);
@@ -132,7 +143,7 @@ void cTextRenderable::render()
 		float charSize = font->defaultSize;
 		if (font->charInfos[text[i]].x >= 0)
 		{
-			shader->setWorldMatrix(mat);
+			shader->setWorldMatrix(temp);
 
 			glBindBuffer(GL_ARRAY_BUFFER, font->charInfos[text[i]].vbo);
 
@@ -145,7 +156,7 @@ void cTextRenderable::render()
 			charSize = (float)font->charInfos[text[i]].w;
 		}
 
-		mat.translateBy(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
+		temp.translateBy(Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f));
 	}
 
 	glDisableVertexAttribArray(0);

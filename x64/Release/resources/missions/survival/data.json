@@ -1,7 +1,0 @@
-{
-  "name": "Survival",
-  
-  
-  "scriptFile" : "resources/missions/survival/survival.lua",
-  "scriptName" : "Survival"
-}

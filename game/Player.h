@@ -17,12 +17,17 @@ class Player
 	Bloodworks *bloodworks;
 	cRenderableGroup *renderable;
 	cRenderable *crosshair;
+	cRenderable *spread;
 	Vec2 crosshairPos;
 	Gun *gun;
 	Vec2 aimDir;
 	float aimAngle;
 	float oldSpreadAngle;
+	int hitPoints;
+	cTextRenderable *healthRenderable;
 
+	float slowdownAmount;
+	float slowdownDuration;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -40,4 +45,9 @@ public:
 
 	void setGun(Gun* gun);
 	Gun* getGun();
+
+	void doDamage(int damage);
+	void slowdown(float slowdownAmount, float slowdownDuration);
+private:
+	void updateHitPoints();
 };

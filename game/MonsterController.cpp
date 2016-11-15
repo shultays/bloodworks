@@ -38,10 +38,23 @@ void MonsterController::init(Bloodworks *bloodworks)
 	{
 		return getClosestMonster(pos);
 	});
+
+	lua.set_function("getClosestMonsterWithIgnoreData",
+		[&](const Vec2& pos, const std::string& ignoreData) -> Monster*
+	{
+		return getClosestMonsterWithIgnoreData(pos, ignoreData);
+	});
+
 	lua.set_function("getClosestMonsterInRange",
 		[&](const Vec2& pos, float range) -> Monster*
 	{
 		return getClosestMonsterInRange(pos, range);
+	});
+
+	lua.set_function("getClosestMonsterInRangeWithIgnoreData",
+		[&](const Vec2& pos, float range, const std::string& ignoreData) -> Monster*
+	{
+		return getClosestMonsterInRangeWithIgnoreData(pos, range, ignoreData);
 	});
 
 
@@ -127,23 +140,16 @@ const std::vector<Monster*> MonsterController::getMonsterAt(const Vec2& pos)  co
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)
 {
-	float closest = FLT_MAX;
-	Monster *closestMonster = nullptr;
-	for (auto& monster : monsters)
-	{
-		float d;
-		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
-		{
-			closest = d;
-			closestMonster = monster;
-		}
-	}
-
-	return closestMonster;
+	return getClosestMonsterWithIgnoreData(pos, "");
 }
 
 
 Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float range)
+{
+	return getClosestMonsterInRangeWithIgnoreData(pos, range, "");
+}
+
+Monster* MonsterController::getClosestMonsterInRangeWithIgnoreData(const Vec2& pos, float range, const std::string& ignoreData)
 {
 	float closest = range * range;
 	Monster *closestMonster = nullptr;
@@ -181,9 +187,10 @@ Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float rang
 				for (auto& monster : grid.getNodeAtIndex(i, j))
 				{
 					float d;
-					if (monster->isDead == false 
-						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y) 
-						&& (d = monster->getPosition().distanceSquared(pos)) < closest)
+					if (monster->isDead == false
+						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
+						&& (d = monster->getPosition().distanceSquared(pos)) < closest
+						&& (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
 					{
 						closest = d;
 						closestMonster = monster;
@@ -197,7 +204,7 @@ Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float rang
 		for (auto& monster : monsters)
 		{
 			float d;
-			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
+			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
 			{
 				closest = d;
 				closestMonster = monster;
@@ -270,4 +277,41 @@ std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, 
 	}
 
 	return foundMonsters;
+}
+
+void MonsterController::damageMonstersInRangeWithIgnoreData(const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData)
+{
+	std::vector<Monster*> monsters = getAllMonstersInRange(pos, range);
+	for (auto& monster : monsters)
+	{
+		if (ignoreData.length() == 0|| ((bool)monster->data[ignoreData]) == false)
+		{
+			monster->doDamage(randInt(minRange, maxRange), (monster->position - pos).normalized());
+			if (mark)
+			{
+				monster->data[ignoreData] = true;
+			}
+		}
+	}
+}
+void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
+{
+	damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, false, "");
+}
+
+Monster* MonsterController::getClosestMonsterWithIgnoreData(const Vec2& pos, const std::string& ignoreData)
+{
+	float closest = FLT_MAX;
+	Monster *closestMonster = nullptr;
+	for (auto& monster : monsters)
+	{
+		float d;
+		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
+		{
+			closest = d;
+			closestMonster = monster;
+		}
+	}
+
+	return closestMonster;
 }
