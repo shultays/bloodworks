@@ -48,4 +48,9 @@ public:
 	void addRenderable(cRenderable* renderable, int level);
 
 	void removeRenderable(cRenderable* renderable);
+
+	const Mat3& getViewMatrix()
+	{
+		return worldViewMatrix;
+	}
 };

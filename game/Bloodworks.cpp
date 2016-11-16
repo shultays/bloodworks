@@ -10,7 +10,9 @@
 
 #include <sstream>
 
-#pragma warning( disable : 4503 )  
+#include "cParticle.h"
+
+cParticle *p;
 
 void Bloodworks::init()
 {
@@ -121,6 +123,9 @@ void Bloodworks::init()
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, 1);
+
+	p = new cParticle(this);
+	addRenderable(p, 1000);
 }
 
 Bloodworks::~Bloodworks()
@@ -243,6 +248,10 @@ void Bloodworks::tick(float dt)
 	monsterController.tick(dt);
 	bulletController.tick(dt);
 
+	if (input.isKeyPressed(mouse_button_right))
+	{
+		p->addParticle(player->getPos());
+	}
 
 	for(int i=0; i< drops.size(); i++)
 	{

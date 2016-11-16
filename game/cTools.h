@@ -7,6 +7,9 @@
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
+#ifndef offsetof
+#define offsetof(st, m) ((size_t)&(((st *)0)->m))
+#endif
 
 template <class T>
 inline void swapt(T& a, T& b)

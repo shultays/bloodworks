@@ -194,6 +194,7 @@
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />
+    <ClInclude Include="cParticle.h" />
     <ClInclude Include="cPriorityVector.h" />
     <ClInclude Include="cRenderable.h" />
     <ClInclude Include="cResources.h" />

@@ -200,5 +200,8 @@
     <ClInclude Include="GameObject.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="cParticle.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
