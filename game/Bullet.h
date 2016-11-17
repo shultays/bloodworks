@@ -7,6 +7,7 @@
 class cRenderableGroup;
 class Bloodworks;
 class cRenderable;
+class cParticle;
 
 class Bullet
 {
@@ -37,6 +38,14 @@ class Bullet
 	sol::table data;
 
 	bool diesOnHit;
+
+	struct Particledata
+	{
+		cParticle* particle;
+		Vec2 spawnShift;
+	};
+
+	std::vector<Particledata> particles;
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
@@ -64,7 +73,10 @@ public:
 	void addRenderableTexture(const std::string& texture);
 	void addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions);
 	void addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions);
+	void addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args);
 
+	bool hasParticles();
 private:
 	void updateDrawable();
+	void removeSelf();
 };

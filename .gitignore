@@ -3,3 +3,4 @@ game.VC.VC.opendb
 /x64/
 *.db
 game.VC.db
+/.vs/

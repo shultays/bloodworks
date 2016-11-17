@@ -28,11 +28,16 @@ void BulletController::init(Bloodworks *bloodworks)
 		"onTickCallback", &Bullet::onTickCallback,
 		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
 
+		"isDead", sol::readonly(&Bullet::isDead),
+
 		"data", &Bullet::data,
 
 		"addRenderableTexture", &Bullet::addRenderableTexture,
 		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
-		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize
+		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
+		"addTrailParticle", &Bullet::addTrailParticle,
+
+		"removeSelf", &Bullet::removeSelf
 		);
 
 
@@ -65,16 +70,23 @@ void BulletController::tick(float dt)
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		bullets[i]->tick(dt);
+		if (bullets[i]->isDead == false)
+		{
+			bullets[i]->tick(dt);
+		}
+
 		if (bullets[i]->isDead)
 		{
-			grid.removeFromGrid(bullets[i]);
-			int id = bullets[i]->getId();
-			SAFE_DELETE(bullets[i]);
-			bulletMap.erase(id);
-			bullets[i] = bullets[bullets.size() - 1];
-			bullets.resize(bullets.size() - 1);
-			i--;
+			if (bullets[i]->hasParticles() == false)
+			{
+				grid.removeFromGrid(bullets[i]);
+				int id = bullets[i]->getId();
+				SAFE_DELETE(bullets[i]);
+				bulletMap.erase(id);
+				bullets[i] = bullets[bullets.size() - 1];
+				bullets.resize(bullets.size() - 1);
+				i--;
+			}
 		}
 		else
 		{

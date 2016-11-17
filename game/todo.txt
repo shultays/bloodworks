@@ -1,5 +1,16 @@
-blooddrawable da body part ları texture a çiz
-blooddrawable da çizilen textureları sil
-body part ları rotate ini düzelt
+
 texture lar için clamp ekle
-body part oluşturma olayını güzelleştir (scale sorunlu mu?)
+
+particle controller gibi bir şey yap
+
+bullet dan particle öldümü checkini kaldır
+
+game object e particle ekle
+(genel olarak particle da olabilir)
+
+rocket particle ı güzelleştir
+
+rocket için area effect ekle
+
+rocket movement ını iyileştir
+

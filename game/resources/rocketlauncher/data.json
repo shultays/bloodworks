@@ -1,0 +1,12 @@
+{
+  "name": "Rocket Launcher",
+  "artFolder" : "resources/rocketlauncher/",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 2.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [30, 70],
+  
+  "scriptFile" : "resources/rocketlauncher/rocket.lua",
+  "scriptName" : "RocketLauncher"
+}

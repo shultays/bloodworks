@@ -97,7 +97,9 @@ void Bloodworks::init()
 	tickCount = renderCount = 0;
 
 	player = new Player(this);
-	Gun *gun = new Gun();
+	Gun *gun;
+
+	gun = new Gun();
 	gun->init(this, "resources/basicgun/data.json");
 	guns.push_back(gun);
 	player->setGun(gun);
@@ -105,6 +107,11 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/machinegun/data.json");
 	guns.push_back(gun);
+
+	gun = new Gun();
+	gun->init(this, "resources/rocketlauncher/data.json");
+	guns.push_back(gun);
+	player->setGun(gun);
 
 	Bonus *bonus = new Bonus("resources/bonuses/circle_fire/data.json");
 	bonuses.push_back(bonus);
@@ -124,14 +131,10 @@ void Bloodworks::init()
 
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/rocketSmoke/data.json");
-
-	p = new cParticle(this, particleTemplate);
-	addRenderable(p, 1000);
 }
 
 Bloodworks::~Bloodworks()
 {
-	SAFE_DELETE(p);
 	SAFE_DELETE(particleTemplate);
 
 	player->setGun(nullptr);
@@ -251,8 +254,6 @@ void Bloodworks::tick(float dt)
 
 	monsterController.tick(dt);
 	bulletController.tick(dt);
-
-	p->addParticle(player->getPos());
 
 	for(int i=0; i< drops.size(); i++)
 	{

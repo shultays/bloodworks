@@ -4,6 +4,7 @@
 #include "Bloodworks.h"
 #include "cTexture.h"
 #include "Gun.h"
+#include "cParticle.h"
 
 int Bullet::nextId = 0;
 
@@ -28,6 +29,11 @@ void Bullet::init()
 Bullet::~Bullet()
 {
 	SAFE_DELETE(renderable);
+	for (int i = 0; i < particles.size(); i++)
+	{
+		SAFE_DELETE(particles[i].particle);
+	}
+	particles.clear();
 }
 
 void Bullet::tick(float dt)
@@ -45,14 +51,19 @@ void Bullet::tick(float dt)
 
 	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
 
-	if (pos.x > 400 || pos.x < -400 || pos.y > 300 || pos.y < -300)
+	if (pos.x > 500 || pos.x < -500 || pos.y > 400 || pos.y < -400)
 	{
-		isDead = true;
+		removeSelf();
 	}
 
 	if (isDead)
 	{
 		return;
+	}
+	
+	for (auto& particleData : particles)
+	{
+		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-rotation + pi_d2)));
 	}
 
 	for (auto& monster : monsters)
@@ -83,10 +94,14 @@ void Bullet::tick(float dt)
 			}
 
 			monster->doDamage(damage, dir);
-			isDead = diesOnHit;
+			if (diesOnHit)
+			{
+				removeSelf();
+			}
 			break;
 		}
 	}
+
 }
 
 void Bullet::addRenderable(cRenderable *renderable)
@@ -103,6 +118,12 @@ void Bullet::updateDrawable()
 }
 
 
+void Bullet::removeSelf()
+{
+	isDead = true;
+	renderable->setVisible(false);
+}
+
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)
 {
 	cTexturedQuadRenderable* quad = new cTexturedQuadRenderable(bloodworks, texture.c_str(), "resources/default");
@@ -111,6 +132,27 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 	updateDrawable();
 }
 
+
+void Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args)
+{
+	Particledata particleData;
+	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
+	particleData.spawnShift = shift;
+	bloodworks->addRenderable(particleData.particle, 503);
+	particles.push_back(particleData);
+}
+
+bool Bullet::hasParticles()
+{
+	for (auto& particleData : particles)
+	{
+		if (particleData.particle->hasParticle())
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 void Bullet::addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions)
 {

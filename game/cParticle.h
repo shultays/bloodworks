@@ -123,14 +123,16 @@ class cParticle : public cRenderable
 	};
 
 	std::vector<QuadBufferData> quadBuffers;
+	sol::table args;
 public:
 
-	cParticle(cGame* game, cParticleTemplate *particleTemplate) : cRenderable(game)
+	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderable(game)
 	{
 		this->particleTemplate = particleTemplate;
 		time = timer.getTime();
 
 		buff = new char[particleTemplate->attributeSize * 4];
+		this->args = args;
 	}
 
 	~cParticle()
@@ -160,7 +162,7 @@ public:
 		QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
 
 		sol::table params = lua.create_table();
-		particleTemplate->scriptTable["addParticle"](params, pos);
+		particleTemplate->scriptTable["addParticle"](params, pos, args);
 
 		memset(buff, 0, particleTemplate->attributeSize * 4);
 
@@ -235,10 +237,6 @@ public:
 				}
 			}
 
-			std::stringstream ss;
-			ss << quadBuffers.size();
-			debugRenderer.addScreenText(ss.str(), 100.0f, 100.0f);
-
 			game->lastShader = nullptr;
 
 			particleTemplate->shader->begin();
@@ -270,4 +268,11 @@ public:
 			game->lastShader = nullptr;
 		}
 	}
+
+	bool hasParticle()
+	{
+		return quadBuffers.size() > 0;
+	}
+
+
 };

@@ -49,8 +49,6 @@ class Bloodworks : public cGame
 
 
 	cParticleTemplate *particleTemplate;
-	cParticle *p;
-
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -77,10 +75,14 @@ public:
 
 	BloodRenderable* getBloodRenderable();
 
+	cParticleTemplate* getParticleTemplate(const std::string& name)
+	{
+		return particleTemplate; //todo
+	}
 	void createGun(const Vec2& pos);
 	void addDrop(const Vec2& position);
+	const Mat3& getViewMatrix() const;
+
 private:
 	void createBonus(const Vec2& position);
-public:
-	const Mat3& getViewMatrix() const;
 };
