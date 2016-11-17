@@ -6,6 +6,8 @@
 #include "BulletController.h"
 #include "MissionController.h"
 
+class cParticle;
+class cParticleTemplate;
 class cTexturedQuadRenderable;
 class Player;
 class Monster;
@@ -45,6 +47,9 @@ class Bloodworks : public cGame
 
 	std::vector<Drop> drops;
 
+
+	cParticleTemplate *particleTemplate;
+	cParticle *p;
 
 protected:
 	virtual void render() override;

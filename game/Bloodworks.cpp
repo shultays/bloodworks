@@ -12,8 +12,6 @@
 
 #include "cParticle.h"
 
-cParticle *p;
-
 void Bloodworks::init()
 {
 	lua.new_usertype<Vec2>("Vec2",
@@ -124,12 +122,18 @@ void Bloodworks::init()
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, 1);
 
-	p = new cParticle(this);
+	particleTemplate = new cParticleTemplate();
+	particleTemplate->init("resources/particles/rocketSmoke/data.json");
+
+	p = new cParticle(this, particleTemplate);
 	addRenderable(p, 1000);
 }
 
 Bloodworks::~Bloodworks()
 {
+	SAFE_DELETE(p);
+	SAFE_DELETE(particleTemplate);
+
 	player->setGun(nullptr);
 	SAFE_DELETE(bloodRenderable);
 	SAFE_DELETE(bg);
@@ -248,10 +252,7 @@ void Bloodworks::tick(float dt)
 	monsterController.tick(dt);
 	bulletController.tick(dt);
 
-	if (input.isKeyPressed(mouse_button_right))
-	{
-		p->addParticle(player->getPos());
-	}
+	p->addParticle(player->getPos());
 
 	for(int i=0; i< drops.size(); i++)
 	{

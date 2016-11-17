@@ -32,8 +32,8 @@ class BloodRenderable : public cRenderable
 	std::vector<BodyPartData> bodyParts;
 	std::vector<BloodData> bloods;
 	std::vector<cTextureShr> cachedBloods;
-	cShaderShr cachedShader;
-	cShaderShr bloodRenderShader;
+	cShaderShr bloodShader;
+	cShaderShr defaultShader;
 	Bloodworks *bloodworks;
 public:
 	BloodRenderable(Bloodworks *bloodworks);

@@ -6,136 +6,268 @@
 #include "cTexture.h"
 #include "cGame.h"
 
-#define MAX_QUAD 10000
+#define MAX_QUAD 256
 
-class cParticle : public cRenderable
+
+class cParticleTemplate
 {
-	struct VertexData
-	{
-		Vec2 pos;
-		Vec2 initialScale;
-		Vec2 uv;
-		Vec4 color;
-		Vec2 moveSpeed;
-		Vec2 scaleSpeed;
-		float time;
-		float rotate;
-		float rotateSpeed;
-		float fadeOutSpeed;
-	};
+	friend class cParticle;
 
-	struct QuadData
-	{
-		VertexData vertices[4];
-	};
-
-	
-	std::vector<QuadData> quads;
-
-	GLuint quadBuffer;
-
-	float time;
+	float maxLifeTime;
 	cShaderShr shader;
 	cTextureShr texture;
+	std::string scriptName;
+	sol::table scriptTable;
+
+	int attributeSize;
+	int uvIndex;
+
+	struct Attribute
+	{
+		std::string name;
+		int type;
+		int size;
+		int begin;
+	};
+
+	std::vector<Attribute> attributes;
 public:
 
-	cParticle(cGame* game) : cRenderable(game)
+	void init(const std::string& particleData)
 	{
-		glGenBuffers(1, &quadBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, quadBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(QuadData) * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
-		time = timer.getTime();
+		std::string jsonFile;
+		textFileRead(particleData.c_str(), jsonFile);
+		json j = json::parse(jsonFile.c_str());
 
-		shader = resources.getShader("resources/particleShader.vs", "resources/particleShader.ps");
+		shader = resources.getShader(j["vertexShader"].get<std::string>().c_str(), j["pixelShader"].get<std::string>().c_str());
 
-		shader->addAttribute("pos", TypeVec2);
-		shader->addAttribute("initialScale", TypeVec2);
-		shader->addAttribute("uv", TypeVec2);
-		shader->addAttribute("color", TypeVec4);
-		shader->addAttribute("moveSpeed", TypeVec2);
-		shader->addAttribute("scaleSpeed", TypeVec2);
-		shader->addAttribute("time", TypeFloat);
-		shader->addAttribute("rotate", TypeFloat);
-		shader->addAttribute("rotateSpeed", TypeFloat);
-		shader->addAttribute("fadeOutSpeed", TypeFloat);
+		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+		std::string scriptPath = j["scriptFile"].get<std::string>();
+		lua.script_file(scriptPath);
+
+		maxLifeTime = j["maxLifeTime"].get<float>();
+
+		attributeSize = 0;
+		
+
+		auto addAtribute = [&](const std::string& attributeName, const std::string& attributeType)
+		{
+			if (attributeName == "uv")
+			{
+				uvIndex = (int)attributes.size();
+			}
+			Attribute attribute;
+			attribute.name = attributeName;
+
+			if (attributeType == "float")
+			{
+				attribute.type = TypeFloat;
+			}
+			else if (attributeType == "vec2")
+			{
+				attribute.type = TypeVec2;
+			}
+			else if (attributeType == "vec3")
+			{
+				attribute.type = TypeVec3;
+			}
+			else if (attributeType == "vec4")
+			{
+				attribute.type = TypeVec4;
+			}
+			else
+			{
+				assert(!"Unknown attribute type");
+			}
+
+			const cShader::Attribute& a = shader->addAttribute(attributeName.c_str(), attribute.type);
+
+			attribute.begin = attributeSize;
+			attribute.size = a.getCount() * 4;
+			attributeSize += attribute.size;
+
+			attributes.push_back(attribute);
+		};
+		addAtribute("pos", "vec2");
+		addAtribute("uv", "vec2");
+		addAtribute("time", "float");
 
 		shader->addUniform("currentTime", TypeFloat);
 
-		texture = resources.getTexture("resources/white.png");
+		lua.set_function("addAttribute", addAtribute);
+
+		texture = resources.getTexture(j["texture"].get<std::string>().c_str());
+
+		scriptTable["initSystem"]();
+	}
+
+	~cParticleTemplate()
+	{
+		shader = nullptr;
+		texture = nullptr;
+	}
+};
+
+
+class cParticle : public cRenderable
+{
+	float time;
+	cParticleTemplate *particleTemplate;
+	char *buff;
+
+	struct QuadBufferData
+	{
+		GLuint quadBuffer;
+		int count;
+		float timeToDie;
+	};
+
+	std::vector<QuadBufferData> quadBuffers;
+public:
+
+	cParticle(cGame* game, cParticleTemplate *particleTemplate) : cRenderable(game)
+	{
+		this->particleTemplate = particleTemplate;
+		time = timer.getTime();
+
+		buff = new char[particleTemplate->attributeSize * 4];
 	}
 
 	~cParticle()
 	{
-		shader = nullptr;
-		texture = nullptr;
-		glDeleteBuffers(1, &quadBuffer);
+		SAFE_DELETE(buff);
+
+		for (auto& bufferData : quadBuffers)
+		{
+			glDeleteBuffers(1, &bufferData.quadBuffer);
+		}
 	}
 
 	void addParticle(const Vec2& pos)
 	{
-		QuadData quadData;
-
-		for (int i = 0; i < 4; i++)
+		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD)
 		{
-			quadData.vertices[i].pos = pos;
-			quadData.vertices[i].initialScale = Vec2(10.0f);
-			quadData.vertices[i].color = Vec4(1.0);
-			quadData.vertices[i].moveSpeed = Vec2(0.0f);
-			quadData.vertices[i].scaleSpeed = Vec2(0.0f);
-			quadData.vertices[i].time = timer.getTime() - time;
-			quadData.vertices[i].rotate = 0.0f;
-			quadData.vertices[i].rotateSpeed = 0.0f;
-			quadData.vertices[i].fadeOutSpeed = 0.0f;
+			QuadBufferData bufferData;
+			bufferData.count = 0;
+
+			glGenBuffers(1, &bufferData.quadBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+			glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
+
+			quadBuffers.push_back(bufferData);
 		}
-		quadData.vertices[0].uv = Vec2(0.0f, 0.0f);
-		quadData.vertices[1].uv = Vec2(0.0f, 1.0f);
-		quadData.vertices[2].uv = Vec2(1.0f, 1.0f);
-		quadData.vertices[3].uv = Vec2(1.0f, 0.0f);
+
+		QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
+
+		sol::table params = lua.create_table();
+		particleTemplate->scriptTable["addParticle"](params, pos);
+
+		memset(buff, 0, particleTemplate->attributeSize * 4);
+
+		int vertexSize = particleTemplate->attributeSize;
+
+		for (auto& attribute : particleTemplate->attributes)
+		{
+			if (params[attribute.name])
+			{
+				switch (attribute.type)
+				{
+				case TypeFloat:
+					*(float*)(buff + attribute.begin) = params[attribute.name].get<float>();
+					break;
+				case TypeVec2:
+					*(Vec2*)(buff + attribute.begin) = params[attribute.name].get<Vec2>();
+					break;
+				case TypeVec3:
+					*(Vec3*)(buff + attribute.begin) = params[attribute.name].get<Vec3>();
+					break;
+				case TypeVec4:
+					*(Vec4*)(buff + attribute.begin) = params[attribute.name].get<Vec4>();
+					break;
+				}
+			}
+			else if (attribute.name == "time")
+			{
+				*(float*)(buff + attribute.begin) = timer.getTime() - time;
+			}
+			else if (attribute.name == "uv")
+			{
+			}
+			else
+			{
+				assert(!"attribute is not set");
+			}
+		}
+
+		memcpy(buff + vertexSize * 1, buff, vertexSize);
+		memcpy(buff + vertexSize * 2, buff, vertexSize);
+		memcpy(buff + vertexSize * 3, buff, vertexSize);
 
 
-		glBindBuffer(GL_ARRAY_BUFFER, quadBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeof(QuadData) * quads.size(), sizeof(QuadData), &quadData);
+		*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
+		*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
+		*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
+		*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
 
-		quads.push_back(quadData);
 
+		glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, bufferData.count * vertexSize * 4, vertexSize * 4, buff);
+
+		bufferData.count++;
+		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 	}
 
 	virtual void render(bool isIdentity, const Mat3& mat)
 	{
-		if (quads.size() > 0)
+		if (quadBuffers.size() > 0)
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, quadBuffer);
+			for (int i = 0; i < quadBuffers.size(); i++)
+			{
+				if (quadBuffers[i].timeToDie < timer.getTime())
+				{
+					glDeleteBuffers(1, &quadBuffers[i].quadBuffer);
+					for (int j = i; j < quadBuffers.size() - 1; j++)
+					{
+						quadBuffers[j] = quadBuffers[j + 1];
+					}
+					quadBuffers.resize(quadBuffers.size() - 1);
+					i--;
+				}
+			}
+
+			std::stringstream ss;
+			ss << quadBuffers.size();
+			debugRenderer.addScreenText(ss.str(), 100.0f, 100.0f);
 
 			game->lastShader = nullptr;
 
-			shader->begin();
+			particleTemplate->shader->begin();
 
-			shader->bindAttribute("pos", sizeof(VertexData), offsetof(VertexData, pos));
-			shader->bindAttribute("initialScale", sizeof(VertexData), offsetof(VertexData, initialScale));
-			shader->bindAttribute("uv", sizeof(VertexData), offsetof(VertexData, uv));
-			shader->bindAttribute("color", sizeof(VertexData), offsetof(VertexData, color));
-			shader->bindAttribute("moveSpeed", sizeof(VertexData), offsetof(VertexData, moveSpeed));
-			shader->bindAttribute("scaleSpeed", sizeof(VertexData), offsetof(VertexData, scaleSpeed));
-			shader->bindAttribute("time", sizeof(VertexData), offsetof(VertexData, time));
-			shader->bindAttribute("rotate", sizeof(VertexData), offsetof(VertexData, rotate));
-			shader->bindAttribute("rotateSpeed", sizeof(VertexData), offsetof(VertexData, rotateSpeed));
-			shader->bindAttribute("fadeOutSpeed", sizeof(VertexData), offsetof(VertexData, fadeOutSpeed));
 
-			shader->setUniform("currentTime", 0.0f);
+			particleTemplate->shader->setUniform("currentTime", timer.getTime() - time);
 
 			glActiveTexture(GL_TEXTURE0);
-			texture->bindTexture();
-			shader->setUniform("uTexture", 0);
+			particleTemplate->texture->bindTexture();
+			particleTemplate->shader->setUniform("uTexture", 0);
 
-			shader->setViewMatrix(game->getViewMatrix());
+			particleTemplate->shader->setViewMatrix(game->getViewMatrix());
 
 			glEnableVertexAttribArray(0);
-			glDrawArrays(GL_QUADS, 0, (int)quads.size() * 4);
+			for (auto& bufferData : quadBuffers)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+
+				for (auto& attribute : particleTemplate->attributes)
+				{
+					particleTemplate->shader->bindAttribute(attribute.name.c_str(), particleTemplate->attributeSize, attribute.begin);
+				}
+				glDrawArrays(GL_QUADS, 0, bufferData.count * 4);
+			}
 
 			glDisableVertexAttribArray(0);
 
 			glDisable(GL_TEXTURE_2D);
+			game->lastShader = nullptr;
 		}
-
 	}
 };

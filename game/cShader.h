@@ -23,6 +23,7 @@ enum {
 };
 
 class cShader {
+public:
 	class Uniform {
 	public:
 		int uniformType;
@@ -94,12 +95,12 @@ class cShader {
 
 		Attribute() {}
 
-		bool isNormalized() 
+		bool isNormalized() const
 		{
 			return normalized;
 		}
 
-		GLsizei getCount() 
+		GLsizei getCount()  const
 		{
 			switch (attributeType) 
 			{
@@ -122,7 +123,7 @@ class cShader {
 			}
 		}
 
-		GLenum getType() 
+		GLenum getType() const
 		{
 			switch (attributeType) 
 			{
@@ -177,6 +178,7 @@ class cShader {
 		}
 	};
 
+	private:
 	GLuint vertexShader;
 	GLuint pixelShader;
 	char vertexShaderFile[64];
@@ -359,7 +361,7 @@ public:
 	}
 
 
-	void bindAttribute(char* name, int stride, int pointer) 
+	void bindAttribute(const char *name, int stride, int pointer) 
 	{
 		Attribute& attribute = attributes.at(name);
 		glEnableVertexAttribArray(attribute.location);
@@ -367,7 +369,7 @@ public:
 	}
 
 
-	void addAttribute(char* name, int attributeType, bool normalized = false, int attributeLocation = -1) 
+	const Attribute& addAttribute(const char *name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
 		Attribute& attribute = attributes[name] = Attribute(attributeType, normalized);
 		if (attributeLocation == -1) {
@@ -377,6 +379,18 @@ public:
 			attribute.location = attributeLocation;
 			glBindAttribLocation(shaderProgram, attributeLocation, name);
 		}
+
+		return attribute;
+	}
+
+	int getTotalAttributeSize()
+	{
+		int size = 0;
+		for (auto& attribute : attributes)
+		{
+			size += attribute.second.getCount() * 4;
+		}
+		return size;
 	}
 
 	void addDefaultUniforms() 
@@ -388,7 +402,7 @@ public:
 		addUniform("uTexture2", TypeInt);
 	}
 
-	void addUniform(char* name, int uniformType) 
+	void addUniform(const char *name, int uniformType) 
 	{
 		Uniform& uniform = uniforms[name] = Uniform(uniformType);
 		uniform.location = glGetUniformLocation(shaderProgram, name);
@@ -409,110 +423,110 @@ public:
 		setUniform("uColor", color);
 	}
 
-	void setUniform(char* name, void* data) 
+	void setUniform(const char *name, void* data) 
 	{
 		uniforms[name].setData(data);
 	}
 
-	void setUniform(char* name, float data) 
+	void setUniform(const char *name, float data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const Vec2& data) 
+	void setUniform(const char *name, const Vec2& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const Vec3& data) 
+	void setUniform(const char *name, const Vec3& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const Vec4& data) 
+	void setUniform(const char *name, const Vec4& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const Mat3& data) 
+	void setUniform(const char *name, const Mat3& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const Mat2& data) 
+	void setUniform(const char *name, const Mat2& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, int data) 
+	void setUniform(const char *name, int data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const IntVec2& data) 
+	void setUniform(const char *name, const IntVec2& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const IntVec3& data) 
+	void setUniform(const char *name, const IntVec3& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setUniform(char* name, const IntVec4& data) 
+	void setUniform(const char *name, const IntVec4& data) 
 	{
 		uniforms[name].setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, void* data) 
+	void setAttributeConstant(const char *name, void* data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData(data);
 	}
 
-	void setAttributeConstant(char* name, float data) 
+	void setAttributeConstant(const char *name, float data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const Vec2& data) 
+	void setAttributeConstant(const char *name, const Vec2& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const Vec3& data) 
+	void setAttributeConstant(const char *name, const Vec3& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const Vec4& data) 
+	void setAttributeConstant(const char *name, const Vec4& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, int data) 
+	void setAttributeConstant(const char *name, int data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const IntVec2& data) 
+	void setAttributeConstant(const char *name, const IntVec2& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const IntVec3& data) 
+	void setAttributeConstant(const char *name, const IntVec3& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
 
-	void setAttributeConstant(char* name, const IntVec4& data) 
+	void setAttributeConstant(const char *name, const IntVec4& data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);

@@ -34,7 +34,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		if (remove)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-			cShaderShr shader = resources.getShader("resources/default.vs", "resources/default.ps");
+			cShaderShr shader = defaultShader;
 
 			Vec2 windowSize = bloodworks->getScreenDimensions().toVec();
 			float halfWidth = windowSize.w * 0.5f;
@@ -84,7 +84,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		if (remove)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-			cShaderShr shader = bloodRenderShader;
+			cShaderShr shader = bloodShader;
 			shader->begin();
 			blood.renderable->setShader(shader);
 
@@ -111,7 +111,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 	bloodworks->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
-	cShaderShr shader = resources.getShader("resources/default.vs", "resources/default.ps");
+	cShaderShr shader = defaultShader;
 	shader->begin();
 	shader->setViewMatrix(bloodworks->getViewMatrix());
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
@@ -179,8 +179,8 @@ BloodRenderable::~BloodRenderable()
 		SAFE_DELETE(t.renderable);
 	}
 	bodyParts.clear();
-	cachedShader = nullptr;
-	bloodRenderShader = nullptr;
+	bloodShader = nullptr;
+	defaultShader = nullptr;
 }
 
 
@@ -192,9 +192,8 @@ void BloodRenderable::init()
 		ss << "resources/blood/blood" << i << ".png";
 		cachedBloods.push_back(resources.getTexture(ss.str().c_str()));
 	}
-	cachedShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
-	bloodRenderShader = resources.getShader("resources/blood/bloodToTexture.vs", "resources/blood/bloodToTexture.ps");
-
+	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
+	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
 	glGenFramebuffers(1, &FramebufferName);
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
@@ -215,11 +214,6 @@ void BloodRenderable::init()
 	glClearColor(color.r, color.g, color.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		int a = 5;
-	}
 }
 
 void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float size)
