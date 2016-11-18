@@ -273,6 +273,4 @@ public:
 	{
 		return quadBuffers.size() > 0;
 	}
-
-
 };

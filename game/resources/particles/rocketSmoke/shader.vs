@@ -13,11 +13,10 @@ attribute float fadeOutSpeed;
 
 uniform float currentTime;
 uniform sampler2D uTexture;
+uniform mat3 uViewMatrix;
 
 varying vec4 vColor;
 varying vec2 vVertexUV;
-
-uniform mat3 uViewMatrix;
 
 
 void main(void) 
