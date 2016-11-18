@@ -15,7 +15,6 @@ class cParticleTemplate
 
 	float maxLifeTime;
 	cShaderShr shader;
-	cTextureShr texture;
 	std::string scriptName;
 	sol::table scriptTable;
 
@@ -31,6 +30,7 @@ class cParticleTemplate
 	};
 
 	std::vector<Attribute> attributes;
+	std::vector<cTextureShr> textures;
 public:
 
 	void init(const std::string& particleData)
@@ -96,15 +96,29 @@ public:
 
 		lua.set_function("addAttribute", addAtribute);
 
-		texture = resources.getTexture(j["texture"].get<std::string>().c_str());
 
+		if (j["textures"].is_array())
+		{
+			for (auto& t : j["textures"])
+			{
+				textures.push_back(resources.getTexture(t.get<std::string>().c_str()));
+			}
+		}
+		else
+		{
+			textures.push_back(resources.getTexture(j["textures"].get<std::string>().c_str()));
+		}
 		scriptTable["initSystem"]();
 	}
 
 	~cParticleTemplate()
 	{
 		shader = nullptr;
-		texture = nullptr;
+		for (auto& t : textures)
+		{
+			t = nullptr;
+		}
+		textures.clear();
 	}
 };
 
@@ -240,13 +254,19 @@ public:
 			game->lastShader = nullptr;
 
 			particleTemplate->shader->begin();
-
-
 			particleTemplate->shader->setUniform("currentTime", timer.getTime() - time);
 
 			glActiveTexture(GL_TEXTURE0);
-			particleTemplate->texture->bindTexture();
-			particleTemplate->shader->setUniform("uTexture", 0);
+
+			for (int i = (int)particleTemplate->textures.size() - 1; i >= 0; i--)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				particleTemplate->textures[i]->bindTexture();
+				std::stringstream ss;
+				ss << "uTexture" << i;
+				particleTemplate->shader->setUniform(ss.str().c_str(), i);
+			}
+
 
 			particleTemplate->shader->setViewMatrix(game->getViewMatrix());
 

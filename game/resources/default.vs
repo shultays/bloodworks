@@ -3,7 +3,7 @@ attribute vec2 aVertexUV;
 attribute vec4 aVertexColor;
 
 uniform vec4 uColor;
-uniform sampler2D uTexture;
+uniform sampler2D uTexture0;
 uniform mat3 uWorldMatrix;
 uniform mat3 uViewMatrix;
 

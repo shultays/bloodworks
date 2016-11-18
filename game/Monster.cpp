@@ -38,7 +38,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setAlignment(cTextRenderable::center);
-	bloodworks->addRenderable(healthRenderable, 101);
+	bloodworks->addRenderable(healthRenderable, 602);
 
 	moveAngle = randFloat(-pi, pi);
 	moveSpeed = 0.0f;
@@ -133,6 +133,10 @@ void Monster::playAnimation(std::string anim, float startPercentage)
 
 void Monster::doDamage(int damage, const Vec2& dir)
 {
+	if (isDead)
+	{
+		return;
+	}
 	hitPoint -= damage;
 	if (hitPoint <= 1.0f)
 	{

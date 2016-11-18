@@ -120,7 +120,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 	shader->setColor(Vec4(1.0f));
-	shader->setUniform("uTexture", 0);
+	shader->setUniform("uTexture0", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, renderedTexture);
 	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));

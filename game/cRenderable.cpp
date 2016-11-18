@@ -59,10 +59,12 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 	shader->setColor(color);
-	shader->setUniform("uTexture", 0);
-	shader->setUniform("uTexture2", 1);
+	shader->setUniform("uTexture0", 0);
+	shader->setUniform("uTexture1", 1);
+	shader->setUniform("uTexture2", 2);
+	shader->setUniform("uTexture3", 3);
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 3; i >= 0; i--)
 	{
 		if (texture[i] != nullptr)
 		{

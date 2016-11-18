@@ -12,6 +12,8 @@
 
 #include "cParticle.h"
 
+cParticle *p;
+
 void Bloodworks::init()
 {
 	lua.new_usertype<Vec2>("Vec2",
@@ -44,6 +46,32 @@ void Bloodworks::init()
 	);
 
 
+	lua.new_usertype<Vec3>("Vec3",
+		sol::constructors<sol::types<>, sol::types<float, float, float>>(), 
+		"x", &Vec3::x,
+		"y", &Vec3::y,
+		"z", &Vec3::z,
+
+		sol::meta_function::addition, [](const Vec3& a, const Vec3& b) { return a + b; },
+		sol::meta_function::subtraction, [](const Vec3& a, const Vec3& b) { return a - b; },
+		sol::meta_function::multiplication, [](const Vec3& a, const Vec3& b) { return a * b; },
+		sol::meta_function::multiplication, [](const Vec3& a, float b) { return a * b; },
+		sol::meta_function::division, [](const Vec3& a, const Vec3& b) { return a / b; },
+		sol::meta_function::division, [](const Vec3& a, float b) { return a / b; },
+
+
+		"normalize", [](Vec3& a) { a.normalize(); },
+		"normalized", [](const Vec3& a) { return a.normalized(); },
+
+		"distance", [](const Vec3& a, const Vec3& b) { return a.distance(b); },
+		"distanceSquared", [](const Vec3& a, const Vec3& b) { return a.distanceSquared(b); },
+
+		"length", [](const Vec3& a) { return a.length(); },
+		"lengthSquared", [](const Vec3& a) { return a.lengthSquared(); },
+
+		"dot", [](const Vec3& a, const Vec3& b) { return a.dot(b); }
+	);
+
 
 	lua.set_function("approachAngle",
 		[&](float angle, float angleToApproach, float maxRotation) -> float
@@ -56,6 +84,12 @@ void Bloodworks::init()
 		[&](const Vec2& pos0, const Vec2& pos1)
 	{
 		debugRenderer.addLine(pos0, pos1);
+	});
+
+	lua.set_function("addExplosion",
+		[&](const Vec2& pos)
+	{
+		addExplosion(pos);
 	});
 
 
@@ -131,11 +165,19 @@ void Bloodworks::init()
 
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/rocketSmoke/data.json");
+
+	fireParticle = new cParticleTemplate();
+	fireParticle->init("resources/particles/explosionFire/data.json");
+
+	p = new cParticle(this, fireParticle, lua.create_table());
+	addRenderable(p, 101);
 }
 
 Bloodworks::~Bloodworks()
 {
 	SAFE_DELETE(particleTemplate);
+	SAFE_DELETE(fireParticle);
+	SAFE_DELETE(p);
 
 	player->setGun(nullptr);
 	SAFE_DELETE(bloodRenderable);
@@ -209,6 +251,14 @@ const Mat3& Bloodworks::getViewMatrix() const
 	return worldViewMatrix;
 }
 
+void Bloodworks::addExplosion(const Vec2& pos)
+{
+	for (int i = 0; i < 25; i++)
+	{
+		p->addParticle(pos);
+	}
+}
+
 void Bloodworks::addDrop(const Vec2& position)
 {
 	if (randBool())
@@ -236,13 +286,14 @@ void Bloodworks::tick(float dt)
 
 	/*
 	static bool start = false;
-	if (input.isKeyPressed(key_space))
-	{
-		start = !start;
-	}
 	if (start == false) return;
 	*/
-	
+
+	if (input.isKeyPressed(key_space))
+	{
+		addExplosion(player->getPos());
+	}
+
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
 

@@ -5,8 +5,6 @@ function RocketSmokeParticle.initSystem()
 	addAttribute("moveSpeed", "vec2")
 	addAttribute("initialScale", "float")
 	addAttribute("scaleSpeed", "float")
-	addAttribute("initialRotation", "float")
-	addAttribute("rotateSpeed", "float")
 	addAttribute("initialAlpha", "float")
 	addAttribute("fadeOutSpeed", "float")
 end
@@ -15,7 +13,7 @@ end
 function RocketSmokeParticle.addParticle(params, pos)
 	params.pos = Vec2.new(pos.x, pos.y)
 	
-	params.color = 0.5 + math.random() * 0.3
+	params.color = 0.2 + math.random() * 0.3
 	
 	params.moveSpeed = Vec2.new(0.0, 0.0)
 	params.moveSpeed:setAngle(math.random() * math.pi * 2.0)
@@ -23,11 +21,7 @@ function RocketSmokeParticle.addParticle(params, pos)
 	
 	params.initialScale = 4.0 + math.random() * 2.0
 	
-	params.scaleSpeed = 6.0 + math.random() * 6.0
-	
-	params.initialRotation = math.random() * math.pi * 2.0
-	
-	params.rotateSpeed = -0.5 + math.random()
+	params.scaleSpeed = 6.0 + math.random() * 6.
 	
 	params.initialAlpha = 0.5 + math.random() * 0.5
 	

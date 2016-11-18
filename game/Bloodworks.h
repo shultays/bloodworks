@@ -49,6 +49,7 @@ class Bloodworks : public cGame
 
 
 	cParticleTemplate *particleTemplate;
+	cParticleTemplate *fireParticle;
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -83,6 +84,7 @@ public:
 	void addDrop(const Vec2& position);
 	const Mat3& getViewMatrix() const;
 
+	void addExplosion(const Vec2& pos);
 private:
 	void createBonus(const Vec2& position);
 };

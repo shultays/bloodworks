@@ -57,7 +57,11 @@ void MonsterController::init(Bloodworks *bloodworks)
 		return getClosestMonsterInRangeWithIgnoreData(pos, range, ignoreData);
 	});
 
-
+	lua.set_function("damageMonstersInRangeWithIgnoreData",
+		[&](const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData) 
+	{
+		return damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, mark, ignoreData);
+	});
 	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
 
 	lua.new_usertype<Monster>("Monster",

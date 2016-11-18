@@ -1,0 +1,24 @@
+uniform sampler2D uTexture0;
+uniform sampler2D uTexture1;
+
+varying vec4 vColor;
+varying vec2 vVertexUV;
+varying vec2 vPos;
+varying vec2 vVertexPos;
+varying float vMaxDist;
+
+
+void main(void) 
+{
+	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
+	
+	float d = distance(vPos, vVertexPos) / vMaxDist;
+	d = saturate(d * 0.20);
+	
+	float alpha = (texture2D(uTexture1, 
+	vVertexUV * 0.2 + (vVertexPos )* 0.01).a
+	
+	) * vColor.a - d;
+	
+	gl_FragColor.a =  max(alpha, 0.0);
+}

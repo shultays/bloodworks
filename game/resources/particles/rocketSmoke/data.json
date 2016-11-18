@@ -6,7 +6,7 @@
 	"vertexShader" : "resources/particles/rocketSmoke/shader.vs",
 	"pixelShader" : "resources/particles/rocketSmoke/shader.ps",
 	
-	"texture" : "resources/particles/rocketSmoke/particle.png",
+	"textures" : "resources/particles/rocketSmoke/particle.png",
 	
 	"scriptFile" : "resources/particles/rocketSmoke/script.lua",
 	"scriptName" : "RocketSmokeParticle"

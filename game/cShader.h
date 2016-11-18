@@ -184,7 +184,7 @@ public:
 	char vertexShaderFile[64];
 	char pixelShaderFile[64];
 
-	void printShaderInfoLog(GLuint obj) 
+	void printShaderInfoLog(const char *name, GLuint obj)
 	{
 		int infologLength = 0;
 		int charsWritten = 0;
@@ -195,7 +195,7 @@ public:
 		if (infologLength > 1) {
 			infoLog = (char *)malloc(infologLength);
 			glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
-			printf("%s\n", infoLog);
+			printf("%s\n%s\n\n", name, infoLog);
 			free(infoLog);
 		}
 	}
@@ -217,7 +217,7 @@ public:
 	}
 
 
-	GLuint buildShader(const std::string& source, int shaderType) 
+	GLuint buildShader(const char *name, const std::string& source, int shaderType) 
 	{
 		assert(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
@@ -231,8 +231,9 @@ public:
 
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 
-		if (!compileStatus) {
-			printShaderInfoLog(shader);
+		if (!compileStatus) 
+		{
+			printShaderInfoLog(name, shader);
 			return 0;
 		}
 
@@ -246,7 +247,7 @@ public:
 			std::cout << "Cannot load shader file : " << fileName;
 			return 0;
 		}
-		return buildShader(shaderSource, shaderType);
+		return buildShader(fileName, shaderSource, shaderType);
 	}
 	GLuint shaderProgram;
 
@@ -398,8 +399,10 @@ public:
 		addUniform("uWorldMatrix", TypeMat3);
 		addUniform("uViewMatrix", TypeMat3);
 		addUniform("uColor", TypeVec4);
-		addUniform("uTexture", TypeInt);
+		addUniform("uTexture0", TypeInt);
+		addUniform("uTexture1", TypeInt);
 		addUniform("uTexture2", TypeInt);
+		addUniform("uTexture3", TypeInt);
 	}
 
 	void addUniform(const char *name, int uniformType) 

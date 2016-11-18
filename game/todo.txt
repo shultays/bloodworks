@@ -14,3 +14,7 @@ rocket için area effect ekle
 
 rocket movement ını iyileştir
 
+rocket e lateral speed
+rocket e ivme
+
+particle ı güzelleştir

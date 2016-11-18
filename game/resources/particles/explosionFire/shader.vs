@@ -2,20 +2,25 @@ attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
 
-attribute float color;
+attribute vec3 color;
 attribute vec2 moveSpeed;
 attribute float initialScale;
 attribute float scaleSpeed;
 attribute float initialAlpha;
 attribute float fadeOutSpeed;
+attribute vec2 uvStart;
+attribute vec2 uvSize;
 
 uniform float currentTime;
 uniform sampler2D uTexture0;
+uniform sampler2D uTexture1;
 uniform mat3 uViewMatrix;
 
 varying vec4 vColor;
 varying vec2 vVertexUV;
-
+varying vec2 vPos;
+varying vec2 vVertexPos;
+varying float vMaxDist;
 
 void main(void) 
 {
@@ -27,35 +32,26 @@ void main(void)
 	gl_Position = vec4(viewPos.x, viewPos.y, 0.0, 1.0);
 	
 	vec3 finalColor = vec3(color);
+	vColor.rgb = finalColor;
 	
-	
-	float t = dt;
-	float whiteDuration = 0.1 * fadeOutSpeed;
-	if (t < whiteDuration)
+	dt /= fadeOutSpeed;
+	if (dt < 0.1f)
 	{
-		float l = t / whiteDuration;
-		finalColor.r = lerp(1.0, 1.0, l);
-		finalColor.g = lerp(0.3, 0.5, l);
-		finalColor.b = lerp(0.0, 0.0, l);
+		vColor.a = dt / 0.1;
 	}
-	else 
+	else if (dt > 1.0)
 	{
-		t -= whiteDuration;
-		float yellowDuration = 0.2 * fadeOutSpeed;
-		if (t < yellowDuration)
-		{
-			float l = t / yellowDuration;
-			finalColor.r = lerp(0.8, color, l);
-			finalColor.g = lerp(0.4, color, l);
-			finalColor.b = lerp(0.0, color, l);
-		}
-		else
-		{
-			finalColor = vec3(color);
-		}
-		
+		vColor.a = 1.0 - (dt - 1.0) / 1.5;
 	}
-	vColor = vec4(finalColor, initialAlpha - fadeOutSpeed * dt);
+	else
+	{
+		vColor.a = 1.0f;
+	}
 	
-	vVertexUV = uv;
+	vColor.a *= 0.3;
+	
+	vVertexUV = uv * uvSize + uvStart;
+	vPos = pos + moveSpeed * dt;
+	vVertexPos = worldPos.xy;
+	vMaxDist = curScale;
 }
