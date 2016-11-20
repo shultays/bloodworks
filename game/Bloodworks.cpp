@@ -365,8 +365,8 @@ void Bloodworks::tick(float dt)
 
 		if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
 		{
-			explosionData.lastDamageScale = newScale + 15.0f;
-			float damageScale = min(newScale + 15.0f, explosionData.maxScale);
+			explosionData.lastDamageScale = newScale + 45.0f;
+			float damageScale = min(newScale + 45.0f, explosionData.maxScale);
 			std::stringstream explosionId;
 			explosionId << "explosion" << explosionData.id;
 			monsterController.damageMonstersInRangeWithIgnoreData(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionId.str());

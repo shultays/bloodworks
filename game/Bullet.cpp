@@ -18,13 +18,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	diesOnHit = true;
 
 	data = lua.create_table();
-}
-
-void Bullet::init()
-{
-	moveDir = Vec2::fromAngle(rotation);
-	moveSpeedDir = moveDir * speed;
-	meshRotation = rotation;
+	meshRotation = -1500;
 }
 
 Bullet::~Bullet()
@@ -40,7 +34,6 @@ Bullet::~Bullet()
 void Bullet::tick(float dt)
 {
 	Vec2 oldPos = pos;
-
 	if (script && onTickCallback.size())
 	{
 		script[onTickCallback](this);
@@ -53,8 +46,8 @@ void Bullet::tick(float dt)
 			gun->getScriptTable()["onBulletTick"](gun, this);
 		}
 	}
-	moveDir = Vec2::fromAngle(rotation);
-	moveSpeedDir = moveDir * speed;;
+	moveDir = Vec2::fromAngle(moveAngle);
+	moveSpeedDir = moveDir * moveSpeed;;
 
 	pos += moveSpeedDir * dt;
 
@@ -74,7 +67,7 @@ void Bullet::tick(float dt)
 	
 	for (auto& particleData : particles)
 	{
-		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-meshRotation + pi_d2)), lua.create_table());
+		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), lua.create_table());
 	}
 
 	for (auto& monster : monsters)
@@ -123,7 +116,7 @@ void Bullet::addRenderable(cRenderable *renderable)
 void Bullet::updateDrawable()
 {
 	Mat3 mat = Mat3::identity();
-	mat.rotateBy(-meshRotation);
+	mat.rotateBy(-getMeshRotation());
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 }
@@ -133,6 +126,11 @@ void Bullet::removeSelf()
 {
 	isDead = true;
 	renderable->setVisible(false);
+}
+
+float Bullet::getMeshRotation()
+{
+	return (meshRotation > -1000 ? meshRotation : moveAngle);
 }
 
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)

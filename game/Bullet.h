@@ -20,8 +20,8 @@ class Bullet
 
 	bool isDead;
 	Vec2 pos;
-	float rotation;
-	float speed;
+	float moveAngle;
+	float moveSpeed;
 
 	float meshRotation;
 
@@ -53,7 +53,6 @@ class Bullet
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
-	void init();
 	void tick(float dt);
 	void addRenderable(cRenderable *renderable);
 	int getId()
@@ -83,4 +82,5 @@ public:
 private:
 	void updateDrawable();
 	void removeSelf();
+	float getMeshRotation();
 };

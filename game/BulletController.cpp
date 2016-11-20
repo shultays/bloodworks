@@ -13,8 +13,9 @@ void BulletController::init(Bloodworks *bloodworks)
 		"index", sol::readonly(&Bullet::id),
 
 		"position", &Bullet::pos,
-		"moveSpeed", &Bullet::speed,
-		"moveAngle", &Bullet::rotation,
+		"moveSpeed", &Bullet::moveSpeed,
+		"moveAngle", &Bullet::moveAngle,
+		"meshRotation", &Bullet::meshRotation,
 
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,

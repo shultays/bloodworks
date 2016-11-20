@@ -142,11 +142,10 @@ Bullet* MissionController::addCustomBullet(const sol::table& params)
 	Player *player = bloodworks->getPlayer();
 
 	bullet->pos = player->getPos() + player->getAimDir() * 20;
-	bullet->speed = 20.0f;
-	bullet->rotation = player->getAimDir().toAngle();
+	bullet->moveSpeed = 20.0f;
+	bullet->moveAngle = player->getAimDir().toAngle();
 	bullet->radius = 2.0f;
 	bullet->damage = 10;
-	bullet->init();
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	return bullet;

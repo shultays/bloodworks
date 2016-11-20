@@ -8,10 +8,6 @@
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	if (input.isKeyDown(key_1))
-	{
-		return;
-	}
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
 		auto& bodyPart = bodyParts[i];

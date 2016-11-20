@@ -101,14 +101,13 @@ Bullet* Gun::addBullet()
 	Bullet *bullet = new Bullet(bloodworks, this);
 	Player *player = bloodworks->getPlayer();
 	bullet->pos = player->getPos() + player->getAimDir() * 20;
-	bullet->speed = bulletSpeed;
-	bullet->rotation = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
+	bullet->moveSpeed = bulletSpeed;
+	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
 	renderable->setWorldMatrix(Mat3::scaleMatrix(bulletSize));
 	bullet->addRenderable(renderable);
-	bullet->init();
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	return bullet;
