@@ -435,7 +435,36 @@ public:
 	}
 
 #ifdef G_IS_TYPE_FLOATING
-	static G_VEC_IMP_NAME normalize(const G_VEC_IMP_NAME& vec) 
+	static G_VEC_IMP_NAME safeNormalize(const G_VEC_IMP_NAME& vec)
+	{
+		if (vec.isZero())
+		{
+			return zero();
+		}
+		G_VEC_TYPE d = vec.length();
+		G_VEC_IMP_NAME ret;
+		for (int i = 0; i < GVEC_N; ++i)
+		{
+			ret.data[i] = vec.data[i] / d;
+		}
+		return ret;
+	}
+
+	G_VEC_TYPE safeNormalize()
+	{
+		if (isZero())
+		{
+			return 0;
+		}
+		G_VEC_TYPE d = length();
+		for (int i = 0; i < GVEC_N; ++i)
+		{
+			data[i] /= d;
+		}
+		return d;
+	}
+
+	static G_VEC_IMP_NAME normalize(const G_VEC_IMP_NAME& vec)
 	{
 		G_VEC_TYPE d = vec.length();
 		G_VEC_IMP_NAME ret;
@@ -446,7 +475,7 @@ public:
 		return ret;
 	}
 
-	G_VEC_TYPE normalize() 
+	G_VEC_TYPE normalize()
 	{
 		G_VEC_TYPE d = length();
 		for (int i = 0; i < GVEC_N; ++i)
@@ -459,6 +488,11 @@ public:
 	G_VEC_IMP_NAME normalized()  const
 	{
 		return G_VEC_IMP_NAME::normalize(*this);
+	}
+
+	G_VEC_IMP_NAME safeNormalized()  const
+	{
+		return G_VEC_IMP_NAME::safeNormalize(*this);
 	}
 
 	bool almostEquals(const G_VEC_IMP_NAME& other) const 

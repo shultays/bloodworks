@@ -22,6 +22,9 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 
 void Bullet::init()
 {
+	moveDir = Vec2::fromAngle(rotation);
+	moveSpeedDir = moveDir * speed;
+	meshRotation = rotation;
 }
 
 Bullet::~Bullet()
@@ -42,8 +45,18 @@ void Bullet::tick(float dt)
 	{
 		script[onTickCallback](this);
 	}
-	Vec2 dir = Vec2::fromAngle(rotation);
-	pos += dir * speed * dt;
+
+	if (gun != nullptr)
+	{
+		if (gun->getScriptTable()["onBulletTick"])
+		{
+			gun->getScriptTable()["onBulletTick"](gun, this);
+		}
+	}
+	moveDir = Vec2::fromAngle(rotation);
+	moveSpeedDir = moveDir * speed;;
+
+	pos += moveSpeedDir * dt;
 
 	updateDrawable();
 
@@ -61,7 +74,7 @@ void Bullet::tick(float dt)
 	
 	for (auto& particleData : particles)
 	{
-		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-rotation + pi_d2)), lua.create_table());
+		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-meshRotation + pi_d2)), lua.create_table());
 	}
 
 	for (auto& monster : monsters)
@@ -82,7 +95,7 @@ void Bullet::tick(float dt)
 			{
 				if (gun->getScriptTable()["onBulletHit"])
 				{
-					gun->getScriptTable()["onBulletHit"](this, monster);
+					gun->getScriptTable()["onBulletHit"](gun, this, monster);
 				}
 			}
 
@@ -91,7 +104,7 @@ void Bullet::tick(float dt)
 				script[onHitCallback](this, monster);
 			}
 
-			monster->doDamage(damage, dir);
+			monster->doDamage(damage, moveDir);
 			if (diesOnHit)
 			{
 				removeSelf();
@@ -110,7 +123,7 @@ void Bullet::addRenderable(cRenderable *renderable)
 void Bullet::updateDrawable()
 {
 	Mat3 mat = Mat3::identity();
-	mat.rotateBy(-rotation);
+	mat.rotateBy(-meshRotation);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 }

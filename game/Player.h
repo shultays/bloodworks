@@ -21,6 +21,8 @@ class Player
 	Vec2 crosshairPos;
 	Gun *gun;
 	Vec2 aimDir;
+	Vec2 moveDir;
+	Vec2 moveSpeedDir;
 	float aimAngle;
 	float oldSpreadAngle;
 	int hitPoints;

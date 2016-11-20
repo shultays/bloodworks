@@ -16,6 +16,8 @@ Player::Player(Bloodworks *bloodworks)
 		"moveAngle", &Player::moveAngle,
 		"crosshairPos", &Player::crosshairPos,
 		"aimDir", sol::readonly(&Player::aimDir),
+		"moveDir", sol::readonly(&Player::moveDir),
+		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"doDamage", &Player::doDamage,
 		"slowdown", &Player::slowdown
@@ -187,7 +189,9 @@ void Player::tick(float dt)
 		moveSpeed = max(moveSpeed, 0.0f);
 	}
 
-	pos += Vec2::fromAngle(moveAngle) * moveSpeed * dt;
+	moveDir = Vec2::fromAngle(moveAngle);
+	moveSpeedDir = moveDir * moveSpeed;
+	pos += moveSpeedDir * dt;
 
 
 	crosshairPos += input.getDeltaMousePos();

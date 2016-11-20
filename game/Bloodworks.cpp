@@ -32,8 +32,11 @@ void Bloodworks::init()
 		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
 		"getAngle", &Vec2::toAngle,
 
-		"normalize", [](Vec2& a) { a.normalize(); },
+		"normalize", [](Vec2& a) { return a.normalize(); },
 		"normalized", [](const Vec2& a) { return a.normalized(); },
+
+		"safeNormalize", [](Vec2& a) { return a.safeNormalize(); },
+		"safeNormalized", [](const Vec2& a) { return a.safeNormalized(); },
 
 		"distance", [](const Vec2& a, const Vec2& b) { return a.distance(b); },
 		"distanceSquared", [](const Vec2& a, const Vec2& b) { return a.distanceSquared(b); },
@@ -367,10 +370,10 @@ void Bloodworks::tick(float dt)
 
 		float newScale = dt * explosionData.scaleSpeed;
 
-		if (newScale > explosionData.lastDamageScale)
+		if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
 		{
-			explosionData.lastDamageScale = newScale + 35.0f;
-			float damageScale = min(newScale + 35.0f, explosionData.maxScale);
+			explosionData.lastDamageScale = newScale + 15.0f;
+			float damageScale = min(newScale, explosionData.maxScale);
 			std::stringstream explosionId;
 			explosionId << "explosion" << explosionData.id;
 			monsterController.damageMonstersInRangeWithIgnoreData(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionId.str());
@@ -388,6 +391,7 @@ void Bloodworks::tick(float dt)
 		float alpha = 0.0f;
 		float a0 = min(20.0f, explosionData.maxScale * 0.2f);
 		float a1 = min(50.0f, explosionData.maxScale * 0.5f);
+		float a2 = max(explosionData.maxScale - 50.0f, explosionData.maxScale * 0.8f, a1);
 
 		if (newScale < a0)
 		{
@@ -397,13 +401,13 @@ void Bloodworks::tick(float dt)
 		{
 			alpha = (newScale - a0) / (a1 - a0);
 		}
-		else if (newScale < explosionData.maxScale - 50.0f)
+		else if (newScale < a2)
 		{
 			alpha = 1.0f;
 		}
 		else
 		{
-			alpha = (explosionData.maxScale - newScale) / 50.0f;
+			alpha = (explosionData.maxScale - newScale) / (explosionData.maxScale - a2);
 		}
 		explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(newScale + 10.0f).translateBy(explosionData.pos));
 		explosionData.ringRenderable->setColor(Vec4(1.0f, 1.0f, 1.0f, alpha * 0.4f));

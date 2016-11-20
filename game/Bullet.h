@@ -23,6 +23,11 @@ class Bullet
 	float rotation;
 	float speed;
 
+	float meshRotation;
+
+	Vec2 moveDir;
+	Vec2 moveSpeedDir;
+
 	float radius;
 	int damage;
 	cRenderableGroup *renderable;
