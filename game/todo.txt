@@ -8,13 +8,11 @@ bullet dan particle öldümü checkini kaldır
 game object e particle ekle
 (genel olarak particle da olabilir)
 
-rocket particle ı güzelleştir
+depth test ekle, render order deptht test ile olsun
 
-rocket için area effect ekle
+bonuslar için resim ekle
 
-rocket movement ını iyileştir
+ui olarak renderable ekle (view matrix den bağımsız)
 
-rocket e lateral speed
-rocket e ivme
-
-particle ı güzelleştir
+explosionlarda is ekle
+explosionları güzelleştir (belki smoke & şarapnel?)
