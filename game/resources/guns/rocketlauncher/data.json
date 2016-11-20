@@ -1,12 +1,12 @@
 {
   "name": "Rocket Launcher",
-  "artFolder" : "resources/rocketlauncher/",
+  "artFolder" : "resources/guns/rocketlauncher/",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [6.0, 12.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 350.0,
   "bulletDamage" : [30, 70],
   
-  "scriptFile" : "resources/rocketlauncher/rocket.lua",
+  "scriptFile" : "resources/guns/rocketlauncher/rocket.lua",
   "scriptName" : "RocketLauncher"
 }
