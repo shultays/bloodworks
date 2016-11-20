@@ -40,7 +40,7 @@ void Coral::tick()
 	if (t - lastDrawTime >= draw_interval) 
 	{
 		timer.renderDt = t - lastDrawTime;
-		if (t - lastUpdateTime < draw_interval * 2.0f)
+		if (t - lastDrawTime < draw_interval * 2.0f)
 		{
 			lastDrawTime += draw_interval;
 		}

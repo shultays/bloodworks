@@ -35,9 +35,9 @@ void main(void)
 	vColor.rgb = finalColor;
 	
 	dt /= fadeOutSpeed;
-	if (dt < 0.1f)
+	if (dt < 0.2f)
 	{
-		vColor.a = dt / 0.1;
+		vColor.a = dt / 0.2;
 	}
 	else if (dt > 1.0)
 	{

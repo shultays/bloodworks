@@ -20,19 +20,19 @@ function ExplosionFireParticle.addParticle(params, pos)
 	
 	params.pos = params.pos + shift * (3.0 + math.random() * 10.0)
 	
-	params.color = Vec3.new(0.6 + math.random() * 0.3, 0.2 + math.random() * 0.5, 0.0)
+	params.color = Vec3.new(0.6 + math.random() * 0.3, 0.2 + math.random() * 0.3, 0.0)
 	
 	params.moveSpeed = Vec2.new(0.0, 0.0)
 	params.moveSpeed:setAngle(math.random() * math.pi * 2.0)
 	params.moveSpeed = params.moveSpeed * (math.random() * 12.0)
 	
-	params.initialScale = 8.0 + math.random() * 4.0
+	params.initialScale = 12.0 + math.random() * 8.0
 	
 	params.scaleSpeed = 14.0 + math.random() * 6.0
 	
 	params.initialAlpha = 0.5 + math.random() * 0.5
 	
-	params.fadeOutSpeed = 0.4 + math.random() * 0.4
+	params.fadeOutSpeed = 0.2 + math.random() * 0.6
 	
 	
 	params.uvSize = Vec2.new(0.2 + math.random() * 0.2, 0.2 + math.random() * 0.2)

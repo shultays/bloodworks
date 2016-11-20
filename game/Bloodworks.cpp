@@ -253,13 +253,13 @@ const Mat3& Bloodworks::getViewMatrix() const
 
 void Bloodworks::addExplosion(const Vec2& pos)
 {
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		p->addParticle(pos);
 	}
 }
 
-void Bloodworks::addDrop(const Vec2& position)
+void Bloodworks::addDrop(const Vec2& position)	
 {
 	if (randBool())
 	{

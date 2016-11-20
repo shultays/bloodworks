@@ -13,10 +13,10 @@ void main(void)
 	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
 	
 	float d = distance(vPos, vVertexPos) / vMaxDist;
-	d = saturate(d * 0.20);
+	d = saturate(d * 0.22);
 	
 	float alpha = (texture2D(uTexture1, 
-	vVertexUV * 0.2 + (vVertexPos )* 0.01).a
+	vVertexUV * 0.1 + (vVertexPos )* 0.01).a
 	
 	) * vColor.a - d;
 	
