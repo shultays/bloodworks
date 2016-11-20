@@ -127,7 +127,7 @@ void Bloodworks::init()
 
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
 	bg->setWorldMatrix(Mat3::scaleMatrix(512.0f));
-	addRenderable(bg, 0);
+	addRenderable(bg, BACKGROUND);
 
 	input.hideMouse();
 
@@ -168,7 +168,7 @@ void Bloodworks::init()
 
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
-	addRenderable(bloodRenderable, 1);
+	addRenderable(bloodRenderable, BACKGROUND + 1);
 
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/rocketSmoke/data.json");
@@ -177,7 +177,7 @@ void Bloodworks::init()
 	fireParticle->init("resources/particles/explosionFire/data.json");
 
 	explosionParticles = new cParticle(this, fireParticle, lua.create_table());
-	addRenderable(explosionParticles, 101);
+	addRenderable(explosionParticles, MONSTERS + 1);
 }
 
 Bloodworks::~Bloodworks()
@@ -239,7 +239,7 @@ void Bloodworks::createGun(const Vec2& position)
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
 	renderable->setAlignment(cTextRenderable::center);
 	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
-	addRenderable(renderable, 400);
+	addRenderable(renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
 }
@@ -255,7 +255,7 @@ void Bloodworks::createBonus(const Vec2& position)
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
 	renderable->setAlignment(cTextRenderable::center);
 	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
-	addRenderable(renderable, 400);
+	addRenderable(renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
 }
@@ -289,7 +289,7 @@ void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed,
 
 	explosionData.pos = pos;
 	explosionData.id = getUniqueId();
-	addRenderable(explosionData.ringRenderable, 502);
+	addRenderable(explosionData.ringRenderable, MONSTERS + 1);
 
 	explosions.push_back(explosionData);
 }
@@ -323,13 +323,6 @@ void Bloodworks::tick(float dt)
 	static bool start = false;
 	if (start == false) return;
 	*/
-
-	if (input.isKeyPressed(key_space))
-	{
-		addExplosion(player->getPos(), 200.0f, 200.0f, 10, 15);
-	}
-
-	debugRenderer.addCircle(player->getPos(), 200.0f);
 
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
@@ -373,7 +366,7 @@ void Bloodworks::tick(float dt)
 		if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
 		{
 			explosionData.lastDamageScale = newScale + 15.0f;
-			float damageScale = min(newScale, explosionData.maxScale);
+			float damageScale = min(newScale + 15.0f, explosionData.maxScale);
 			std::stringstream explosionId;
 			explosionId << "explosion" << explosionData.id;
 			monsterController.damageMonstersInRangeWithIgnoreData(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionId.str());

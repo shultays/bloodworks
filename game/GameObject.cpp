@@ -88,7 +88,7 @@ void GameObject::checkRenderable()
 	{
 		renderableGroup = new cRenderableGroup(bloodworks);
 		renderableGroup->setWorldMatrix(Mat3::translationMatrix(Vec2::zero()));
-		bloodworks->addRenderable(renderableGroup, 500);
+		bloodworks->addRenderable(renderableGroup, GAME_OBJECTS);
 	}
 }
 

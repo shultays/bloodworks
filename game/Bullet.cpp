@@ -11,7 +11,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	this->bloodworks = bloodworks;
 	this->gun = gun;
 	renderable = new cRenderableGroup(bloodworks);
-	bloodworks->addRenderable(renderable, 501);
+	bloodworks->addRenderable(renderable, BULLETS);
 	isDead = false;
 	id = bloodworks->getUniqueId();
 	damage = 10;
@@ -149,7 +149,7 @@ void Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const 
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
-	bloodworks->addRenderable(particleData.particle, 503);
+	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
 }
 

@@ -8,7 +8,7 @@ bullet dan particle öldümü checkini kaldır
 game object e particle ekle
 (genel olarak particle da olabilir)
 
-depth test ekle, render order deptht test ile olsun
+priority queue you düzelt
 
 bonuslar için resim ekle
 

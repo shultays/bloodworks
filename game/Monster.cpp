@@ -27,7 +27,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate->animationData);
-	bloodworks->addRenderable(renderable, 100);
+	bloodworks->addRenderable(renderable, MONSTERS);
 
 	if (monsterTemplate->defaultAnimation.size())
 	{
@@ -36,7 +36,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setAlignment(cTextRenderable::center);
-	bloodworks->addRenderable(healthRenderable, 602);
+	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
 	moveAngle = randFloat(-pi, pi);
 	moveSpeed = 0.0f;

@@ -127,9 +127,7 @@ public:
 							debugRenderer.addCircle(o->getPosition(), o->getRadius(), 0.0f, Vec4::fromColor(0xFFFF0000));
 						}
 					}
-				
 				}
-
 			}
 		}
 	}

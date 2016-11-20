@@ -45,19 +45,19 @@ Player::Player(Bloodworks *bloodworks)
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setAlignment(cTextRenderable::center);
 	healthRenderable->setWorldMatrix(Mat3::identity());
-	bloodworks->addRenderable(healthRenderable, 505);
+	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
 
 	renderable->setWorldMatrix(Mat3::identity());
-	bloodworks->addRenderable(renderable, 500);
+	bloodworks->addRenderable(renderable, PLAYER);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(crosshair, 503);
+	bloodworks->addRenderable(crosshair, OBJECT_GUI + 1);
 
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(spread, 502);
+	bloodworks->addRenderable(spread, OBJECT_GUI + 2);
 
 	slowdownAmount = 0.0f;
 

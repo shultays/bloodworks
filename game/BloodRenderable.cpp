@@ -8,6 +8,10 @@
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 {
+	if (input.isKeyDown(key_1))
+	{
+		return;
+	}
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
 		auto& bodyPart = bodyParts[i];
@@ -39,6 +43,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
 				GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			shader->begin();
 			shader->setViewMatrix(
 				Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
 				.scaleBy(1.0f / blood_size)
@@ -46,16 +51,14 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 				.scaleBy(2.0f));
 			bloodworks->lastShader = shader;
 
-			shader->begin();
 			glViewport(0, 0, blood_size, blood_size);
 			bodyPart.renderable->render(true, Mat3::identity());
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			bodyPart.renderable->setVisible(false);
 
-			bloodworks->lastShader = nullptr;
 			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
-
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			bloodworks->lastShader = nullptr;
 		}
 	}
 
@@ -99,10 +102,9 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			blood.renderable->setVisible(false);
 
-			bloodworks->lastShader = nullptr;
 			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
-
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			bloodworks->lastShader = nullptr;
 		}
 	}
 
@@ -221,7 +223,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(8.0f, 14.0f)).translateBy(pos));
 	renderable->setTexture(1, "resources/blood/blood_bg.png");
 	renderable->setColor(Vec4::fromColor(0xFF660000));
-	bloodworks->addRenderable(renderable, 2);
+	bloodworks->addRenderable(renderable, BACKGROUND);
 
 	BloodData data;
 	data.renderable = renderable;
@@ -249,7 +251,7 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	{
 		bodyPartData.rotateSpeed = -bodyPartData.rotateSpeed;
 	}
-	bloodworks->addRenderable(partRenderable, 3);
+	bloodworks->addRenderable(partRenderable, BACKGROUND + 1);
 
 	bodyParts.push_back(bodyPartData);
 }

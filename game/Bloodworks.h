@@ -6,6 +6,20 @@
 #include "BulletController.h"
 #include "MissionController.h"
 
+
+enum Depths
+{
+	BACKGROUND = 0,
+	MONSTERS = 1000,
+	GAME_OBJECTS = 2000,
+	PLAYER = 3000,
+	BULLETS = 4000,
+	OBJECT_GUI = 5000,
+	GUI = 6000,
+
+	TOTAL_LEVEL
+};
+
 class cParticle;
 class cParticleTemplate;
 class cTexturedQuadRenderable;
