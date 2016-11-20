@@ -1,0 +1,5 @@
+{
+  "name": "Explosion",
+  "scriptFile" : "resources/bonuses/explosion/explosion.lua",
+  "scriptName" : "Explosion"
+}

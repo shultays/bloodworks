@@ -154,6 +154,9 @@ void Bloodworks::init()
 	bonus = new Bonus("resources/bonuses/homing/data.json");
 	bonuses.push_back(bonus);
 
+	bonus = new Bonus("resources/bonuses/explosion/data.json");
+	bonuses.push_back(bonus);
+
 	monsterController.init(this);
 	bulletController.init(this);
 
