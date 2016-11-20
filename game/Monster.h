@@ -28,7 +28,6 @@ class Monster
 	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
-	static int nextId;
 
 	bool isDead;
 	bool hasBlood;

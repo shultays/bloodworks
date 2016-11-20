@@ -6,7 +6,8 @@ function ExplosionFireParticle.initSystem()
 	addAttribute("initialScale", "float")
 	addAttribute("scaleSpeed", "float")
 	addAttribute("initialAlpha", "float")
-	addAttribute("fadeOutSpeed", "float")
+	addAttribute("fadeoutTime", "float")
+	addAttribute("explosionEffect", "float")
 	addAttribute("uvStart", "vec2")
 	addAttribute("uvSize", "vec2")
 end
@@ -28,12 +29,13 @@ function ExplosionFireParticle.addParticle(params, pos)
 	
 	params.initialScale = 12.0 + math.random() * 8.0
 	
-	params.scaleSpeed = 14.0 + math.random() * 6.0
+	params.scaleSpeed = params.size / params.duration + math.random() * 6.0
 	
 	params.initialAlpha = 0.5 + math.random() * 0.5
 	
-	params.fadeOutSpeed = 0.2 + math.random() * 0.6
+	params.fadeoutTime = params.duration + 0.2 - math.random() * 0.4
 	
+	params.explosionEffect = 0.001 + math.random() * 0.003;
 	
 	params.uvSize = Vec2.new(0.2 + math.random() * 0.2, 0.2 + math.random() * 0.2)
 	params.uvStart = Vec2.new(math.random() * (1.0 - params.uvSize.x), math.random() * (1.0 - params.uvSize.y))

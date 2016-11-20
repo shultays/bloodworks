@@ -21,8 +21,6 @@ class Gun
 	float bulletRadius;
 	float bulletSpeed;
 
-	static int nextGunId;
-
 	std::string scriptName;
 	sol::table scriptTable;
 	int id;

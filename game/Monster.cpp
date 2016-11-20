@@ -7,12 +7,10 @@
 #include "cTexture.h"
 #include "BloodRenderable.h"
 
-int Monster::nextId = 0;
-
 Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	id = nextId++;
+	id = bloodworks->getUniqueId();
 }
 
 void Monster::init(const MonsterTemplate* monsterTemplate)

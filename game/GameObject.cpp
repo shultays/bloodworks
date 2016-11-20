@@ -4,8 +4,6 @@
 #include "Bloodworks.h"
 #include "cFont.h"
 
-int GameObject::nextGameObjectId = 0;
-
 void GameObject::updateMatrix()
 {
 	if (renderableGroup)
@@ -13,6 +11,18 @@ void GameObject::updateMatrix()
 		Mat3 mat = Mat3::scaleMatrix(scale).rotateBy(rotation).translateBy(pos);
 		renderableGroup->setWorldMatrix(mat);
 	}
+}
+
+GameObject::GameObject(Bloodworks *bloodworks)
+{
+	this->bloodworks = bloodworks;
+	renderableGroup = nullptr;
+	toBeRemoved = false;
+	id = bloodworks->getUniqueId();
+
+	pos.setZero();
+	scale = Vec2(1.0f);
+	rotation = 0.0f;
 }
 
 GameObject::~GameObject()

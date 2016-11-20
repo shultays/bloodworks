@@ -35,8 +35,6 @@ class GameObject
 		void update();
 	};
 
-	static int nextGameObjectId;
-
 	int id;
 	bool toBeRemoved;
 	bool hasOnTick;
@@ -73,17 +71,7 @@ class GameObject
 	void updateMatrix();
 
 public:
-	GameObject(Bloodworks *bloodworks)
-	{
-		this->bloodworks = bloodworks;
-		renderableGroup = nullptr;
-		toBeRemoved = false;
-		id = nextGameObjectId++;
-
-		pos.setZero();
-		scale = Vec2(1.0f);
-		rotation = 0.0f;
-	}
+	GameObject(Bloodworks *bloodworks);
 
 	~GameObject();
 

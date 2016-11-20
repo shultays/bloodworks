@@ -6,7 +6,6 @@
 #include "json.h"	
 
 using json = nlohmann::json;
-int Gun::nextGunId = 0;
 
 void Gun::init(Bloodworks *bloodworks, const char *gunData)
 {
@@ -34,7 +33,7 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	scriptName = j["scriptName"].get<std::string>();
 	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
 	data = lua.create_table();
-	id = nextGunId++;
+	id = bloodworks->getUniqueId();
 
 
 	spreadAngle = 0.0f;

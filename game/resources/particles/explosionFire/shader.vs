@@ -7,9 +7,10 @@ attribute vec2 moveSpeed;
 attribute float initialScale;
 attribute float scaleSpeed;
 attribute float initialAlpha;
-attribute float fadeOutSpeed;
+attribute float fadeoutTime;
 attribute vec2 uvStart;
 attribute vec2 uvSize;
+attribute float explosionEffect;
 
 uniform float currentTime;
 uniform sampler2D uTexture0;
@@ -21,6 +22,7 @@ varying vec2 vVertexUV;
 varying vec2 vPos;
 varying vec2 vVertexPos;
 varying float vMaxDist;
+varying float vExplosionEffect;
 
 void main(void) 
 {
@@ -34,24 +36,23 @@ void main(void)
 	vec3 finalColor = vec3(color);
 	vColor.rgb = finalColor;
 	
-	dt /= fadeOutSpeed;
 	if (dt < 0.2f)
 	{
 		vColor.a = dt / 0.2;
 	}
-	else if (dt > 1.0)
+	else if (dt > fadeoutTime - 0.3)
 	{
-		vColor.a = 1.0 - (dt - 1.0) / 1.5;
+		vColor.a = (fadeoutTime - dt) / 0.3;
 	}
 	else
 	{
 		vColor.a = 1.0f;
 	}
-	
-	vColor.a *= 0.3;
+	vColor.a = max(0.0, vColor.a * 0.3);
 	
 	vVertexUV = uv * uvSize + uvStart;
 	vPos = pos + moveSpeed * dt;
 	vVertexPos = worldPos.xy;
 	vMaxDist = curScale;
+	vExplosionEffect = explosionEffect;
 }

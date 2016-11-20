@@ -30,6 +30,5 @@ function RocketLauncher.onTick(gun)
 end
 
 function RocketLauncher.onBulletHit(bullet, monster)
-	addExplosion(bullet.position)
-	damageMonstersInRangeWithIgnoreData(bullet.position, 50, 40, 60, true, "ignoreBullet" .. bullet.index)
+	addExplosion(bullet.position, 30.0, 30.0, 40, 60)
 end

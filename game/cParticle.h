@@ -159,7 +159,7 @@ public:
 		}
 	}
 
-	void addParticle(const Vec2& pos)
+	void addParticle(const Vec2& pos, sol::table& params)
 	{
 		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD)
 		{
@@ -175,7 +175,6 @@ public:
 
 		QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
 
-		sol::table params = lua.create_table();
 		particleTemplate->scriptTable["addParticle"](params, pos, args);
 
 		memset(buff, 0, particleTemplate->attributeSize * 4);

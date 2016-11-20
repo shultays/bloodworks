@@ -50,6 +50,23 @@ class Bloodworks : public cGame
 
 	cParticleTemplate *particleTemplate;
 	cParticleTemplate *fireParticle;
+
+	struct ExplosionData
+	{
+		cTexturedQuadRenderable *ringRenderable;
+		int id;
+		float startTime;
+		float maxScale;
+		float lastDamageScale;
+		int minDamage;
+		int maxDamage;
+		float scaleSpeed;
+		Vec2 pos;
+	};
+	std::vector<ExplosionData> explosions;
+
+	static int nextUniqueId;
+	cParticle *explosionParticles;
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -84,7 +101,11 @@ public:
 	void addDrop(const Vec2& position);
 	const Mat3& getViewMatrix() const;
 
-	void addExplosion(const Vec2& pos);
-private:
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
 	void createBonus(const Vec2& position);
+
+	int getUniqueId()
+	{
+		return nextUniqueId++;
+	}
 };

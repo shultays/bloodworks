@@ -6,8 +6,6 @@
 #include "Gun.h"
 #include "cParticle.h"
 
-int Bullet::nextId = 0;
-
 Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 {
 	this->bloodworks = bloodworks;
@@ -15,7 +13,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	renderable = new cRenderableGroup(bloodworks);
 	bloodworks->addRenderable(renderable, 501);
 	isDead = false;
-	id = nextId++;
+	id = bloodworks->getUniqueId();
 	damage = 10;
 	diesOnHit = true;
 
@@ -63,7 +61,7 @@ void Bullet::tick(float dt)
 	
 	for (auto& particleData : particles)
 	{
-		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-rotation + pi_d2)));
+		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-rotation + pi_d2)), lua.create_table());
 	}
 
 	for (auto& monster : monsters)

@@ -6,6 +6,7 @@ varying vec2 vVertexUV;
 varying vec2 vPos;
 varying vec2 vVertexPos;
 varying float vMaxDist;
+varying float vExplosionEffect;
 
 
 void main(void) 
@@ -13,12 +14,12 @@ void main(void)
 	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
 	
 	float d = distance(vPos, vVertexPos) / vMaxDist;
-	d = saturate(d * 0.22);
+	float sd = saturate(d * 0.22);
 	
 	float alpha = (texture2D(uTexture1, 
-	vVertexUV * 0.1 + (vVertexPos )* 0.01).a
+	vVertexUV * 0.1 + (vVertexPos )* vExplosionEffect).a
 	
-	) * vColor.a - d;
+	) * vColor.a - sd;
 	
 	gl_FragColor.a =  max(alpha, 0.0);
 }

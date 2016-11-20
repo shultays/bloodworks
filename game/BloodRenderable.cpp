@@ -4,9 +4,6 @@
 #include "cShader.h"
 #include <sstream>
 
-GLuint FramebufferName = 0;
-GLuint renderedTexture;
-
 #define blood_size 2048
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
@@ -33,7 +30,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 		if (remove)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			cShaderShr shader = defaultShader;
 
 			Vec2 windowSize = bloodworks->getScreenDimensions().toVec();
@@ -83,7 +80,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 		if (remove)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			cShaderShr shader = bloodShader;
 			shader->begin();
 			blood.renderable->setShader(shader);
@@ -122,7 +119,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 	shader->setColor(Vec4(1.0f));
 	shader->setUniform("uTexture0", 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
@@ -181,6 +178,8 @@ BloodRenderable::~BloodRenderable()
 	bodyParts.clear();
 	bloodShader = nullptr;
 	defaultShader = nullptr;
+
+	glDeleteFramebuffers(1, &frameBuffer);
 }
 
 
@@ -194,17 +193,17 @@ void BloodRenderable::init()
 	}
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
-	glGenFramebuffers(1, &FramebufferName);
-	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
-	glGenTextures(1, &renderedTexture);
-	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glGenTextures(1, &frameBufferTexture);
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, blood_size, blood_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, frameBufferTexture, 0);
 
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 

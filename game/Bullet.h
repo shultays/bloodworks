@@ -27,7 +27,6 @@ class Bullet
 	int damage;
 	cRenderableGroup *renderable;
 	int id;
-	static int nextId;
 
 	sol::table script;
 

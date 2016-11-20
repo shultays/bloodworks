@@ -35,6 +35,9 @@ class BloodRenderable : public cRenderable
 	cShaderShr bloodShader;
 	cShaderShr defaultShader;
 	Bloodworks *bloodworks;
+
+	GLuint frameBuffer;
+	GLuint frameBufferTexture;
 public:
 	BloodRenderable(Bloodworks *bloodworks);
 	~BloodRenderable();
@@ -44,4 +47,5 @@ public:
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 	void tick();
+
 };
