@@ -135,8 +135,10 @@ void Bloodworks::init()
 	tickCount = renderCount = 0;
 
 	player = new Player(this);
-	Gun *gun;
+	
+	lua.script_file("resources/guns/helpers.lua");
 
+	Gun *gun;
 	gun = new Gun();
 	gun->init(this, "resources/guns/basicgun/data.json");
 	guns.push_back(gun);
@@ -149,7 +151,6 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/rocketlauncher/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	Bonus *bonus = new Bonus("resources/bonuses/circle_fire/data.json");
 	bonuses.push_back(bonus);

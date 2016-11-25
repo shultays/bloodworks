@@ -1,16 +1,14 @@
 
 function RocketLauncher.init(gun)
-	gun.data.timeToNextShoot = 0.0
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 350.0
+	ShootTimer.InitGun(gun, 0.8)
 end
 
 
 function RocketLauncher.onTick(gun)
 	if gun.leftMouseDown then
-		if gun.data.timeToNextShoot < time then
-			gun.data.timeToNextShoot = time + 0.8
-			
+		if ShootTimer.CheckGun(gun) then
 			local bullet = gun:addBullet()
 			bullet.damage = math.floor(110 + math.random() * 40)
 			bullet:addTrailParticle("RocketSmoke", Vec2.new(0.0, -8.0), {})

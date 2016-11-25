@@ -1,8 +1,8 @@
 
 function BasicGun.init(gun)
-	gun.data.timeToNextShoot = 0.0
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 350.0
+	ShootTimer.InitGun(gun, 0.25)
 end
 
 
@@ -15,9 +15,7 @@ function BasicGun.onTick(gun)
 		gun.spreadAngle = 0
 	end
 	if gun.leftMouseDown then
-		if gun.data.timeToNextShoot < time then
-			gun.data.timeToNextShoot = time + 0.25
-			
+		if ShootTimer.CheckGun(gun) then
 			gun.spreadAngle = gun.spreadAngle + 0.025
 			if gun.spreadAngle > 0.15 then
 				gun.spreadAngle = 0.15

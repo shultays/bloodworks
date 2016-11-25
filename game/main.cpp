@@ -8,7 +8,7 @@
 #include "cGlobals.h"
 #include "Bloodworks.h"
 
-std::string programName = "Hola";
+std::string programName = "Bloodworks";
 
 SDL_Window *mainWindow;
 SDL_GLContext mainContext;
