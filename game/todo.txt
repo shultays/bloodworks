@@ -1,4 +1,7 @@
 
+GPU da hareket eden mermi ekle
+mermiler kasıyor çok render ihtiyacı olunca
+
 texture lar için clamp ekle
 
 particle controller gibi bir şey yap

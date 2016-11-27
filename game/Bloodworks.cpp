@@ -131,14 +131,14 @@ void Bloodworks::init()
 	mapEnd = mapBegin + mapSize;
 
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
-	shader->addUniform("uvBegin", TypeVec2);
-	shader->addUniform("uvSize", TypeVec2);
+	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
+	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
 
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
 	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
 	bg->setShader(shader);
-	bg->setUniform("uvBegin", Vec2(0.0f));
-	bg->setUniform("uvSize", Vec2(4.0f));
+	bg->setUniform(uvBegin, Vec2(0.0f));
+	bg->setUniform(uvSize, Vec2(4.0f));
 	addRenderable(bg, BACKGROUND);
 
 	cTexturedQuadRenderable *fg;
@@ -147,8 +147,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapBegin.x, 0.0f));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.0f, 0.5f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.0f));
+	fg->setUniform(uvBegin, Vec2(0.0f, 0.5f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -156,8 +156,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapEnd.x, 0.0f));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.8f, 0.5f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.0f));
+	fg->setUniform(uvBegin, Vec2(0.8f, 0.5f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -165,16 +165,16 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapBegin.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.5f, 0.8f));
-	fg->setUniform("uvSize", Vec2(0.0f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.5f, 0.8f));
+	fg->setUniform(uvSize, Vec2(0.0f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapEnd.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.5f, 0.0f));
-	fg->setUniform("uvSize", Vec2(0.0f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.5f, 0.0f));
+	fg->setUniform(uvSize, Vec2(0.0f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -182,8 +182,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapBegin.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.0f, 0.8f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.0f, 0.8f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -191,8 +191,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapEnd.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.0f, 0.0f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.0f, 0.0f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -200,8 +200,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapBegin.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.8f, 0.8f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.8f, 0.8f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
@@ -209,8 +209,8 @@ void Bloodworks::init()
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapEnd.y));
 	fg->setShader(shader);
-	fg->setUniform("uvBegin", Vec2(0.8f, 0.0f));
-	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	fg->setUniform(uvBegin, Vec2(0.8f, 0.0f));
+	fg->setUniform(uvSize, Vec2(0.2f, 0.2f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 

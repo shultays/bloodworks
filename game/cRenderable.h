@@ -125,7 +125,7 @@ protected:
 		}
 	};
 
-	std::unordered_map<std::string, UniformData> uniforms;
+	std::unordered_map<int, UniformData> uniforms;
 public:
 	cRenderableWithShader(cGame *game, const char* shaderPath) : cRenderable(game)
 	{
@@ -156,10 +156,10 @@ public:
 		this->shader = shader;
 	}
 
-	void setUniform(const std::string& name, float data);
-	void setUniform(const std::string& name, const Vec2& data);
-	void setUniform(const std::string& name, const Vec3& data);
-	void setUniform(const std::string& name, const Vec4& data);
+	void setUniform(int index, float data);
+	void setUniform(int index, const Vec2& data);
+	void setUniform(int index, const Vec3& data);
+	void setUniform(int index, const Vec4& data);
 };
 
 class cTexturedQuadRenderable : public cRenderableWithShader

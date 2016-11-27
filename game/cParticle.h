@@ -23,6 +23,7 @@ class cParticleTemplate
 
 	struct Attribute
 	{
+		int index;
 		std::string name;
 		int type;
 		int size;
@@ -31,6 +32,8 @@ class cParticleTemplate
 
 	std::vector<Attribute> attributes;
 	std::vector<cTextureShr> textures;
+
+	int uCurrentTime;
 public:
 
 	void init(const std::string& particleData)
@@ -81,7 +84,7 @@ public:
 			}
 
 			const cShader::Attribute& a = shader->addAttribute(attributeName.c_str(), attribute.type);
-
+			attribute.index = a.index;
 			attribute.begin = attributeSize;
 			attribute.size = a.getCount() * 4;
 			attributeSize += attribute.size;
@@ -92,7 +95,7 @@ public:
 		addAtribute("uv", "vec2");
 		addAtribute("time", "float");
 
-		shader->addUniform("currentTime", TypeFloat);
+		uCurrentTime = shader->addUniform("uCurrentTime", TypeFloat).index;
 
 		lua.set_function("addAttribute", addAtribute);
 
@@ -253,7 +256,7 @@ public:
 			game->lastShader = nullptr;
 
 			particleTemplate->shader->begin();
-			particleTemplate->shader->setUniform("currentTime", timer.getTime() - time);
+			particleTemplate->shader->setUniform(particleTemplate->uCurrentTime, timer.getTime() - time);
 
 			glActiveTexture(GL_TEXTURE0);
 
@@ -261,9 +264,7 @@ public:
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
 				particleTemplate->textures[i]->bindTexture();
-				std::stringstream ss;
-				ss << "uTexture" << i;
-				particleTemplate->shader->setUniform(ss.str().c_str(), i);
+				particleTemplate->shader->setUniform(i, i);
 			}
 
 
@@ -276,7 +277,7 @@ public:
 
 				for (auto& attribute : particleTemplate->attributes)
 				{
-					particleTemplate->shader->bindAttribute(attribute.name.c_str(), particleTemplate->attributeSize, attribute.begin);
+					particleTemplate->shader->bindAttribute(attribute.index, particleTemplate->attributeSize, attribute.begin);
 				}
 				glDrawArrays(GL_QUADS, 0, bufferData.count * 4);
 			}

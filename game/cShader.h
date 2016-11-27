@@ -26,6 +26,8 @@ class cShader {
 public:
 	class Uniform {
 	public:
+		int index;
+
 		int uniformType;
 
 		GLint location;
@@ -37,7 +39,7 @@ public:
 
 		Uniform() {}
 
-		void setData(void * data) 
+		void setData(void * data)  const
 		{
 			switch (uniformType) 
 			{
@@ -83,6 +85,7 @@ public:
 	class Attribute 
 	{
 	public:
+		int index;
 		int attributeType;
 		bool normalized;
 		GLint location;
@@ -251,9 +254,20 @@ public:
 	}
 	GLuint shaderProgram;
 
-	std::unordered_map<std::string, Uniform> uniforms;
-	std::unordered_map<std::string, Attribute> attributes;
+	std::unordered_map<std::string, int> uniformIndices;
+	std::unordered_map<std::string, int> attributeIndices;
 
+	std::vector<Uniform> uniforms;
+	std::vector<Attribute> attributes;
+
+	int aVertexPosition;
+	int aVertexColor;
+	int aVertexUV;
+
+	int uWorldMatrix;
+	int uViewMatrix;
+	int uColor;
+	int uTextures[4];
 public:
 	cShader() 
 	{
@@ -327,61 +341,69 @@ public:
 		glUseProgram(shaderProgram);
 	}
 
-
 	void addDefaultAttribs() 
 	{
-		addAttribute("aVertexPosition", TypeVec2);
-		addAttribute("aVertexColor", TypeVec4);
-		addAttribute("aVertexUV", TypeVec2);
+		aVertexPosition = addAttribute("aVertexPosition", TypeVec2).index;
+		aVertexColor = addAttribute("aVertexColor", TypeVec4).index;
+		aVertexUV = addAttribute("aVertexUV", TypeVec2).index;
 	}
-
 
 	void bindPosition(int stride, int pointer) 
 	{
-		bindAttribute("aVertexPosition", stride, pointer);
+		bindAttribute(aVertexPosition, stride, pointer);
 	}
 
 	void bindColor(int stride, int pointer) 
 	{
-		bindAttribute("aVertexColor", stride, pointer);
+		bindAttribute(aVertexColor, stride, pointer);
 	}
 
 	void setAttributeColor(const Vec4& color) 
 	{
-		setAttributeConstant("aVertexColor", color);
+		setAttributeConstant(aVertexColor, color);
 	}
 
 	void bindUV(int stride, int pointer) 
 	{
-		bindAttribute("aVertexUV", stride, pointer);
+		bindAttribute(aVertexUV, stride, pointer);
 	}
 
 	void setAttributeUV(const Vec2& uv) 
 	{
-		setAttributeConstant("aVertexUV", uv);
+		setAttributeConstant(aVertexUV, uv);
 	}
 
+	void bindAttribute(int index, int stride, int pointer)
+	{
+		Attribute& attribute = attributes[index];
+		glEnableVertexAttribArray(attribute.location);
+		glVertexAttribPointer(attribute.location, attribute.getCount(), attribute.getType(), attribute.isNormalized(), stride, (const void*)(long long)pointer);
+	}
 
+	/*
 	void bindAttribute(const char *name, int stride, int pointer) 
 	{
 		Attribute& attribute = attributes.at(name);
 		glEnableVertexAttribArray(attribute.location);
 		glVertexAttribPointer(attribute.location, attribute.getCount(), attribute.getType(), attribute.isNormalized(), stride, (const void*)(long long)pointer);
 	}
+	*/
 
 
 	const Attribute& addAttribute(const char *name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
-		Attribute& attribute = attributes[name] = Attribute(attributeType, normalized);
+		Attribute attribute(attributeType, normalized);
 		if (attributeLocation == -1) {
 			attribute.location = glGetAttribLocation(shaderProgram, name);
 		}
-		else {
+		else 
+		{
 			attribute.location = attributeLocation;
 			glBindAttribLocation(shaderProgram, attributeLocation, name);
 		}
-
-		return attribute;
+		attribute.index = attributeIndices[name] = (int)attributes.size();
+		attributes.push_back(attribute);
+		return attributes[attribute.index];
 	}
 
 	int getTotalAttributeSize()
@@ -389,98 +411,285 @@ public:
 		int size = 0;
 		for (auto& attribute : attributes)
 		{
-			size += attribute.second.getCount() * 4;
+			size += attribute.getCount() * 4;
 		}
 		return size;
 	}
 
 	void addDefaultUniforms() 
 	{
-		addUniform("uWorldMatrix", TypeMat3);
-		addUniform("uViewMatrix", TypeMat3);
-		addUniform("uColor", TypeVec4);
-		addUniform("uTexture0", TypeInt);
-		addUniform("uTexture1", TypeInt);
-		addUniform("uTexture2", TypeInt);
-		addUniform("uTexture3", TypeInt);
+		uWorldMatrix = addUniform("uWorldMatrix", TypeMat3).index;
+		uViewMatrix = addUniform("uViewMatrix", TypeMat3).index;
+		uColor = addUniform("uColor", TypeVec4).index;
+		uTextures[0] = addUniform("uTexture0", TypeInt).index;
+		uTextures[1] = addUniform("uTexture1", TypeInt).index;
+		uTextures[2] = addUniform("uTexture2", TypeInt).index;
+		uTextures[3] = addUniform("uTexture3", TypeInt).index;
 	}
 
-	void addUniform(const char *name, int uniformType) 
+	const Uniform& addUniform(const char *name, int uniformType) 
 	{
-		Uniform& uniform = uniforms[name] = Uniform(uniformType);
+		Uniform uniform(uniformType);
+		uniform.index = uniformIndices[name] = (int)uniforms.size();
 		uniform.location = glGetUniformLocation(shaderProgram, name);
+		uniforms.push_back(uniform);
+		return uniforms[uniform.index];
 	}
 
 	void setViewMatrix(const Mat3& mat)
 	{
-		setUniform("uViewMatrix", mat);
+		setUniform(uniforms[uViewMatrix], mat);
 	}
 
 	void setWorldMatrix(const Mat3& mat)
 	{
-		setUniform("uWorldMatrix", mat);
+		setUniform(uniforms[uWorldMatrix], mat);
 	}
 
 	void setColor(const Vec4& color) 
 	{
-		setUniform("uColor", color);
+		setUniform(uniforms[uColor], color);
 	}
 
-	void setUniform(const char *name, void* data) 
+	void setTexture0(int texture)
 	{
-		uniforms[name].setData(data);
+		setUniform(uniforms[uTextures[0]], texture);
 	}
-
-	void setUniform(const char *name, float data) 
+	void setTexture1(int texture)
 	{
-		uniforms[name].setData((void*)&data);
+		setUniform(uniforms[uTextures[1]], texture);
 	}
-
-	void setUniform(const char *name, const Vec2& data) 
+	void setTexture2(int texture)
 	{
-		uniforms[name].setData((void*)&data);
+		setUniform(uniforms[uTextures[2]], texture);
 	}
-
-	void setUniform(const char *name, const Vec3& data) 
+	void setTexture3(int texture)
 	{
-		uniforms[name].setData((void*)&data);
+		setUniform(uniforms[uTextures[3]], texture);
 	}
-
-	void setUniform(const char *name, const Vec4& data) 
+	void setTexture(int i, int texture)
 	{
-		uniforms[name].setData((void*)&data);
+		setUniform(uniforms[uTextures[i]], texture);
 	}
 
-	void setUniform(const char *name, const Mat3& data) 
+	void setUniform(int uniformIndex, void* data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData(data);
 	}
 
-	void setUniform(const char *name, const Mat2& data) 
+	void setUniform(int uniformIndex, float data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData((void*)&data);
 	}
 
-	void setUniform(const char *name, int data) 
+	void setUniform(int uniformIndex, const Vec2& data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData((void*)&data);
 	}
 
-	void setUniform(const char *name, const IntVec2& data) 
+	void setUniform(int uniformIndex, const Vec3& data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData((void*)&data);
 	}
 
-	void setUniform(const char *name, const IntVec3& data) 
+	void setUniform(int uniformIndex, const Vec4& data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData((void*)&data);
 	}
 
-	void setUniform(const char *name, const IntVec4& data) 
+	void setUniform(int uniformIndex, const Mat3& data)
 	{
-		uniforms[name].setData((void*)&data);
+		uniforms[uniformIndex].setData((void*)&data);
 	}
 
+	void setUniform(int uniformIndex, const Mat2& data)
+	{
+		uniforms[uniformIndex].setData((void*)&data);
+	}
+
+	void setUniform(int uniformIndex, int data)
+	{
+		uniforms[uniformIndex].setData((void*)&data);
+	}
+
+	void setUniform(int uniformIndex, const IntVec2& data)
+	{
+		uniforms[uniformIndex].setData((void*)&data);
+	}
+
+	void setUniform(int uniformIndex, const IntVec3& data)
+	{
+		uniforms[uniformIndex].setData((void*)&data);
+	}
+
+	void setUniform(int uniformIndex, const IntVec4& data)
+	{
+		uniforms[uniformIndex].setData((void*)&data);
+	}
+
+
+	void setUniform(const Uniform& uniform, void* data)
+	{
+		uniform.setData(data);
+	}
+
+	void setUniform(const Uniform& uniform, float data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const Vec2& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const Vec3& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const Vec4& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const Mat3& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const Mat2& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, int data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const IntVec2& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const IntVec3& data)
+	{
+		uniform.setData((void*)&data);
+	}
+
+	void setUniform(const Uniform& uniform, const IntVec4& data)
+	{
+		uniform.setData((void*)&data);
+	}
+	void setAttributeConstant(int index, void* data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData(data);
+	}
+
+	void setAttributeConstant(int index, float data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const Vec2& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const Vec3& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const Vec4& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, int data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const IntVec2& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const IntVec3& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+
+	void setAttributeConstant(int index, const IntVec4& data)
+	{
+		glDisableVertexAttribArray(attributes[index].location);
+		attributes[index].setData((void*)&data);
+	}
+	/*
+	void setUniform(const char *name, void* data)
+	{
+		uniforms[uniformIndices[name]].setData(data);
+	}
+
+	void setUniform(const char *name, float data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const Vec2& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const Vec3& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const Vec4& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const Mat3& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const Mat2& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, int data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const IntVec2& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const IntVec3& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
+
+	void setUniform(const char *name, const IntVec4& data)
+	{
+		uniforms[uniformIndices[name]].setData((void*)&data);
+	}
 	void setAttributeConstant(const char *name, void* data) 
 	{
 		glDisableVertexAttribArray(attributes.at(name).location);
@@ -534,7 +743,7 @@ public:
 		glDisableVertexAttribArray(attributes.at(name).location);
 		attributes.at(name).setData((void*)&data);
 	}
-
+	*/
 	void deleteSelf()
 	{
 		delete this;

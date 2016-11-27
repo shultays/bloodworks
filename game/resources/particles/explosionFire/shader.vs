@@ -12,7 +12,7 @@ attribute vec2 uvStart;
 attribute vec2 uvSize;
 attribute float explosionEffect;
 
-uniform float currentTime;
+uniform float uCurrentTime;
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform mat3 uViewMatrix;
@@ -26,7 +26,7 @@ varying float vExplosionEffect;
 
 void main(void) 
 {
-	float dt = currentTime - time;
+	float dt = uCurrentTime - time;
 	
 	float curScale = initialScale + scaleSpeed * dt;
 	vec3 worldPos = vec3(pos + moveSpeed * dt + (uv * 2.0 - vec2(1.0, 1.0)) * curScale, 1.0);

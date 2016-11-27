@@ -52,51 +52,51 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 		switch (uniform.second.type)
 		{
 		case TypeFloat:
-			shader->setUniform(uniform.first.c_str(), uniform.second.f);
+			shader->setUniform(uniform.first, uniform.second.f);
 			break;
 		case TypeVec2:
-			shader->setUniform(uniform.first.c_str(), uniform.second.vec2);
+			shader->setUniform(uniform.first, uniform.second.vec2);
 			break;
 		case TypeVec3:
-			shader->setUniform(uniform.first.c_str(), uniform.second.vec3);
+			shader->setUniform(uniform.first, uniform.second.vec3);
 			break;
 		case TypeVec4:
-			shader->setUniform(uniform.first.c_str(), uniform.second.vec4);
+			shader->setUniform(uniform.first, uniform.second.vec4);
 			break;
 		}
 	}
 }
 
-void cRenderableWithShader::setUniform(const std::string& name, float data)
+void cRenderableWithShader::setUniform(int index, float data)
 {
 	UniformData uniform;
 	uniform.type = TypeFloat;
 	uniform.f = data;
-	uniforms[name] = uniform;
+	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(const std::string& name, const Vec2& data)
+void cRenderableWithShader::setUniform(int index, const Vec2& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec2;
 	uniform.vec2 = data;
-	uniforms[name] = uniform;
+	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(const std::string& name, const Vec3& data)
+void cRenderableWithShader::setUniform(int index, const Vec3& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec3;
 	uniform.vec3 = data;
-	uniforms[name] = uniform;
+	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(const std::string& name, const Vec4& data)
+void cRenderableWithShader::setUniform(int index, const Vec4& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec4;
 	uniform.vec4 = data;
-	uniforms[name] = uniform;
+	uniforms[index] = uniform;
 }
 
 void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
@@ -110,10 +110,10 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 	shader->setColor(color);
-	shader->setUniform("uTexture0", 0);
-	shader->setUniform("uTexture1", 1);
-	shader->setUniform("uTexture2", 2);
-	shader->setUniform("uTexture3", 3);
+	shader->setTexture0(0);
+	shader->setTexture1(1);
+	shader->setTexture2(2);
+	shader->setTexture3(3);
 
 	for (int i = 3; i >= 0; i--)
 	{
