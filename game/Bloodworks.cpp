@@ -126,19 +126,114 @@ void Bloodworks::init()
 	);
 
 
-	mapSize = 1024.0f;
-	mapBegin = -512.0f;
+	mapSize = 1048.0f;
+	mapBegin = -mapSize*0.5f;
 	mapEnd = mapBegin + mapSize;
 
-	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
-	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	shader->addUniform("uvBegin", TypeVec2);
 	shader->addUniform("uvSize", TypeVec2);
+
+	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
+	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
 	bg->setShader(shader);
 	bg->setUniform("uvBegin", Vec2(0.0f));
 	bg->setUniform("uvSize", Vec2(4.0f));
 	addRenderable(bg, BACKGROUND);
+
+	cTexturedQuadRenderable *fg;
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapBegin.x, 0.0f));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.0f, 0.5f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapEnd.x, 0.0f));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.8f, 0.5f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapBegin.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.5f, 0.8f));
+	fg->setUniform("uvSize", Vec2(0.0f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapEnd.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.5f, 0.0f));
+	fg->setUniform("uvSize", Vec2(0.0f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapBegin.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.0f, 0.8f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapEnd.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.0f, 0.0f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapBegin.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.8f, 0.8f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapEnd.y));
+	fg->setShader(shader);
+	fg->setUniform("uvBegin", Vec2(0.8f, 0.0f));
+	fg->setUniform("uvSize", Vec2(0.2f, 0.2f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f, 600.0f + mapSize.y).translateBy(mapBegin.x - 640.0f, 0.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f, 600.0f + mapSize.y).translateBy(mapEnd.x + 640.0f, 0.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+
+	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f + mapSize.x, 600.0f).translateBy(0.0f, mapBegin.y - 640.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
+
+	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f + mapSize.x, 600.0f).translateBy(0.0f, mapEnd.y + 640.0f));
+	addRenderable(fg, FOREGROUND);
+	fgs.push_back(fg);
 
 	input.hideMouse();
 
@@ -226,6 +321,12 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(explosionData.ringRenderable);
 	}
 	explosions.clear();
+
+	for (auto& fg : fgs)
+	{
+		SAFE_DELETE(fg);
+	}
+	fgs.clear();
 
 	monsterController.clear();
 	bulletController.clear();
@@ -343,10 +444,10 @@ void Bloodworks::tick(float dt)
 		tickCount = 0;
 	}
 
-	/*
-	static bool start = false;
-	if (start == false) return;
-	*/
+	if (input.isKeyPressed(key_space))
+	{
+		lua[bonuses[0]->scriptName]["spawn"](player->getPos());
+	}
 
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
@@ -357,8 +458,6 @@ void Bloodworks::tick(float dt)
 
 	player->tick(dt);
 
-
-
 	if (cameraCenterPos.x > player->getPos().x + 50.0f)
 	{
 		cameraCenterPos.x = player->getPos().x + 50;
@@ -367,7 +466,6 @@ void Bloodworks::tick(float dt)
 	{
 		cameraCenterPos.x = player->getPos().x - 50;
 	}
-
 	if (cameraCenterPos.y > player->getPos().y + 50.0f)
 	{
 		cameraCenterPos.y = player->getPos().y + 50;
@@ -376,6 +474,7 @@ void Bloodworks::tick(float dt)
 	{
 		cameraCenterPos.y = player->getPos().y - 50;
 	}
+
 
 	Vec2 playerAimDir = player->getCrosshairPos();
 	float playerAimLength = playerAimDir.normalize();
@@ -390,6 +489,27 @@ void Bloodworks::tick(float dt)
 		cameraPos = cameraCenterPos;
 	}
 
+	float approachToEdgeSize = 100.0f;
+	float horizontalMaxMove = getScreenDimensions().x * 0.5f - approachToEdgeSize;
+	float verticalMaxMove = getScreenDimensions().y * 0.5f - approachToEdgeSize;
+
+	if (cameraPos.x < mapBegin.x + horizontalMaxMove)
+	{
+		cameraPos.x = mapBegin.x + horizontalMaxMove;
+	}
+	else if (cameraPos.x > mapEnd.x - horizontalMaxMove)
+	{
+		cameraPos.x = mapEnd.x - horizontalMaxMove;
+	}
+
+	if (cameraPos.y < mapBegin.y + verticalMaxMove)
+	{
+		cameraPos.y = mapBegin.y + verticalMaxMove;
+	}
+	else if (cameraPos.y > mapEnd.y - verticalMaxMove)
+	{
+		cameraPos.y = mapEnd.y - verticalMaxMove;
+	}
 
 	monsterController.tick(dt);
 	bulletController.tick(dt);

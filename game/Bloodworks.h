@@ -15,7 +15,8 @@ enum Depths
 	GAME_OBJECTS = 3000,
 	BULLETS = 4000,
 	OBJECT_GUI = 5000,
-	GUI = 6000,
+	FOREGROUND = 6000,
+	GUI = 7000,
 
 	TOTAL_LEVEL
 };
@@ -35,6 +36,7 @@ class Bonus;
 class Bloodworks : public cGame
 {
 	cTexturedQuadRenderable *bg;
+	std::vector<cTexturedQuadRenderable*> fgs;
 	Player *player;
 
 

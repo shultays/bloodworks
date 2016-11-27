@@ -69,7 +69,7 @@ void Bullet::tick(float dt)
 	{
 		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), lua.create_table());
 	}
-
+	
 	for (auto& monster : monsters)
 	{
 		Vec2 monsterPos = monster->getPosition();

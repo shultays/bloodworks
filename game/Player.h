@@ -11,6 +11,7 @@ class Player
 {
 	Vec2 pos;
 	Vec2 oldPos;
+	Vec2 oldMoveAmount;
 
 	float moveAngle;
 	float moveSpeed;

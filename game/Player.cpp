@@ -24,7 +24,7 @@ Player::Player(Bloodworks *bloodworks)
 		);
 
 	oldSpreadAngle = 0.0f;
-	oldPos = pos = Vec2::zero();
+	oldMoveAmount = oldPos = pos = Vec2::zero();
 	renderable = new cRenderableGroup(bloodworks);
 	aimAngle = 0.0f;
 	aimDir = Vec2::fromAngle(aimAngle);
@@ -196,7 +196,7 @@ void Player::tick(float dt)
 
 	Vec2 moveAmount = moveSpeedDir * dt;
 	Vec2 newPos = pos + moveAmount;
-
+	oldMoveAmount = moveAmount;
 	Vec2 boundaryMin = bloodworks->getMapMin() + 20.0f;
 	Vec2 boundaryMax = bloodworks->getMapMax() - 20.0f;
 	float boundaryAmount = 40.0f;
@@ -218,7 +218,6 @@ void Player::tick(float dt)
 	{
 		moveAmount.y = moveAmount.y * max(0.0f, (boundaryMax.y + boundaryAmount - newPos.y) / boundaryAmount);
 	}
-
 
 	pos = pos + moveAmount;
 	crosshairPos += input.getDeltaMousePos();
