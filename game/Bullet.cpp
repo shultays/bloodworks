@@ -53,8 +53,6 @@ void Bullet::tick(float dt)
 
 	updateDrawable();
 
-	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
-
 	if (bloodworks->isCoorOutside(pos, radius + 40.0f))
 	{
 		removeSelf();
@@ -69,7 +67,8 @@ void Bullet::tick(float dt)
 	{
 		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), lua.create_table());
 	}
-	
+
+	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
 	for (auto& monster : monsters)
 	{
 		Vec2 monsterPos = monster->getPosition();

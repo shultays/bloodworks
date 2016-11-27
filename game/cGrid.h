@@ -71,7 +71,15 @@ public:
 			for (int y = object->gridStart.y; y <= object->gridEnd.y; y++)
 			{
 				auto& v = data[x][y];
-				v.erase(std::remove(v.begin(), v.end(), object), v.end());
+				for (int i = 0; i < v.size(); i++)
+				{
+					if (v[i] == object)
+					{
+						v[i] = v[v.size() - 1];
+						v.resize(v.size() - 1);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -84,8 +92,39 @@ public:
 		IntVec2 gridEnd = getNodeIndex(objectPos + radius);
 		if (object->gridStart != gridStart || object->gridEnd != gridEnd)
 		{
-			removeFromGrid(object);
-			insertToGrid(object);
+			for (int x = object->gridStart.x; x <= object->gridEnd.x; x++)
+			{
+				for (int y = object->gridStart.y; y <= object->gridEnd.y; y++)
+				{
+					if (x < gridStart.x || x > gridEnd.x || y < gridStart.y || y > gridEnd.y)
+					{
+						auto& v = data[x][y];
+						for (int i = 0; i < v.size(); i++)
+						{
+							if (v[i] == object)
+							{
+								v[i] = v[v.size() - 1];
+								v.resize(v.size() - 1);
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			for (int x = gridStart.x; x <= gridEnd.x; x++)
+			{
+				for (int y = gridStart.y; y <= gridEnd.y; y++)
+				{
+					if (x < object->gridStart.x || x > object->gridEnd.x || y < object->gridStart.y || y > object->gridEnd.y)
+					{
+						data[x][y].push_back(object);
+					}
+				}
+			}
+
+			object->gridStart = gridStart;
+			object->gridEnd = gridEnd;
 		}
 	}
 
@@ -132,8 +171,7 @@ public:
 		}
 	}
 
-
-	std::vector<T*> getNodeAtPos(const Vec2& pos) const
+	const std::vector<T*>& getNodeAtPos(const Vec2& pos) const
 	{
 		return data[getNodeIndex(pos)];
 	}
@@ -144,14 +182,13 @@ public:
 	}
 
 
-	const std::vector<T*> getNodeAtIndex(int i, int j) const
+	const std::vector<T*>& getNodeAtIndex(int i, int j) const
 	{
 		return data[i][j];
 	}
 
-	const std::vector<T*> getNodeAtIndex(const IntVec2& pos) const
+	const std::vector<T*>& getNodeAtIndex(const IntVec2& pos) const
 	{
 		return data[i];
 	}
-
 };

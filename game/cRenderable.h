@@ -28,6 +28,7 @@ public:
 		worldMatrix.makeIdentity();
 		color = Vec4(1.0f);
 		visible = true;
+		next = prev = nullptr;
 	}
 
 	virtual void render(bool isIdentity, const Mat3& mat) = 0;
@@ -65,6 +66,11 @@ public:
 	{
 		return color;
 	}
+
+	int level;
+
+	cRenderable *next;
+	cRenderable *prev;
 };
 
 class cRenderableGroup : public cRenderable
@@ -199,5 +205,4 @@ public:
 	{
 		return texture[i];
 	}
-
 };

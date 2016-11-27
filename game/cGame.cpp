@@ -8,6 +8,16 @@
 extern SDL_Window *mainWindow;
 extern SDL_GLContext mainContext;
 
+class cRootRenderable : public cRenderable
+{
+public:
+	cRootRenderable() : cRenderable(nullptr)
+	{
+	}
+	virtual void render(bool isIdentity, const Mat3& mat) override {}
+
+};
+
 void cGame::initInternal()
 {
 	cameraPos.setZero();
@@ -32,6 +42,8 @@ void cGame::initInternal()
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
+	first = new cRootRenderable();
+
 	init();
 }
 
@@ -51,16 +63,29 @@ void cGame::renderInternal()
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
 
-	for (int i=0; i<renderables.size(); i++)
+	cRenderable *cur = first->next;
+
+	while(cur)
 	{
-		if (renderables[i]->visible)
+		if (cur->visible)
 		{
-			renderables[i]->render();
+			cur->render();
 		}
+		cur = cur->next;
 	}
 	debugRenderer.render();
 
 	render();
+}
+
+cGame::~cGame()
+{
+	lastShader = nullptr;
+	if (first->next)
+	{
+		assert("there are some non-removed renderables");
+	}
+	SAFE_DELETE(first);
 }
 
 void cGame::setCameraPos(const Vec2& newPos)
@@ -87,10 +112,31 @@ IntVec2 cGame::getScreenDimensions() const
 
 void cGame::addRenderable(cRenderable* renderable, int level)
 {
-	renderables.insert(renderable, level);
+	cRenderable *cur = first;
+	renderable->level = level;
+	while (cur->next != nullptr && cur->next->level < level)
+	{
+		cur = cur->next;
+	}
+
+	renderable->next = cur->next;
+	renderable->prev = cur;
+	if (renderable->next)
+	{
+		renderable->next->prev = renderable;
+	}
+	cur->next = renderable;
 }
 
 void cGame::removeRenderable(cRenderable* renderable)
 {
-	renderables.remove(renderable);
+	if (renderable->prev == nullptr)
+	{
+		return;
+	}
+	renderable->prev->next = renderable->next;
+	if (renderable->next)
+	{
+		renderable->next->prev = renderable->prev;
+	}
 }

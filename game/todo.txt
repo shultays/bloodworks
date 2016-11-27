@@ -1,6 +1,12 @@
 
+renderable da ki uniform hash ini kaldır
+
+mermi collision unu monster a taşı (monster azdır)
+
+grid için linked belki
+
 GPU da hareket eden mermi ekle
-mermiler kasıyor çok render ihtiyacı olunca
+mermiler kasabilir çok render ihtiyacı olunca
 
 texture lar için clamp ekle
 

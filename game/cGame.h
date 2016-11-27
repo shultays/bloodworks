@@ -24,20 +24,13 @@ protected:
 
 	friend class cRenderableWithShader;
 
-	cPriorityVector<cRenderable*> renderables;
+	cRenderable *first;
 public:
 	cShaderShr lastShader;
 	virtual void init() {}
 	virtual void render() {}
 	virtual void tick(float dt) {}
-	virtual ~cGame()
-	{
-		lastShader = nullptr;
-		if (renderables.size() > 0)
-		{
-			assert("there are some non-removed renderables");
-		}
-	}
+	virtual ~cGame();
 
 	void setCameraPos(const Vec2& newPos);
 	void setCameraAngle(float angle);
