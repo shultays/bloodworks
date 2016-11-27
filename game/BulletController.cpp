@@ -10,7 +10,7 @@ void BulletController::init(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
+	grid.init(bloodworks->getMapMin() - 100.0f, bloodworks->getMapSize() + 200.0f, Vec2(50.0f));
 
 	lua.new_usertype<Bullet>("Bullet",
 		"index", sol::readonly(&Bullet::id),

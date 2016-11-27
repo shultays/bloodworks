@@ -264,7 +264,7 @@ public:
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
 				particleTemplate->textures[i]->bindTexture();
-				particleTemplate->shader->setUniform(i, i);
+				particleTemplate->shader->setTexture(i, i);
 			}
 
 
