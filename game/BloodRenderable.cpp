@@ -219,7 +219,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(8.0f, 14.0f)).translateBy(pos));
 	renderable->setTexture(1, "resources/blood/blood_bg.png");
 	renderable->setColor(Vec4::fromColor(0xFF660000));
-	bloodworks->addRenderable(renderable, BACKGROUND);
+	bloodworks->addRenderable(renderable, BACKGROUND + 1);
 
 	BloodData data;
 	data.renderable = renderable;

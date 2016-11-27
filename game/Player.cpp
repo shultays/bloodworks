@@ -53,11 +53,11 @@ Player::Player(Bloodworks *bloodworks)
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(crosshair, OBJECT_GUI + 1);
+	bloodworks->addRenderable(crosshair, FOREGROUND + 1);
 
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(spread, OBJECT_GUI + 2);
+	bloodworks->addRenderable(spread, FOREGROUND + 2);
 
 	slowdownAmount = 0.0f;
 
