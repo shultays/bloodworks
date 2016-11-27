@@ -11,8 +11,8 @@ enum Depths
 {
 	BACKGROUND = 0,
 	MONSTERS = 1000,
-	GAME_OBJECTS = 2000,
-	PLAYER = 3000,
+	PLAYER = 2000,
+	GAME_OBJECTS = 3000,
 	BULLETS = 4000,
 	OBJECT_GUI = 5000,
 	GUI = 6000,
@@ -81,6 +81,13 @@ class Bloodworks : public cGame
 
 	static int nextUniqueId;
 	cParticle *explosionParticles;
+
+	Vec2 mapSize;
+	Vec2 mapBegin;
+	Vec2 mapEnd;
+
+	Vec2 cameraCenterPos;
+
 protected:
 	virtual void render() override;
 	virtual void tick(float dt) override;
@@ -122,4 +129,18 @@ public:
 	{
 		return nextUniqueId++;
 	}
+	const Vec2& getMapSize() const
+	{
+		return mapSize;
+	}
+	const Vec2& getMapMin() const
+	{
+		return mapBegin;
+	}
+	const Vec2& getMapMax() const
+	{
+		return mapEnd;
+	}
+	bool isCoorOutside(const Vec2& pos, float radius) const;
+	bool isCoorOutside(const Vec2& pos) const;
 };

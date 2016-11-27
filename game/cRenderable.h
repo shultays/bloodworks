@@ -104,6 +104,28 @@ class cRenderableWithShader : public cRenderable
 protected:
 	cShaderShr shader;
 	virtual void render(bool isIdentity, const Mat3& mat) override;
+
+	struct UniformData
+	{
+		int type;
+		union
+		{
+			Vec4 vec4;
+			Vec3 vec3;
+			Vec2 vec2;
+			float f;
+		};
+
+		UniformData() {}
+		UniformData& operator=(const UniformData& other)
+		{
+			this->type = other.type;
+			this->vec4 = other.vec4;
+			return *this;
+		}
+	};
+
+	std::unordered_map<std::string, UniformData> uniforms;
 public:
 	cRenderableWithShader(cGame *game, const char* shaderPath) : cRenderable(game)
 	{
@@ -133,6 +155,11 @@ public:
 	{
 		this->shader = shader;
 	}
+
+	void setUniform(const std::string& name, float data);
+	void setUniform(const std::string& name, const Vec2& data);
+	void setUniform(const std::string& name, const Vec3& data);
+	void setUniform(const std::string& name, const Vec4& data);
 };
 
 class cTexturedQuadRenderable : public cRenderableWithShader

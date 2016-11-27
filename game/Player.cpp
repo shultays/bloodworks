@@ -24,7 +24,7 @@ Player::Player(Bloodworks *bloodworks)
 		);
 
 	oldSpreadAngle = 0.0f;
-	pos = Vec2::zero();
+	oldPos = pos = Vec2::zero();
 	renderable = new cRenderableGroup(bloodworks);
 	aimAngle = 0.0f;
 	aimDir = Vec2::fromAngle(aimAngle);
@@ -81,6 +81,8 @@ Player::~Player()
 
 void Player::tick(float dt)
 {
+	oldPos = pos;
+
 	float wantedAngle = moveAngle;
 
 	bool moving = false;
@@ -191,9 +193,34 @@ void Player::tick(float dt)
 
 	moveDir = Vec2::fromAngle(moveAngle);
 	moveSpeedDir = moveDir * moveSpeed;
-	pos += moveSpeedDir * dt;
+
+	Vec2 moveAmount = moveSpeedDir * dt;
+	Vec2 newPos = pos + moveAmount;
+
+	Vec2 boundaryMin = bloodworks->getMapMin() + 20.0f;
+	Vec2 boundaryMax = bloodworks->getMapMax() - 20.0f;
+	float boundaryAmount = 40.0f;
+
+	if (newPos.x < boundaryMin.x && moveAmount.x < 0.0f)
+	{
+		moveAmount.x = moveAmount.x * max(0.0f, (newPos.x + boundaryAmount - boundaryMin.x) / boundaryAmount);
+	}
+	else if (newPos.x > boundaryMax.x && moveAmount.x > 0.0f)
+	{
+		moveAmount.x = moveAmount.x * max(0.0f, (boundaryMax.x + boundaryAmount - newPos.x) / boundaryAmount);
+	}
+
+	if (newPos.y < boundaryMin.y && moveAmount.y < 0.0f)
+	{
+		moveAmount.y = moveAmount.y * max(0.0f, (newPos.y + boundaryAmount - boundaryMin.y) / boundaryAmount);
+	}
+	else if (newPos.y > boundaryMax.y && moveAmount.y > 0.0f)
+	{
+		moveAmount.y = moveAmount.y * max(0.0f, (boundaryMax.y + boundaryAmount - newPos.y) / boundaryAmount);
+	}
 
 
+	pos = pos + moveAmount;
 	crosshairPos += input.getDeltaMousePos();
 
 	float maxCrosshairDistance = gun->getMaxCrosshairDistance();

@@ -55,7 +55,7 @@ void Bullet::tick(float dt)
 
 	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
 
-	if (pos.x > 500 || pos.x < -500 || pos.y > 400 || pos.y < -400)
+	if (bloodworks->isCoorOutside(pos, radius + 40.0f))
 	{
 		removeSelf();
 	}

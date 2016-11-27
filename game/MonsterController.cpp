@@ -8,7 +8,7 @@ void MonsterController::init(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
+	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
 
 	lua.set_function("addMonster",
 		[&](std::string monsterTemplate) -> Monster*
@@ -112,7 +112,10 @@ void MonsterController::tick(float dt)
 	for (auto& monster : monsters)
 	{
 		monster->tick(dt);
-		grid.relocate(monster);
+		if (bloodworks->isCoorOutside(monster->position) == false)
+		{
+			grid.relocate(monster);
+		}
 	}
 
 	if (input.isKeyDown(key_f1))

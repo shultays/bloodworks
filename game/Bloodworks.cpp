@@ -125,8 +125,19 @@ void Bloodworks::init()
 		"addBullet", &Gun::addBullet
 	);
 
+
+	mapSize = 1024.0f;
+	mapBegin = -512.0f;
+	mapEnd = mapBegin + mapSize;
+
 	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
-	bg->setWorldMatrix(Mat3::scaleMatrix(512.0f));
+	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
+	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
+	shader->addUniform("uvBegin", TypeVec2);
+	shader->addUniform("uvSize", TypeVec2);
+	bg->setShader(shader);
+	bg->setUniform("uvBegin", Vec2(0.0f));
+	bg->setUniform("uvSize", Vec2(4.0f));
 	addRenderable(bg, BACKGROUND);
 
 	input.hideMouse();
@@ -179,6 +190,8 @@ void Bloodworks::init()
 
 	explosionParticles = new cParticle(this, fireParticle, lua.create_table());
 	addRenderable(explosionParticles, MONSTERS + 1);
+
+	cameraCenterPos.setZero();
 }
 
 Bloodworks::~Bloodworks()
@@ -261,6 +274,16 @@ void Bloodworks::createBonus(const Vec2& position)
 	drops.push_back(drop);
 }
 
+bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
+{
+	return pos.x + radius < mapBegin.x || pos.y + radius < mapBegin.x || pos.x - radius> mapEnd.x || pos.y - radius> mapEnd.y;
+}
+
+bool Bloodworks::isCoorOutside(const Vec2& pos) const
+{
+	return pos.x < mapBegin.x || pos.y < mapBegin.x || pos.x > mapEnd.x || pos.y > mapEnd.y;
+}
+
 const Mat3& Bloodworks::getViewMatrix() const
 {
 	return worldViewMatrix;
@@ -333,6 +356,40 @@ void Bloodworks::tick(float dt)
 	missionController.tick(dt);
 
 	player->tick(dt);
+
+
+
+	if (cameraCenterPos.x > player->getPos().x + 50.0f)
+	{
+		cameraCenterPos.x = player->getPos().x + 50;
+	}
+	else if (cameraCenterPos.x < player->getPos().x - 50.0f)
+	{
+		cameraCenterPos.x = player->getPos().x - 50;
+	}
+
+	if (cameraCenterPos.y > player->getPos().y + 50.0f)
+	{
+		cameraCenterPos.y = player->getPos().y + 50;
+	}
+	else if (cameraCenterPos.y < player->getPos().y - 50.0f)
+	{
+		cameraCenterPos.y = player->getPos().y - 50;
+	}
+
+	Vec2 playerAimDir = player->getCrosshairPos();
+	float playerAimLength = playerAimDir.normalize();
+	if (playerAimLength > 30.0f)
+	{
+		float l = playerAimLength - 30.0f;
+
+		cameraPos = cameraCenterPos + playerAimDir * l * 0.1f;
+	}
+	else
+	{
+		cameraPos = cameraCenterPos;
+	}
+
 
 	monsterController.tick(dt);
 	bulletController.tick(dt);

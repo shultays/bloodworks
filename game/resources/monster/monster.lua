@@ -118,9 +118,9 @@ end
 
 MeleeHitImage = {}
 
-
 function MeleeHitImage.init(gameObject)
 end
+
 function MeleeHitImage.onTick(gameObject)
 	local timeDiff = time - gameObject.data.startTime
 	local alpha

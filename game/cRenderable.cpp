@@ -46,6 +46,57 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 		shader->begin();
 		shader->setViewMatrix(game->worldViewMatrix);
 	}
+
+	for (auto& uniform : uniforms)
+	{
+		switch (uniform.second.type)
+		{
+		case TypeFloat:
+			shader->setUniform(uniform.first.c_str(), uniform.second.f);
+			break;
+		case TypeVec2:
+			shader->setUniform(uniform.first.c_str(), uniform.second.vec2);
+			break;
+		case TypeVec3:
+			shader->setUniform(uniform.first.c_str(), uniform.second.vec3);
+			break;
+		case TypeVec4:
+			shader->setUniform(uniform.first.c_str(), uniform.second.vec4);
+			break;
+		}
+	}
+}
+
+void cRenderableWithShader::setUniform(const std::string& name, float data)
+{
+	UniformData uniform;
+	uniform.type = TypeFloat;
+	uniform.f = data;
+	uniforms[name] = uniform;
+}
+
+void cRenderableWithShader::setUniform(const std::string& name, const Vec2& data)
+{
+	UniformData uniform;
+	uniform.type = TypeVec2;
+	uniform.vec2 = data;
+	uniforms[name] = uniform;
+}
+
+void cRenderableWithShader::setUniform(const std::string& name, const Vec3& data)
+{
+	UniformData uniform;
+	uniform.type = TypeVec3;
+	uniform.vec3 = data;
+	uniforms[name] = uniform;
+}
+
+void cRenderableWithShader::setUniform(const std::string& name, const Vec4& data)
+{
+	UniformData uniform;
+	uniform.type = TypeVec4;
+	uniform.vec4 = data;
+	uniforms[name] = uniform;
 }
 
 void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)

@@ -80,6 +80,11 @@ public:
 		};
 	};
 
+	G_VEC_IMP_NAME() {
+		/*for (int i = 0; i < GVEC_N; ++i)
+		data[i] = 0;*/
+	}
+
 	static G_VEC_IMP_NAME zero() 
 	{
 		return G_VEC_IMP_NAME(0);
@@ -91,11 +96,6 @@ public:
 		{
 			data[i] = 0;
 		}
-	}
-
-	G_VEC_IMP_NAME() {
-		/*for (int i = 0; i < GVEC_N; ++i)
-		data[i] = 0;*/
 	}
 
 	G_VEC_IMP_NAME(const G_VEC_TYPE& con) 

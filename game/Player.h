@@ -10,6 +10,7 @@ class Gun;
 class Player
 {
 	Vec2 pos;
+	Vec2 oldPos;
 
 	float moveAngle;
 	float moveSpeed;
@@ -50,6 +51,10 @@ public:
 
 	void doDamage(int damage);
 	void slowdown(float slowdownAmount, float slowdownDuration);
+	const Vec2& getCrosshairPos() const 
+	{
+		return crosshairPos;
+	}
 private:
 	void updateHitPoints();
 };

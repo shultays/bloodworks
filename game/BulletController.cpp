@@ -4,10 +4,13 @@
 #include "cGlobals.h"
 #include "lua.h"
 #include "Gun.h"
+#include "Bloodworks.h"
 
 void BulletController::init(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
+
+	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
 
 	lua.new_usertype<Bullet>("Bullet",
 		"index", sol::readonly(&Bullet::id),
@@ -40,9 +43,6 @@ void BulletController::init(Bloodworks *bloodworks)
 
 		"removeSelf", &Bullet::removeSelf
 		);
-
-
-	grid.init(Vec2(-700, -600), Vec2(1400, 1200), Vec2(50, 50));
 }
 
 void BulletController::clear()

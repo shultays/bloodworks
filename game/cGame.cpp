@@ -46,7 +46,7 @@ void cGame::renderInternal()
 	float halfWidth = windowSize.w * 0.5f;
 	float halfHeight = windowSize.h * 0.5f;
 	worldViewMatrix = 
-		Mat3::translationMatrix(-halfWidth - cameraPos.x, -halfHeight + cameraPos.y)
+		Mat3::translationMatrix(-halfWidth - cameraPos.x, -halfHeight - cameraPos.y)
 		.scaleBy(1.0f / windowSize.w, 1.0f / windowSize.h)
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
