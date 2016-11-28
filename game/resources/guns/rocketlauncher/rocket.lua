@@ -2,7 +2,7 @@
 function RocketLauncher.init(gun)
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 350.0
-	ShootTimer.InitGun(gun, 0.8)
+	ShootTimer.InitGun(gun, 0.5)
 end
 
 
