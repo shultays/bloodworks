@@ -268,7 +268,7 @@ public:
 			}
 
 
-			particleTemplate->shader->setViewMatrix(game->getViewMatrix());
+			particleTemplate->shader->setViewMatrix(game->getViewMatrix(alignment));
 
 			glEnableVertexAttribArray(0);
 			for (auto& bufferData : quadBuffers)

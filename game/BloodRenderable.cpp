@@ -8,6 +8,52 @@
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 {
+	for(int i=0; i<bloods.size(); i++)
+	{
+		auto& blood = bloods[i];
+		if (blood.renderable->isVisible() == false)
+		{
+			continue;
+		}
+		float scaleFactor = (timer.getTime() - blood.time) * 6.0f;
+		bool remove = false;
+		if (scaleFactor >= 1.0f)
+		{
+			scaleFactor = 1.0;
+			remove = true;
+		}
+		float moveFactor = scaleFactor;
+		scaleFactor = 0.5f + scaleFactor * 0.5f;
+		Mat3 mat = Mat3::scaleMatrix(scaleFactor * blood.size).rotateBy(blood.rotation).translateBy(blood.pos + blood.moveSpeed * moveFactor);
+		blood.renderable->setWorldMatrix(mat);
+
+		if (remove)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+			cShaderShr shader = bloodShader;
+			shader->begin();
+			blood.renderable->setShader(shader);
+
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+				GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			shader->setViewMatrix(
+				Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
+				.scaleBy(1.0f / blood_size)
+				.translateBy(0.5f)
+				.scaleBy(2.0f));
+			bloodworks->lastShader = shader;
+
+			glViewport(0, 0, blood_size, blood_size);
+			blood.renderable->render(true, Mat3::identity());
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			blood.renderable->setVisible(false);
+
+			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			bloodworks->lastShader = nullptr;
+		}
+	}
+
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
 		auto& bodyPart = bodyParts[i];
@@ -58,57 +104,11 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		}
 	}
 
-	for(int i=0; i<bloods.size(); i++)
-	{
-		auto& blood = bloods[i];
-		if (blood.renderable->isVisible() == false)
-		{
-			continue;
-		}
-		float scaleFactor = (timer.getTime() - blood.time) * 6.0f;
-		bool remove = false;
-		if (scaleFactor >= 1.0f)
-		{
-			scaleFactor = 1.0;
-			remove = true;
-		}
-		float moveFactor = scaleFactor;
-		scaleFactor = 0.5f + scaleFactor * 0.5f;
-		Mat3 mat = Mat3::scaleMatrix(scaleFactor * blood.size).rotateBy(blood.rotation).translateBy(blood.pos + blood.moveSpeed * moveFactor);
-		blood.renderable->setWorldMatrix(mat);
-
-		if (remove)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-			cShaderShr shader = bloodShader;
-			shader->begin();
-			blood.renderable->setShader(shader);
-
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-				GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			shader->setViewMatrix(
-				Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
-				.scaleBy(1.0f / blood_size)
-				.translateBy(0.5f)
-				.scaleBy(2.0f));
-			bloodworks->lastShader = shader;
-
-			glViewport(0, 0, blood_size, blood_size);
-			blood.renderable->render(true, Mat3::identity());
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			blood.renderable->setVisible(false);
-
-			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			bloodworks->lastShader = nullptr;
-		}
-	}
-
 	bloodworks->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
 	cShaderShr shader = defaultShader;
 	shader->begin();
-	shader->setViewMatrix(bloodworks->getViewMatrix());
+	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 
 	shader->bindPosition(sizeof(float) * 8, 0);

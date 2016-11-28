@@ -25,6 +25,16 @@ void cRenderableGroup::addRenderable(cRenderable *child)
 	renderables.push_back(childData);
 }
 
+cRenderable::cRenderable(cGame *game)
+{
+	this->game = game;
+	worldMatrix.makeIdentity();
+	color = Vec4(1.0f);
+	visible = true;
+	next = prev = nullptr;
+	alignment = RenderableAlignment::world;
+}
+
 cRenderable::~cRenderable()
 {
 	if (game != nullptr)
@@ -40,11 +50,18 @@ void cRenderable::setWorldMatrix(const Mat3& worldMatrix)
 
 void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 {
+
 	if (game->lastShader != shader)
 	{
 		game->lastShader = shader;
 		shader->begin();
-		shader->setViewMatrix(game->worldViewMatrix);
+		shader->setViewMatrix(game->getViewMatrix(alignment));
+		game->lastAllignment = alignment;
+	}
+	else if (game->lastAllignment != alignment)
+	{
+		shader->setViewMatrix(game->getViewMatrix(alignment));
+		game->lastAllignment = alignment;
 	}
 
 	for (auto& uniform : uniforms)

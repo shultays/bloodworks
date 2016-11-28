@@ -115,22 +115,22 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 	temp2.row1.y *= textSize;
 	temp2.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
 
-	if (alignment == center)
+	if (textAlignment == TextAlignment::center)
 	{
 		temp2.row2.x -= length;
 	}
-	else if (alignment == right)
+	else if (textAlignment == TextAlignment::right)
 	{
 		temp2.row2.x -= length * 2.0f;
 	}
 
 	Mat3 temp = isIdentity ? temp2 : temp2 * mat;
 
-	if (alignment == center)
+	if (textAlignment == TextAlignment::center)
 	{
 		temp.translateBy(Vec2(length * 0.5f, 0.0f));
 	}
-	else if (alignment == right)
+	else if (textAlignment == TextAlignment::right)
 	{
 		temp.translateBy(Vec2(length, 0.0f));
 	}

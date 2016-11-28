@@ -8,6 +8,9 @@ class cTextRenderable;
 #include <GL/glew.h>
 #include <vector>
 
+enum class RenderableAlignment;
+enum class TextAlignment;
+
 class cDebugRenderable
 {
 	cTextRenderable *textRenderable;
@@ -17,13 +20,14 @@ class cDebugRenderable
 
 	struct TextData  
 	{
-		bool isScreen;
 		int id;
 		std::string text;
 		Vec4 color;
 		float size;
 		float time;
 		Vec2 pos;
+		TextAlignment textAlignment;
+		RenderableAlignment alignment;
 	};
 
 	std::vector<TextData> textData;
@@ -51,7 +55,7 @@ class cDebugRenderable
 	std::vector<LineData> lineData;
 	GLuint lineGPUBuffer;
 
-	int addTextInternal(int id, const std::string &string, bool isScreen, float x, float y, float time, Vec4 color, float size);
+	int addTextInternal(int id, const std::string &string, float x, float y, float time, Vec4 color, float size, TextAlignment textAlignment, RenderableAlignment alignment);
 public:
 
 	const float infinite = FLT_MAX;
@@ -61,10 +65,8 @@ public:
 
 	void init();
 
-	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f);
-	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f);
-	int addScreenText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f);
-	int addScreenText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f);
+	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
+	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
 
 	int addLine(int id, const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
 	int addLine(const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));

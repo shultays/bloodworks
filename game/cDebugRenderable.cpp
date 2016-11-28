@@ -13,7 +13,7 @@
 #define MAX_LINE 2048
 
 
-int cDebugRenderable::addTextInternal(int id, const std::string &string, bool isScreen, float x, float y, float time, Vec4 color, float size)
+int cDebugRenderable::addTextInternal(int id, const std::string &string, float x, float y, float time, Vec4 color, float size, TextAlignment textAlignment, RenderableAlignment alignment)
 {
 	TextData data;
 	data.text = string;
@@ -21,7 +21,8 @@ int cDebugRenderable::addTextInternal(int id, const std::string &string, bool is
 	data.time = time;
 	data.color = color;
 	data.size = size;
-	data.isScreen = isScreen;
+	data.alignment = alignment;
+	data.textAlignment = textAlignment;
 	if (id == -1)
 	{
 		id = data.id = nextId++;
@@ -83,24 +84,14 @@ void cDebugRenderable::init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(LinetGPUData) * MAX_LINE, NULL, GL_DYNAMIC_DRAW);
 }
 
-int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
 {
-	return addTextInternal(-1, string, false, x, y, time, color, size);
+	return addTextInternal(-1, string, x, y, time, color, size, textAlignment, alignment);
 }
 
-int cDebugRenderable::addText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
+int cDebugRenderable::addText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
 {
-	return addTextInternal(id, string, false, x, y, time, color, size);
-}
-
-int cDebugRenderable::addScreenText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
-{
-	return addTextInternal(-1, string, true, x, y, time, color, size);
-}
-
-int cDebugRenderable::addScreenText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/)
-{
-	return addTextInternal(id, string, true, x, y, time, color, size);
+	return addTextInternal(id, string, x, y, time, color, size, textAlignment, alignment);
 }
 
 int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
@@ -170,14 +161,9 @@ void cDebugRenderable::render()
 		textRenderable->setText(textData.text);
 		textRenderable->setTextColor(textData.color);
 		textRenderable->setTextSize(textData.size);
-		if (textData.isScreen)
-		{
-			textRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(textData.pos.x - halfScreen.w, -textData.pos.y + halfScreen.h - textData.size)));
-		}
-		else
-		{
-			textRenderable->setWorldMatrix(Mat3::translationMatrix(textData.pos));
-		}
+		textRenderable->setTextAllignment(textData.textAlignment);
+		textRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(textData.pos.x, textData.pos.y)));
+		textRenderable->setAlignment((RenderableAlignment)textData.alignment);
 		textRenderable->render(false, Mat3::identity());
 	}
 

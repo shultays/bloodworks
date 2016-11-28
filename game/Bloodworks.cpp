@@ -17,6 +17,8 @@ int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
+	lua.script_file("resources/helpers.lua");
+
 	lua.new_usertype<Vec2>("Vec2",
 		sol::constructors<sol::types<>, sol::types<float, float>>(),
 		"x", &Vec2::x,
@@ -353,7 +355,7 @@ void Bloodworks::createGun(const Vec2& position)
 	drop.pos = position;
 	cTextRenderable *renderable;
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	renderable->setAlignment(cTextRenderable::center);
+	renderable->setTextAllignment(TextAlignment::center);
 	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
 	addRenderable(renderable, OBJECT_GUI);
 
@@ -369,7 +371,7 @@ void Bloodworks::createBonus(const Vec2& position)
 	drop.pos = position;
 	cTextRenderable *renderable;
 	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
-	renderable->setAlignment(cTextRenderable::center);
+	renderable->setTextAllignment(TextAlignment::center);
 	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
 	addRenderable(renderable, OBJECT_GUI);
 
@@ -386,10 +388,6 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 	return pos.x < mapBegin.x || pos.y < mapBegin.x || pos.x > mapEnd.x || pos.y > mapEnd.y;
 }
 
-const Mat3& Bloodworks::getViewMatrix() const
-{
-	return worldViewMatrix;
-}
 
 void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
 {
@@ -440,7 +438,7 @@ void Bloodworks::tick(float dt)
 		lastSetTickTime += 1.0f;
 		std::stringstream ss;
 		ss << "FPS " << tickCount;
-		debugRenderer.addScreenText(0, ss.str(), 5.0f, 5.0f, FLT_MAX);
+		debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 		tickCount = 0;
 	}
@@ -594,7 +592,7 @@ void Bloodworks::render()
 		lastSetRenderTime += 1.0f;
 		std::stringstream ss;
 		ss << "Render " << renderCount;
-		debugRenderer.addScreenText(1, ss.str(), 5.0f, 35.0f, FLT_MAX);
+		debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 		renderCount = 0;
 	}

@@ -43,10 +43,9 @@ Player::Player(Bloodworks *bloodworks)
 	renderable->addRenderable(hands);
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
-	healthRenderable->setAlignment(cTextRenderable::center);
+	healthRenderable->setTextAllignment(TextAlignment::center);
 	healthRenderable->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
-
 
 	renderable->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(renderable, PLAYER);
@@ -68,7 +67,7 @@ Player::Player(Bloodworks *bloodworks)
 	hitPoints = 100;
 	lua["player"] = this;
 	updateHitPoints();
-	this->gun = nullptr;
+	gun = nullptr;
 }
 
 Player::~Player()

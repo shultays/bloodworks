@@ -49,7 +49,9 @@ void MissionController::loadMissionController(const std::string& missionControll
 		"textureSize", &GameObject::RenderableData::textureSize,
 		"textSize", &GameObject::RenderableData::textSize,
 		"color", &GameObject::RenderableData::color,
-		"update", &GameObject::RenderableData::update
+		"update", &GameObject::RenderableData::update,
+		"alignment", &GameObject::RenderableData::alignment,
+		"textAlignment", &GameObject::RenderableData::textAlignment
 		);
 }
 

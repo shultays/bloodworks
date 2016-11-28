@@ -35,7 +35,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	}
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
-	healthRenderable->setAlignment(cTextRenderable::center);
+	healthRenderable->setTextAllignment(TextAlignment::center);
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
 	moveAngle = randFloat(-pi, pi);

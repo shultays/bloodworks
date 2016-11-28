@@ -47,6 +47,7 @@ GameObject::RenderableData& GameObject::addTexture(const std::string& texture, c
 	renderableData.color = 0xFFFFFFFF;
 	renderableData.textSize = 0.0f;
 	renderableData.alignment = 0;
+	renderableData.textAlignment = 0;
 	renderableData.gameObject = this;
 
 	renderableGroup->addRenderable(renderable);
@@ -69,7 +70,8 @@ GameObject::RenderableData& GameObject::addText(const std::string& text, const s
 	renderableData.rotation = 0.0f;
 	renderableData.color = 0xFFFFFFFF;
 	renderableData.textSize = 32.0f;
-	renderableData.alignment = 1;
+	renderableData.alignment = 0;
+	renderableData.textAlignment = 1;
 	renderableData.gameObject = this;
 
 	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font.c_str() : "resources/fontData.txt"), text);
@@ -101,6 +103,7 @@ void GameObject::RenderableData::update()
 		quadRenderable->setColor(Vec4::fromColor(color));
 		Mat3 mat = Mat3::scaleMatrix(textureSize).rotateBy(rotation).translateBy(pos);
 		renderable->setWorldMatrix(mat);
+		renderable->setAlignment((RenderableAlignment)alignment);
 	}
 	else if (type == RenderableDataType::text)
 	{
@@ -108,7 +111,8 @@ void GameObject::RenderableData::update()
 		textRenderable->setWorldMatrix(Mat3::translationMatrix(pos));
 		textRenderable->setTextColor(Vec4::fromColor(color));
 		textRenderable->setTextSize(textSize);
-		textRenderable->setAlignment((cTextRenderable::Alignment)alignment);
+		textRenderable->setTextAllignment((TextAlignment)textAlignment);
+		textRenderable->setAlignment((RenderableAlignment)alignment);
 	}
 }
 

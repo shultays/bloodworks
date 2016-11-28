@@ -55,13 +55,34 @@ void cGame::tickInternal()
 void cGame::renderInternal()
 {
 	Vec2 windowSize = getScreenDimensions().toVec();
+	windowSize *= cameraZoom;
 	float halfWidth = windowSize.w * 0.5f;
 	float halfHeight = windowSize.h * 0.5f;
-	worldViewMatrix = 
-		Mat3::translationMatrix(-halfWidth - cameraPos.x, -halfHeight - cameraPos.y)
+
+	viewMatrices[(int)RenderableAlignment::world] =
+		Mat3::identity()
+		.rotateBy(cameraAngle)
+		.translateBy(-halfWidth - cameraPos.x, -halfHeight - cameraPos.y)
 		.scaleBy(1.0f / windowSize.w, 1.0f / windowSize.h)
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
+
+	Mat3 center = viewMatrices[(int)RenderableAlignment::center] =
+		Mat3::identity()
+		.translateBy(-halfWidth, -halfHeight)
+		.scaleBy(1.0f / windowSize.w, 1.0f / windowSize.h)
+		.translateBy(0.5f)
+		.scaleBy(2.0f);
+
+	viewMatrices[(int)RenderableAlignment::left] = center * Mat3::translationMatrix(-1.0f, 0.0f);
+	viewMatrices[(int)RenderableAlignment::right] = center * Mat3::translationMatrix(1.0f, 0.0f);
+	viewMatrices[(int)RenderableAlignment::top] = center * Mat3::translationMatrix(0.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::bottom] = center * Mat3::translationMatrix(0.0f, -1.0f);
+
+	viewMatrices[(int)RenderableAlignment::topLeft] = center * Mat3::translationMatrix(-1.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::topRight] = center * Mat3::translationMatrix(1.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::bottomLeft] = center * Mat3::translationMatrix(-1.0f, -1.0f);
+	viewMatrices[(int)RenderableAlignment::bottomRight] = center * Mat3::translationMatrix(1.0f, -1.0f);
 
 	cRenderable *cur = first->next;
 

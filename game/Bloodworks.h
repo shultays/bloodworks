@@ -31,7 +31,6 @@ class Gun;
 class MissionController;
 class BloodRenderable;
 class Bonus;
-class Bonus;
 
 class Bloodworks : public cGame
 {
@@ -122,7 +121,6 @@ public:
 	}
 	void createGun(const Vec2& pos);
 	void addDrop(const Vec2& position);
-	const Mat3& getViewMatrix() const;
 
 	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
 	void createBonus(const Vec2& position);

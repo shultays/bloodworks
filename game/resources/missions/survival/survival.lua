@@ -11,7 +11,9 @@ function Survival.onTick()
 		gameObject.data.fadeOutStartTime = 2.0
 		gameObject.data.fadeInDuration = 0.5
 		gameObject.data.renderable = gameObject:addText("Level : " .. mission.level, "resources/fontData.txt")
-		gameObject:setPosition(Vec2.new(100, 0))
+        gameObject.data.renderable.alignment = RenderableAlignment.bottom
+        gameObject.data.renderable:update()
+        gameObject:setPosition(Vec2.new(0, 50))
 		
 		local v = Vec2.new(math.random() * 600 - 300, math.random() * 500 - 250)
 		local ang = math.pi * 2.0 * math.random()
@@ -64,7 +66,6 @@ function FadeOutImage.onTick(gameObject)
 	local a =  math.floor(255 * alpha)
 	gameObject.data.renderable.color = (a<<24) | 0x00FFFFFF 
 	gameObject.data.renderable:update()
-	gameObject:setPosition(Vec2.new(0, -200))
 end
 
 function FadeOutImage.clear(gameObjectId)

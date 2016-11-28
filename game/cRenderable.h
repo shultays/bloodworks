@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 class cGame;
+enum class RenderableAlignment;
 extern GLuint quad;
 
 class cRenderable
@@ -21,15 +22,14 @@ protected:
 	Mat3 worldMatrix;
 	Vec4 color;
 	bool visible;
+	RenderableAlignment alignment;
+
+	int level;
+
+	cRenderable *next;
+	cRenderable *prev;
 public:
-	cRenderable(cGame *game)
-	{
-		this->game = game;
-		worldMatrix.makeIdentity();
-		color = Vec4(1.0f);
-		visible = true;
-		next = prev = nullptr;
-	}
+	cRenderable(cGame *game);
 
 	virtual void render(bool isIdentity, const Mat3& mat) = 0;
 
@@ -41,6 +41,11 @@ public:
 	void setVisible(bool visible)
 	{
 		this->visible = visible;
+	}
+
+	void setAlignment(RenderableAlignment alignment)
+	{
+		this->alignment = alignment;
 	}
 
 	virtual ~cRenderable();
@@ -67,10 +72,6 @@ public:
 		return color;
 	}
 
-	int level;
-
-	cRenderable *next;
-	cRenderable *prev;
 };
 
 class cRenderableGroup : public cRenderable

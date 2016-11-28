@@ -40,16 +40,15 @@ public:
 	}
 };
 
+enum class TextAlignment
+{
+	left,
+	center,
+	right
+};
+
 class cTextRenderable : public cRenderableWithShader
 {
-public:
-	enum Alignment
-	{
-		left,
-		center,
-		right
-	};
-
 private:
 	cFontShr font;
 	float textSize;
@@ -58,7 +57,7 @@ private:
 	friend class cDebugRenderable;
 	float length;
 	bool lengthDirty;
-	Alignment alignment;
+	TextAlignment textAlignment;
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 public:
@@ -69,7 +68,7 @@ public:
 		this->text = text;
 		this->textSize = textSize;
 		this->textColor = textColor;
-		setAlignment(left);
+		setTextAllignment(TextAlignment::left);
 		lengthDirty = true;
 	}
 
@@ -83,9 +82,9 @@ public:
 		setText(text.c_str());
 	}
 
-	void setAlignment(Alignment alignment)
+	void setTextAllignment(TextAlignment alignment)
 	{
-		this->alignment = alignment;
+		this->textAlignment = alignment;
 	}
 
 	void setText(const char* text)

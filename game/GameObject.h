@@ -30,6 +30,7 @@ class GameObject
 		float rotation;
 
 		float textSize;
+		int textAlignment;
 		int alignment;
 
 		void update();
