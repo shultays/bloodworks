@@ -38,6 +38,7 @@ class Bloodworks : public cGame
 	std::vector<cTexturedQuadRenderable*> fgs;
 	Player *player;
 
+	cTextureShr ring;
 
 	int tickCount;
 	int renderCount;

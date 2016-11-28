@@ -8,6 +8,28 @@
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 {
+	bloodworks->lastShader = nullptr;
+	glEnable(GL_TEXTURE_2D);
+	cShaderShr shader = defaultShader;
+	shader->begin();
+	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
+	glBindBuffer(GL_ARRAY_BUFFER, quad);
+
+	shader->bindPosition(sizeof(float) * 8, 0);
+	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
+	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
+	shader->setColor(Vec4(1.0f));
+	shader->setTexture0(0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
+	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glDisableVertexAttribArray(0);
+
+	glDisable(GL_TEXTURE_2D);
+	bloodworks->lastShader = nullptr;
+
 	for(int i=0; i<bloods.size(); i++)
 	{
 		auto& blood = bloods[i];
@@ -104,28 +126,6 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		}
 	}
 
-	bloodworks->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
-	cShaderShr shader = defaultShader;
-	shader->begin();
-	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
-
-	shader->bindPosition(sizeof(float) * 8, 0);
-	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
-	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
-	shader->setColor(Vec4(1.0f));
-	shader->setTexture0(0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-	glDisableVertexAttribArray(0);
-
-	glDisable(GL_TEXTURE_2D);
-	bloodworks->lastShader = nullptr;
-
 }
 
 void BloodRenderable::tick()
@@ -176,7 +176,7 @@ BloodRenderable::~BloodRenderable()
 	bodyParts.clear();
 	bloodShader = nullptr;
 	defaultShader = nullptr;
-
+	bloodBg = nullptr;
 	glDeleteFramebuffers(1, &frameBuffer);
 }
 
@@ -189,6 +189,8 @@ void BloodRenderable::init()
 		ss << "resources/blood/blood" << i << ".png";
 		cachedBloods.push_back(resources.getTexture(ss.str().c_str()));
 	}
+	bloodBg = resources.getTexture("resources/blood/blood_bg.png");
+	
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
 	glGenFramebuffers(1, &frameBuffer);

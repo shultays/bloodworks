@@ -276,6 +276,10 @@ public:
 
 	~cShader() 
 	{
+		if (shaderProgram != -1)
+		{
+			printf("unloading %s %s\n", vertexShaderFile, pixelShaderFile);
+		}
 		if (pixelShader != -1)
 		{
 			glDeleteShader(pixelShader);
@@ -302,6 +306,7 @@ public:
 
 	bool loadFromFile(const char* vertexShaderFile, const char* pixelShaderFile) 
 	{
+		printf("loading %s %s\n", vertexShaderFile, pixelShaderFile);
 		strcpy_s(this->vertexShaderFile, vertexShaderFile);
 		strcpy_s(this->pixelShaderFile, pixelShaderFile);
 

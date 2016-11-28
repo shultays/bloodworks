@@ -290,6 +290,8 @@ void Bloodworks::init()
 	addRenderable(explosionParticles, MONSTERS + 1);
 
 	cameraCenterPos.setZero();
+
+	ring = resources.getTexture("resources/particles/explosionFire/ring.png");
 }
 
 Bloodworks::~Bloodworks()
@@ -334,6 +336,8 @@ Bloodworks::~Bloodworks()
 	monsterController.clear();
 	bulletController.clear();
 	missionController.clear();
+
+	ring = nullptr;
 }
 
 
