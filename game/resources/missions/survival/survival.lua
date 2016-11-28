@@ -64,7 +64,8 @@ function FadeOutImage.onTick(gameObject)
 		end
 	end
 	local a =  math.floor(255 * alpha)
-	gameObject.data.renderable.color = (a<<24) | 0x00FFFFFF 
+    
+	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
 	gameObject.data.renderable:update()
 end
 

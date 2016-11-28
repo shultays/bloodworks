@@ -29,28 +29,29 @@ function RocketLauncher.onBulletHit(gun, bullet, monster)
 end
 
 function RocketLauncher.onBulletTick(gun, bullet)
-	bullet.data.lifeTime = bullet.data.lifeTime - dt
+    local data = bullet.data
+	data.lifeTime = data.lifeTime - dt
 	
-	if bullet.data.lifeTime < 0.0 then
+	if data.lifeTime < 0.0 then
 		RocketLauncher.onBulletHit(gun, bullet, nil)
 		bullet:removeSelf()
 	end
-	bullet.data.moveSpeed = bullet.data.moveSpeed + dt * 250
-	if bullet.data.moveSpeed > 250.0 then
-		bullet.data.moveSpeed = 250.0
+	data.moveSpeed = data.moveSpeed + dt * 250
+	if data.moveSpeed > 250.0 then
+		data.moveSpeed = 250.0
 	end
 	
-	bullet.data.lateralSpeed = bullet.data.lateralSpeed - dt * 0.5
+	data.lateralSpeed = data.lateralSpeed - dt * 0.5
 	
-	if bullet.data.lateralSpeed < 0.0 then
-		bullet.data.lateralSpeed = 0.0
+	if data.lateralSpeed < 0.0 then
+		data.lateralSpeed = 0.0
 	end
 	
 	local defaultSpeed = Vec2.new(0.0, 0.0)
-	defaultSpeed:setAngle(bullet.data.moveAngle)
-	defaultSpeed = defaultSpeed * bullet.data.moveSpeed
+	defaultSpeed:setAngle(data.moveAngle)
+	defaultSpeed = defaultSpeed * data.moveSpeed
 	
-	local finalSpeed = defaultSpeed + bullet.data.lateralSpeedDir * bullet.data.lateralSpeed
+	local finalSpeed = defaultSpeed + data.lateralSpeedDir * data.lateralSpeed
 	
 	bullet.moveSpeed = finalSpeed:length()
 	bullet.moveAngle = finalSpeed:getAngle()

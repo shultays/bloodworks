@@ -13,7 +13,9 @@ function Monster.init(monster)
 	else
 		b = 0xff
 	end
-	monster:setColor(0xFF000000 | (r << 16) | (g << 8) | b)
+    
+	monster:setColor(0xFF000000 + (r * 2 ^ 16) + (g  * 2 ^ 8) + b)
+    
 	
 	local diff = player.position - monster.position
 	
@@ -29,18 +31,19 @@ function Monster.init(monster)
 end
 
 function Monster.onTick(monster)
+    local data = monster.data
 	local diff = player.position - monster.position
 	local length = diff:length()
 	
 	if length < 20 + monster.collisionRadius then
-		if monster.data.moving or monster.data.lastHitTime + 1.5 < time then
-			monster.data.lastHitTime = time
-			monster.data.moving = false
+		if data.moving or data.lastHitTime + 1.5 < time then
+			data.lastHitTime = time
+			data.moving = false
 			monster:playAnimation("attack")
-			monster.data.willHit = true
+			data.willHit = true
 		end
-		if monster.data.willHit and monster.data.lastHitTime + 0.2 < time then
-			monster.data.willHit = false
+		if data.willHit and data.lastHitTime + 0.2 < time then
+			data.willHit = false
 			player:doDamage(math.floor(5 + math.random() * 6))
 			player:slowdown(0.4, 0.15)
 			
@@ -52,9 +55,9 @@ function Monster.onTick(monster)
 			gameObject:setRotation(-math.pi * 0.5 - monster.moveAngle)
 		end
 	else
-		monster.data.willHit = false
-		if monster.data.moving == false then
-			monster.data.moving = true
+		data.willHit = false
+		if data.moving == false then
+			data.moving = true
 			monster:playAnimation("walk", math.random())
 		end
 	end
@@ -65,8 +68,8 @@ function Monster.onTick(monster)
 	
 	local closestMonster = nil
 	
-	if monster.data.closestMonsterIndex ~= -1 then
-		closestMonster = getMonster(monster.data.closestMonsterIndex)
+	if data.closestMonsterIndex ~= -1 then
+		closestMonster = getMonster(data.closestMonsterIndex)
 		if closestMonster ~= nil then
 			if closestMonster.position:distanceSquared(monster.position) > 30.0 * 30.0 then
 				closestMonster = nil
@@ -75,13 +78,13 @@ function Monster.onTick(monster)
 	end
 	
 	if closestMonster == nil then
-		monster.data.ignoreThis = true
+		data.ignoreThis = true
 		closestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		monster.data.ignoreThis = false
+		data.ignoreThis = false
 	else
-		monster.data.ignoreThis = true
+		data.ignoreThis = true
 		local newClosestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		monster.data.ignoreThis = false
+		data.ignoreThis = false
 		
 		if newClosestMonster ~= nil and newClosestMonster ~= closestMonster then
 			if closestMonster.position:distanceSquared(monster.position) > newClosestMonster.position:distanceSquared(monster.position) + 15 * 15 then
@@ -91,7 +94,7 @@ function Monster.onTick(monster)
 	end
 	
 	if closestMonster ~= nil then
-		monster.data.closestMonsterIndex = closestMonster.index
+		data.closestMonsterIndex = closestMonster.index
 		local toOther = closestMonster.position - monster.position;
 		local c = 1.0 - toOther:length() / 30.0
 		local cPlayer = length / 100
@@ -108,7 +111,7 @@ function Monster.onTick(monster)
 	
 	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, 0.05)
 	
-	if monster.data.moving then
+	if data.moving then
 		monster.moveSpeed = 50.0;
 	else
 		monster.moveSpeed = 0.0;
@@ -136,7 +139,7 @@ function MeleeHitImage.onTick(gameObject)
 		end
 	end
 	local a =  math.floor(255 * alpha)
-	gameObject.data.renderable.color = (a<<24) | 0x00FFFFFF 
+	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
 	gameObject.data.renderable:update()
 end
 

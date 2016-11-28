@@ -41,9 +41,13 @@ public:
 		SDL_FreeSurface(surf);
 
 		name = fileName;
+
+		printf("loading %s\n", name.c_str());
 	}
 	~cTexture()
 	{
+
+		printf("unloading %s\n", name.c_str());
 		if (gTexture != -1)
 		{
 			glDeleteTextures(1, &gTexture);

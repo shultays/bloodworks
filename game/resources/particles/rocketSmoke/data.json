@@ -2,6 +2,7 @@
 
 {
 	"maxLifeTime" : 3.0,
+	"spawnInterval" : 0.0,
 	
 	"vertexShader" : "resources/particles/rocketSmoke/shader.vs",
 	"pixelShader" : "resources/particles/rocketSmoke/shader.ps",

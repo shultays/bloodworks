@@ -14,6 +14,7 @@ class cParticleTemplate
 	friend class cParticle;
 
 	float maxLifeTime;
+	float spawnInterval;
 	cShaderShr shader;
 	std::string scriptName;
 	sol::table scriptTable;
@@ -32,6 +33,7 @@ class cParticleTemplate
 
 	std::vector<Attribute> attributes;
 	std::vector<cTextureShr> textures;
+	std::vector<GLuint> emptyBuffers;
 
 	int uCurrentTime;
 public:
@@ -49,7 +51,7 @@ public:
 		lua.script_file(scriptPath);
 
 		maxLifeTime = j["maxLifeTime"].get<float>();
-
+		spawnInterval = j["spawnInterval"].get<float>();
 		attributeSize = 0;
 		
 
@@ -122,6 +124,10 @@ public:
 			t = nullptr;
 		}
 		textures.clear();
+		for (auto& t : emptyBuffers)
+		{
+			glDeleteBuffers(1, &t);
+		}
 	}
 };
 
@@ -139,8 +145,10 @@ class cParticle : public cRenderable
 		float timeToDie;
 	};
 
+	int maxBufferSize;
 	std::vector<QuadBufferData> quadBuffers;
 	sol::table args;
+	float lastSpawn;
 public:
 
 	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderable(game)
@@ -150,6 +158,8 @@ public:
 
 		buff = new char[particleTemplate->attributeSize * 4];
 		this->args = args;
+		maxBufferSize = 0;
+		lastSpawn = -1;
 	}
 
 	~cParticle()
@@ -158,20 +168,41 @@ public:
 
 		for (auto& bufferData : quadBuffers)
 		{
-			glDeleteBuffers(1, &bufferData.quadBuffer);
+			if (particleTemplate->emptyBuffers.size() < maxBufferSize * 2)
+			{
+				particleTemplate->emptyBuffers.push_back(bufferData.quadBuffer);
+			}
+			else
+			{
+				glDeleteBuffers(1, &bufferData.quadBuffer);
+			}
 		}
 	}
 
 	void addParticle(const Vec2& pos, sol::table& params)
 	{
+		if (particleTemplate->spawnInterval > 0.0f && timer.getTime() - lastSpawn < particleTemplate->spawnInterval)
+		{
+			return;
+		}
+		lastSpawn = timer.getTime();
 		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD)
 		{
 			QuadBufferData bufferData;
 			bufferData.count = 0;
 
-			glGenBuffers(1, &bufferData.quadBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-			glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
+			if (particleTemplate->emptyBuffers.size() == 0)
+			{
+				glGenBuffers(1, &bufferData.quadBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+				glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
+			}
+			else
+			{
+				bufferData.quadBuffer = particleTemplate->emptyBuffers[(int)particleTemplate->emptyBuffers.size() - 1];
+				particleTemplate->emptyBuffers.resize(particleTemplate->emptyBuffers.size() - 1);
+			}
+
 
 			quadBuffers.push_back(bufferData);
 		}
@@ -243,7 +274,7 @@ public:
 			{
 				if (quadBuffers[i].timeToDie < timer.getTime())
 				{
-					glDeleteBuffers(1, &quadBuffers[i].quadBuffer);
+					particleTemplate->emptyBuffers.push_back(quadBuffers[i].quadBuffer);
 					for (int j = i; j < quadBuffers.size() - 1; j++)
 					{
 						quadBuffers[j] = quadBuffers[j + 1];

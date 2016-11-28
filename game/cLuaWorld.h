@@ -7,6 +7,4 @@
 
 class cLuaWorld : public sol::state
 {
-
-
 };
