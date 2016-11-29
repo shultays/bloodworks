@@ -10,6 +10,25 @@ radyasyon
 mıknatıs
 arada bir iki ateş
 ekstra perk
+Stationary Reloader
+hızlı reload
+reload sırasında ufak patlama
+Bloody Mess (ne kadar kan o kadar exp)
+Sharpshooter
+Pyrokinetic
+Instant Winner
+Random Weapon
+Anxious Loader
+Final Revenge
+Reload sırasında hızlanma
+Reload sırasında can karşılığı ateş??
+Infernal Contract
+Dodger
+Bonus Magnet more bonus
+Doctor (health ları gör)
+Hot Tempered (arada bi sağa sola ateş)
+My Favorite Weapon
+Bandage
 
 
 bonuslar
@@ -22,6 +41,25 @@ ekstra exp
 
 
 silahlar
+pompalı
+bullet trail
+laser
+çarpınca chain yapan silah
+rail gun, delen geçen
+flame thower
+homing bir silah
+el bombası?
+mayın?
+çok hızlı makineli?
+yavaşlatan bir silahchian lighting
+space ace teki lazer? gittikçe büyüyen mermili
+daha kısa ama açılı pompalı
+
+
+
+ulti silahlar?
+banana bomb?
+mayın?
 
 
 yaratıklar
