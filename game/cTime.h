@@ -7,6 +7,7 @@ friend class Coral;
 	void init();
 
 	float currentTime;
+	float renderTime;
 	float dt;
 	float renderDt;
 
@@ -26,6 +27,9 @@ public:
 		return renderDt;
 	}
 
-	void tick();
 	float getRealTime();
+	float getRenderTime()
+	{
+		return renderTime;
+	}
 };

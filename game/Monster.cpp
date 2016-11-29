@@ -142,7 +142,7 @@ void Monster::doDamage(int damage, const Vec2& dir)
 	}
 	else
 	{
-		if (randFloat() < 0.7f)
+		// if (randFloat() < 0.7f)
 		{
 			bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 7.0f);
 		}

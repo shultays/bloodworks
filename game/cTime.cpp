@@ -4,18 +4,10 @@
 
 void cTime::init()
 {
-	currentTime = getRealTime();
+	renderTime = currentTime = getRealTime();
 	dt = 0.0f;
 	renderDt = 0.0f;
 }
-
-void cTime::tick()
-{
-	float newTime = getRealTime();
-	dt = newTime - currentTime;
-	currentTime = newTime;
-}
-
 
 float cTime::getRealTime()
 {

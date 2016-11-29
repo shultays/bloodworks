@@ -25,7 +25,6 @@ class BloodRenderable : public cRenderable
 		Vec2 moveSpeed;
 		Vec2 rotatePoint;
 		float time;
-		float timeScale;
 		float rotateSpeed;
 	};
 

@@ -37,7 +37,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		{
 			continue;
 		}
-		float scaleFactor = (timer.getTime() - blood.time) * 6.0f;
+		float scaleFactor = (timer.getRenderTime() - blood.time) * 6.0f;
 		bool remove = false;
 		if (scaleFactor >= 1.0f)
 		{
@@ -83,7 +83,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		{
 			continue;
 		}
-		float t = (timer.getTime() - bodyPart.time) * bodyPart.timeScale * 5.0f;
+		float t = (timer.getRenderTime() - bodyPart.time) * 6.0f;
 		bool remove = false;
 		if (t >= 1.0f)
 		{
@@ -242,7 +242,6 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	bodyPartData.rotation = angle;
 	bodyPartData.moveSpeed = blowDir * Mat2::rotation(randFloat(-0.9f, 0.9f)) * randFloat(0.7f, 1.5f);
 	bodyPartData.time = timer.getTime();
-	bodyPartData.timeScale = randFloat(0.8f, 1.2f);
 	bodyPartData.rotateSpeed = randFloat(1.4f, 2.2f);
 	bodyPartData.rotatePoint = rotatePoint;
 	if (randBool())
