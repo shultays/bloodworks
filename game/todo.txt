@@ -1,4 +1,6 @@
 
+render neden senkron olamadı onu bul
+
 renderable da ki uniform hash ini kaldır
 
 mermi collision unu monster a taşı (monster azdır)
