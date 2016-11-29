@@ -32,6 +32,10 @@ class Player
 
 	float slowdownAmount;
 	float slowdownDuration;
+
+	float bulletSpeedMult;
+	float shootSpeedMult;
+	float moveSpeedMult;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -55,6 +59,11 @@ public:
 	const Vec2& getCrosshairPos() const 
 	{
 		return crosshairPos;
+	}
+
+	float getBulletSpeedMultiplier()
+	{
+		return bulletSpeedMult;
 	}
 private:
 	void updateHitPoints();

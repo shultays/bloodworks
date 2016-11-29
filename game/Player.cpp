@@ -20,8 +20,13 @@ Player::Player(Bloodworks *bloodworks)
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"doDamage", &Player::doDamage,
-		"slowdown", &Player::slowdown
+		"slowdown", &Player::slowdown,
+		"bulletSpeedMult", &Player::bulletSpeedMult,
+		"shootSpeedMult", &Player::shootSpeedMult,
+		"moveSpeedMult", &Player::moveSpeedMult
 		);
+
+	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
 
 	oldSpreadAngle = 0.0f;
 	oldMoveAmount = oldPos = pos = Vec2::zero();
@@ -191,7 +196,7 @@ void Player::tick(float dt)
 	}
 
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveSpeedDir = moveDir * moveSpeed;
+	moveSpeedDir = moveDir * moveSpeed * moveSpeedMult;
 
 	Vec2 moveAmount = moveSpeedDir * dt;
 	Vec2 newPos = pos + moveAmount;

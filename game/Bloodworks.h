@@ -31,6 +31,7 @@ class Gun;
 class MissionController;
 class BloodRenderable;
 class Bonus;
+class Perk;
 
 class Bloodworks : public cGame
 {
@@ -50,6 +51,7 @@ class Bloodworks : public cGame
 	BulletController bulletController;
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
+	std::vector<Perk*> perks;
 
 	BloodRenderable *bloodRenderable;
 

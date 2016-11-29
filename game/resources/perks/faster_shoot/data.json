@@ -1,0 +1,5 @@
+{
+  "name": "Faster Shoot",
+  "scriptFile" : "resources/perks/faster_shoot/faster_shoot.lua",
+  "scriptName" : "FasterShoot"
+}

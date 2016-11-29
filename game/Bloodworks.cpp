@@ -7,6 +7,7 @@
 #include "Bonus.h"
 #include "BloodRenderable.h"
 #include "cFont.h"
+#include "Perk.h"
 
 #include <sstream>
 
@@ -292,6 +293,21 @@ void Bloodworks::init()
 	cameraCenterPos.setZero();
 
 	ring = resources.getTexture("resources/particles/explosionFire/ring.png");
+
+
+	Perk *perk;
+
+	perk = new Perk();
+	perk->load("resources/perks/faster_shoot/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
+	perk->load("resources/perks/faster_bullets/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
+	perk->load("resources/perks/faster_movement/data.json");
+	perks.push_back(perk);
 }
 
 Bloodworks::~Bloodworks()
@@ -332,6 +348,12 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(fg);
 	}
 	fgs.clear();
+
+	for (auto& perk : perks)
+	{
+		SAFE_DELETE(perk);
+	}
+	perks.clear();
 
 	monsterController.clear();
 	bulletController.clear();
@@ -454,6 +476,19 @@ void Bloodworks::tick(float dt)
 
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
+
+	if (input.isKeyPressed(key_1))
+	{
+		perks[0]->use();
+	}
+	if (input.isKeyPressed(key_2))
+	{
+		perks[1]->use();
+	}
+	if (input.isKeyPressed(key_3))
+	{
+		perks[2]->use();
+	}
 
 	bloodRenderable->tick();
 

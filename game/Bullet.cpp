@@ -5,6 +5,7 @@
 #include "cTexture.h"
 #include "Gun.h"
 #include "cParticle.h"
+#include "Player.h"
 
 Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 {
@@ -47,7 +48,7 @@ void Bullet::tick(float dt)
 		}
 	}
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveSpeedDir = moveDir * moveSpeed;;
+	moveSpeedDir = moveDir * moveSpeed * bloodworks->getPlayer()->getBulletSpeedMultiplier();
 
 	pos += moveSpeedDir * dt;
 

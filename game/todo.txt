@@ -1,3 +1,36 @@
+perkler
+regen
+crit
+homing?
+yavaşlamama
+blink?
+sprint?
+zehir
+radyasyon
+mıknatıs
+arada bir iki ateş
+ekstra perk
+
+
+bonuslar
+melee + ölümsüzlük
+düşmanları yavaşlatma
+zaman durdurma
+heal
+güçlü silahlar
+ekstra exp
+
+
+silahlar
+
+
+yaratıklar
+
+
+
+
+
+game object ler için level
 
 render neden senkron olamadı onu bul
 

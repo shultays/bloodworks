@@ -1,0 +1,5 @@
+{
+  "name": "Faster Movement",
+  "scriptFile" : "resources/perks/faster_movement/faster_movement.lua",
+  "scriptName" : "FasterMovement"
+}

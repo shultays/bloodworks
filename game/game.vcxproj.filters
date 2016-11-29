@@ -203,5 +203,8 @@
     <ClInclude Include="cParticle.h">
       <Filter>Coral</Filter>
     </ClInclude>
+    <ClInclude Include="Perk.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
