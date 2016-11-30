@@ -29,3 +29,7 @@ Weapons
 Drakojan14, Doberman, Bungie
 http://117649-m-i.deviantart.com/art/Halo-Weapon-sprites-174840024
 http://drakojan14.deviantart.com/art/Halo-Weapon-Sprite-Sheet-2-162109821
+
+Particles
+hc
+http://opengameart.org/content/lens-flares-and-particles
