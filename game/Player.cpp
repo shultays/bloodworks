@@ -23,10 +23,12 @@ Player::Player(Bloodworks *bloodworks)
 		"slowdown", &Player::slowdown,
 		"bulletSpeedMult", &Player::bulletSpeedMult,
 		"shootSpeedMult", &Player::shootSpeedMult,
-		"moveSpeedMult", &Player::moveSpeedMult
+		"moveSpeedMult", &Player::moveSpeedMult,
+		"slowdownOnHit", &Player::slowdownOnHit
 		);
 
 	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
+	slowdownOnHit = true;
 
 	oldSpreadAngle = 0.0f;
 	oldMoveAmount = oldPos = pos = Vec2::zero();

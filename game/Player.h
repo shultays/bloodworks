@@ -36,6 +36,8 @@ class Player
 	float bulletSpeedMult;
 	float shootSpeedMult;
 	float moveSpeedMult;
+
+	bool slowdownOnHit;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

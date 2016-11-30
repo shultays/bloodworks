@@ -1,0 +1,5 @@
+{
+  "name": "No Slowdown On Hit",
+  "scriptFile" : "resources/perks/no_slowdown_on_hit/no_slowdown_on_hit.lua",
+  "scriptName" : "NoSlowdownOnHit"
+}

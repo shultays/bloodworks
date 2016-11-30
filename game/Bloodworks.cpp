@@ -298,6 +298,10 @@ void Bloodworks::init()
 	Perk *perk;
 
 	perk = new Perk();
+	perk->load("resources/perks/no_slowdown_on_hit/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
 	perk->load("resources/perks/faster_shoot/data.json");
 	perks.push_back(perk);
 

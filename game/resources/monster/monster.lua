@@ -45,8 +45,11 @@ function Monster.onTick(monster)
 		if data.willHit and data.lastHitTime + 0.2 < time then
 			data.willHit = false
 			player:doDamage(math.floor(5 + math.random() * 6))
-			player:slowdown(0.4, 0.15)
 			
+            if player.slowdownOnHit then
+                player:slowdown(0.4, 0.15)
+			end
+            
 			local gameObject = addGameObject("MeleeHitImage")
 			gameObject.data.startTime = time
 			gameObject.data.renderable = gameObject:addTexture("resources/monster/art/hit.png", "resources/default")
