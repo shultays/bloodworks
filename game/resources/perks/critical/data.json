@@ -1,0 +1,5 @@
+{
+  "name": "Critical Bullets",
+  "scriptFile" : "resources/perks/critical/critical.lua",
+  "scriptName" : "CriticalBullets"
+}

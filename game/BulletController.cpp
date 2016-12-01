@@ -20,6 +20,11 @@ void BulletController::init(Bloodworks *bloodworks)
 		"moveAngle", &Bullet::moveAngle,
 		"meshRotation", &Bullet::meshRotation,
 
+		"meshScale", &Bullet::meshScale,
+
+		"moveDir", sol::readonly(&Bullet::moveDir),
+		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
+
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
 

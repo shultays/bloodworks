@@ -45,8 +45,8 @@ public:
 		json j = json::parse(jsonFile.c_str());
 
 		shader = resources.getShader(j["vertexShader"].get<std::string>().c_str(), j["pixelShader"].get<std::string>().c_str());
-
-		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+		scriptName = j["scriptName"].get<std::string>();
+		scriptTable = lua[scriptName] = lua.create_table();
 		std::string scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
 
@@ -128,6 +128,11 @@ public:
 		{
 			glDeleteBuffers(1, &t);
 		}
+	}
+
+	const std::string& getName() const
+	{
+		return scriptName;
 	}
 };
 

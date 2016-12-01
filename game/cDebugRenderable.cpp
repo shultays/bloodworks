@@ -187,6 +187,7 @@ void cDebugRenderable::render()
 
 		whiteTexture->bindTexture();
 		lineShader->setWorldMatrix(Mat3::identity());
+		lineShader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
 		glDrawArrays(GL_LINES, 0, (int)lineData.size() * 2);
 
 	}

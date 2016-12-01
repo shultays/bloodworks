@@ -33,3 +33,7 @@ http://drakojan14.deviantart.com/art/Halo-Weapon-Sprite-Sheet-2-162109821
 Particles
 hc
 http://opengameart.org/content/lens-flares-and-particles
+
+Player 2
+rileygombart
+http://opengameart.org/content/animated-top-down-survivor-player

@@ -22,11 +22,13 @@ class Bullet
 	Vec2 pos;
 	float moveAngle;
 	float moveSpeed;
-
+	
 	float meshRotation;
 
 	Vec2 moveDir;
 	Vec2 moveSpeedDir;
+
+	Vec2 meshScale;
 
 	float radius;
 	int damage;

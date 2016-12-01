@@ -1,0 +1,14 @@
+
+
+{
+	"maxLifeTime" : 3.0,
+	"spawnInterval" : 0.02,
+	
+	"vertexShader" : "resources/particles/critical/shader.vs",
+	"pixelShader" : "resources/particles/critical/shader.ps",
+	
+	"textures" : "resources/particles/critical/critical.png",
+	
+	"scriptFile" : "resources/particles/critical/script.lua",
+	"scriptName" : "CriticalParticle"
+}

@@ -281,11 +281,19 @@ void Bloodworks::init()
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, BACKGROUND + 1);
 
+	cParticleTemplate *particleTemplate;
+
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/rocketSmoke/data.json");
+	particles[particleTemplate->getName()] = particleTemplate;
 
-	fireParticle = new cParticleTemplate();
-	fireParticle->init("resources/particles/explosionFire/data.json");
+	particleTemplate = new cParticleTemplate();
+	particleTemplate->init("resources/particles/critical/data.json");
+	particles[particleTemplate->getName()] = particleTemplate;
+
+	particleTemplate = new cParticleTemplate();
+	particleTemplate->init("resources/particles/explosionFire/data.json");
+	fireParticle = particles[particleTemplate->getName()] = particleTemplate;
 
 	explosionParticles = new cParticle(this, fireParticle, lua.create_table());
 	addRenderable(explosionParticles, MONSTERS + 1);
@@ -296,6 +304,10 @@ void Bloodworks::init()
 
 
 	Perk *perk;
+
+	perk = new Perk();
+	perk->load("resources/perks/critical/data.json");
+	perks.push_back(perk);
 
 	perk = new Perk();
 	perk->load("resources/perks/no_slowdown_on_hit/data.json");
@@ -316,8 +328,11 @@ void Bloodworks::init()
 
 Bloodworks::~Bloodworks()
 {
-	SAFE_DELETE(particleTemplate);
-	SAFE_DELETE(fireParticle);
+	for (auto& particle : particles)
+	{
+		SAFE_DELETE(particle.second);
+	}
+	particles.clear();
 	SAFE_DELETE(explosionParticles);
 
 	player->setGun(nullptr);
@@ -366,6 +381,16 @@ Bloodworks::~Bloodworks()
 	ring = nullptr;
 }
 
+void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
+{
+	for (auto& perk : usedPerks)
+	{
+		if (perk->onAddGunBullet)
+		{
+			perk->onAddGunBullet(gun, bullet);
+		}
+	}
+}
 
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
@@ -481,18 +506,12 @@ void Bloodworks::tick(float dt)
 	lua["dt"] = dt;
 	lua["time"] = timer.getTime();
 
-	if (input.isKeyPressed(key_1))
+	if (input.isKeyPressed(key_1) && perks[0]->used == false)
 	{
 		perks[0]->use();
+		usedPerks.push_back(perks[0]);
 	}
-	if (input.isKeyPressed(key_2))
-	{
-		perks[1]->use();
-	}
-	if (input.isKeyPressed(key_3))
-	{
-		perks[2]->use();
-	}
+
 
 	bloodRenderable->tick();
 

@@ -38,6 +38,9 @@ class Player
 	float moveSpeedMult;
 
 	bool slowdownOnHit;
+
+	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
+	Vec2 barSize;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

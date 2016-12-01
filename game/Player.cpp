@@ -65,6 +65,25 @@ Player::Player(Bloodworks *bloodworks)
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
 	bloodworks->addRenderable(spread, FOREGROUND + 2);
 
+	barSize = Vec2(256.0f, 32.0f);
+	barSize *= 0.4f;
+	Mat3 barMat = Mat3::scaleMatrix(barSize).translateBy(Vec2(0.0f, -50.0f));
+
+	healthBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_bg.png", "resources/default");
+	healthBarBG->setWorldMatrix(barMat);
+	healthBarBG->setAlignment(RenderableAlignment::top);
+	bloodworks->addRenderable(healthBarBG, GUI + 10);
+
+	healthBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_active.png", "resources/default");
+	healthBarActive->setWorldMatrix(barMat);
+	healthBarActive->setAlignment(RenderableAlignment::top);
+	bloodworks->addRenderable(healthBarActive, GUI + 11);
+
+	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_fg.png", "resources/default");
+	healthBarFG->setWorldMatrix(barMat);
+	healthBarFG->setAlignment(RenderableAlignment::top);
+	bloodworks->addRenderable(healthBarFG, GUI + 12);
+
 	slowdownAmount = 0.0f;
 
 	crosshairPos = Vec2(10.0f);
@@ -83,6 +102,9 @@ Player::~Player()
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(spread);
 	SAFE_DELETE(healthRenderable);
+	SAFE_DELETE(healthBarBG);
+	SAFE_DELETE(healthBarActive);
+	SAFE_DELETE(healthBarFG);
 }
 
 void Player::tick(float dt)
@@ -329,4 +351,5 @@ void Player::updateHitPoints()
 	std::stringstream ss;
 	ss << hitPoints;
 	healthRenderable->setText(ss.str().c_str());
+	healthBarActive->setWorldMatrix(Mat3::scaleMatrix(Vec2(barSize.x * (hitPoints / 100.0f), barSize.y)).translateBy(Vec2(0.0f, -50.0f)));
 }

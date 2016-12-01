@@ -63,12 +63,19 @@ mayın?
 
 
 yaratıklar
+örümcek (gidip gidip duracak)
+angel (görünce duracak, öbür türlü hızlı)
+blink atan? 
+arada invis atan?
+parçalanan
 
 
 
 
+renderable lar standart olsun lua tarafında
 
-game object ler için level
+
+game object ler için level (level 1 yazısı gui olmalı)
 
 render neden senkron olamadı onu bul
 

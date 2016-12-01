@@ -10,10 +10,12 @@ using json = nlohmann::json;
 
 class Perk
 {
+	friend class Bloodworks;
 	std::string name;
 	sol::table scriptTable;
 	bool used;
 
+	sol::function onAddGunBullet;
 public:
 	void load(const std::string& perkData)
 	{
@@ -28,6 +30,8 @@ public:
 
 		std::string scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
+
+		onAddGunBullet = scriptTable["onAddGunBullet"];
 	}
 
 	void use()

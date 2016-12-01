@@ -52,6 +52,7 @@ class Bloodworks : public cGame
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
 	std::vector<Perk*> perks;
+	std::vector<Perk*> usedPerks;
 
 	BloodRenderable *bloodRenderable;
 
@@ -66,8 +67,11 @@ class Bloodworks : public cGame
 	std::vector<Drop> drops;
 
 
-	cParticleTemplate *particleTemplate;
+	std::unordered_map<std::string, cParticleTemplate*> particles;
 	cParticleTemplate *fireParticle;
+
+
+
 
 	struct ExplosionData
 	{
@@ -120,7 +124,7 @@ public:
 
 	cParticleTemplate* getParticleTemplate(const std::string& name)
 	{
-		return particleTemplate; //todo
+		return particles[name];
 	}
 	void createGun(const Vec2& pos);
 	void addDrop(const Vec2& position);
@@ -146,4 +150,6 @@ public:
 	}
 	bool isCoorOutside(const Vec2& pos, float radius) const;
 	bool isCoorOutside(const Vec2& pos) const;
+
+	void onAddedGunBullet(Gun *gun, Bullet *bullet);
 };

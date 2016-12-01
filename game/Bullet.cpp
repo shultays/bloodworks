@@ -17,7 +17,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	id = bloodworks->getUniqueId();
 	damage = 10;
 	diesOnHit = true;
-
+	meshScale = Vec2(1.0f);
 	data = lua.create_table();
 	meshRotation = -1500;
 }
@@ -63,10 +63,12 @@ void Bullet::tick(float dt)
 	{
 		return;
 	}
-	
+
+	auto table = lua.create_table();
+	table["bullet"] = this;
 	for (auto& particleData : particles)
 	{
-		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), lua.create_table());
+		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), table);
 	}
 
 	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
@@ -116,6 +118,7 @@ void Bullet::addRenderable(cRenderable *renderable)
 void Bullet::updateDrawable()
 {
 	Mat3 mat = Mat3::identity();
+	mat.scaleBy(meshScale);
 	mat.rotateBy(-getMeshRotation());
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
@@ -147,7 +150,7 @@ void Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const 
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
-	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
+	bloodworks->addRenderable(particleData.particle, BULLETS + 1);
 	particles.push_back(particleData);
 }
 

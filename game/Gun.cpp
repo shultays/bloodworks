@@ -110,5 +110,6 @@ Bullet* Gun::addBullet()
 	bullet->addRenderable(renderable);
 	bloodworks->getBulletController()->addBullet(bullet);
 
+	bloodworks->onAddedGunBullet(this, bullet);
 	return bullet;
 }
