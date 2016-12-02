@@ -70,13 +70,6 @@ arada invis atan?
 parçalanan
 
 
-
-
-renderable lar standart olsun lua tarafında
-
-
-game object ler için level (level 1 yazısı gui olmalı)
-
 render neden senkron olamadı onu bul
 
 renderable da ki uniform hash ini kaldır
@@ -103,5 +96,5 @@ bonuslar için resim ekle
 
 ui olarak renderable ekle (view matrix den bağımsız)
 
-explosionlarda is ekle
+explosionlarda yere is ekle
 explosionları güzelleştir (belki smoke & şarapnel?)

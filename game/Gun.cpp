@@ -20,6 +20,8 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	fixFolderPath(artFolder);
 
 	bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
+	iconPath = artFolder + j["icon"].get<std::string>();
+
 	bulletTexture = resources.getTexture(bulletTexturePath.c_str());
 	bulletSize.w = j["bulletSize"].at(0).get<float>();
 	bulletSize.h = j["bulletSize"].at(0).get<float>();

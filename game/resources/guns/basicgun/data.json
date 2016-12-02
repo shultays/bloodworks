@@ -1,6 +1,7 @@
 {
   "name": "Basic Gun",
   "artFolder" : "resources/guns/basicgun/",
+  "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [15.0, 15.0],
   "bulletRadius" : 2.0,

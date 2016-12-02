@@ -16,6 +16,7 @@ class Gun
 	std::string name;
 	std::string artFolder;
 	std::string bulletTexturePath;
+	std::string iconPath;
 	cTextureShr bulletTexture;
 	Vec2 bulletSize;
 	float bulletRadius;
@@ -42,6 +43,7 @@ class Gun
 	bool rightMousePressed;
 	bool rightMouseDown;
 	bool rightMouseReleased;
+
 
 public:
 	Gun() {}

@@ -38,6 +38,11 @@ public:
 		return visible;
 	}
 
+	RenderableAlignment getAlignment() const
+	{
+		return alignment;
+	}
+
 	void setVisible(bool visible)
 	{
 		this->visible = visible;

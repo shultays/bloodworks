@@ -64,6 +64,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 				.translateBy(0.5f)
 				.scaleBy(2.0f));
 			bloodworks->lastShader = shader;
+			bloodworks->lastAllignment = blood.renderable->getAlignment();
 
 			glViewport(0, 0, blood_size, blood_size);
 			blood.renderable->render(true, Mat3::identity());
@@ -114,6 +115,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 				.translateBy(0.5f)
 				.scaleBy(2.0f));
 			bloodworks->lastShader = shader;
+			bloodworks->lastAllignment = bodyPart.renderable->getAlignment();
 
 			glViewport(0, 0, blood_size, blood_size);
 			bodyPart.renderable->render(true, Mat3::identity());
@@ -200,8 +202,9 @@ void BloodRenderable::init()
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, blood_size, blood_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, frameBufferTexture, 0);
 

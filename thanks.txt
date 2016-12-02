@@ -37,3 +37,12 @@ http://opengameart.org/content/lens-flares-and-particles
 Player 2
 rileygombart
 http://opengameart.org/content/animated-top-down-survivor-player
+
+gui
+StumpyStrust
+http://opengameart.org/content/ui-button
+http://opengameart.org/content/ui-button-and-extra
+http://opengameart.org/content/fantasy-ui-button
+
+p0ss
+http://opengameart.org/content/user-interface-element-pack-panels-buttons-sliders-tables-icons
