@@ -59,11 +59,11 @@ Player::Player(Bloodworks *bloodworks)
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(crosshair, FOREGROUND + 1);
+	bloodworks->addRenderable(crosshair, GUI + 100);
 
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
-	bloodworks->addRenderable(spread, FOREGROUND + 2);
+	bloodworks->addRenderable(spread, GUI + 101);
 
 	barSize = Vec2(256.0f, 32.0f);
 	barSize *= 0.4f;
