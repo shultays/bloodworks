@@ -72,6 +72,7 @@ public:
 		return color;
 	}
 
+	void setLevel(int level);
 };
 
 class cRenderableGroup : public cRenderable

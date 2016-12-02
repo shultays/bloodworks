@@ -16,9 +16,7 @@ enum Depths
 	BULLETS = 4000,
 	OBJECT_GUI = 5000,
 	FOREGROUND = 6000,
-	GUI = 7000,
-
-	TOTAL_LEVEL
+	GUI = 7000
 };
 
 class cParticle;

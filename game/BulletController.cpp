@@ -11,43 +11,6 @@ void BulletController::init(Bloodworks *bloodworks)
 	this->bloodworks = bloodworks;
 
 	grid.init(bloodworks->getMapMin() - 100.0f, bloodworks->getMapSize() + 200.0f, Vec2(50.0f));
-
-	lua.new_usertype<Bullet>("Bullet",
-		"index", sol::readonly(&Bullet::id),
-
-		"position", &Bullet::pos,
-		"moveSpeed", &Bullet::moveSpeed,
-		"moveAngle", &Bullet::moveAngle,
-		"meshRotation", &Bullet::meshRotation,
-
-		"meshScale", &Bullet::meshScale,
-
-		"moveDir", sol::readonly(&Bullet::moveDir),
-		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
-
-		"radius", &Bullet::radius,
-		"damage", &Bullet::damage,
-
-		"diesOnHit", &Bullet::diesOnHit,
-		"updateDrawable", &Bullet::updateDrawable,
-
-		"script", &Bullet::script,
-
-		"onHitCallback", &Bullet::onHitCallback,
-		"onTickCallback", &Bullet::onTickCallback,
-		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
-
-		"isDead", sol::readonly(&Bullet::isDead),
-
-		"data", &Bullet::data,
-
-		"addRenderableTexture", &Bullet::addRenderableTexture,
-		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
-		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
-		"addTrailParticle", &Bullet::addTrailParticle,
-
-		"removeSelf", &Bullet::removeSelf
-		);
 }
 
 void BulletController::clear()

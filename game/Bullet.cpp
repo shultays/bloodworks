@@ -145,13 +145,14 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 }
 
 
-void Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args)
+cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args)
 {
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
-	bloodworks->addRenderable(particleData.particle, BULLETS + 1);
+	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
+	return particleData.particle;
 }
 
 bool Bullet::hasParticles()

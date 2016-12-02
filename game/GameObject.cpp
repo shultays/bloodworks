@@ -23,6 +23,16 @@ GameObject::GameObject(Bloodworks *bloodworks)
 	pos.setZero();
 	scale = Vec2(1.0f);
 	rotation = 0.0f;
+	level = GAME_OBJECTS;
+}
+
+void GameObject::setLevel(int level)
+{
+	this->level = level;
+	if (renderableGroup)
+	{
+		renderableGroup->setLevel(level);
+	}
 }
 
 GameObject::~GameObject()
@@ -90,7 +100,7 @@ void GameObject::checkRenderable()
 	{
 		renderableGroup = new cRenderableGroup(bloodworks);
 		renderableGroup->setWorldMatrix(Mat3::translationMatrix(Vec2::zero()));
-		bloodworks->addRenderable(renderableGroup, GAME_OBJECTS);
+		bloodworks->addRenderable(renderableGroup, level);
 	}
 }
 

@@ -48,6 +48,7 @@ class GameObject
 
 	cRenderableGroup *renderableGroup;
 	std::vector<RenderableData> renderables;
+	int level;
 
 	Vec2 pos;
 	Vec2 scale;
@@ -68,6 +69,8 @@ class GameObject
 		this->scale = scale;
 		updateMatrix();
 	}
+
+	void setLevel(int level);
 
 	void updateMatrix();
 

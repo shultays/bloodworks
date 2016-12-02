@@ -8,6 +8,7 @@
 #include "BloodRenderable.h"
 #include "cFont.h"
 #include "Perk.h"
+#include "Bullet.h"
 
 #include <sstream>
 
@@ -54,7 +55,7 @@ void Bloodworks::init()
 
 
 	lua.new_usertype<Vec3>("Vec3",
-		sol::constructors<sol::types<>, sol::types<float, float, float>>(), 
+		sol::constructors<sol::types<>, sol::types<float, float, float>>(),
 		"x", &Vec3::x,
 		"y", &Vec3::y,
 		"z", &Vec3::z,
@@ -79,7 +80,65 @@ void Bloodworks::init()
 		"dot", [](const Vec3& a, const Vec3& b) { return a.dot(b); }
 	);
 
+	lua.new_usertype<Mat3>("Mat3",
+		"fromPosition", [](const Vec2& pos) { return Mat3::translationMatrix(pos); },
+		"fromPositionAndScale", [](const Vec2& pos, const Vec2& scale) { return Mat3::scaleMatrix(scale).translateBy(pos); },
+		"from", [](const Vec2& pos, const Vec2& scale, float rotation) { return Mat3::scaleMatrix(scale).rotateBy(rotation).translateBy(pos); }
+	);
 
+	lua.new_usertype<cRenderable>("Renderable",
+		"setLevel", &cRenderable::setLevel,
+		"setAllignment", &cRenderable::setAlignment,
+		"setVisible", &cRenderable::setVisible,
+		"setColor", &cRenderable::setColor,
+		"setWorldMatrix", &cRenderable::setWorldMatrix
+		);
+
+	lua.new_usertype<cParticle>("Particle",
+		"setLevel", &cParticle::setLevel,
+		"setAllignment", &cParticle::setAlignment,
+		"setVisible", &cParticle::setVisible,
+		"setColor", &cParticle::setColor,
+		"setWorldMatrix", &cParticle::setWorldMatrix,
+		"addParticle", &cParticle::addParticle
+		);
+
+	lua.new_usertype<Bullet>("Bullet",
+		"index", sol::readonly(&Bullet::id),
+
+		"position", &Bullet::pos,
+		"moveSpeed", &Bullet::moveSpeed,
+		"moveAngle", &Bullet::moveAngle,
+		"meshRotation", &Bullet::meshRotation,
+
+		"meshScale", &Bullet::meshScale,
+
+		"moveDir", sol::readonly(&Bullet::moveDir),
+		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
+
+		"radius", &Bullet::radius,
+		"damage", &Bullet::damage,
+
+		"diesOnHit", &Bullet::diesOnHit,
+		"updateDrawable", &Bullet::updateDrawable,
+
+		"script", &Bullet::script,
+
+		"onHitCallback", &Bullet::onHitCallback,
+		"onTickCallback", &Bullet::onTickCallback,
+		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
+
+		"isDead", sol::readonly(&Bullet::isDead),
+
+		"data", &Bullet::data,
+
+		"addRenderableTexture", &Bullet::addRenderableTexture,
+		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
+		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
+		"addTrailParticle", &Bullet::addTrailParticle,
+
+		"removeSelf", &Bullet::removeSelf
+		);
 	lua.set_function("approachAngle",
 		[&](float angle, float angleToApproach, float maxRotation) -> float
 	{

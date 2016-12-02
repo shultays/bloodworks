@@ -48,6 +48,17 @@ void cRenderable::setWorldMatrix(const Mat3& worldMatrix)
 	this->worldMatrix = worldMatrix;
 }
 
+void cRenderable::setLevel(int level)
+{
+	this->level = level;
+	if (game)
+	{
+		game->removeRenderable(this);
+		game->addRenderable(this, level);
+	}
+}
+
+
 void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 {
 

@@ -39,7 +39,8 @@ void MissionController::loadMissionController(const std::string& missionControll
 
 		"setPosition", &GameObject::setPosition,
 		"setRotation", &GameObject::setRotation,
-		"setScale", &GameObject::setScale
+		"setScale", &GameObject::setScale,
+		"setLevel", &GameObject::setLevel
 	);
 
 
