@@ -756,7 +756,7 @@ void Bloodworks::tick()
 	}
 	else if (gamePlaySlowdown < targetGamePlaySlowdown)
 	{
-		gamePlaySlowdown += 0.01;
+		gamePlaySlowdown += 0.01f;
 		if (gamePlaySlowdown > targetGamePlaySlowdown)
 		{
 			gamePlaySlowdown = targetGamePlaySlowdown;
