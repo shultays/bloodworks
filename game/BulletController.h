@@ -19,5 +19,5 @@ public:
 	void clear();
 	~BulletController();
 	void addBullet(Bullet* bullet);
-	void tick(float dt);
+	void tick();
 };

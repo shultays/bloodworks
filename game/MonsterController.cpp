@@ -94,7 +94,7 @@ void MonsterController::init(Bloodworks *bloodworks)
 
 }
 
-void MonsterController::tick(float dt)
+void MonsterController::tick()
 {
 	for (int i = 0; i < monsters.size(); i++)
 	{
@@ -111,7 +111,7 @@ void MonsterController::tick(float dt)
 
 	for (auto& monster : monsters)
 	{
-		monster->tick(dt);
+		monster->tick();
 		if (bloodworks->isCoorOutside(monster->position) == false)
 		{
 			grid.relocate(monster);

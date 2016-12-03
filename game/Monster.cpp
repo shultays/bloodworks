@@ -72,7 +72,7 @@ Monster::~Monster()
 	SAFE_DELETE(healthRenderable);
 }
 
-void Monster::tick(float dt)
+void Monster::tick()
 {
 	scriptTable["onTick"](this);
 
@@ -95,7 +95,7 @@ void Monster::tick(float dt)
 
 	if (moveSpeed > 0.0f)
 	{
-		position += Vec2::fromAngle(moveAngle) * moveSpeed * dt;
+		position += Vec2::fromAngle(moveAngle) * moveSpeed * timer.getDt();
 	}
 
 	std::stringstream ss;

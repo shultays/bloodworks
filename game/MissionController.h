@@ -27,7 +27,7 @@ public:
 	void loadMissionController(const std::string& missionControllerData);
 	void clear();
 	void init(Bloodworks *bloodworks);
-	void tick(float dt);
+	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);
 	Bullet* addCustomBullet(const sol::table& params);

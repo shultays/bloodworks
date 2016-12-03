@@ -52,6 +52,7 @@ public:
 
 		maxLifeTime = j["maxLifeTime"].get<float>();
 		spawnInterval = j["spawnInterval"].get<float>();
+		spawnInterval = max(spawnInterval, 0.01f);
 		attributeSize = 0;
 		
 
@@ -164,7 +165,7 @@ public:
 		buff = new char[particleTemplate->attributeSize * 4];
 		this->args = args;
 		maxBufferSize = 0;
-		lastSpawn = -1;
+		lastSpawn = -1.0f;
 	}
 
 	~cParticle()

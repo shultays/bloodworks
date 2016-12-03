@@ -16,34 +16,47 @@ Coral::Coral()
 
 void Coral::tick()
 {
+	float slowdown = game->getSlowdown();
+
 	float t;
 	while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval)
 	{
+		timer.currentTime = update_interval * slowdown + timer.currentTime;
+		timer.dt = update_interval * slowdown;
+		tickedBeforeRender = true;
 		if (t - lastUpdateTime < update_interval * 2.0f)
 		{
-			timer.dt = update_interval;
 			lastUpdateTime += update_interval;
 		}
 		else
 		{
-			timer.dt = t - lastUpdateTime;
 			lastUpdateTime = t;
 		}
-		timer.currentTime = lastUpdateTime;
 		debugRenderer.tick(timer.getDt());
 		game->tickInternal();
 		input.tick();
 	}
 
-	if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.9f)
+	if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
 	{
-		timer.renderDt = t - lastDrawTime;
-		timer.renderTime = lastDrawTime = t;
+		if (tickedBeforeRender)
+		{
+			tickedBeforeRender = false;
+			timer.renderDt = (t - lastUpdateTime) * slowdown + timer.currentTime - timer.renderTime;
+			timer.renderTime += timer.renderDt;
+		}
+		else
+		{
+			timer.renderDt = draw_interval * slowdown;
+			timer.renderTime += timer.renderDt;
+		}
+
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		game->renderInternal();
 
 		SDL_GL_SwapWindow(mainWindow);
+		lastDrawTime = timer.getRealTime();
 	}
 	
 	t = timer.getRealTime();
@@ -62,7 +75,7 @@ void Coral::init()
 {
 	timer.init();
 	input.init();
-
+	tickedBeforeRender = false;
 	lastDrawTime = timer.getTime() - draw_interval;
 	lastUpdateTime = timer.getTime() - update_interval;
 }

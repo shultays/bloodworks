@@ -32,8 +32,9 @@ Bullet::~Bullet()
 	particles.clear();
 }
 
-void Bullet::tick(float dt)
+void Bullet::tick()
 {
+	float dt = timer.getDt();
 	Vec2 oldPos = pos;
 	if (script && onTickCallback.size())
 	{

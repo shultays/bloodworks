@@ -29,6 +29,8 @@ protected:
 	float cameraAngle;
 	float cameraZoom;
 
+	float slowdown;
+
 	void renderInternal();
 	void tickInternal();
 	void initInternal();
@@ -46,7 +48,7 @@ public:
 
 	virtual void init() {}
 	virtual void render() {}
-	virtual void tick(float dt) {}
+	virtual void tick() {}
 	virtual ~cGame();
 
 	void setCameraPos(const Vec2& newPos);
@@ -62,5 +64,15 @@ public:
 	const Mat3& getViewMatrix(RenderableAlignment alignment)
 	{
 		return viewMatrices[(int)alignment];
+	}
+
+	void setSlowdown(float slowdown)
+	{
+		this->slowdown = slowdown;
+	}
+
+	float getSlowdown() const
+	{
+		return slowdown;
 	}
 };

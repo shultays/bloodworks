@@ -24,6 +24,7 @@ void cGame::initInternal()
 	cameraZoom = 1.0f;
 	cameraAngle = 0.0f;
 
+	slowdown = 1.0f;
 
 	GLfloat vertexData[] =
 	{
@@ -49,7 +50,7 @@ void cGame::initInternal()
 
 void cGame::tickInternal()
 {
-	tick(timer.getDt());
+	tick();
 }
 
 void cGame::renderInternal()

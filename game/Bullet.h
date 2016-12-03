@@ -56,7 +56,7 @@ class Bullet
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
-	void tick(float dt);
+	void tick();
 	void addRenderable(cRenderable *renderable);
 	int getId()
 	{

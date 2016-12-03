@@ -44,7 +44,7 @@ class Player
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
-	void tick(float dt);
+	void tick();
 
 	const Vec2& getPos() const
 	{

@@ -35,13 +35,13 @@ void BulletController::addBullet(Bullet* bullet)
 	grid.insertToGrid(bullet);
 }
 
-void BulletController::tick(float dt)
+void BulletController::tick()
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		if (bullets[i]->isDead == false)
 		{
-			bullets[i]->tick(dt);
+			bullets[i]->tick();
 		}
 
 		if (bullets[i]->isDead)

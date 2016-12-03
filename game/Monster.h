@@ -56,7 +56,7 @@ public:
 	int getId();
 	void setScale(float scale);
 	void setColor(int color);
-	void tick(float dt);
+	void tick();
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(std::string anim, float startPercentage);
 	void doDamage(int damage, const Vec2& dir);

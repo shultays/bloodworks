@@ -19,6 +19,9 @@ int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
+	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
+	paused = false;
+
 	lua.script_file("resources/helpers.lua");
 
 	lua.new_usertype<Vec2>("Vec2",
@@ -145,6 +148,10 @@ void Bloodworks::init()
 		return approachAngle(angle, angleToApproach, maxRotation);
 	});
 
+	lua.set_function("multiplyGameSpeed", [&](float multiplier)
+	{
+		multiplyGameSpeed(multiplier);
+	});
 
 	lua.set_function("addLine",
 		[&](const Vec2& pos0, const Vec2& pos1)
@@ -321,7 +328,12 @@ void Bloodworks::init()
 	guns.push_back(gun);
 	player->setGun(gun);
 
-	Bonus *bonus = new Bonus("resources/bonuses/circle_fire/data.json");
+	Bonus *bonus;
+
+	bonus = new Bonus("resources/bonuses/reflex_boost/data.json");
+	bonuses.push_back(bonus);
+
+	bonus = new Bonus("resources/bonuses/circle_fire/data.json");
 	bonuses.push_back(bonus);
 
 	bonus = new Bonus("resources/bonuses/homing/data.json");
@@ -451,6 +463,15 @@ void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
 	}
 }
 
+void Bloodworks::multiplyGameSpeed(float multiplier)
+{
+	targetGamePlaySlowdown *= multiplier;
+	if (targetGamePlaySlowdown > 0.99f)
+	{
+		targetGamePlaySlowdown = 1.0f;
+	}
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -544,10 +565,10 @@ void Bloodworks::addDrop(const Vec2& position)
 	}
 }
 
-void Bloodworks::tick(float dt)
+void Bloodworks::tick()
 {
 	tickCount++;
-	if (timer.getTime() - lastSetTickTime > 1.0f)
+	if (timer.getRealTime() - lastSetTickTime > 1.0f)
 	{
 		lastSetTickTime += 1.0f;
 		std::stringstream ss;
@@ -557,26 +578,25 @@ void Bloodworks::tick(float dt)
 		tickCount = 0;
 	}
 
-	if (input.isKeyPressed(key_space))
-	{
-		lua[bonuses[0]->scriptName]["spawn"](player->getPos());
-	}
-
-	lua["dt"] = dt;
+	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 
-	if (input.isKeyPressed(key_1) && perks[0]->used == false)
+	if (input.isKeyPressed(key_2) && perks[0]->used == false)
 	{
 		perks[0]->use();
 		usedPerks.push_back(perks[0]);
 	}
 
+	if (input.isKeyPressed(key_3))
+	{
+		lua[bonuses[0]->scriptName]["spawn"](player->getPos());
+	}
 
 	bloodRenderable->tick();
 
-	missionController.tick(dt);
+	missionController.tick();
 
-	player->tick(dt);
+	player->tick();
 
 	if (cameraCenterPos.x > player->getPos().x + 50.0f)
 	{
@@ -594,7 +614,6 @@ void Bloodworks::tick(float dt)
 	{
 		cameraCenterPos.y = player->getPos().y - 50;
 	}
-
 
 	Vec2 playerAimDir = player->getCrosshairPos();
 	float playerAimLength = playerAimDir.normalize();
@@ -631,8 +650,8 @@ void Bloodworks::tick(float dt)
 		cameraPos.y = mapEnd.y - verticalMaxMove;
 	}
 
-	monsterController.tick(dt);
-	bulletController.tick(dt);
+	monsterController.tick();
+	bulletController.tick();
 
 	for(int i=0; i< drops.size(); i++)
 	{
@@ -663,8 +682,8 @@ void Bloodworks::tick(float dt)
 
 		if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
 		{
-			explosionData.lastDamageScale = newScale + 45.0f;
-			float damageScale = min(newScale + 45.0f, explosionData.maxScale);
+			explosionData.lastDamageScale = newScale + 15.0f;
+			float damageScale = min(newScale + 15.0f, explosionData.maxScale);
 			std::stringstream explosionId;
 			explosionId << "explosion" << explosionData.id;
 			monsterController.damageMonstersInRangeWithIgnoreData(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionId.str());
@@ -703,12 +722,54 @@ void Bloodworks::tick(float dt)
 		explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(newScale + 10.0f).translateBy(explosionData.pos));
 		explosionData.ringRenderable->setColor(Vec4(1.0f, 1.0f, 1.0f, alpha * 0.4f));
 	}
+
+	if (input.isKeyPressed(key_p))
+	{
+		paused = !paused;
+	}
+
+
+	if (paused && pauseSlowdown > 0.0f)
+	{
+		pauseSlowdown -= 0.02f;
+		if (pauseSlowdown < 0.0f)
+		{
+			pauseSlowdown = 0.0f;
+		}
+	}
+	else if (!paused && pauseSlowdown < 1.0f)
+	{
+		pauseSlowdown += 0.02f;
+		if (pauseSlowdown > 1.0f)
+		{
+			pauseSlowdown = 1.0f;
+		}
+	}
+
+	if (gamePlaySlowdown > targetGamePlaySlowdown)
+	{
+		gamePlaySlowdown -= 0.01f;
+		if (gamePlaySlowdown < targetGamePlaySlowdown)
+		{
+			gamePlaySlowdown = targetGamePlaySlowdown;
+		}
+	}
+	else if (gamePlaySlowdown < targetGamePlaySlowdown)
+	{
+		gamePlaySlowdown += 0.01;
+		if (gamePlaySlowdown > targetGamePlaySlowdown)
+		{
+			gamePlaySlowdown = targetGamePlaySlowdown;
+		}
+	}
+
+	setSlowdown(pauseSlowdown * gamePlaySlowdown);
 }
 
 void Bloodworks::render()
 {
 	renderCount++;
-	if (timer.getTime() - lastSetRenderTime > 1.0f)
+	if (timer.getRealTime() - lastSetRenderTime > 1.0f)
 	{
 		lastSetRenderTime += 1.0f;
 		std::stringstream ss;

@@ -64,12 +64,8 @@ class Bloodworks : public cGame
 
 	std::vector<Drop> drops;
 
-
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 	cParticleTemplate *fireParticle;
-
-
-
 
 	struct ExplosionData
 	{
@@ -94,9 +90,15 @@ class Bloodworks : public cGame
 
 	Vec2 cameraCenterPos;
 
+	float pauseSlowdown;
+	float gamePlaySlowdown;
+	float targetGamePlaySlowdown;
+
+	bool paused;
+
 protected:
 	virtual void render() override;
-	virtual void tick(float dt) override;
+	virtual void tick() override;
 	virtual void init() override;
 
 public:
@@ -150,4 +152,11 @@ public:
 	bool isCoorOutside(const Vec2& pos) const;
 
 	void onAddedGunBullet(Gun *gun, Bullet *bullet);
+
+	float getPauseSlowdown() const
+	{
+		return pauseSlowdown;
+	}
+
+	void multiplyGameSpeed(float multiplier);
 };

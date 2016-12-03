@@ -89,7 +89,7 @@ void MissionController::init(Bloodworks *bloodworks)
 	});
 }
 
-void MissionController::tick(float dt)
+void MissionController::tick()
 {
 	scriptTable["onTick"]();
 

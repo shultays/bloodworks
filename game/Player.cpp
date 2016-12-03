@@ -107,7 +107,7 @@ Player::~Player()
 	SAFE_DELETE(healthBarFG);
 }
 
-void Player::tick(float dt)
+void Player::tick()
 {
 	oldPos = pos;
 
@@ -159,6 +159,7 @@ void Player::tick(float dt)
 	const float acceleration = 800.0f;
 	const float decceleration = 1000.0f;
 	float maxSpeed = 150.0f;
+	float dt = timer.getDt();
 
 	if (slowdownAmount > 0.0f)
 	{
@@ -179,7 +180,6 @@ void Player::tick(float dt)
 		{
 			float diff = angleDiff(moveAngle, wantedAngle);
 			float rotation = lerp(maxRotation, minRotation, moveSpeed / maxSpeed) * dt;
-
 			if (diff > pi * 0.99f || diff < -pi * 0.99f)
 			{
 				if (moveSpeed > decceleration * dt)
@@ -248,7 +248,7 @@ void Player::tick(float dt)
 	}
 
 	pos = pos + moveAmount;
-	crosshairPos += input.getDeltaMousePos();
+	crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
 
 	float maxCrosshairDistance = gun->getMaxCrosshairDistance();
 	float lengthSquared = crosshairPos.lengthSquared();
@@ -297,7 +297,6 @@ void Player::tick(float dt)
 	spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4, 0.0f, 0.4f)));
 
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
-
 
 	Mat3 mat = Mat3::identity();
 	mat.rotateBy(pi_d2 - aimAngle);

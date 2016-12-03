@@ -1,0 +1,5 @@
+{
+  "name": "Reflex Boost",
+  "scriptFile" : "resources/bonuses/reflex_boost/reflex_boost.lua",
+  "scriptName" : "ReflexBoost"
+}
