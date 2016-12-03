@@ -728,42 +728,49 @@ void Bloodworks::tick()
 		paused = !paused;
 	}
 
-
+	bool changeSlowdown = false;
 	if (paused && pauseSlowdown > 0.0f)
 	{
-		pauseSlowdown -= 0.02f;
+		pauseSlowdown -= timer.realDt * 2.0f;
 		if (pauseSlowdown < 0.0f)
 		{
 			pauseSlowdown = 0.0f;
 		}
+		changeSlowdown = true;
 	}
 	else if (!paused && pauseSlowdown < 1.0f)
 	{
-		pauseSlowdown += 0.02f;
+		pauseSlowdown += timer.realDt * 2.0f;
 		if (pauseSlowdown > 1.0f)
 		{
 			pauseSlowdown = 1.0f;
 		}
+		changeSlowdown = true;
 	}
 
 	if (gamePlaySlowdown > targetGamePlaySlowdown)
 	{
-		gamePlaySlowdown -= 0.01f;
+		gamePlaySlowdown -= timer.realDt;
 		if (gamePlaySlowdown < targetGamePlaySlowdown)
 		{
 			gamePlaySlowdown = targetGamePlaySlowdown;
 		}
+		changeSlowdown = true;
 	}
 	else if (gamePlaySlowdown < targetGamePlaySlowdown)
 	{
-		gamePlaySlowdown += 0.01f;
+		gamePlaySlowdown += timer.realDt;
 		if (gamePlaySlowdown > targetGamePlaySlowdown)
 		{
 			gamePlaySlowdown = targetGamePlaySlowdown;
 		}
+		changeSlowdown = true;
 	}
 
-	setSlowdown(pauseSlowdown * gamePlaySlowdown);
+	if (changeSlowdown)
+	{
+		setSlowdown(pauseSlowdown * gamePlaySlowdown);
+	}
 }
 
 void Bloodworks::render()

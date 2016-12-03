@@ -23,6 +23,7 @@ void Coral::tick()
 	{
 		timer.currentTime = update_interval * slowdown + timer.currentTime;
 		timer.dt = update_interval * slowdown;
+		timer.realDt = update_interval;
 		tickedBeforeRender = true;
 		if (t - lastUpdateTime < update_interval * 2.0f)
 		{

@@ -7,6 +7,7 @@ void cTime::init()
 	renderTime = currentTime = getRealTime();
 	dt = 0.0f;
 	renderDt = 0.0f;
+	realDt = 0.0f;
 }
 
 float cTime::getRealTime()

@@ -32,4 +32,5 @@ public:
 	{
 		return renderTime;
 	}
+	float realDt;
 };

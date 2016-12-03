@@ -31,6 +31,10 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 !!! ignore data ları düzelt, string olmasın, integer olsun
 
 !!! game objeler için timer (reflex e lazım)
+
+!!! post process
+
+
 ----------------
 
 
