@@ -13,6 +13,7 @@ Bonus::Bonus(const std::string& bonusDataFile)
 	json j = json::parse(jsonFile.c_str());
 
 	name = j["name"].get<std::string>();
+	iconPath = j["iconFile"].get<std::string>();
 	scriptName = j["scriptName"].get<std::string>();
 	std::string scriptFile = j["scriptFile"].get<std::string>();
 

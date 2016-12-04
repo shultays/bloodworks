@@ -317,10 +317,14 @@ void Bloodworks::init()
 	lua.script_file("resources/guns/helpers.lua");
 
 	Gun *gun;
+
+	// gun = new Gun();
+	// gun->init(this, "resources/guns/swastika_gun/data.json");
+	// guns.push_back(gun);
+
 	gun = new Gun();
 	gun->init(this, "resources/guns/basicgun/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/machinegun/data.json");
@@ -331,6 +335,12 @@ void Bloodworks::init()
 	guns.push_back(gun);
 	player->setGun(gun);
 
+	/*
+	cTexturedQuadRenderable *t = new cTexturedQuadRenderable(this, "resources/level_up_bg.png", "resources/default");
+	t->setWorldMatrix(Mat3::scaleMatrix(t->getTexture()->getDimensions().toVec() * 0.55f));
+	t->setAlignment(RenderableAlignment::center);
+	addRenderable(t, FOREGROUND);
+	*/
 	Bonus *bonus;
 
 	bonus = new Bonus("resources/bonuses/reflex_boost/data.json");
@@ -403,6 +413,8 @@ void Bloodworks::init()
 	pausePostProcess->init(this, resources.getShader("resources/post_process/default.vs", "resources/post_process/pause.ps"), 0);
 	pausePostProcess->setShaderAmount(0.0f);
 	pausePostProcess->setEnabled(false);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Bloodworks::~Bloodworks()
@@ -486,38 +498,84 @@ BloodRenderable* Bloodworks::getBloodRenderable()
 	return bloodRenderable;
 }
 
-void Bloodworks::createGun(const Vec2& position)
+void Bloodworks::createGun(const Vec2& position, int forceIndex)
 {
 	Drop drop;
 	drop.bonus = nullptr;
 
-	do 
+	if (forceIndex == -1)
 	{
-		drop.gun = guns[randInt((int)guns.size())];
-	} while (drop.gun == player->getGun());
+		int t = 10;
+		do
+		{
+			drop.gun = guns[randInt((int)guns.size())];
+		} while (drop.gun == player->getGun() && t-->0);
+	}
+	else
+	{
+		drop.gun = guns[forceIndex];
+	}
 
 	drop.pos = position;
-	cTextRenderable *renderable;
-	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	renderable->setTextAllignment(TextAlignment::center);
-	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
-	addRenderable(renderable, OBJECT_GUI);
+
+	cRenderableGroup *group = new cRenderableGroup(this);
+	
+	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(this, drop.gun->iconPath.c_str(), "resources/default");
+	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec();
+	if (textureSize.w > 30.0f)
+	{
+		textureSize *= 30.0f / textureSize.w;
+	}	
+	if (textureSize.h > 15.0f)
+	{
+		textureSize *= 15.0f / textureSize.h;
+	}
+	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
+	group->addRenderable(renderable);
+
+	cTextRenderable *text = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
+	text->setTextAllignment(TextAlignment::center);
+	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
+	group->addRenderable(text);
+
+	group->setWorldMatrix(Mat3::translationMatrix(position));
+	drop.renderable = group;
+	addRenderable(drop.renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
 }
 
-void Bloodworks::createBonus(const Vec2& position)
+void Bloodworks::createBonus(const Vec2& position, int forceIndex)
 {
 	Drop drop;
-	drop.bonus = bonuses[randInt((int)bonuses.size())];
+	if (forceIndex >= 0)
+	{
+		drop.bonus = bonuses[forceIndex];
+	}
+	else
+	{
+		drop.bonus = bonuses[randInt((int)bonuses.size())];
+	}
 	drop.gun = nullptr;
 
 	drop.pos = position;
-	cTextRenderable *renderable;
-	drop.renderable = renderable = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
-	renderable->setTextAllignment(TextAlignment::center);
-	renderable->setWorldMatrix(Mat3::translationMatrix(position - Vec2(0.0f, 5.0f)));
-	addRenderable(renderable, OBJECT_GUI);
+
+	cRenderableGroup *group = new cRenderableGroup(this);
+
+	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(this, drop.bonus->iconPath.c_str(), "resources/default");
+	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.10f;
+
+	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize));
+	group->addRenderable(renderable);
+
+	cTextRenderable *text = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
+	text->setTextAllignment(TextAlignment::center);
+	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
+	group->addRenderable(text);
+
+	group->setWorldMatrix(Mat3::translationMatrix(position));
+	drop.renderable = group;
+	addRenderable(drop.renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
 }
@@ -599,6 +657,20 @@ void Bloodworks::tick()
 	if (input.isKeyPressed(key_3))
 	{
 		lua[bonuses[0]->scriptName]["spawn"](player->getPos());
+	}
+
+
+	if (input.isKeyPressed(key_4))
+	{
+		for (int i = 0; i < guns.size(); i++)
+		{
+			createGun(player->getPos() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+		}
+
+		for (int i = 0; i < bonuses.size(); i++)
+		{
+			createBonus(player->getPos() + Vec2(100, i * 50.0f - guns.size() * 25.0f), i);
+		}
 	}
 
 	bloodRenderable->tick();

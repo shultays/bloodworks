@@ -14,7 +14,7 @@ end
 
 
 function ReflexBoost.onTick(gameObject)
-	if time - gameObject.data.time > 10.0 then
+	if time - gameObject.data.time > 5.0 then
 		ReflexBoost.boost = nil
 		multiplyGameSpeed(1.0 / 0.5)
 		gameObject.toBeRemoved = true

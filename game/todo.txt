@@ -12,8 +12,6 @@ mermiler kasabilir çok render ihtiyacı olunca
 
 texture lar için clamp ekle
 
-particle controller gibi bir şey yap
-
 bullet dan particle öldümü checkini kaldır
 
 game object e particle ekle
@@ -32,8 +30,17 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 
 !!! game objeler için timer (reflex e lazım)
 
-!!! post process
+!! post process belirli levellere
 
+!! ateş edince efekt
+
+!! mermi çarpınca efekt
+
+resource manager ı iyileştir
+char * almasınlar
+default resource default olsun
+
+mermiler vurunca veya namlunun ucunda çıkaracağı ateşler
 
 ----------------
 

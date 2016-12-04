@@ -33,6 +33,7 @@ public:
 		shaderAmountIndex = shader->addUniform("uShaderAmount", TypeFloat).index;
 		shaderAmount = 0.0f;
 	}
+
 	void setShaderAmount(float amount)
 	{
 		this->shaderAmount = amount;

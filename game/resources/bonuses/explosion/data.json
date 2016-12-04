@@ -1,5 +1,6 @@
 {
   "name": "Explosion",
+  "iconFile" : "resources/bonuses/explosion/icon.png",
   "scriptFile" : "resources/bonuses/explosion/explosion.lua",
   "scriptName" : "Explosion"
 }

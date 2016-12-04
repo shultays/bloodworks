@@ -128,11 +128,11 @@ public:
 	{
 		return particles[name];
 	}
-	void createGun(const Vec2& pos);
+	void createGun(const Vec2& pos, int forceIndex = -1);
 	void addDrop(const Vec2& position);
 
 	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
-	void createBonus(const Vec2& position);
+	void createBonus(const Vec2& position, int forceIndex = -1);
 
 	int getUniqueId()
 	{
