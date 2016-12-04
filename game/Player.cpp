@@ -6,10 +6,16 @@
 #include <sstream>
 
 
+int Player::calculateExperienceForLevel(int level)
+{
+	level--;
+	return level * 100 + level * level * 20 - 20;
+}
+
 Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-
+	
 	lua.new_usertype<Player>("Player",
 		"position", &Player::pos,
 		"moveSpeed", &Player::moveSpeed,
@@ -24,7 +30,12 @@ Player::Player(Bloodworks *bloodworks)
 		"bulletSpeedMult", &Player::bulletSpeedMult,
 		"shootSpeedMult", &Player::shootSpeedMult,
 		"moveSpeedMult", &Player::moveSpeedMult,
-		"slowdownOnHit", &Player::slowdownOnHit
+		"slowdownOnHit", &Player::slowdownOnHit,
+
+
+		"level", sol::readonly(&Player::level),
+		"experience", sol::readonly(&Player::experience),
+		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel)
 		);
 
 	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
@@ -94,6 +105,10 @@ Player::Player(Bloodworks *bloodworks)
 	lua["player"] = this;
 	updateHitPoints();
 	gun = nullptr;
+
+	experience = 0;
+	level = 1;
+	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 }
 
 Player::~Player()
@@ -161,7 +176,7 @@ void Player::tick()
 	float maxSpeed = 150.0f;
 	float dt = timer.getDt();
 
-	if (slowdownAmount > 0.0f)
+	if (slowdownAmount > 0.0f && input.isMouseVisible() == false)
 	{
 		maxSpeed *= 1.0f - slowdownAmount;
 		slowdownDuration -= dt;
@@ -351,4 +366,21 @@ void Player::updateHitPoints()
 	ss << hitPoints;
 	healthRenderable->setText(ss.str().c_str());
 	healthBarActive->setWorldMatrix(Mat3::scaleMatrix(Vec2(barSize.x * (hitPoints / 100.0f), barSize.y)).translateBy(Vec2(0.0f, -50.0f)));
+}
+
+void Player::gainExperience(int e)
+{
+	this->experience += e;
+	if (experience >= experienceForNextLevel)
+	{
+		experience -= experienceForNextLevel;
+		doLevelup();
+	}
+}
+
+void Player::doLevelup()
+{
+	level++;
+	experienceForNextLevel = calculateExperienceForLevel(level + 1);
+	bloodworks->openLevelupPopup();
 }

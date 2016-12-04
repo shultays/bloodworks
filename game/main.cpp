@@ -91,6 +91,8 @@ void RunGame()
 {
 	bool loop = true;
 
+	int w, h;
+	SDL_GetWindowSize(mainWindow, &w, &h);
 	while (loop)
 	{
 		SDL_Event event;
@@ -98,7 +100,7 @@ void RunGame()
 		{
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				input.setMousePos(Vec2((float)event.motion.x, (float)-event.motion.y), Vec2((float)event.motion.xrel, (float)-event.motion.yrel));
+				input.setMousePos(Vec2((float)event.motion.x, (float)(h - event.motion.y)), Vec2((float)event.motion.xrel, (float)-event.motion.yrel));
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{

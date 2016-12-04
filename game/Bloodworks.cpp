@@ -14,8 +14,6 @@
 
 #include <sstream>
 
-
-
 int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
@@ -335,12 +333,33 @@ void Bloodworks::init()
 	guns.push_back(gun);
 	player->setGun(gun);
 
-	/*
+	levelupGroup = new cRenderableGroup(this);
+	levelupGroup->setAlignment(RenderableAlignment::center);
+	
 	cTexturedQuadRenderable *t = new cTexturedQuadRenderable(this, "resources/level_up_bg.png", "resources/default");
 	t->setWorldMatrix(Mat3::scaleMatrix(t->getTexture()->getDimensions().toVec() * 0.55f));
-	t->setAlignment(RenderableAlignment::center);
-	addRenderable(t, FOREGROUND);
-	*/
+	levelupGroup->addRenderable(t);
+
+	levelupGroupTitle = new cTextRenderable(this, resources.getFont("resources/fontData.txt"), "You are now level 2!", 24.0f);
+	levelupGroupTitle->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 110.0f)));
+	levelupGroupTitle->setTextAllignment(TextAlignment::center);
+	levelupGroup->addRenderable(levelupGroupTitle);
+
+
+	currentPerkName = new cTextRenderable(this, resources.getFont("resources/fontData.txt"), "You are now level 2!", 18.0f);
+	currentPerkName->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -80.0f)));
+	currentPerkName->setTextAllignment(TextAlignment::center);
+	levelupGroup->addRenderable(currentPerkName);
+
+	currentPerkExplanation = new cTextRenderable(this, resources.getFont("resources/fontData.txt"), "asd asd asd asd asd asdasd asd asd asd", 14.0f, Vec4::fromColor(0xFFAAAAAA));
+	currentPerkExplanation->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -110.0f)));
+	currentPerkExplanation->setTextAllignment(TextAlignment::center);
+	levelupGroup->addRenderable(currentPerkExplanation);
+
+	levelupGroup->setVisible(false);
+	
+	addRenderable(levelupGroup, GUI + 150);
+	
 	Bonus *bonus;
 
 	bonus = new Bonus("resources/bonuses/reflex_boost/data.json");
@@ -466,6 +485,15 @@ Bloodworks::~Bloodworks()
 	}
 	perks.clear();
 
+	SAFE_DELETE(levelupGroup);
+
+
+	for (auto& t : levelupPerksRenderables)
+	{
+		SAFE_DELETE(t);
+	}
+	levelupPerksRenderables.clear();
+
 	monsterController.clear();
 	bulletController.clear();
 	missionController.clear();
@@ -490,6 +518,62 @@ void Bloodworks::multiplyGameSpeed(float multiplier)
 	if (targetGamePlaySlowdown > 0.99f)
 	{
 		targetGamePlaySlowdown = 1.0f;
+	}
+}
+
+void Bloodworks::openLevelupPopup()
+{
+	input.showMouse();
+	paused = true;
+	pausePostProcess->setEnabled(true);
+	levelupGroup->setVisible(true);
+	std::stringstream ss;
+
+	ss << "You are now level " << player->level << "!";
+
+	levelupGroupTitle->setText(ss.str().c_str());
+	currentPerkName->setText("");
+	currentPerkExplanation->setText("");
+	hoverLevelupPerkIndex = -1;
+	
+	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+	std::vector<Perk*> availablePerks;
+
+	for (auto& perk : perks)
+	{
+		if (perk->used == false)
+		{
+			availablePerks.push_back(perk);
+		}
+	}
+
+	int selectCount = min(3, (int)availablePerks.size());
+	levelupPerks.clear();
+	bool t = false;
+	while (selectCount --> 0)
+	{
+		int r = randInt((int)availablePerks.size());
+		if (t == false)
+		{
+			t = true;
+			r = 0;
+		}
+		levelupPerks.push_back(availablePerks[r]);
+		availablePerks[r] = availablePerks[availablePerks.size() - 1];
+		availablePerks.resize(availablePerks.size() - 1);
+	}
+	levelupPerksRenderables.clear();
+	levelupPerksRenderablePosition.clear();
+	for (int i=0; i<levelupPerks.size(); i++)
+	{
+		cTexturedQuadRenderable *t = new cTexturedQuadRenderable(this, levelupPerks[i]->iconPath.c_str(), "resources/default");
+		Vec2 pos = Vec2(-i * 140.0f + (levelupPerks.size() - 1) * 140.0f * 0.5f, 20.0f);
+		levelupPerksRenderablePosition.push_back(pos + getScreenDimensions().toVec() * 0.5f);
+		t->setWorldMatrix(Mat3::scaleMatrix(Vec2(40.0f)).translateBy(pos));
+		t->setAlignment(RenderableAlignment::center);
+		t->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+		addRenderable(t, GUI + 151);
+		levelupPerksRenderables.push_back(t);
 	}
 }
 
@@ -673,6 +757,10 @@ void Bloodworks::tick()
 		}
 	}
 
+	if (input.isKeyPressed(key_5) && levelupGroup->isVisible() == false)
+	{
+		player->doLevelup();
+	}
 	bloodRenderable->tick();
 
 	missionController.tick();
@@ -804,7 +892,62 @@ void Bloodworks::tick()
 		explosionData.ringRenderable->setColor(Vec4(1.0f, 1.0f, 1.0f, alpha * 0.4f));
 	}
 
-	if (input.isKeyPressed(key_p))
+	if (levelupGroup->isVisible())
+	{
+		float alpha = levelupGroup->getColor().a;
+		if (alpha < 1.0f)
+		{
+			alpha += timer.realDt * 4.0f;
+			alpha = min(1.0f, alpha);
+			Vec4 color = Vec4(1.0f, 1.0f, 1.0f, alpha);
+			levelupGroup->setColor(color);
+			for (int i = 0; i < levelupPerks.size(); i++)
+			{
+				levelupPerksRenderables[i]->setColor(color);
+			}
+		}
+		for (int i = 0; i < levelupPerks.size(); i++)
+		{
+			bool inside = levelupPerksRenderablePosition[i].manhattanDistance(input.getMousePos()) < 40.0f;
+			if (hoverLevelupPerkIndex != i)
+			{
+				if (inside)
+				{
+					hoverLevelupPerkIndex = i;
+					currentPerkName->setText(levelupPerks[i]->name.c_str());
+					currentPerkExplanation->setText(levelupPerks[i]->description.c_str());
+					hoverLevelupPerkIndex = i;
+				}
+			}
+			else if (hoverLevelupPerkIndex == i)
+			{
+				if (!inside)
+				{
+					hoverLevelupPerkIndex = -1;
+					currentPerkName->setText("");
+					currentPerkExplanation->setText("");
+				}
+			}
+		}
+
+		if (input.isKeyReleased(mouse_button_left) && hoverLevelupPerkIndex >= 0)
+		{
+			levelupPerks[hoverLevelupPerkIndex]->use();
+			usedPerks.push_back(levelupPerks[hoverLevelupPerkIndex]);
+			input.hideMouse();
+			paused = false;
+			levelupGroup->setVisible(false);
+			levelupPerks.clear();
+			levelupPerksRenderablePosition.clear();
+			for (auto& t : levelupPerksRenderables)
+			{
+				SAFE_DELETE(t);
+			}
+			levelupPerksRenderables.clear();
+		}
+	}
+
+	if (levelupGroup->isVisible() == false && input.isKeyPressed(key_p))
 	{
 		paused = !paused;
 		if (paused)

@@ -12,6 +12,8 @@ class Perk
 {
 	friend class Bloodworks;
 	std::string name;
+	std::string description;
+	std::string iconPath;
 	sol::table scriptTable;
 	bool used;
 
@@ -26,6 +28,8 @@ public:
 		json j = json::parse(jsonFile.c_str());
 
 		name = j["name"].get<std::string>();
+		description = j["description"].get<std::string>();
+		iconPath = j["iconFile"].get<std::string>();
 		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
 
 		std::string scriptPath = j["scriptFile"].get<std::string>();

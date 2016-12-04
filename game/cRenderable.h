@@ -55,11 +55,6 @@ public:
 
 	virtual ~cRenderable();
 
-	const Vec2& getPosition() const
-	{
-		return worldMatrix.row2.vec2;
-	}
-
 	const Mat3& getWorldMatrix() const
 	{
 		return worldMatrix;

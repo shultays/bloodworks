@@ -1,5 +1,7 @@
 {
   "name": "Faster Shoot",
+  "description": "Your rate of fire increases.",
+  "iconFile" : "resources/perks/faster_shoot/icon.png",
   "scriptFile" : "resources/perks/faster_shoot/faster_shoot.lua",
   "scriptName" : "FasterShoot"
 }
