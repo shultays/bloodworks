@@ -268,22 +268,13 @@ private:
 	void pressKey(int key);
 	void releaseKey(int key);
 
-	void setMousePos(const Vec2& pos, const Vec2& relativePos)
-	{
-		if (mouseShown)
-		{
-			mousePos = pos;
-		}
-		else
-		{
-			prevMousePos -= relativePos;
-		}
-	}
+	void setMousePos(const Vec2& pos, const Vec2& relativePos);
 
 	friend void RunGame();
 	Vec2 mousePos;
 	Vec2 prevMousePos;
 	bool mouseShown;
+	bool ignoreNextMove;
 public:
 	void tick();
 
@@ -313,8 +304,10 @@ public:
 		return keyTime[key];
 	}
 
+
 	void showMouse()
 	{
+		ignoreNextMove = true;
 		prevMousePos = mousePos;
 		mouseShown = true;
 		SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -322,6 +315,7 @@ public:
 
 	void hideMouse()
 	{
+		ignoreNextMove = true;
 		prevMousePos = mousePos;
 		mouseShown = false;
 		SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -335,5 +329,20 @@ public:
 	Vec2 getDeltaMousePos() const
 	{
 		return mousePos - prevMousePos;
+	}
+
+	bool isMouseVisible() const
+	{
+		return mouseShown;
+	}
+
+	void clearKeyPress(int key)
+	{
+		keyStates[key] = false;
+	}
+
+	void clearKeyRelease(int key)
+	{
+		prevKeyStates[key] = false;
 	}
 };

@@ -135,7 +135,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 		temp.translateBy(Vec2(length, 0.0f));
 	}
 	glActiveTexture(GL_TEXTURE0);
-	shader->setColor(textColor);
+	shader->setColor(color);
 	shader->setTexture0(0);
 
 	for (int i = 0; i < text.size(); i++)

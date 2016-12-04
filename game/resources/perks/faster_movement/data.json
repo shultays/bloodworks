@@ -1,5 +1,7 @@
 {
-  "name": "Faster Movement",
+  "name": "Long Distance Runner",
+  "description": "Your movement speed gets higher.",
+  "iconFile" : "resources/perks/faster_movement/icon.png",
   "scriptFile" : "resources/perks/faster_movement/faster_movement.lua",
   "scriptName" : "FasterMovement"
 }

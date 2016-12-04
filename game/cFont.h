@@ -53,7 +53,6 @@ private:
 	cFontShr font;
 	float textSize;
 	std::string text;
-	Vec4 textColor;
 	friend class cDebugRenderable;
 	float length;
 	bool lengthDirty;
@@ -67,7 +66,7 @@ public:
 		this->font = font;
 		this->text = text;
 		this->textSize = textSize;
-		this->textColor = textColor;
+		this->color = textColor;
 		setTextAllignment(TextAlignment::left);
 		lengthDirty = true;
 	}
@@ -101,6 +100,6 @@ public:
 
 	void setTextColor(const Vec4& color)
 	{
-		this->textColor = color;
+		this->color = color;
 	}
 };

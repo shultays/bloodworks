@@ -9,6 +9,8 @@ class Gun;
 
 class Player
 {
+	friend class Bloodworks;
+
 	Vec2 pos;
 	Vec2 oldPos;
 	Vec2 oldMoveAmount;
@@ -41,6 +43,12 @@ class Player
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
 	Vec2 barSize;
+
+	int level;
+	int experience;
+	int experienceForNextLevel;
+
+	int calculateExperienceForLevel(int level);
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -70,6 +78,9 @@ public:
 	{
 		return bulletSpeedMult;
 	}
+
+	void gainExperience(int experience);
+	void doLevelup();
 private:
 	void updateHitPoints();
 };

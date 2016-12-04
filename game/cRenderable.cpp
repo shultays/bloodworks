@@ -22,6 +22,7 @@ void cRenderableGroup::addRenderable(cRenderable *child)
 {
 	ChildData childData;
 	childData.child = child;
+	child->setAlignment(alignment);
 	renderables.push_back(childData);
 }
 

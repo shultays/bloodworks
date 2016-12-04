@@ -42,6 +42,10 @@ default resource default olsun
 
 mermiler vurunca veya namlunun ucunda çıkaracağı ateşler
 
+mutli line text
+
+bloodworks.cpp i temizle
+
 ----------------
 
 

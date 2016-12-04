@@ -372,6 +372,16 @@ public:
 		return ret;
 	}
 
+	G_VEC_TYPE manhattanDistance(const G_VEC_IMP_NAME& other) const
+	{
+		G_VEC_TYPE ret = 0;
+		for (int i = 0; i < GVEC_N; ++i)
+		{
+			ret += abs(data[i] - other.data[i]);
+		}
+		return ret;
+	}
+
 	G_SQRT_RET_TYPE distance(const G_VEC_IMP_NAME& other) const 
 	{
 		G_VEC_TYPE ret = 0;

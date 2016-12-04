@@ -5,6 +5,8 @@
 #include "cTools.h"
 #include "cFont.h"
 #include "cTexture.h"
+#include "Bloodworks.h"
+#include "Player.h"
 #include "BloodRenderable.h"
 
 Monster::Monster(Bloodworks *bloodworks)
@@ -207,5 +209,10 @@ void Monster::killSelf(const Vec2& blowDir)
 			moveAngle - pi_d2, 
 			textureShift + monsterTemplate->bodyParts[i].shift * scale, 
 			blowDir * 2.0f);
+	}
+
+	if (bloodworks->getPlayer())
+	{
+		bloodworks->getPlayer()->gainExperience(monsterTemplate->experience);
 	}
 }
