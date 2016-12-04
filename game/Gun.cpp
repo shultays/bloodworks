@@ -102,7 +102,7 @@ Bullet* Gun::addBullet()
 	Vec2 dir = bloodworks->getPlayer()->getAimDir();
 	Bullet *bullet = new Bullet(bloodworks, this);
 	Player *player = bloodworks->getPlayer();
-	bullet->pos = player->getPos() + player->getAimDir() * 20;
+	bullet->pos = player->getPos() + player->getAimDir() * 22 - player->getAimDir().sideVec() * 4.0f;
 	bullet->moveSpeed = bulletSpeed;
 	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
