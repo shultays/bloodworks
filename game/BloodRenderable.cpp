@@ -68,7 +68,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 			glViewport(0, 0, blood_size, blood_size);
 			blood.renderable->render(true, Mat3::identity());
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			bloodworks->resetToBackBuffer();
 			blood.renderable->setVisible(false);
 
 			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
@@ -119,7 +119,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 
 			glViewport(0, 0, blood_size, blood_size);
 			bodyPart.renderable->render(true, Mat3::identity());
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			bloodworks->resetToBackBuffer();
 			bodyPart.renderable->setVisible(false);
 
 			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
@@ -127,7 +127,6 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 			bloodworks->lastShader = nullptr;
 		}
 	}
-
 }
 
 void BloodRenderable::tick()
@@ -215,7 +214,7 @@ void BloodRenderable::init()
 	Vec4 color = Vec4::fromColor(0xFF660000);
 	glClearColor(color.r, color.g, color.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	bloodworks->resetToBackBuffer();
 }
 
 void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float size)

@@ -30,6 +30,7 @@ class MissionController;
 class BloodRenderable;
 class Bonus;
 class Perk;
+class cPostProcess;
 
 class Bloodworks : public cGame
 {
@@ -96,6 +97,7 @@ class Bloodworks : public cGame
 
 	bool paused;
 
+	cPostProcess* pausePostProcess;
 protected:
 	virtual void render() override;
 	virtual void tick() override;

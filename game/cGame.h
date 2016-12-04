@@ -3,6 +3,7 @@
 #include "cMat.h"
 #include "cResources.h"
 #include "cPriorityVector.h"
+#include <GL/glew.h>
 
 enum class RenderableAlignment
 {
@@ -20,6 +21,7 @@ enum class RenderableAlignment
 };
 
 class cRenderable;
+class cPostProcess;
 
 class cGame
 {
@@ -42,6 +44,11 @@ protected:
 	friend class cRenderableWithShader;
 
 	cRenderable *first;
+	GLuint backBuffer;
+
+	int postProcessEndLevel;
+
+	cPriorityVector<cPostProcess*> postProcesses;
 public:
 	cShaderShr lastShader;
 	RenderableAlignment lastAllignment;
@@ -75,4 +82,8 @@ public:
 	{
 		return slowdown;
 	}
+
+	void resetToBackBuffer();
+	void addPostProcess(cPostProcess *postProcess, int level);
+	void removePostProcess(cPostProcess *postProcess);
 };

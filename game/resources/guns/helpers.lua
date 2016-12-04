@@ -6,7 +6,7 @@ function ShootTimer.InitGun(gun, interval)
 end
 
 function ShootTimer.IsGunReady(gun)
-	return gun.data.timeToNextShoot < time
+	return gun.data.timeToNextShoot < time and dt > 0.0
 end
 
 function ShootTimer.GunShot(gun)
@@ -15,7 +15,7 @@ end
 
 
 function ShootTimer.CheckGun(gun)
-	if gun.data.timeToNextShoot < time then
+	if gun.data.timeToNextShoot < time and dt > 0.0 then
 		gun.data.timeToNextShoot = time + gun.data.shootInterval * player.shootSpeedMult
 		return true
 	end

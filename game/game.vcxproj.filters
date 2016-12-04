@@ -206,5 +206,8 @@
     <ClInclude Include="Perk.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="cPostProcess.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -397,8 +397,14 @@ public:
 
 	const Attribute& addAttribute(const char *name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
+		if (attributeIndices.count(name))
+		{
+			return attributes[attributeIndices[name]];
+		}
+
 		Attribute attribute(attributeType, normalized);
-		if (attributeLocation == -1) {
+		if (attributeLocation == -1) 
+		{
 			attribute.location = glGetAttribLocation(shaderProgram, name);
 		}
 		else 
@@ -434,6 +440,11 @@ public:
 
 	const Uniform& addUniform(const char *name, int uniformType) 
 	{
+		if (uniformIndices.count(name))
+		{
+			return uniforms[uniformIndices[name]];
+		}
+
 		Uniform uniform(uniformType);
 		uniform.index = uniformIndices[name] = (int)uniforms.size();
 		uniform.location = glGetUniformLocation(shaderProgram, name);

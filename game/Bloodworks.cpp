@@ -9,16 +9,19 @@
 #include "cFont.h"
 #include "Perk.h"
 #include "Bullet.h"
+#include "cParticle.h"
+#include "cPostProcess.h"
 
 #include <sstream>
 
-#include "cParticle.h"
 
 
 int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
+	postProcessEndLevel = (GUI + FOREGROUND) / 2;
+
 	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
 	paused = false;
 
@@ -395,6 +398,11 @@ void Bloodworks::init()
 	perk = new Perk();
 	perk->load("resources/perks/faster_movement/data.json");
 	perks.push_back(perk);
+
+	pausePostProcess = new cPostProcess();
+	pausePostProcess->init(this, resources.getShader("resources/post_process/default.vs", "resources/post_process/pause.ps"), 0);
+	pausePostProcess->setShaderAmount(0.0f);
+	pausePostProcess->setEnabled(false);
 }
 
 Bloodworks::~Bloodworks()
@@ -410,6 +418,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bloodRenderable);
 	SAFE_DELETE(bg);
 	SAFE_DELETE(player);
+	SAFE_DELETE(pausePostProcess);
 	for (auto& gun : guns)
 	{
 		SAFE_DELETE(gun);
@@ -726,6 +735,10 @@ void Bloodworks::tick()
 	if (input.isKeyPressed(key_p))
 	{
 		paused = !paused;
+		if (paused)
+		{
+			pausePostProcess->setEnabled(true);
+		}
 	}
 
 	bool changeSlowdown = false;
@@ -736,15 +749,18 @@ void Bloodworks::tick()
 		{
 			pauseSlowdown = 0.0f;
 		}
+		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
 		changeSlowdown = true;
 	}
 	else if (!paused && pauseSlowdown < 1.0f)
 	{
 		pauseSlowdown += timer.realDt * 2.0f;
-		if (pauseSlowdown > 1.0f)
+		if (pauseSlowdown >= 1.0f)
 		{
 			pauseSlowdown = 1.0f;
+			pausePostProcess->setEnabled(false);
 		}
+		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
 		changeSlowdown = true;
 	}
 

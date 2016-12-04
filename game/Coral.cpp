@@ -12,6 +12,7 @@ Coral::Coral()
 {
 	lastDrawTime = 0.0f;
 	lastUpdateTime = 0.0f;
+
 }
 
 void Coral::tick()
@@ -72,8 +73,44 @@ void Coral::tick()
 	}
 }
 
+GLuint postProcessQuad;
+
 void Coral::init()
 {
+
+	GLfloat vertexData[] =
+	{
+		-1.0f, 1.0f,
+		1.0f,  1.0f,
+		1.0f,  -1.0f,
+		-1.0f, -1.0f,
+	};
+
+	glGenBuffers(1, &postProcessQuad);
+	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+
+	glGenFramebuffers(2, tempFrameBuffer);
+	glGenTextures(2, tempFrameBufferTexture);
+
+	IntVec2 size = game->getScreenDimensions();
+
+	for (int i = 0; i < 2; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, tempFrameBuffer[i]);
+
+		glBindTexture(GL_TEXTURE_2D, tempFrameBufferTexture[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.w, size.h, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tempFrameBufferTexture[i], 0);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	timer.init();
 	input.init();
 	tickedBeforeRender = false;

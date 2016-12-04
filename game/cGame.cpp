@@ -4,6 +4,7 @@
 #include "cResources.h"
 #include "cShader.h"
 #include "cRenderable.h"
+#include "cPostProcess.h"
 
 extern SDL_Window *mainWindow;
 extern SDL_GLContext mainContext;
@@ -15,7 +16,6 @@ public:
 	{
 	}
 	virtual void render(bool isIdentity, const Mat3& mat) override {}
-
 };
 
 void cGame::initInternal()
@@ -26,6 +26,8 @@ void cGame::initInternal()
 
 	slowdown = 1.0f;
 
+	postProcessEndLevel = 0xFFFFFFF;
+
 	GLfloat vertexData[] =
 	{
 		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
@@ -34,17 +36,12 @@ void cGame::initInternal()
 		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 	};
 
-
-	//IBO data
-	GLuint indexData[] = { 0, 1, 2, 3 };
-
-	//Create VBO
 	glGenBuffers(1, &quad);
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	first = new cRootRenderable();
-
+	first->level = -1;
 	init();
 }
 
@@ -85,16 +82,67 @@ void cGame::renderInternal()
 	viewMatrices[(int)RenderableAlignment::bottomLeft] = center * Mat3::translationMatrix(-1.0f, -1.0f);
 	viewMatrices[(int)RenderableAlignment::bottomRight] = center * Mat3::translationMatrix(1.0f, -1.0f);
 
-	cRenderable *cur = first->next;
+	int lastPostProcess = -1;
+	int nextBackBufferIndex = 1;
 
+	for (int i = postProcesses.size() - 1; i >= 0; i--)
+	{
+		if (postProcesses[i]->isEnabled())
+		{
+			lastPostProcess = i;
+		}
+	}
+
+	if (lastPostProcess >= 0)
+	{
+		backBuffer = coral.tempFrameBuffer[0];
+	}
+	else
+	{
+		backBuffer = 0;
+	}
+
+	resetToBackBuffer();
+	bool postProcessDone = lastPostProcess == -1;
+	cRenderable *cur = first->next;
 	while(cur)
 	{
 		if (cur->visible)
 		{
 			cur->render();
 		}
+		cRenderable *prev = cur;
 		cur = cur->next;
+
+		if (postProcessDone == false && (cur == nullptr || cur->level >= postProcessEndLevel))
+		{
+			postProcessDone = true;
+			for (int i = 0; i < postProcesses.size(); i++)
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, i == lastPostProcess ? 0 : nextBackBufferIndex);
+				lastShader = postProcesses[0]->shader;
+				postProcesses[0]->bind();
+				glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+
+				lastShader->bindUV(0, 0);
+				if (nextBackBufferIndex == 0)
+				{
+					nextBackBufferIndex = 1;
+					glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[1]);
+				}
+				else
+				{
+					nextBackBufferIndex = 0;
+					glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[0]);
+				}
+
+				lastShader->setTexture0(0);
+
+				glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+			}
+		}
 	}
+
 	debugRenderer.render();
 
 	render();
@@ -105,7 +153,7 @@ cGame::~cGame()
 	lastShader = nullptr;
 	if (first->next)
 	{
-		assert("there are some non-removed renderables");
+		assert(!"there are some non-removed renderables");
 	}
 	SAFE_DELETE(first);
 }
@@ -161,4 +209,19 @@ void cGame::removeRenderable(cRenderable* renderable)
 	{
 		renderable->next->prev = renderable->prev;
 	}
+}
+
+void cGame::resetToBackBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, backBuffer);
+}
+
+void cGame::addPostProcess(cPostProcess *postProcess, int level)
+{
+	postProcesses.insert(postProcess, level);
+}
+
+void cGame::removePostProcess(cPostProcess *postProcess)
+{
+	postProcesses.remove(postProcess);
 }

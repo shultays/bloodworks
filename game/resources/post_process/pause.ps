@@ -1,0 +1,17 @@
+uniform sampler2D uTexture0;
+uniform float uShaderAmount;
+
+varying vec2 vScreenUV;
+
+void main(void) 
+{
+	vec3 color = texture2D(uTexture0, vScreenUV).rgb;
+	float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+	float redAmount = clamp(color.r * 8.0, 0.0, 1.0);
+	float blueAmount = clamp(color.b * 3.0, 0.0, 1.0);
+	float greenAmount = clamp(color.g * 3.0, 0.0, 1.0);
+	
+    gl_FragColor = vec4(
+		lerp(color, lerp(vec3(gray), color, redAmount * (1.0 - blueAmount) * (1.0 - greenAmount)), uShaderAmount)
+	, 1.0);
+}
