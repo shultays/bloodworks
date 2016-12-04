@@ -549,15 +549,9 @@ void Bloodworks::openLevelupPopup()
 
 	int selectCount = min(3, (int)availablePerks.size());
 	levelupPerks.clear();
-	bool t = false;
 	while (selectCount --> 0)
 	{
 		int r = randInt((int)availablePerks.size());
-		if (t == false)
-		{
-			t = true;
-			r = 0;
-		}
 		levelupPerks.push_back(availablePerks[r]);
 		availablePerks[r] = availablePerks[availablePerks.size() - 1];
 		availablePerks.resize(availablePerks.size() - 1);
