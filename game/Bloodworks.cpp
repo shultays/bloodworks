@@ -316,10 +316,6 @@ void Bloodworks::init()
 
 	Gun *gun;
 
-	// gun = new Gun();
-	// gun->init(this, "resources/guns/swastika_gun/data.json");
-	// guns.push_back(gun);
-
 	gun = new Gun();
 	gun->init(this, "resources/guns/basicgun/data.json");
 	guns.push_back(gun);
