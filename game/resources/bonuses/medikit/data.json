@@ -1,0 +1,6 @@
+{
+  "name": "Medi-Kit",
+  "iconFile" : "resources/bonuses/medikit/icon.png",
+  "scriptFile" : "resources/bonuses/medikit/medikit.lua",
+  "scriptName" : "MediKit"
+}
