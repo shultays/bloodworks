@@ -184,6 +184,7 @@
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
+    <ClCompile Include="DropController.cpp" />
     <ClCompile Include="ExplosionController.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="cVecImp.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cLuaWorld.h" />
+    <ClInclude Include="DropController.h" />
     <ClInclude Include="ExplosionController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />

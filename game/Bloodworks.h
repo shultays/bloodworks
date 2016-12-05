@@ -34,6 +34,7 @@ class cPostProcess;
 class cTextRenderable;
 class LevelUpPopup;
 class ExplosionController;
+class DropController;
 
 class Bloodworks : public cGame
 {
@@ -56,17 +57,7 @@ class Bloodworks : public cGame
 	std::vector<Perk*> usedPerks;
 
 	BloodRenderable *bloodRenderable;
-
-	struct Drop
-	{
-		Gun *gun;
-		Bonus *bonus;
-		Vec2 pos;
-		cRenderable *renderable;
-	};
-
-	std::vector<Drop> drops;
-
+	DropController *dropController;
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 
@@ -120,11 +111,9 @@ public:
 	{
 		return particles[name];
 	}
-	void createGun(const Vec2& pos, int forceIndex = -1);
-	void addDrop(const Vec2& position);
 
+	void addDrop(const Vec2& position);
 	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
-	void createBonus(const Vec2& position, int forceIndex = -1);
 
 	int getUniqueId()
 	{
@@ -159,4 +148,6 @@ public:
 	void doUnpause();
 	std::vector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
+	std::vector<Gun*>& getGuns();
+	std::vector<Bonus*>& getBonuses();
 };

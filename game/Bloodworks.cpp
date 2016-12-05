@@ -13,6 +13,7 @@
 #include "cPostProcess.h"
 #include "LevelUpPopup.h"
 #include "ExplosionController.h"
+#include "DropController.h"
 
 #include <sstream>
 
@@ -351,6 +352,8 @@ void Bloodworks::init()
 	bonus = new Bonus("resources/bonuses/explosion/data.json");
 	bonuses.push_back(bonus);
 
+	dropController = new DropController(this);
+
 	monsterController.init(this);
 	bulletController.init(this);
 
@@ -438,13 +441,7 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(bonus);
 	}
 	bonuses.clear();
-
-	for (auto& drop : drops)
-	{
-		SAFE_DELETE(drop.renderable);
-	}
-	drops.clear();
-	
+	SAFE_DELETE(dropController);
 	SAFE_DELETE(explosionController);
 
 	for (auto& fg : fgs)
@@ -460,11 +457,11 @@ Bloodworks::~Bloodworks()
 	perks.clear();
 
 	SAFE_DELETE(levelUpPopup);
+	SAFE_DELETE(dropController);
 
 	monsterController.clear();
 	bulletController.clear();
 	missionController.clear();
-
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -521,91 +518,19 @@ void Bloodworks::onPerkUsed(Perk *levelupPerks)
 	usedPerks.push_back(levelupPerks);
 }
 
+std::vector<Gun*>& Bloodworks::getGuns()
+{
+	return guns;
+}
+
+std::vector<Bonus*>& Bloodworks::getBonuses()
+{
+	return bonuses;
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
-}
-
-void Bloodworks::createGun(const Vec2& position, int forceIndex)
-{
-	Drop drop;
-	drop.bonus = nullptr;
-
-	if (forceIndex == -1)
-	{
-		int t = 10;
-		do
-		{
-			drop.gun = guns[randInt((int)guns.size())];
-		} while (drop.gun == player->getGun() && t-->0);
-	}
-	else
-	{
-		drop.gun = guns[forceIndex];
-	}
-
-	drop.pos = position;
-
-	cRenderableGroup *group = new cRenderableGroup(this);
-	
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(this, drop.gun->iconPath.c_str(), "resources/default");
-	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec();
-	if (textureSize.w > 30.0f)
-	{
-		textureSize *= 30.0f / textureSize.w;
-	}	
-	if (textureSize.h > 15.0f)
-	{
-		textureSize *= 15.0f / textureSize.h;
-	}
-	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
-	group->addRenderable(renderable);
-
-	cTextRenderable *text = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	text->setTextAllignment(TextAlignment::center);
-	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
-	group->addRenderable(text);
-
-	group->setWorldMatrix(Mat3::translationMatrix(position));
-	drop.renderable = group;
-	addRenderable(drop.renderable, OBJECT_GUI);
-
-	drops.push_back(drop);
-}
-
-void Bloodworks::createBonus(const Vec2& position, int forceIndex)
-{
-	Drop drop;
-	if (forceIndex >= 0)
-	{
-		drop.bonus = bonuses[forceIndex];
-	}
-	else
-	{
-		drop.bonus = bonuses[randInt((int)bonuses.size())];
-	}
-	drop.gun = nullptr;
-
-	drop.pos = position;
-
-	cRenderableGroup *group = new cRenderableGroup(this);
-
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(this, drop.bonus->iconPath.c_str(), "resources/default");
-	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.10f;
-
-	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize));
-	group->addRenderable(renderable);
-
-	cTextRenderable *text = new cTextRenderable(this, resources.getFont("resources/fontSmallData.txt"), drop.bonus->name, 11);
-	text->setTextAllignment(TextAlignment::center);
-	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
-	group->addRenderable(text);
-
-	group->setWorldMatrix(Mat3::translationMatrix(position));
-	drop.renderable = group;
-	addRenderable(drop.renderable, OBJECT_GUI);
-
-	drops.push_back(drop);
 }
 
 bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
@@ -626,14 +551,7 @@ void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed,
 
 void Bloodworks::addDrop(const Vec2& position)	
 {
-	if (randBool())
-	{
-		createBonus(position);
-	}
-	else
-	{
-		createGun(position);
-	}
+	dropController->addDrop(position);
 }
 
 void Bloodworks::tick()
@@ -660,20 +578,19 @@ void Bloodworks::tick()
 
 	if (input.isKeyPressed(key_3))
 	{
-		lua[bonuses[0]->scriptName]["spawn"](player->getPos());
+		bonuses[0]->spawnAt(player->getPos());
 	}
-
 
 	if (input.isKeyPressed(key_4))
 	{
 		for (int i = 0; i < guns.size(); i++)
 		{
-			createGun(player->getPos() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+			dropController->createGun(player->getPos() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
 		}
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
-			createBonus(player->getPos() + Vec2(100, i * 50.0f - guns.size() * 25.0f), i);
+			dropController->createBonus(player->getPos() + Vec2(100, i * 50.0f - guns.size() * 25.0f), i);
 		}
 	}
 
@@ -749,27 +666,7 @@ void Bloodworks::tick()
 
 	monsterController.tick();
 	bulletController.tick();
-
-	for(int i=0; i< drops.size(); i++)
-	{
-		auto& drop = drops[i];
-		if (drop.pos.distanceSquared(player->getPos()) < 20.0f * 20.0f)
-		{
-			if (drop.gun)
-			{
-				player->setGun(drop.gun);
-			}
-			else
-			{
-				lua[drop.bonus->scriptName]["spawn"](drop.pos);
-			}
-			SAFE_DELETE(drop.renderable);
-			drops[i] = drops[(int)drops.size() - 1];
-			drops.resize((int)drops.size() - 1);
-			i--;
-		}
-	}
-
+	dropController->tick();
 	explosionController->tick();
 
 	if (levelUpPopup->isVisible())
