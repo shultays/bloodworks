@@ -12,6 +12,7 @@
 #include "cParticle.h"
 #include "cPostProcess.h"
 #include "LevelUpPopup.h"
+#include "ExplosionController.h"
 
 #include <sstream>
 
@@ -372,15 +373,11 @@ void Bloodworks::init()
 
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/explosionFire/data.json");
-	fireParticle = particles[particleTemplate->getName()] = particleTemplate;
-
-	explosionParticles = new cParticle(this, fireParticle, lua.create_table());
-	addRenderable(explosionParticles, MONSTERS + 1);
+	particles[particleTemplate->getName()] = particleTemplate;
 
 	cameraCenterPos.setZero();
 
-	ring = resources.getTexture("resources/particles/explosionFire/ring.png");
-
+	explosionController = new ExplosionController(this);
 
 	Perk *perk;
 
@@ -425,7 +422,6 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(particle.second);
 	}
 	particles.clear();
-	SAFE_DELETE(explosionParticles);
 
 	player->setGun(nullptr);
 	SAFE_DELETE(bloodRenderable);
@@ -448,12 +444,8 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(drop.renderable);
 	}
 	drops.clear();
-
-	for (auto& explosionData : explosions)
-	{
-		SAFE_DELETE(explosionData.ringRenderable);
-	}
-	explosions.clear();
+	
+	SAFE_DELETE(explosionController);
 
 	for (auto& fg : fgs)
 	{
@@ -473,7 +465,6 @@ Bloodworks::~Bloodworks()
 	bulletController.clear();
 	missionController.clear();
 
-	ring = nullptr;
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -630,31 +621,7 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 
 void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
 {
-	sol::table params = lua.create_table();
-	float particleScale = maxScale * 0.67f;
-	params["size"] = particleScale;
-	params["duration"] = maxScale / scaleSpeed;
-	for (int i = 0; i < 15; i++)
-	{
-		explosionParticles->addParticle(pos, params);
-	}
-	ExplosionData explosionData;
-	explosionData.ringRenderable = new cTexturedQuadRenderable(this, "resources/particles/explosionFire/ring.png", "resources/default");
-	explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(0.0f).translateBy(pos));
-	explosionData.ringRenderable->setColor(Vec4(0.0f));
-
-	explosionData.lastDamageScale = -50.0f;
-	explosionData.maxScale = maxScale;
-	explosionData.scaleSpeed = scaleSpeed;
-	explosionData.startTime = timer.getTime();
-	explosionData.minDamage = minDamage;
-	explosionData.maxDamage = maxDamage;
-
-	explosionData.pos = pos;
-	explosionData.id = getUniqueId();
-	addRenderable(explosionData.ringRenderable, MONSTERS + 1);
-
-	explosions.push_back(explosionData);
+	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage);
 }
 
 void Bloodworks::addDrop(const Vec2& position)	
@@ -803,55 +770,7 @@ void Bloodworks::tick()
 		}
 	}
 
-	for (int i=0; i < explosions.size(); i++)
-	{
-		auto& explosionData = explosions[i];
-		float dt = timer.getTime() - explosionData.startTime;
-
-		float newScale = dt * explosionData.scaleSpeed;
-
-		if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
-		{
-			explosionData.lastDamageScale = newScale + 15.0f;
-			float damageScale = min(newScale + 15.0f, explosionData.maxScale);
-			std::stringstream explosionId;
-			explosionId << "explosion" << explosionData.id;
-			monsterController.damageMonstersInRangeWithIgnoreData(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionId.str());
-		}
-
-		if (newScale > explosionData.maxScale)
-		{
-			SAFE_DELETE(explosions[i].ringRenderable);
-			explosions[i] = explosions[(int)explosions.size() - 1];
-			explosions.resize(explosions.size() - 1);
-			i--;
-			continue;
-		}
-
-		float alpha = 0.0f;
-		float a0 = min(20.0f, explosionData.maxScale * 0.2f);
-		float a1 = min(50.0f, explosionData.maxScale * 0.5f);
-		float a2 = max(explosionData.maxScale - 50.0f, explosionData.maxScale * 0.8f, a1);
-
-		if (newScale < a0)
-		{
-			alpha = 0.0f;
-		}
-		else if (newScale < a1)
-		{
-			alpha = (newScale - a0) / (a1 - a0);
-		}
-		else if (newScale < a2)
-		{
-			alpha = 1.0f;
-		}
-		else
-		{
-			alpha = (explosionData.maxScale - newScale) / (explosionData.maxScale - a2);
-		}
-		explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(newScale + 10.0f).translateBy(explosionData.pos));
-		explosionData.ringRenderable->setColor(Vec4(1.0f, 1.0f, 1.0f, alpha * 0.4f));
-	}
+	explosionController->tick();
 
 	if (levelUpPopup->isVisible())
 	{

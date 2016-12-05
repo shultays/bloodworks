@@ -2,7 +2,6 @@
 
 {
 	"maxLifeTime" : 5.0,
-	"spawnInterval" : 0.0,
 	
 	"vertexShader" : "resources/particles/explosionFire/shader.vs",
 	"pixelShader" : "resources/particles/explosionFire/shader.ps",

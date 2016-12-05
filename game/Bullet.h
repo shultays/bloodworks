@@ -50,6 +50,8 @@ class Bullet
 	{
 		cParticle* particle;
 		Vec2 spawnShift;
+		float spawnInterval;
+		float lastSpawnTime;
 	};
 
 	std::vector<Particledata> particles;
@@ -79,7 +81,7 @@ public:
 	void addRenderableTexture(const std::string& texture);
 	void addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions);
 	void addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions);
-	cParticle* addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args);
+	cParticle* addTrailParticle(const std::string& name, const Vec2& shift, float spawnInterval, const sol::table& args);
 
 	bool hasParticles();
 private:

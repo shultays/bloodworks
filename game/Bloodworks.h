@@ -33,6 +33,7 @@ class Perk;
 class cPostProcess;
 class cTextRenderable;
 class LevelUpPopup;
+class ExplosionController;
 
 class Bloodworks : public cGame
 {
@@ -40,7 +41,6 @@ class Bloodworks : public cGame
 	std::vector<cTexturedQuadRenderable*> fgs;
 	Player *player;
 
-	cTextureShr ring;
 
 	int tickCount;
 	int renderCount;
@@ -67,25 +67,11 @@ class Bloodworks : public cGame
 
 	std::vector<Drop> drops;
 
-	std::unordered_map<std::string, cParticleTemplate*> particles;
-	cParticleTemplate *fireParticle;
 
-	struct ExplosionData
-	{
-		cTexturedQuadRenderable *ringRenderable;
-		int id;
-		float startTime;
-		float maxScale;
-		float lastDamageScale;
-		int minDamage;
-		int maxDamage;
-		float scaleSpeed;
-		Vec2 pos;
-	};
-	std::vector<ExplosionData> explosions;
+	std::unordered_map<std::string, cParticleTemplate*> particles;
+
 
 	static int nextUniqueId;
-	cParticle *explosionParticles;
 
 	Vec2 mapSize;
 	Vec2 mapBegin;
@@ -102,6 +88,8 @@ class Bloodworks : public cGame
 	cPostProcess *pausePostProcess;
 
 	LevelUpPopup *levelUpPopup;
+
+	ExplosionController *explosionController;
 protected:
 	virtual void render() override;
 	virtual void tick() override;

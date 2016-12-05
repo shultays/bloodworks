@@ -85,8 +85,7 @@ bonuslar
 melee + ölümsüzlük
 düşmanları yavaşlatma
 güçlü silahlar
-ekstra exp
-experience
+ekstra exp duration
 
 
 silahlar
