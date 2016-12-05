@@ -21,7 +21,6 @@ public:
 	MonsterController(Bloodworks *bloodworks);
 	~MonsterController();
 	void tick();
-	void clear();
 	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;
 
 	Monster* getClosestMonster(const Vec2& pos);
@@ -33,4 +32,7 @@ public:
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);
 	void damageMonstersInRangeWithIgnoreData(const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData);
 
+	Monster* createMonster(const std::string& monsterTemplateName);
+	int getMonsterCount() const;
+	Monster* getMonster(int id) const;
 };

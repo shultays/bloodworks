@@ -20,7 +20,7 @@ function Survival.onTick()
 		local ang = math.pi * 2.0 * math.random()
 		local vShift = Vec2.new(math.cos(ang), math.sin(ang)) * 50.0
 		for i = 1, 6 do
-			local monster = addMonster("monster")
+			local monster = createMonster("monster")
 			monster.position = v
 			monster.moveAngle =  (player.position - v):getAngle()
 			v = v + vShift

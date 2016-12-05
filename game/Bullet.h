@@ -14,7 +14,7 @@ class Bullet
 	friend class BulletController;
 	friend class MissionController;
 	friend class Gun;
-	friend class Bloodworks;
+	friend class BloodworksLuaWorld;
 
 	Bloodworks *bloodworks;
 	Gun *gun;

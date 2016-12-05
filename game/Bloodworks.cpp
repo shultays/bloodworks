@@ -17,6 +17,7 @@
 #include "MonsterController.h"
 #include "BulletController.h"
 #include "MissionController.h"
+#include "BloodworksLuaWorld.h"
 
 #include <sstream>
 
@@ -24,184 +25,13 @@ int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
+	lua.script_file("resources/helpers.lua");
+	luaWorld = new BloodworksLuaWorld(this);
+
 	postProcessEndLevel = (GUI + FOREGROUND) / 2;
 
 	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
 	paused = false;
-
-	lua.script_file("resources/helpers.lua");
-
-	lua.new_usertype<Vec2>("Vec2",
-		sol::constructors<sol::types<>, sol::types<float, float>>(),
-		"x", &Vec2::x,
-		"y", &Vec2::y,
-
-		sol::meta_function::addition, [](const Vec2& a, const Vec2& b) { return a + b; },
-		sol::meta_function::subtraction, [](const Vec2& a, const Vec2& b) { return a - b; },
-		sol::meta_function::multiplication, [](const Vec2& a, const Vec2& b) { return a * b; },
-		sol::meta_function::multiplication, [](const Vec2& a, float b) { return a * b; },
-		sol::meta_function::division, [](const Vec2& a, const Vec2& b) { return a / b; },
-		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
-
-		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
-		"getAngle", &Vec2::toAngle,
-
-		"normalize", [](Vec2& a) { return a.normalize(); },
-		"normalized", [](const Vec2& a) { return a.normalized(); },
-
-		"safeNormalize", [](Vec2& a) { return a.safeNormalize(); },
-		"safeNormalized", [](const Vec2& a) { return a.safeNormalized(); },
-
-		"distance", [](const Vec2& a, const Vec2& b) { return a.distance(b); },
-		"distanceSquared", [](const Vec2& a, const Vec2& b) { return a.distanceSquared(b); },
-
-		"length", [](const Vec2& a) { return a.length(); },
-		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); },
-
-		"sideVec", &Vec2::sideVec,
-
-		"dot", [](const Vec2& a, const Vec2& b) { return a.dot(b); }
-	);
-
-
-	lua.new_usertype<Vec3>("Vec3",
-		sol::constructors<sol::types<>, sol::types<float, float, float>>(),
-		"x", &Vec3::x,
-		"y", &Vec3::y,
-		"z", &Vec3::z,
-
-		sol::meta_function::addition, [](const Vec3& a, const Vec3& b) { return a + b; },
-		sol::meta_function::subtraction, [](const Vec3& a, const Vec3& b) { return a - b; },
-		sol::meta_function::multiplication, [](const Vec3& a, const Vec3& b) { return a * b; },
-		sol::meta_function::multiplication, [](const Vec3& a, float b) { return a * b; },
-		sol::meta_function::division, [](const Vec3& a, const Vec3& b) { return a / b; },
-		sol::meta_function::division, [](const Vec3& a, float b) { return a / b; },
-
-
-		"normalize", [](Vec3& a) { a.normalize(); },
-		"normalized", [](const Vec3& a) { return a.normalized(); },
-
-		"distance", [](const Vec3& a, const Vec3& b) { return a.distance(b); },
-		"distanceSquared", [](const Vec3& a, const Vec3& b) { return a.distanceSquared(b); },
-
-		"length", [](const Vec3& a) { return a.length(); },
-		"lengthSquared", [](const Vec3& a) { return a.lengthSquared(); },
-
-		"dot", [](const Vec3& a, const Vec3& b) { return a.dot(b); }
-	);
-
-	lua.new_usertype<Mat3>("Mat3",
-		"fromPosition", [](const Vec2& pos) { return Mat3::translationMatrix(pos); },
-		"fromPositionAndScale", [](const Vec2& pos, const Vec2& scale) { return Mat3::scaleMatrix(scale).translateBy(pos); },
-		"from", [](const Vec2& pos, const Vec2& scale, float rotation) { return Mat3::scaleMatrix(scale).rotateBy(rotation).translateBy(pos); }
-	);
-
-	lua.new_usertype<cRenderable>("Renderable",
-		"setLevel", &cRenderable::setLevel,
-		"setAllignment", &cRenderable::setAlignment,
-		"setVisible", &cRenderable::setVisible,
-		"setColor", &cRenderable::setColor,
-		"setWorldMatrix", &cRenderable::setWorldMatrix
-		);
-
-	lua.new_usertype<cParticle>("Particle",
-		"setLevel", &cParticle::setLevel,
-		"setAllignment", &cParticle::setAlignment,
-		"setVisible", &cParticle::setVisible,
-		"setColor", &cParticle::setColor,
-		"setWorldMatrix", &cParticle::setWorldMatrix,
-		"addParticle", &cParticle::addParticle
-		);
-
-	lua.new_usertype<Bullet>("Bullet",
-		"index", sol::readonly(&Bullet::id),
-
-		"position", &Bullet::pos,
-		"moveSpeed", &Bullet::moveSpeed,
-		"moveAngle", &Bullet::moveAngle,
-		"meshRotation", &Bullet::meshRotation,
-
-		"meshScale", &Bullet::meshScale,
-
-		"moveDir", sol::readonly(&Bullet::moveDir),
-		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
-
-		"radius", &Bullet::radius,
-		"damage", &Bullet::damage,
-
-		"diesOnHit", &Bullet::diesOnHit,
-		"updateDrawable", &Bullet::updateDrawable,
-
-		"script", &Bullet::script,
-
-		"onHitCallback", &Bullet::onHitCallback,
-		"onTickCallback", &Bullet::onTickCallback,
-		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
-
-		"isDead", sol::readonly(&Bullet::isDead),
-
-		"data", &Bullet::data,
-
-		"addRenderableTexture", &Bullet::addRenderableTexture,
-		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
-		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
-		"addTrailParticle", &Bullet::addTrailParticle,
-
-		"removeSelf", &Bullet::removeSelf
-		);
-	lua.set_function("approachAngle",
-		[&](float angle, float angleToApproach, float maxRotation) -> float
-	{
-		return approachAngle(angle, angleToApproach, maxRotation);
-	});
-
-	lua.set_function("multiplyGameSpeed", [&](float multiplier)
-	{
-		multiplyGameSpeed(multiplier);
-	});
-
-	lua.set_function("addLine",
-		[&](const Vec2& pos0, const Vec2& pos1)
-	{
-		debugRenderer.addLine(pos0, pos1);
-	});
-
-	lua.set_function("addExplosion",
-		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage)
-	{
-		addExplosion(pos, scale, speed, minDamage, maxDamage);
-	});
-
-
-	lua["mission"] = lua.create_table();
-
-	lua.new_usertype<Gun>("Gun",
-		"index", sol::readonly(&Gun::id),
-		"data", &Gun::data,
-
-		"bulletSpeed", &Gun::bulletSpeed,
-		"bulletRadius", &Gun::bulletRadius,
-		"bulletSpeed", &Gun::bulletSpeed,
-		"scriptTable", &Gun::scriptTable,
-
-		"spreadAngle", &Gun::spreadAngle,
-		"crosshairDistance", &Gun::crosshairDistance,
-
-		"leftMousePressed", &Gun::leftMousePressed,
-		"leftMouseDown", &Gun::leftMouseDown,
-		"leftMouseReleased", &Gun::leftMouseReleased,
-
-		"middleMousePressed", &Gun::middleMousePressed,
-		"middleMouseDown", &Gun::middleMouseDown,
-		"middleMouseReleased", &Gun::middleMouseReleased,
-		"rightMousePressed", &Gun::rightMousePressed,
-		"rightMouseDown", &Gun::rightMouseDown,
-		"rightMouseReleased", &Gun::rightMouseReleased,
-
-		"addBullet", &Gun::addBullet
-	);
-
-
 	mapSize = 1048.0f;
 	mapBegin = -mapSize*0.5f;
 	mapEnd = mapBegin + mapSize;
@@ -417,7 +247,6 @@ void Bloodworks::init()
 	pausePostProcess->setEnabled(false);
 
 	levelUpPopup = new LevelUpPopup(this);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -434,6 +263,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bg);
 	SAFE_DELETE(player);
 	SAFE_DELETE(pausePostProcess);
+	// SAFE_DELETE(luaWorld); TODO fix
 	for (auto& gun : guns)
 	{
 		SAFE_DELETE(gun);
@@ -471,10 +301,7 @@ void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
 {
 	for (auto& perk : usedPerks)
 	{
-		if (perk->onAddGunBullet)
-		{
-			perk->onAddGunBullet(gun, bullet);
-		}
+		perk->onAddGunBullet(gun, bullet);
 	}
 }
 
@@ -608,10 +435,7 @@ void Bloodworks::tick()
 
 	for (auto& perk : usedPerks)
 	{
-		if (perk->onTick)
-		{
-			perk->onTick();
-		}
+		perk->onTick();
 	}
 
 	if (cameraCenterPos.x > player->getPos().x + 50.0f)

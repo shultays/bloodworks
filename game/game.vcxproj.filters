@@ -102,6 +102,10 @@
     <ClCompile Include="DropController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="BloodworksLuaWorld.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
+    <ClCompile Include="Perk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -225,6 +229,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="DropController.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodworksLuaWorld.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

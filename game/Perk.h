@@ -7,10 +7,11 @@
 #include "cTools.h"
 
 using json = nlohmann::json;
+class Gun;
+class Bullet;
 
 class Perk
 {
-	friend class Bloodworks;
 	std::string name;
 	std::string description;
 	std::string iconPath;
@@ -19,8 +20,8 @@ class Perk
 	int level;
 	int maxLevel;
 
-	sol::function onAddGunBullet;
-	sol::function onTick;
+	sol::function onAddGunBulletFunc;
+	sol::function onTickFunc;
 public:
 	void load(const std::string& perkData)
 	{
@@ -47,25 +48,11 @@ public:
 		std::string scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
 
-		onAddGunBullet = scriptTable["onAddGunBullet"];
-		onTick = scriptTable["onTick"];
+		onAddGunBulletFunc = scriptTable["onAddGunBullet"];
+		onTickFunc = scriptTable["onTick"];
 	}
 
-	void takeLevel()
-	{
-		if (level < maxLevel)
-		{
-			level++;
-			if (maxLevel == 1)
-			{
-				scriptTable["init"]();
-			}
-			else
-			{
-				scriptTable["init"](level);
-			}
-		}
-	}
+	void takeLevel();
 
 	int getLevel() const
 	{
@@ -96,4 +83,7 @@ public:
 	{
 		return description;
 	}
+
+	void onTick();
+	void onAddGunBullet(Gun *gun, Bullet *bullet);
 };

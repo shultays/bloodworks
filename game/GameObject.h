@@ -11,6 +11,7 @@ class cRenderableGroup;
 class GameObject
 {
 	friend class MissionController;
+	friend class BloodworksLuaWorld;
 	Bloodworks *bloodworks;
 
 	enum RenderableDataType

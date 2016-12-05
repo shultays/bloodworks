@@ -10,88 +10,9 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
 
-	lua.set_function("addMonster",
-		[&](std::string monsterTemplate) -> Monster*
-	{
-		Monster *newMonster = new Monster(this->bloodworks);
-		monstersMap[newMonster->id] = newMonster;
-		monsters.push_back(newMonster);
-		newMonster->init(monsterTemplates[monsterTemplate]);
-		grid.insertToGrid(newMonster);
-		return newMonster;
-	});
+	lua["mission"] = lua.create_table();
 
-	lua.set_function("getMonsterCount",
-		[&]() -> int
-	{
-		return (int)monsters.size();
-	});
-
-	lua.set_function("getMonster",
-		[&](int i) -> Monster*
-	{
-		return monstersMap[i];
-	});
-
-	lua.set_function("getClosestMonster",
-		[&](const Vec2& pos) -> Monster*
-	{
-		return getClosestMonster(pos);
-	});
-
-	lua.set_function("getClosestMonsterWithIgnoreData",
-		[&](const Vec2& pos, const std::string& ignoreData) -> Monster*
-	{
-		return getClosestMonsterWithIgnoreData(pos, ignoreData);
-	});
-
-	lua.set_function("getClosestMonsterInRange",
-		[&](const Vec2& pos, float range) -> Monster*
-	{
-		return getClosestMonsterInRange(pos, range);
-	});
-
-	lua.set_function("getClosestMonsterInRangeWithIgnoreData",
-		[&](const Vec2& pos, float range, const std::string& ignoreData) -> Monster*
-	{
-		return getClosestMonsterInRangeWithIgnoreData(pos, range, ignoreData);
-	});
-
-	lua.set_function("damageMonstersInRangeWithIgnoreData",
-		[&](const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData) 
-	{
-		return damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, mark, ignoreData);
-	});
 	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
-
-	lua.new_usertype<Monster>("Monster",
-		"name", &Monster::name,
-		"index", sol::readonly(&Monster::id),
-
-		"position", &Monster::position,
-		"moveSpeed", &Monster::moveSpeed,
-		"moveAngle", &Monster::moveAngle,
-
-		"textureShift", &Monster::textureShift,
-		"textureSize", &Monster::textureSize,
-
-		"hitPoint", &Monster::hitPoint,
-
-		"collisionRadius", &Monster::collisionRadius,
-		"bulletRadius", &Monster::bulletRadius,
-
-		"data", &Monster::data,
-
-		"isDead", sol::readonly(&Monster::isDead),
-
-		"playAnimation", &Monster::playAnimation,
-		"addTimer", &Monster::addTimer,
-		"setScale", &Monster::setScale,
-		"setColor", &Monster::setColor,
-
-		"doDamage", &Monster::doDamage
-	);
-
 }
 
 void MonsterController::tick()
@@ -301,6 +222,30 @@ void MonsterController::damageMonstersInRangeWithIgnoreData(const Vec2& pos, flo
 		}
 	}
 }
+
+Monster* MonsterController::createMonster(const std::string& monsterTemplateName)
+{
+	MonsterTemplate *monsterTemplate = monsterTemplates[monsterTemplateName];
+
+	Monster *newMonster = new Monster(bloodworks);
+	monstersMap[newMonster->id] = newMonster;
+	monsters.push_back(newMonster);
+	newMonster->init(monsterTemplate);
+	grid.insertToGrid(newMonster);
+	return newMonster;
+}
+
+int MonsterController::getMonsterCount() const
+{
+	return (int)monsters.size();
+}
+
+Monster* MonsterController::getMonster(int id) const
+{
+	auto& element = monstersMap.find(id);
+	return element == monstersMap.end() ? nullptr : element->second;
+}
+
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
 {
 	damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, false, "");
