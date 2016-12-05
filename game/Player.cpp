@@ -10,8 +10,7 @@
 
 int Player::calculateExperienceForLevel(int level)
 {
-	level--;
-	return level * 100 + level * level * 20 - 20;
+	return level * 100 + level * level * 20;
 }
 
 Player::Player(Bloodworks *bloodworks)

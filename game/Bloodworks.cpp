@@ -420,7 +420,7 @@ void Bloodworks::tick()
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
-			dropController->createBonus(player->getPos() + Vec2(100, i * 50.0f - guns.size() * 25.0f), i);
+			dropController->createBonus(player->getPos() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
 		}
 	}
 
