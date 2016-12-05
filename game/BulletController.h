@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include "cGrid.h"
+#include "sol.h"
 
 class Bloodworks;
 class Bullet;
@@ -18,4 +19,5 @@ public:
 	~BulletController();
 	void addBullet(Bullet* bullet);
 	void tick();
+	Bullet *addCustomBullet(const sol::table& params);
 };
