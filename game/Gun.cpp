@@ -92,6 +92,11 @@ sol::table& Gun::getScriptTable()
 	return scriptTable;
 }
 
+const std::string& Gun::getIconPath() const
+{
+	return iconPath;
+}
+
 Gun::~Gun()
 {
 	bulletTexture = nullptr;

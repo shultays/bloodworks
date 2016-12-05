@@ -61,4 +61,5 @@ public:
 	{
 		return name;
 	}
+	const std::string& getIconPath() const;
 };
