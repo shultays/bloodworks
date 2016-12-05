@@ -405,6 +405,10 @@ void Bloodworks::init()
 	Perk *perk;
 
 	perk = new Perk();
+	perk->load("resources/perks/regen/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
 	perk->load("resources/perks/critical/data.json");
 	perks.push_back(perk);
 
@@ -756,6 +760,14 @@ void Bloodworks::tick()
 	missionController.tick();
 
 	player->tick();
+
+	for (auto& perk : usedPerks)
+	{
+		if (perk->onTick)
+		{
+			perk->onTick();
+		}
+	}
 
 	if (cameraCenterPos.x > player->getPos().x + 50.0f)
 	{

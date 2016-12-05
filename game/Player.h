@@ -49,6 +49,10 @@ class Player
 	int experienceForNextLevel;
 
 	int calculateExperienceForLevel(int level);
+
+	sol::table data;
+
+	void updateHitPoints();
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -81,6 +85,7 @@ public:
 
 	void gainExperience(int experience);
 	void doLevelup();
+	void doHeal(int hp);
 private:
-	void updateHitPoints();
+	int maxHitPoints;
 };

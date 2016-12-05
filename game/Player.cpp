@@ -26,6 +26,7 @@ Player::Player(Bloodworks *bloodworks)
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"doDamage", &Player::doDamage,
+		"doHeal", &Player::doHeal,
 		"slowdown", &Player::slowdown,
 		"bulletSpeedMult", &Player::bulletSpeedMult,
 		"shootSpeedMult", &Player::shootSpeedMult,
@@ -35,7 +36,8 @@ Player::Player(Bloodworks *bloodworks)
 
 		"level", sol::readonly(&Player::level),
 		"experience", sol::readonly(&Player::experience),
-		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel)
+		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
+		"data", &Player::data
 		);
 
 	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
@@ -101,7 +103,8 @@ Player::Player(Bloodworks *bloodworks)
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
-	hitPoints = 100;
+	maxHitPoints = hitPoints = 100;
+	data = lua.create_table();
 	lua["player"] = this;
 	updateHitPoints();
 	gun = nullptr;
@@ -349,7 +352,7 @@ void Player::doDamage(int damage)
 	hitPoints -= damage;
 	if (hitPoints <= 0)
 	{
-		hitPoints = 100;
+		hitPoints = maxHitPoints;
 	}
 	updateHitPoints();
 }
@@ -383,4 +386,14 @@ void Player::doLevelup()
 	level++;
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	bloodworks->openLevelupPopup();
+}
+
+void Player::doHeal(int hp)
+{
+	hitPoints += hp;
+	if (hitPoints > maxHitPoints)
+	{
+		hitPoints = maxHitPoints;
+	}
+	updateHitPoints();
 }
