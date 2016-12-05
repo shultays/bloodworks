@@ -332,6 +332,9 @@ void Bloodworks::init()
 
 	Bonus *bonus;
 
+	bonus = new Bonus("resources/bonuses/experience/data.json");
+	bonuses.push_back(bonus);
+
 	bonus = new Bonus("resources/bonuses/medikit/data.json");
 	bonuses.push_back(bonus);
 

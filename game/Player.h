@@ -30,6 +30,7 @@ class Player
 	float aimAngle;
 	float oldSpreadAngle;
 	int hitPoints;
+	int maxHitPoints;
 	cTextRenderable *healthRenderable;
 
 	float slowdownAmount;
@@ -86,8 +87,5 @@ public:
 	void gainExperience(int experience);
 	void doLevelup();
 	void doHeal(int hp);
-private:
-	int maxHitPoints;
-public:
 	int getLevel() const;
 };
