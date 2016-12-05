@@ -46,14 +46,13 @@ mutli line text
 
 bloodworks.cpp i temizle
 
+bonuslara şans faktörü ekle
+
 ----------------
 
 
 perkler
-regen
-crit
 homing?
-yavaşlamama
 blink?
 sprint?
 zehir
@@ -85,10 +84,9 @@ Bandage
 bonuslar
 melee + ölümsüzlük
 düşmanları yavaşlatma
-zaman durdurma
-heal
 güçlü silahlar
 ekstra exp
+experience
 
 
 silahlar

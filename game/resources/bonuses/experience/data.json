@@ -1,0 +1,6 @@
+{
+  "name": "Experience",
+  "iconFile" : "resources/bonuses/experience/icon.png",
+  "scriptFile" : "resources/bonuses/experience/experience.lua",
+  "scriptName" : "Experience"
+}

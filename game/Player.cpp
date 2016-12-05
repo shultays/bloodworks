@@ -28,6 +28,7 @@ Player::Player(Bloodworks *bloodworks)
 		"doDamage", &Player::doDamage,
 		"doHeal", &Player::doHeal,
 		"slowdown", &Player::slowdown,
+		"gainExperience", &Player::gainExperience,
 		"bulletSpeedMult", &Player::bulletSpeedMult,
 		"shootSpeedMult", &Player::shootSpeedMult,
 		"moveSpeedMult", &Player::moveSpeedMult,
