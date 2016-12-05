@@ -2,7 +2,6 @@
 
 {
 	"maxLifeTime" : 3.0,
-	"spawnInterval" : 0.02,
 	
 	"vertexShader" : "resources/particles/critical/shader.vs",
 	"pixelShader" : "resources/particles/critical/shader.ps",

@@ -5,16 +5,17 @@
 #include "cShader.h"
 #include "cTexture.h"
 #include "cGame.h"
+#include "json.h"
+
+using json = nlohmann::json;
 
 #define MAX_QUAD 256
-
 
 class cParticleTemplate
 {
 	friend class cParticle;
 
 	float maxLifeTime;
-	float spawnInterval;
 	cShaderShr shader;
 	std::string scriptName;
 	sol::table scriptTable;
@@ -51,11 +52,8 @@ public:
 		lua.script_file(scriptPath);
 
 		maxLifeTime = j["maxLifeTime"].get<float>();
-		spawnInterval = j["spawnInterval"].get<float>();
-		spawnInterval = max(spawnInterval, 0.01f);
 		attributeSize = 0;
 		
-
 		auto addAtribute = [&](const std::string& attributeName, const std::string& attributeType)
 		{
 			if (attributeName == "uv")
@@ -154,7 +152,6 @@ class cParticle : public cRenderable
 	int maxBufferSize;
 	std::vector<QuadBufferData> quadBuffers;
 	sol::table args;
-	float lastSpawn;
 public:
 
 	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderable(game)
@@ -165,7 +162,6 @@ public:
 		buff = new char[particleTemplate->attributeSize * 4];
 		this->args = args;
 		maxBufferSize = 0;
-		lastSpawn = -1.0f;
 	}
 
 	~cParticle()
@@ -187,11 +183,6 @@ public:
 
 	void addParticle(const Vec2& pos, sol::table& params)
 	{
-		if (particleTemplate->spawnInterval > 0.0f && timer.getTime() - lastSpawn < particleTemplate->spawnInterval)
-		{
-			return;
-		}
-		lastSpawn = timer.getTime();
 		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD)
 		{
 			QuadBufferData bufferData;

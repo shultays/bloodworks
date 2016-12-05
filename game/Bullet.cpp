@@ -69,7 +69,11 @@ void Bullet::tick()
 	table["bullet"] = this;
 	for (auto& particleData : particles)
 	{
-		particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), table);
+		if (particleData.lastSpawnTime < timer.getTime() - particleData.spawnInterval)
+		{
+			particleData.lastSpawnTime = timer.getTime();
+			particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), table);
+		}
 	}
 
 	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
@@ -146,11 +150,13 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 }
 
 
-cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, const sol::table& args)
+cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, float spawnInterval, const sol::table& args)
 {
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
+	particleData.spawnInterval = spawnInterval;
+	particleData.lastSpawnTime = timer.getTime();
 	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
 	return particleData.particle;
