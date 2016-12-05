@@ -19,10 +19,6 @@ game object e particle ekle
 
 priority queue you düzelt
 
-bonuslar için resim ekle
-
-ui olarak renderable ekle (view matrix den bağımsız)
-
 explosionlarda yere is ekle
 explosionları güzelleştir (belki smoke & şarapnel?)
 
@@ -32,7 +28,7 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 
 !! post process belirli levellere
 
-!! ateş edince efekt
+!! ateş edince efekt silaha
 
 !! mermi çarpınca efekt
 
@@ -47,6 +43,12 @@ mutli line text
 bloodworks.cpp i temizle
 
 bonuslara şans faktörü ekle
+
+bullet trail
+
+ilk silahları güncelle (trail ekle ve hızlandır)
+
+renderable group vector tutmasın, linked list i kullansın
 
 ----------------
 
