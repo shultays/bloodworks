@@ -3,6 +3,8 @@
 #include "Bullet.h"
 #include "Gun.h"
 #include "cFont.h"
+#include "cRenderable.h"
+
 #include <sstream>
 
 
@@ -16,31 +18,6 @@ Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	
-	lua.new_usertype<Player>("Player",
-		"position", &Player::pos,
-		"moveSpeed", &Player::moveSpeed,
-		"moveAngle", &Player::moveAngle,
-		"crosshairPos", &Player::crosshairPos,
-		"aimDir", sol::readonly(&Player::aimDir),
-		"moveDir", sol::readonly(&Player::moveDir),
-		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
-		"hitPoints", sol::readonly(&Player::hitPoints),
-		"doDamage", &Player::doDamage,
-		"doHeal", &Player::doHeal,
-		"slowdown", &Player::slowdown,
-		"gainExperience", &Player::gainExperience,
-		"bulletSpeedMult", &Player::bulletSpeedMult,
-		"shootSpeedMult", &Player::shootSpeedMult,
-		"moveSpeedMult", &Player::moveSpeedMult,
-		"slowdownOnHit", &Player::slowdownOnHit,
-
-
-		"level", sol::readonly(&Player::level),
-		"experience", sol::readonly(&Player::experience),
-		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
-		"data", &Player::data
-		);
-
 	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
 	slowdownOnHit = true;
 

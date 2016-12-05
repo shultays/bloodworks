@@ -11,7 +11,8 @@ class Bullet;
 
 class Gun
 {
-	friend class Bloodworks;
+	friend class BloodworksLuaWorld;
+
 	Bloodworks *bloodworks;
 	std::string name;
 	std::string artFolder;

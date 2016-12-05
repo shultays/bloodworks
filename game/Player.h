@@ -2,15 +2,17 @@
 
 #include "cMat.h"
 #include "cVec.h"
-#include "cRenderable.h"
+#include "sol.h"
 
 class Bloodworks;
 class Gun;
+class cTextRenderable;
+class cRenderable;
+class cRenderableGroup;
 
 class Player
 {
-	friend class Bloodworks;
-
+	friend class BloodworksLuaWorld;
 	Vec2 pos;
 	Vec2 oldPos;
 	Vec2 oldMoveAmount;

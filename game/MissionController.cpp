@@ -28,34 +28,6 @@ void MissionController::loadMissionController(const std::string& missionControll
 	scriptPath = j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 	scriptTable["init"]();
-
-
-	lua.new_usertype<GameObject>("GameObject",
-		"index", sol::readonly(&GameObject::id),
-
-		"toBeRemoved", &GameObject::toBeRemoved,
-		"script", &GameObject::script,
-		"data", &GameObject::data,
-		"addText", &GameObject::addText,
-		"addTexture", &GameObject::addTexture,
-
-		"setPosition", &GameObject::setPosition,
-		"setRotation", &GameObject::setRotation,
-		"setScale", &GameObject::setScale,
-		"setLevel", &GameObject::setLevel
-	);
-
-
-	lua.new_usertype<GameObject::RenderableData>("RenderableData",
-		"position", &GameObject::RenderableData::pos,
-		"rotation", &GameObject::RenderableData::rotation,
-		"textureSize", &GameObject::RenderableData::textureSize,
-		"textSize", &GameObject::RenderableData::textSize,
-		"color", &GameObject::RenderableData::color,
-		"update", &GameObject::RenderableData::update,
-		"alignment", &GameObject::RenderableData::alignment,
-		"textAlignment", &GameObject::RenderableData::textAlignment
-		);
 }
 
 MissionController::~MissionController()
@@ -77,18 +49,6 @@ MissionController::~MissionController()
 MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-
-	lua.set_function("addGameObject",
-		[&](const std::string& script) -> GameObject*
-	{
-		return addGameObject(script);
-	});
-
-	lua.set_function("addCustomBullet",
-		[&](const sol::table& params) -> Bullet*
-	{
-		return addCustomBullet(params);
-	});
 }
 
 void MissionController::tick()

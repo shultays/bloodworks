@@ -34,6 +34,8 @@ class DropController;
 class MissionController;
 class MonsterController;
 class BulletController;
+class BloodworksLuaWorld;
+
 
 class Bloodworks : public cGame
 {
@@ -49,7 +51,7 @@ class Bloodworks : public cGame
 	BulletController *bulletController;
 	ExplosionController *explosionController;
 	DropController *dropController;
-
+	BloodworksLuaWorld *luaWorld;
 
 	BloodRenderable *bloodRenderable;
 	cPostProcess *pausePostProcess;
@@ -96,6 +98,11 @@ public:
 	BulletController* getBulletController() const
 	{
 		return bulletController;
+	}
+
+	MissionController* getMissionController() const
+	{
+		return missionController;
 	}
 
 	Player* getPlayer()

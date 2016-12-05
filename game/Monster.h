@@ -11,6 +11,7 @@ class Bloodworks;
 class Monster
 {
 	friend class MonsterController;
+	friend class BloodworksLuaWorld;
 
 	cAnimatedTexturedQuadRenderable *renderable;
 	cTextRenderable *healthRenderable;
