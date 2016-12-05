@@ -32,6 +32,7 @@ class Bonus;
 class Perk;
 class cPostProcess;
 class cTextRenderable;
+class LevelUpPopup;
 
 class Bloodworks : public cGame
 {
@@ -98,18 +99,9 @@ class Bloodworks : public cGame
 
 	bool paused;
 
-	cPostProcess* pausePostProcess;
+	cPostProcess *pausePostProcess;
 
-	cRenderableGroup *levelupGroup;
-
-	cTextRenderable *levelupGroupTitle;
-	cTextRenderable *currentPerkName;
-	cTextRenderable *currentPerkExplanation;
-	std::vector<cRenderable*> levelupPerksRenderables;
-	std::vector<Vec2> levelupPerksRenderablePosition;
-	std::vector<Perk*> levelupPerks;
-	int hoverLevelupPerkIndex;
-
+	LevelUpPopup *levelUpPopup;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -175,4 +167,8 @@ public:
 	void multiplyGameSpeed(float multiplier);
 
 	void openLevelupPopup();
+	void doPause();
+	void doUnpause();
+	std::vector<Perk*> getAvailablePerks() const;
+	void onPerkUsed(Perk *levelupPerks);
 };

@@ -15,14 +15,16 @@ class Perk
 	std::string description;
 	std::string iconPath;
 	sol::table scriptTable;
-	bool used;
+
+	int level;
+	int maxLevel;
 
 	sol::function onAddGunBullet;
 	sol::function onTick;
 public:
 	void load(const std::string& perkData)
 	{
-		used = false;
+		level = 0;
 
 		std::string jsonFile;
 		textFileRead(perkData.c_str(), jsonFile);
@@ -33,6 +35,15 @@ public:
 		iconPath = j["iconFile"].get<std::string>();
 		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
 
+		if (j.count("maxLevel"))
+		{
+			maxLevel = j["maxLevel"].get<int>();
+		}
+		else
+		{
+			maxLevel = 1;
+		}
+
 		std::string scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
 
@@ -40,12 +51,49 @@ public:
 		onTick = scriptTable["onTick"];
 	}
 
-	void use()
+	void takeLevel()
 	{
-		if (used == false)
+		if (level < maxLevel)
 		{
-			used = true;
-			scriptTable["init"]();
+			level++;
+			if (maxLevel == 1)
+			{
+				scriptTable["init"]();
+			}
+			else
+			{
+				scriptTable["init"](level);
+			}
 		}
+	}
+
+	int getLevel() const
+	{
+		return level;
+	}
+
+	int getMaxLevel() const
+	{
+		return maxLevel;
+	}
+
+	bool isTakenFully() const
+	{
+		return level >= maxLevel;
+	}
+
+	const std::string& getIconPath() const
+	{
+		return iconPath;
+	}
+
+	const std::string& getName() const
+	{
+		return name;
+	}
+
+	const std::string& getDescription() const
+	{
+		return description;
 	}
 };

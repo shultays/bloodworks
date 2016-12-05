@@ -397,3 +397,8 @@ void Player::doHeal(int hp)
 	}
 	updateHitPoints();
 }
+
+int Player::getLevel() const
+{
+	return level;
+}
