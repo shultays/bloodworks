@@ -37,10 +37,7 @@ class BulletController;
 
 class Bloodworks : public cGame
 {
-	cTexturedQuadRenderable *bg;
-	std::vector<cTexturedQuadRenderable*> fgs;
 	Player *player;
-
 
 	int tickCount;
 	int renderCount;
@@ -50,16 +47,23 @@ class Bloodworks : public cGame
 	MissionController *missionController;
 	MonsterController *monsterController;
 	BulletController *bulletController;
+	ExplosionController *explosionController;
+	DropController *dropController;
+
+
+	BloodRenderable *bloodRenderable;
+	cPostProcess *pausePostProcess;
+	LevelUpPopup *levelUpPopup;
+
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
 	std::vector<Perk*> perks;
 	std::vector<Perk*> usedPerks;
 
-	BloodRenderable *bloodRenderable;
-	DropController *dropController;
+	cTexturedQuadRenderable *bg;
+	std::vector<cTexturedQuadRenderable*> fgs;
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
-
 
 	static int nextUniqueId;
 
@@ -75,11 +79,6 @@ class Bloodworks : public cGame
 
 	bool paused;
 
-	cPostProcess *pausePostProcess;
-
-	LevelUpPopup *levelUpPopup;
-
-	ExplosionController *explosionController;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
