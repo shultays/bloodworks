@@ -1,6 +1,7 @@
 #include "Gun.h"
 #include "Bloodworks.h"
 #include "cGlobals.h"
+#include "BulletController.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "json.h"	

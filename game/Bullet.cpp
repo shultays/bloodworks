@@ -5,6 +5,7 @@
 #include "cTexture.h"
 #include "Gun.h"
 #include "cParticle.h"
+#include "MonsterController.h"
 #include "Player.h"
 
 Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)

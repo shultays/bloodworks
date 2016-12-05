@@ -14,6 +14,9 @@
 #include "LevelUpPopup.h"
 #include "ExplosionController.h"
 #include "DropController.h"
+#include "MonsterController.h"
+#include "BulletController.h"
+#include "MissionController.h"
 
 #include <sstream>
 
@@ -354,11 +357,11 @@ void Bloodworks::init()
 
 	dropController = new DropController(this);
 
-	monsterController.init(this);
-	bulletController.init(this);
+	monsterController = new MonsterController(this);
+	bulletController = new BulletController(this);
+	missionController = new MissionController(this);
 
-	missionController.init(this);
-	missionController.loadMissionController("resources/missions/survival/data.json");
+	missionController->loadMissionController("resources/missions/survival/data.json");
 
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
@@ -459,9 +462,9 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(levelUpPopup);
 	SAFE_DELETE(dropController);
 
-	monsterController.clear();
-	bulletController.clear();
-	missionController.clear();
+	SAFE_DELETE(monsterController);
+	SAFE_DELETE(bulletController);
+	SAFE_DELETE(missionController);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -599,8 +602,7 @@ void Bloodworks::tick()
 		player->doLevelup();
 	}
 	bloodRenderable->tick();
-
-	missionController.tick();
+	missionController->tick();
 
 	player->tick();
 
@@ -664,8 +666,8 @@ void Bloodworks::tick()
 		cameraPos.y = mapEnd.y - verticalMaxMove;
 	}
 
-	monsterController.tick();
-	bulletController.tick();
+	monsterController->tick();
+	bulletController->tick();
 	dropController->tick();
 	explosionController->tick();
 
