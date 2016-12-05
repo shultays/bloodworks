@@ -18,6 +18,7 @@ class Perk
 	bool used;
 
 	sol::function onAddGunBullet;
+	sol::function onTick;
 public:
 	void load(const std::string& perkData)
 	{
@@ -36,6 +37,7 @@ public:
 		lua.script_file(scriptPath);
 
 		onAddGunBullet = scriptTable["onAddGunBullet"];
+		onTick = scriptTable["onTick"];
 	}
 
 	void use()
