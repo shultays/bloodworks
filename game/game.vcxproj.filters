@@ -93,6 +93,9 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="LevelUpPopup.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -207,6 +210,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cPostProcess.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelUpPopup.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

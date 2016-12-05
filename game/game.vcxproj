@@ -186,6 +186,7 @@
     <ClCompile Include="cResources.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
+    <ClCompile Include="LevelUpPopup.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
     <ClCompile Include="cTools.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />
+    <ClInclude Include="LevelUpPopup.h" />
     <ClInclude Include="MissionController.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />

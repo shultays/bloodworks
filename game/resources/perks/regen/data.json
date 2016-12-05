@@ -3,5 +3,6 @@
   "description": "You slowly regenerate your life.",
   "iconFile" : "resources/perks/regen/icon.png",
   "scriptFile" : "resources/perks/regen/regen.lua",
-  "scriptName" : "Regen"
+  "scriptName" : "Regen",
+  "maxLevel" : 3
 }

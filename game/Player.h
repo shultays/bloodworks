@@ -88,4 +88,6 @@ public:
 	void doHeal(int hp);
 private:
 	int maxHitPoints;
+public:
+	int getLevel() const;
 };
