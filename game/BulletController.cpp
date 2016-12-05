@@ -1,31 +1,24 @@
 #include "BulletController.h"
+#include "Bloodworks.h"
 #include "Bullet.h"
-
 #include "cGlobals.h"
 #include "lua.h"
 #include "Gun.h"
-#include "Bloodworks.h"
 
-void BulletController::init(Bloodworks *bloodworks)
+BulletController::BulletController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
 	grid.init(bloodworks->getMapMin() - 100.0f, bloodworks->getMapSize() + 200.0f, Vec2(50.0f));
 }
 
-void BulletController::clear()
+BulletController::~BulletController()
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		SAFE_DELETE(bullets[i]);
 	}
 	bulletMap.clear();
-
-}
-
-BulletController::~BulletController()
-{
-	clear();
 }
 
 void BulletController::addBullet(Bullet* bullet)

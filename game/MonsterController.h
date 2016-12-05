@@ -18,7 +18,8 @@ class MonsterController
 	cGrid<Monster> grid;
 	std::unordered_map<std::string, MonsterTemplate*> monsterTemplates;
 public:
-	void init(Bloodworks *bloodworks);
+	MonsterController(Bloodworks *bloodworks);
+	~MonsterController();
 	void tick();
 	void clear();
 	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;

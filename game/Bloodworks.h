@@ -2,10 +2,6 @@
 
 #include "cGame.h"
 #include "cSharedPtr.h"
-#include "MonsterController.h"
-#include "BulletController.h"
-#include "MissionController.h"
-
 
 enum Depths
 {
@@ -35,6 +31,9 @@ class cTextRenderable;
 class LevelUpPopup;
 class ExplosionController;
 class DropController;
+class MissionController;
+class MonsterController;
+class BulletController;
 
 class Bloodworks : public cGame
 {
@@ -48,9 +47,9 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
-	MissionController missionController;
-	MonsterController monsterController;
-	BulletController bulletController;
+	MissionController *missionController;
+	MonsterController *monsterController;
+	BulletController *bulletController;
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
 	std::vector<Perk*> perks;
@@ -90,14 +89,14 @@ public:
 	Bloodworks() {}
 	virtual ~Bloodworks();
 
-	MonsterController* getMonsterController()
+	MonsterController* getMonsterController() const
 	{
-		return &monsterController;
+		return monsterController;
 	}
 
-	BulletController* getBulletController()
+	BulletController* getBulletController() const
 	{
-		return &bulletController;
+		return bulletController;
 	}
 
 	Player* getPlayer()

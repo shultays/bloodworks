@@ -8,6 +8,8 @@
 #include "Bloodworks.h"
 #include "Player.h"
 #include "GameObject.h"
+#include "BulletController.h"
+#include "Bullet.h"
 
 using json = nlohmann::json;
 
@@ -56,7 +58,7 @@ void MissionController::loadMissionController(const std::string& missionControll
 		);
 }
 
-void MissionController::clear()
+MissionController::~MissionController()
 {
 	scriptTable["clear"]();
 
@@ -72,7 +74,7 @@ void MissionController::clear()
 	lua["gameObjects"] = lua.create_table();
 }
 
-void MissionController::init(Bloodworks *bloodworks)
+MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 

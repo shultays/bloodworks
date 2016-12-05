@@ -23,10 +23,9 @@ class MissionController
 	
 	std::unordered_map<int, GameObject*> gameObjects;
 public:
-	MissionController(){}
+	MissionController(Bloodworks *bloodworks);
+	~MissionController();
 	void loadMissionController(const std::string& missionControllerData);
-	void clear();
-	void init(Bloodworks *bloodworks);
 	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);

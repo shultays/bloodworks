@@ -4,7 +4,7 @@
 #include "sol.h"
 
 
-void MonsterController::init(Bloodworks *bloodworks)
+MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
@@ -124,7 +124,7 @@ void MonsterController::tick()
 	}
 }
 
-void MonsterController::clear()
+MonsterController::~MonsterController()
 {
 	for (auto& monster : monsters)
 	{
