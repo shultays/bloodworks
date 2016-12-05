@@ -4,6 +4,8 @@
 #include "cGlobals.h"
 #include "lua.h"
 #include "Gun.h"
+#include "Bloodworks.h"
+#include "Player.h"
 
 BulletController::BulletController(Bloodworks *bloodworks)
 {
@@ -62,3 +64,19 @@ void BulletController::tick()
 	}
 }
 
+
+Bullet* BulletController::addCustomBullet(const sol::table& params)
+{
+	Vec2 dir = bloodworks->getPlayer()->getAimDir();
+	Bullet *bullet = new Bullet(bloodworks, nullptr);
+	Player *player = bloodworks->getPlayer();
+
+	bullet->pos = player->getPos() + player->getAimDir() * 20;
+	bullet->moveSpeed = 20.0f;
+	bullet->moveAngle = player->getAimDir().toAngle();
+	bullet->radius = 2.0f;
+	bullet->damage = 10;
+	bloodworks->getBulletController()->addBullet(bullet);
+
+	return bullet;
+}

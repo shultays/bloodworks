@@ -32,7 +32,7 @@ public:
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);
 	void damageMonstersInRangeWithIgnoreData(const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData);
 
-	Monster* createMonster(const std::string& monsterTemplateName);
+	Monster* addMonster(const std::string& monsterTemplateName);
 	int getMonsterCount() const;
 	Monster* getMonster(int id) const;
 };

@@ -99,19 +99,3 @@ void MissionController::removeGameObject(int id)
 	SAFE_DELETE(gameObject);
 	gameObjects.erase(id);
 }
-
-Bullet* MissionController::addCustomBullet(const sol::table& params)
-{
-	Vec2 dir = bloodworks->getPlayer()->getAimDir();
-	Bullet *bullet = new Bullet(bloodworks, nullptr);
-	Player *player = bloodworks->getPlayer();
-
-	bullet->pos = player->getPos() + player->getAimDir() * 20;
-	bullet->moveSpeed = 20.0f;
-	bullet->moveAngle = player->getAimDir().toAngle();
-	bullet->radius = 2.0f;
-	bullet->damage = 10;
-	bloodworks->getBulletController()->addBullet(bullet);
-
-	return bullet;
-}

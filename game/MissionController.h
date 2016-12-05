@@ -29,5 +29,4 @@ public:
 	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);
-	Bullet* addCustomBullet(const sol::table& params);
 };

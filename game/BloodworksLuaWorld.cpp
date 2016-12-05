@@ -194,14 +194,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("addCustomBullet",
 		[&](const sol::table& params) -> Bullet*
 	{
-		return bloodworks->getMissionController()->addCustomBullet(params);
+		return bloodworks->getBulletController()->addCustomBullet(params);
 	});
 
 
-	lua.set_function("createMonster",
+	lua.set_function("addMonster",
 		[&](std::string monsterTemplate) -> Monster*
 	{
-		return bloodworks->getMonsterController()->createMonster(monsterTemplate);
+		return bloodworks->getMonsterController()->addMonster(monsterTemplate);
 	});
 
 	lua.set_function("getMonsterCount",

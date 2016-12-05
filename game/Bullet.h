@@ -12,7 +12,6 @@ class cParticle;
 class Bullet
 {
 	friend class BulletController;
-	friend class MissionController;
 	friend class Gun;
 	friend class BloodworksLuaWorld;
 

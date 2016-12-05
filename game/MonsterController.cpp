@@ -223,7 +223,7 @@ void MonsterController::damageMonstersInRangeWithIgnoreData(const Vec2& pos, flo
 	}
 }
 
-Monster* MonsterController::createMonster(const std::string& monsterTemplateName)
+Monster* MonsterController::addMonster(const std::string& monsterTemplateName)
 {
 	MonsterTemplate *monsterTemplate = monsterTemplates[monsterTemplateName];
 
