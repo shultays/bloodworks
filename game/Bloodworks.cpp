@@ -155,6 +155,7 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/pistol/data.json");
 	guns.push_back(gun);
+	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/laser_pistol/data.json");
@@ -171,16 +172,15 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/rocketlauncher/data.json");
 	guns.push_back(gun);
+	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/shotgun/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/rifle/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	Bonus *bonus;
 

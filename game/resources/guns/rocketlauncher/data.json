@@ -3,7 +3,7 @@
   "artFolder" : "resources/guns/rocketlauncher/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
-  "bulletSize" : [6.0, 12.0],
+  "bulletSize" : [6.0, 6.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 350.0,
   "bulletDamage" : [30, 70],
