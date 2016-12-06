@@ -44,11 +44,17 @@ bloodworks.cpp i temizle
 
 bonuslara şans faktörü ekle
 
+bonuslar yanyana spawn olmasın
+
 renderable group vector tutmasın, linked list i kullansın
 
 trail particle ları timer değilde distance kullansın
 
 bullet trail a (ve particle lara) uniform layabilelim
+
+knock back
+
+
 
 ----------------
 
@@ -91,6 +97,7 @@ ekstra exp duration
 
 
 silahlar
+laser
 pompalı
 bullet trail
 laser
