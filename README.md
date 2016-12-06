@@ -34,4 +34,4 @@ Documentation for scripting part will be here.
 
 ## License
 
-Sol is distributed with a GPLv3 License. You can see [LICENSE.md](https://raw.githubusercontent.com/shultays/bloodworks/master/LICENCE.md) for more info.
+Bloodworks is distributed with a GPLv3 License. You can see [LICENSE.md](https://raw.githubusercontent.com/shultays/bloodworks/master/LICENCE.md) for more info.
