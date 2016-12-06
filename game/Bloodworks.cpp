@@ -348,14 +348,119 @@ void Bloodworks::onPerkUsed(Perk *levelupPerks)
 	usedPerks.push_back(levelupPerks);
 }
 
-std::vector<Gun*>& Bloodworks::getGuns()
+void Bloodworks::tickCamera()
 {
-	return guns;
+	if (cameraCenterPos.x > player->getPos().x + 50.0f)
+	{
+		cameraCenterPos.x = player->getPos().x + 50;
+	}
+	else if (cameraCenterPos.x < player->getPos().x - 50.0f)
+	{
+		cameraCenterPos.x = player->getPos().x - 50;
+	}
+	if (cameraCenterPos.y > player->getPos().y + 50.0f)
+	{
+		cameraCenterPos.y = player->getPos().y + 50;
+	}
+	else if (cameraCenterPos.y < player->getPos().y - 50.0f)
+	{
+		cameraCenterPos.y = player->getPos().y - 50;
+	}
+
+	Vec2 playerAimDir = player->getCrosshairPos();
+	float playerAimLength = playerAimDir.normalize();
+	if (playerAimLength > 30.0f)
+	{
+		float l = playerAimLength - 30.0f;
+
+		cameraPos = cameraCenterPos + playerAimDir * l * 0.1f;
+	}
+	else
+	{
+		cameraPos = cameraCenterPos;
+	}
+
+	float approachToEdgeSize = 100.0f;
+	float horizontalMaxMove = getScreenDimensions().x * 0.5f - approachToEdgeSize;
+	float verticalMaxMove = getScreenDimensions().y * 0.5f - approachToEdgeSize;
+
+	if (cameraPos.x < mapBegin.x + horizontalMaxMove)
+	{
+		cameraPos.x = mapBegin.x + horizontalMaxMove;
+	}
+	else if (cameraPos.x > mapEnd.x - horizontalMaxMove)
+	{
+		cameraPos.x = mapEnd.x - horizontalMaxMove;
+	}
+
+	if (cameraPos.y < mapBegin.y + verticalMaxMove)
+	{
+		cameraPos.y = mapBegin.y + verticalMaxMove;
+	}
+	else if (cameraPos.y > mapEnd.y - verticalMaxMove)
+	{
+		cameraPos.y = mapEnd.y - verticalMaxMove;
+	}
+
 }
 
-std::vector<Bonus*>& Bloodworks::getBonuses()
+void Bloodworks::tickGameSlowdown()
 {
-	return bonuses;
+	if (levelUpPopup->isVisible() == false && input.isKeyPressed(key_p))
+	{
+		paused = !paused;
+		if (paused)
+		{
+			pausePostProcess->setEnabled(true);
+		}
+	}
+
+	bool changeSlowdown = false;
+	if (paused && pauseSlowdown > 0.0f)
+	{
+		pauseSlowdown -= timer.realDt * 2.0f;
+		if (pauseSlowdown < 0.0f)
+		{
+			pauseSlowdown = 0.0f;
+		}
+		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
+		changeSlowdown = true;
+	}
+	else if (!paused && pauseSlowdown < 1.0f)
+	{
+		pauseSlowdown += timer.realDt * 2.0f;
+		if (pauseSlowdown >= 1.0f)
+		{
+			pauseSlowdown = 1.0f;
+			pausePostProcess->setEnabled(false);
+		}
+		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
+		changeSlowdown = true;
+	}
+
+	if (gamePlaySlowdown > targetGamePlaySlowdown)
+	{
+		gamePlaySlowdown -= timer.realDt;
+		if (gamePlaySlowdown < targetGamePlaySlowdown)
+		{
+			gamePlaySlowdown = targetGamePlaySlowdown;
+		}
+		changeSlowdown = true;
+	}
+	else if (gamePlaySlowdown < targetGamePlaySlowdown)
+	{
+		gamePlaySlowdown += timer.realDt;
+		if (gamePlaySlowdown > targetGamePlaySlowdown)
+		{
+			gamePlaySlowdown = targetGamePlaySlowdown;
+		}
+		changeSlowdown = true;
+	}
+
+	if (changeSlowdown)
+	{
+		setSlowdown(pauseSlowdown * gamePlaySlowdown);
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
@@ -438,123 +543,13 @@ void Bloodworks::tick()
 		perk->onTick();
 	}
 
-	if (cameraCenterPos.x > player->getPos().x + 50.0f)
-	{
-		cameraCenterPos.x = player->getPos().x + 50;
-	}
-	else if (cameraCenterPos.x < player->getPos().x - 50.0f)
-	{
-		cameraCenterPos.x = player->getPos().x - 50;
-	}
-	if (cameraCenterPos.y > player->getPos().y + 50.0f)
-	{
-		cameraCenterPos.y = player->getPos().y + 50;
-	}
-	else if (cameraCenterPos.y < player->getPos().y - 50.0f)
-	{
-		cameraCenterPos.y = player->getPos().y - 50;
-	}
-
-	Vec2 playerAimDir = player->getCrosshairPos();
-	float playerAimLength = playerAimDir.normalize();
-	if (playerAimLength > 30.0f)
-	{
-		float l = playerAimLength - 30.0f;
-
-		cameraPos = cameraCenterPos + playerAimDir * l * 0.1f;
-	}
-	else
-	{
-		cameraPos = cameraCenterPos;
-	}
-
-	float approachToEdgeSize = 100.0f;
-	float horizontalMaxMove = getScreenDimensions().x * 0.5f - approachToEdgeSize;
-	float verticalMaxMove = getScreenDimensions().y * 0.5f - approachToEdgeSize;
-
-	if (cameraPos.x < mapBegin.x + horizontalMaxMove)
-	{
-		cameraPos.x = mapBegin.x + horizontalMaxMove;
-	}
-	else if (cameraPos.x > mapEnd.x - horizontalMaxMove)
-	{
-		cameraPos.x = mapEnd.x - horizontalMaxMove;
-	}
-
-	if (cameraPos.y < mapBegin.y + verticalMaxMove)
-	{
-		cameraPos.y = mapBegin.y + verticalMaxMove;
-	}
-	else if (cameraPos.y > mapEnd.y - verticalMaxMove)
-	{
-		cameraPos.y = mapEnd.y - verticalMaxMove;
-	}
-
+	tickCamera();
 	monsterController->tick();
 	bulletController->tick();
 	dropController->tick();
 	explosionController->tick();
-
-	if (levelUpPopup->isVisible())
-	{
-		levelUpPopup->tick();
-	}
-
-	if (levelUpPopup->isVisible() == false && input.isKeyPressed(key_p))
-	{
-		paused = !paused;
-		if (paused)
-		{
-			pausePostProcess->setEnabled(true);
-		}
-	}
-
-	bool changeSlowdown = false;
-	if (paused && pauseSlowdown > 0.0f)
-	{
-		pauseSlowdown -= timer.realDt * 2.0f;
-		if (pauseSlowdown < 0.0f)
-		{
-			pauseSlowdown = 0.0f;
-		}
-		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
-		changeSlowdown = true;
-	}
-	else if (!paused && pauseSlowdown < 1.0f)
-	{
-		pauseSlowdown += timer.realDt * 2.0f;
-		if (pauseSlowdown >= 1.0f)
-		{
-			pauseSlowdown = 1.0f;
-			pausePostProcess->setEnabled(false);
-		}
-		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
-		changeSlowdown = true;
-	}
-
-	if (gamePlaySlowdown > targetGamePlaySlowdown)
-	{
-		gamePlaySlowdown -= timer.realDt;
-		if (gamePlaySlowdown < targetGamePlaySlowdown)
-		{
-			gamePlaySlowdown = targetGamePlaySlowdown;
-		}
-		changeSlowdown = true;
-	}
-	else if (gamePlaySlowdown < targetGamePlaySlowdown)
-	{
-		gamePlaySlowdown += timer.realDt;
-		if (gamePlaySlowdown > targetGamePlaySlowdown)
-		{
-			gamePlaySlowdown = targetGamePlaySlowdown;
-		}
-		changeSlowdown = true;
-	}
-
-	if (changeSlowdown)
-	{
-		setSlowdown(pauseSlowdown * gamePlaySlowdown);
-	}
+	levelUpPopup->tick();
+	tickGameSlowdown();
 }
 
 void Bloodworks::render()

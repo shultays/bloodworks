@@ -101,6 +101,10 @@ void LevelUpPopup::show()
 
 void LevelUpPopup::tick()
 {
+	if (!isVisible())
+	{
+		return;
+	}
 	float alpha = levelupGroup->getColor().a;
 	if (alpha < 1.0f)
 	{
