@@ -86,6 +86,8 @@ protected:
 	virtual void tick() override;
 	virtual void init() override;
 
+	void tickCamera();
+	void tickGameSlowdown();
 public:
 	Bloodworks() {}
 	virtual ~Bloodworks();
@@ -103,6 +105,16 @@ public:
 	MissionController* getMissionController() const
 	{
 		return missionController;
+	}
+
+	std::vector<Gun*>& Bloodworks::getGuns()
+	{
+		return guns;
+	}
+
+	std::vector<Bonus*>& Bloodworks::getBonuses()
+	{
+		return bonuses;
 	}
 
 	Player* getPlayer()
@@ -153,6 +165,4 @@ public:
 	void doUnpause();
 	std::vector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
-	std::vector<Gun*>& getGuns();
-	std::vector<Bonus*>& getBonuses();
 };
