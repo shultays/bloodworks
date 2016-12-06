@@ -23,6 +23,8 @@ class cParticleTemplate
 	int attributeSize;
 	int uvIndex;
 
+	bool isStrip;
+
 	struct Attribute
 	{
 		int index;
@@ -100,6 +102,14 @@ public:
 
 		lua.set_function("addAttribute", addAtribute);
 
+		if (j.count("isStrip"))
+		{
+			isStrip = j["isStrip"].get<bool>();
+		}
+		else
+		{
+			isStrip = false;
+		}
 
 		if (j["textures"].is_array())
 		{
@@ -152,6 +162,8 @@ class cParticle : public cRenderable
 	int maxBufferSize;
 	std::vector<QuadBufferData> quadBuffers;
 	sol::table args;
+
+	bool nextIsStripBegining;
 public:
 
 	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderable(game)
@@ -162,6 +174,7 @@ public:
 		buff = new char[particleTemplate->attributeSize * 4];
 		this->args = args;
 		maxBufferSize = 0;
+		nextIsStripBegining = true;
 	}
 
 	~cParticle()
@@ -183,7 +196,7 @@ public:
 
 	void addParticle(const Vec2& pos, sol::table& params)
 	{
-		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD)
+		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD * 4)
 		{
 			QuadBufferData bufferData;
 			bufferData.count = 0;
@@ -208,7 +221,9 @@ public:
 
 		particleTemplate->scriptTable["addParticle"](params, pos, args);
 
-		memset(buff, 0, particleTemplate->attributeSize * 4);
+		int particleNumToAdd = particleTemplate->isStrip ? 2 : 4;
+
+		memset(buff, 0, particleTemplate->attributeSize * particleNumToAdd);
 
 		int vertexSize = particleTemplate->attributeSize;
 
@@ -245,21 +260,39 @@ public:
 			}
 		}
 
-		memcpy(buff + vertexSize * 1, buff, vertexSize);
-		memcpy(buff + vertexSize * 2, buff, vertexSize);
-		memcpy(buff + vertexSize * 3, buff, vertexSize);
+		if (particleNumToAdd == 4)
+		{
+			memcpy(buff + vertexSize * 1, buff, vertexSize);
+			memcpy(buff + vertexSize * 2, buff, vertexSize);
+			memcpy(buff + vertexSize * 3, buff, vertexSize);
 
 
-		*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
-		*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
-		*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
-		*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+			*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
+			*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
+			*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
+			*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+		}
+		else
+		{
+			memcpy(buff + vertexSize * 1, buff, vertexSize);
 
+			if (nextIsStripBegining)
+			{
+				*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
+				*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
+			}
+			else
+			{
+				*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
+				*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+			}
+			nextIsStripBegining = !nextIsStripBegining;
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, bufferData.count * vertexSize * 4, vertexSize * 4, buff);
+		glBufferSubData(GL_ARRAY_BUFFER, vertexSize * bufferData.count, vertexSize * particleNumToAdd, buff);
 
-		bufferData.count++;
+		bufferData.count += particleNumToAdd;
 		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 	}
 
@@ -307,7 +340,14 @@ public:
 				{
 					particleTemplate->shader->bindAttribute(attribute.index, particleTemplate->attributeSize, attribute.begin);
 				}
-				glDrawArrays(GL_QUADS, 0, bufferData.count * 4);
+				if (particleTemplate->isStrip)
+				{
+					glDrawArrays(GL_QUAD_STRIP, 0, bufferData.count);
+				}
+				else
+				{
+					glDrawArrays(GL_QUADS, 0, bufferData.count);
+				}
 			}
 
 			glDisableVertexAttribArray(0);
