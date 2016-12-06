@@ -1,0 +1,16 @@
+{
+  "name": "Shotgun",
+  "artFolder" : "resources/guns/shotgun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [8.0, 8.0],
+  "bulletMeshShift" : [-14.0, 0.0],
+  "bulletRadius" : 2.0,
+  "bulletSpeed" : 850.0,
+  "bulletDamage" : [30, 70],
+  
+  "hideSpread" : true,
+  
+  "scriptFile" : "resources/guns/shotgun/shotgun.lua",
+  "scriptName" : "Shotgun"
+}

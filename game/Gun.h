@@ -46,6 +46,7 @@ class Gun
 	bool rightMouseDown;
 	bool rightMouseReleased;
 
+	bool hideSpread;
 
 public:
 	Gun() {}
@@ -64,4 +65,5 @@ public:
 		return name;
 	}
 	const std::string& getIconPath() const;
+	bool spreadVisible() const;
 };

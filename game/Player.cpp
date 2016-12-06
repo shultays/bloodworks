@@ -260,7 +260,7 @@ void Player::tick()
 		aimAngle = aimDir.toAngle();
 	}
 
-	if (gun)
+	if (gun && gun->spreadVisible())
 	{
 		float newSpreadAngle = gun->getSpreadAngle();
 		const float maxAngleChange = 1.0f * dt;
@@ -283,14 +283,20 @@ void Player::tick()
 			}
 		}
 		oldSpreadAngle = newSpreadAngle;
+
+		spread->setWorldMatrix(Mat3::scaleMatrix(sin(oldSpreadAngle) * length + 10.0f).translateBy(pos + crosshairPos));
+		spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4, 0.0f, 0.4f)));
+
+		spread->setVisible(true);
+	}
+	else
+	{
+		spread->setVisible(false);
 	}
 
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(14.0f).translateBy(pos + crosshairPos));
 	crosshair->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.7f));
 	
-	spread->setWorldMatrix(Mat3::scaleMatrix(sin(oldSpreadAngle) * length + 10.0f).translateBy(pos + crosshairPos));
-	spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4, 0.0f, 0.4f)));
-
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
 	Mat3 mat = Mat3::identity();
