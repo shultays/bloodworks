@@ -1,0 +1,13 @@
+{
+  "name": "Laser Pistol",
+  "artFolder" : "resources/guns/laser_pistol/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 4.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [45, 80],
+  
+  "scriptFile" : "resources/guns/laser_pistol/laser_pistol.lua",
+  "scriptName" : "LaserPistol"
+}

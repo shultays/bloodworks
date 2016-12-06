@@ -144,10 +144,7 @@ void Monster::doDamage(int damage, const Vec2& dir)
 	}
 	else
 	{
-		// if (randFloat() < 0.7f)
-		{
-			bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 7.0f);
-		}
+		bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
 	}
 }
 
@@ -164,7 +161,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	{
 		scriptTable["onKilled"](id);
 	}
-	bloodworks->getBloodRenderable()->addBlood(position, blowDir);
+	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 22.0f);
 
 	if (randFloat() < 0.1f || input.isKeyDown(key_1))
 	{

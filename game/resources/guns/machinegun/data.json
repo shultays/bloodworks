@@ -3,9 +3,9 @@
   "artFolder" : "resources/guns/machinegun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
-  "bulletSize" : [10.0, 10.0],
+  "bulletSize" : [8.0, 8.0],
   "bulletRadius" : 1.0,
-  "bulletSpeed" : 450.0,
+  "bulletSpeed" : 550.0,
   "bulletDamage" : [10, 25],
   
   "scriptFile" : "resources/guns/machinegun/machine.lua",

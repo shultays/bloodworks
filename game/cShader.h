@@ -651,6 +651,7 @@ public:
 		glDisableVertexAttribArray(attributes[index].location);
 		attributes[index].setData((void*)&data);
 	}
+
 	/*
 	void setUniform(const char *name, void* data)
 	{

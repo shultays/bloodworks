@@ -7,20 +7,24 @@ function BulletTrailParticle.initSystem()
 	addAttribute("scaleSpeed", "float")
 	addAttribute("initialAlpha", "float")
 	addAttribute("fadeOutSpeed", "float")
+	
+	addUniform("lastBulletTime", "float")
 end
 
 
 function BulletTrailParticle.addParticle(params, pos)
 	params.pos = Vec2.new(pos.x, pos.y)
 	
-	params.color = Vec3.new(1.0, 1.0, 1.0)
+	params.color = Vec3.new(0.8, 0.6, 0.3)
 	
-	params.initialScale = 8.0
+	params.initialScale = 3.0
 	
-	params.scaleSpeed = 2.0
+	params.scaleSpeed = 5.0
 	
-	params.initialAlpha = 0.8
+	params.initialAlpha = 0.4
 	
-	params.fadeOutSpeed = 0.2
-	params.rotation = 0.0
+	params.fadeOutSpeed = 0.8
+	params.rotation = params.bullet.moveAngle
+	
+	params.lastBulletTime = time - params.particleBeginTime
 end

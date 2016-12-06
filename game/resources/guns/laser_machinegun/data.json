@@ -1,0 +1,13 @@
+{
+  "name": "Laser Machine Gun",
+  "artFolder" : "resources/guns/laser_machinegun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [10.0, 10.0],
+  "bulletRadius" : 1.0,
+  "bulletSpeed" : 450.0,
+  "bulletDamage" : [20, 45],
+  
+  "scriptFile" : "resources/guns/laser_machinegun/laser_machine.lua",
+  "scriptName" : "LaserMachineGun"
+}

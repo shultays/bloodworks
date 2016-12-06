@@ -1,0 +1,14 @@
+{
+  "name": "Pistol",
+  "artFolder" : "resources/guns/pistol/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [8.0, 8.0],
+  "bulletMeshShift" : [-14.0, 0.0],
+  "bulletRadius" : 2.0,
+  "bulletSpeed" : 850.0,
+  "bulletDamage" : [30, 70],
+  
+  "scriptFile" : "resources/guns/pistol/basic.lua",
+  "scriptName" : "Pistol"
+}
