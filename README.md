@@ -26,8 +26,8 @@ Documentation for scripting part will be here.
 - Lua for scripting. Heavy work is done on C++ side while gameplay is mostly on Lua.
 - json reader of nlohmann (https://github.com/nlohmann/json)
 - sol2 for C++ & Lua interaction (https://github.com/ThePhD/sol2/)
-- Art is mostly from http://opengameart.org/. Check "game/thanks.txt" for more info.
+- Art is mostly from http://opengameart.org/. Check [game/thanks.txt](https://raw.githubusercontent.com/shultays/bloodworks/master/game/thanks.txt) for more info.
 
 ## License
 
-Sol is distributed with a GPLv3 License. You can see LICENSE.md for more info.
+Sol is distributed with a GPLv3 License. You can see [LICENSE.md](https://raw.githubusercontent.com/shultays/bloodworks/master/LICENCE.md) for more info.
