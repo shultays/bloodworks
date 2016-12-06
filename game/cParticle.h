@@ -38,6 +38,14 @@ class cParticleTemplate
 	std::vector<cTextureShr> textures;
 	std::vector<GLuint> emptyBuffers;
 
+	struct Uniform
+	{
+		int index;
+		std::string name;
+		int type;
+	};
+	std::vector<Uniform> uniforms;
+
 	int uCurrentTime;
 public:
 
@@ -102,6 +110,38 @@ public:
 
 		lua.set_function("addAttribute", addAtribute);
 
+
+		auto addUniform = [&](const std::string& uniformName, const std::string& uniformType)
+		{
+			Uniform uniform;
+
+			if (uniformType == "float")
+			{
+				uniform.type = TypeFloat;
+			}
+			else if (uniformType == "vec2")
+			{
+				uniform.type = TypeVec2;
+			}
+			else if (uniformType == "vec3")
+			{
+				uniform.type = TypeVec3;
+			}
+			else if (uniformType == "vec4")
+			{
+				uniform.type = TypeVec4;
+			}
+			else
+			{
+				assert(!"Unknown uniform type");
+			}
+			uniform.name = uniformName;
+			uniform.index = shader->addUniform(uniformName.c_str(), uniform.type).index;
+			uniforms.push_back(uniform);
+		};
+
+		lua.set_function("addUniform", addUniform);
+
 		if (j.count("isStrip"))
 		{
 			isStrip = j["isStrip"].get<bool>();
@@ -146,7 +186,7 @@ public:
 };
 
 
-class cParticle : public cRenderable
+class cParticle : public cRenderableWithShader
 {
 	float time;
 	cParticleTemplate *particleTemplate;
@@ -166,7 +206,7 @@ class cParticle : public cRenderable
 	bool nextIsStripBegining;
 public:
 
-	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderable(game)
+	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderableWithShader(game, particleTemplate->shader)
 	{
 		this->particleTemplate = particleTemplate;
 		time = timer.getTime();
@@ -218,7 +258,7 @@ public:
 		}
 
 		QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
-
+		params["particleBeginTime"] = time;
 		particleTemplate->scriptTable["addParticle"](params, pos, args);
 
 		int particleNumToAdd = particleTemplate->isStrip ? 2 : 4;
@@ -226,6 +266,28 @@ public:
 		memset(buff, 0, particleTemplate->attributeSize * particleNumToAdd);
 
 		int vertexSize = particleTemplate->attributeSize;
+
+		for (auto& uniform : particleTemplate->uniforms)
+		{
+			if (params[uniform.name])
+			{
+				switch (uniform.type)
+				{
+				case TypeFloat:
+					setUniform(uniform.index, params[uniform.name].get<float>());
+					break;
+				case TypeVec2:
+					setUniform(uniform.index, params[uniform.name].get<Vec2>());
+					break;
+				case TypeVec3:
+					setUniform(uniform.index, params[uniform.name].get<Vec3>());
+					break;
+				case TypeVec4:
+					setUniform(uniform.index, params[uniform.name].get<Vec4>());
+					break;
+				}
+			}
+		}
 
 		for (auto& attribute : particleTemplate->attributes)
 		{
@@ -283,8 +345,8 @@ public:
 			}
 			else
 			{
-				*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
-				*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+				*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+				*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
 			}
 			nextIsStripBegining = !nextIsStripBegining;
 		}
@@ -314,11 +376,11 @@ public:
 				}
 			}
 
-			game->lastShader = nullptr;
-
+			game->lastShader = particleTemplate->shader;
 			particleTemplate->shader->begin();
 			particleTemplate->shader->setUniform(particleTemplate->uCurrentTime, timer.getTime() - time);
 
+			cRenderableWithShader::render(isIdentity, mat);
 			glActiveTexture(GL_TEXTURE0);
 
 			for (int i = (int)particleTemplate->textures.size() - 1; i >= 0; i--)
@@ -334,19 +396,22 @@ public:
 			glEnableVertexAttribArray(0);
 			for (auto& bufferData : quadBuffers)
 			{
-				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+				if (bufferData.count >= 4)
+				{
+					glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
 
-				for (auto& attribute : particleTemplate->attributes)
-				{
-					particleTemplate->shader->bindAttribute(attribute.index, particleTemplate->attributeSize, attribute.begin);
-				}
-				if (particleTemplate->isStrip)
-				{
-					glDrawArrays(GL_QUAD_STRIP, 0, bufferData.count);
-				}
-				else
-				{
-					glDrawArrays(GL_QUADS, 0, bufferData.count);
+					for (auto& attribute : particleTemplate->attributes)
+					{
+						particleTemplate->shader->bindAttribute(attribute.index, particleTemplate->attributeSize, attribute.begin);
+					}
+					if (particleTemplate->isStrip)
+					{
+						glDrawArrays(GL_QUAD_STRIP, 0, bufferData.count);
+					}
+					else
+					{
+						glDrawArrays(GL_QUADS, 0, bufferData.count);
+					}
 				}
 			}
 

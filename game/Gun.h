@@ -20,6 +20,7 @@ class Gun
 	std::string iconPath;
 	cTextureShr bulletTexture;
 	Vec2 bulletSize;
+	Vec2 bulletMeshShift;
 	float bulletRadius;
 	float bulletSpeed;
 

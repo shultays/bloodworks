@@ -144,6 +144,11 @@ public:
 		shader = resources.getShader(vs.c_str(), ps.c_str());
 	}
 
+	cRenderableWithShader(cGame *game, cShaderShr shader) : cRenderable(game)
+	{
+		this->shader = shader;
+	}
+
 	virtual ~cRenderableWithShader()
 	{
 		shader = nullptr;

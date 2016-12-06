@@ -21,12 +21,24 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	artFolder = j["artFolder"].get<std::string>();
 	fixFolderPath(artFolder);
 
-	bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
+	if (j.count("bulletTexture"))
+	{
+		bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
+		bulletTexture = resources.getTexture(bulletTexturePath.c_str());
+	}
+	if (j.count("bulletMeshShift"))
+	{
+		bulletMeshShift.w = j["bulletMeshShift"].at(0).get<float>();
+		bulletMeshShift.h = j["bulletMeshShift"].at(1).get<float>();
+	}
+	else
+	{
+		bulletMeshShift.setZero();
+	}
 	iconPath = artFolder + j["icon"].get<std::string>();
 
-	bulletTexture = resources.getTexture(bulletTexturePath.c_str());
 	bulletSize.w = j["bulletSize"].at(0).get<float>();
-	bulletSize.h = j["bulletSize"].at(0).get<float>();
+	bulletSize.h = j["bulletSize"].at(1).get<float>();
 	bulletRadius = j["bulletRadius"].get<float>();
 	bulletSpeed = j["bulletSpeed"].get<float>();
 
@@ -114,9 +126,12 @@ Bullet* Gun::addBullet()
 	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
-	renderable->setWorldMatrix(Mat3::scaleMatrix(bulletSize));
-	bullet->addRenderable(renderable);
+	if (bulletTexture != nullptr)
+	{
+		cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
+		renderable->setWorldMatrix(Mat3::scaleMatrix(bulletSize).translateBy(bulletMeshShift));
+		bullet->addRenderable(renderable);
+	}
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	bloodworks->onAddedGunBullet(this, bullet);
