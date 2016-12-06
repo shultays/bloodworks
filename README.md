@@ -6,6 +6,10 @@ You play as a soldier who tries to survive endless waves of monsters that come a
 
 Bloodworks is still in early development. Once it is finished, it will be completely free and open source. I will release the source code once it is more complete, and I would love to other to join me and help me finish it! 
 
+itch.io page
+
+https://shultays.itch.io/bloodworks
+
 ## Sneak Peak
 
 Gameplay test (Youtube)
