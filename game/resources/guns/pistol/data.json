@@ -9,6 +9,6 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [30, 70],
   
-  "scriptFile" : "resources/guns/pistol/basic.lua",
+  "scriptFile" : "resources/guns/pistol/pistol.lua",
   "scriptName" : "Pistol"
 }

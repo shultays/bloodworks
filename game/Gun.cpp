@@ -21,6 +21,15 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 	artFolder = j["artFolder"].get<std::string>();
 	fixFolderPath(artFolder);
 
+	if (j.count("hideSpread"))
+	{
+		hideSpread = j["hideSpread"].get<bool>();
+	}
+	else
+	{
+		hideSpread = false;
+	}
+
 	if (j.count("bulletTexture"))
 	{
 		bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
@@ -109,6 +118,11 @@ sol::table& Gun::getScriptTable()
 const std::string& Gun::getIconPath() const
 {
 	return iconPath;
+}
+
+bool Gun::spreadVisible() const
+{
+	return !hideSpread;
 }
 
 Gun::~Gun()

@@ -1,0 +1,14 @@
+{
+  "name": "Rifle",
+  "artFolder" : "resources/guns/rifle/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [10.0, 10.0],
+  "bulletMeshShift" : [-14.0, 0.0],
+  "bulletRadius" : 2.0,
+  "bulletSpeed" : 950.0,
+  "bulletDamage" : [85, 130],
+  
+  "scriptFile" : "resources/guns/rifle/rifle.lua",
+  "scriptName" : "Rifle"
+}
