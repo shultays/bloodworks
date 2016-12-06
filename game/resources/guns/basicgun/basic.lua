@@ -21,7 +21,6 @@ function BasicGun.onTick(gun)
 				gun.spreadAngle = 0.15
 			end
 			local bullet = gun:addBullet()
-			bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, -8.0), 0.015, {})
 		end
 	end
 end
