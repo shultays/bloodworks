@@ -50,6 +50,8 @@ ilk silahları güncelle (trail ekle ve hızlandır)
 
 renderable group vector tutmasın, linked list i kullansın
 
+trail particle ları timer değilde distance kullansın
+
 ----------------
 
 

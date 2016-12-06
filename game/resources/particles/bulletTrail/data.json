@@ -1,0 +1,14 @@
+
+
+{
+	"maxLifeTime" : 3.0,
+	"isStrip" : true,
+	
+	"vertexShader" : "resources/particles/bulletTrail/shader.vs",
+	"pixelShader" : "resources/particles/bulletTrail/shader.ps",
+	
+	"textures" : "resources/particles/bulletTrail/particle.png",
+	
+	"scriptFile" : "resources/particles/bulletTrail/script.lua",
+	"scriptName" : "BulletTrailParticle"
+}

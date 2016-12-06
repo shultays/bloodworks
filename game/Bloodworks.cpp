@@ -155,6 +155,7 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/basicgun/data.json");
 	guns.push_back(gun);
+	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/machinegun/data.json");
@@ -163,7 +164,6 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/rocketlauncher/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	Bonus *bonus;
 
@@ -209,6 +209,10 @@ void Bloodworks::init()
 
 	particleTemplate = new cParticleTemplate();
 	particleTemplate->init("resources/particles/explosionFire/data.json");
+	particles[particleTemplate->getName()] = particleTemplate;
+
+	particleTemplate = new cParticleTemplate();
+	particleTemplate->init("resources/particles/bulletTrail/data.json");
 	particles[particleTemplate->getName()] = particleTemplate;
 
 	cameraCenterPos.setZero();
