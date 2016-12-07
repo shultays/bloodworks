@@ -12,7 +12,9 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 	lua["mission"] = lua.create_table();
 
-	monsterTemplates["monster"] = new MonsterTemplate("resources/monster/data.json");
+	lua.script_file("resources/monsters/helpers.lua");
+
+	monsterTemplates["monster"] = new MonsterTemplate("resources/monsters/alien/data.json");
 }
 
 void MonsterController::tick()
