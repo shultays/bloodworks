@@ -6,15 +6,7 @@ You play as a soldier who tries to survive endless waves of monsters that come a
 
 Bloodworks is still in early development. Once it is finished, it will be completely free and open source. I will release the source code once it is more complete, and I would love to other to join me and help me finish it! 
 
-itch.io page
-
-https://shultays.itch.io/bloodworks
-
-## Sneak Peak
-
-Gameplay test (Youtube)
-
-[![GamePlayTest](https://img.youtube.com/vi/0d3cv1DFGoE/0.jpg)](https://www.youtube.com/watch?v=0d3cv1DFGoE)
+## Sneak peak
 
 <img src="https://raw.githubusercontent.com/shultays/bloodworks/master/game2.gif" width="600">
 
@@ -34,8 +26,8 @@ Documentation for scripting part will be here.
 - Lua for scripting. Heavy work is done on C++ side while gameplay is mostly on Lua.
 - json reader of nlohmann (https://github.com/nlohmann/json)
 - sol2 for C++ & Lua interaction (https://github.com/ThePhD/sol2/)
-- Art is mostly from http://opengameart.org/. Check [game/thanks.txt](https://raw.githubusercontent.com/shultays/bloodworks/master/game/thanks.txt) for more info.
+- Art is mostly from http://opengameart.org/. Check "game/thanks.txt" for more info.
 
 ## License
 
-Bloodworks is distributed with a GPLv3 License. You can see [LICENSE.md](https://raw.githubusercontent.com/shultays/bloodworks/master/LICENCE.md) for more info.
+Sol is distributed with a GPLv3 License. You can see [LICENSE.md](https://raw.githubusercontent.com/shultays/bloodworks/master/LICENCE.md) for more info.
