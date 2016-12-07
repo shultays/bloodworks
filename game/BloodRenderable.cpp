@@ -84,7 +84,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		{
 			continue;
 		}
-		float t = (timer.getRenderTime() - bodyPart.time) * 6.0f;
+		float t = (timer.getRenderTime() - bodyPart.time) * 5.0f;
 		bool remove = false;
 		if (t >= 1.0f)
 		{
