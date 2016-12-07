@@ -1,0 +1,54 @@
+{
+  "name": "Spider",
+  "hitPoint": 100,
+  "artFolder" : "resources/monsters/spider/art",
+  "size" : [24.0, 24.0],
+  "textureShift" : [0.0, 0.0],
+  "bulletRadius" : 16.0,
+  "collisionRadius" : 12.0,
+  "hasBlood" : true,
+  
+  "experience" : 20,
+  
+  "animations" : 
+  {
+	"stand" : 
+	{
+		"default" : true,
+		"looped" : true,
+		"frameDuration" : 0.5,
+		"frames":
+		[
+			"s0.png"
+		]
+	},
+	
+	"walk" : 
+	{
+		"looped" : true,
+		"frameDuration" : 0.1,
+		"frames":
+		[
+			"s0.png",
+			"s1.png",
+			"s2.png"
+		]
+	},
+	
+	"attack" : 
+	{
+		"frameDuration" : 0.1,
+		"frames":
+		[
+			"s0.png",
+			"s1.png",
+			"s2.png"
+		]
+	}
+  },
+  
+  "scriptFile" : "resources/monsters/spider/spider.lua",
+  "scriptName" : "Spider",
+  
+  "bodyParts" : []
+}

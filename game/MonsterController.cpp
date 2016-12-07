@@ -14,7 +14,8 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 	lua.script_file("resources/monsters/helpers.lua");
 
-	monsterTemplates["monster"] = new MonsterTemplate("resources/monsters/alien/data.json");
+	monsterTemplates["alien"] = new MonsterTemplate("resources/monsters/alien/data.json");
+	monsterTemplates["spider"] = new MonsterTemplate("resources/monsters/spider/data.json");
 }
 
 void MonsterController::tick()
