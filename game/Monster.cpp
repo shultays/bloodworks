@@ -145,6 +145,10 @@ void Monster::doDamage(int damage, const Vec2& dir)
 	else
 	{
 		bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+		if (scriptTable["onHit"])
+		{
+			scriptTable["onHit"](this, damage);
+		}
 	}
 }
 
@@ -159,7 +163,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	isDead = true;
 	if (scriptTable["onKilled"])
 	{
-		scriptTable["onKilled"](id);
+		scriptTable["onKilled"](this);
 	}
 	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 22.0f);
 

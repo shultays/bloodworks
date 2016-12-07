@@ -172,7 +172,6 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/rocketlauncher/data.json");
 	guns.push_back(gun);
-	player->setGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/shotgun/data.json");
