@@ -46,6 +46,8 @@ bonuslara şans faktörü ekle
 
 bonuslar yanyana spawn olmasın
 
+bonuslara timer
+
 renderable group vector tutmasın, linked list i kullansın
 
 ----------------
@@ -112,7 +114,6 @@ mayın?
 
 
 yaratıklar
-örümcek (gidip gidip duracak)
 angel (görünce duracak, öbür türlü hızlı)
 blink atan? 
 arada invis atan?
