@@ -50,9 +50,6 @@ renderable group vector tutmasın, linked list i kullansın
 
 trail particle ları timer değilde distance kullansın
 
-mosnter melee attack i generalise et
-
-
 ----------------
 
 
