@@ -48,8 +48,6 @@ bonuslar yanyana spawn olmasın
 
 renderable group vector tutmasın, linked list i kullansın
 
-trail particle ları timer değilde distance kullansın
-
 ----------------
 
 
