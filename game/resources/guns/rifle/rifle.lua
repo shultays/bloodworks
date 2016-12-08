@@ -21,7 +21,7 @@ function Rifle.onTick(gun)
 				gun.spreadAngle = 0.15
 			end
 			local bullet = gun:addBullet()
-			local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 0.015, {})
+			local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 15.0, {})
 			particle.args.initialScale = 3.0
 			particle.args.fadeOutSpeed = 0.8
 		end
