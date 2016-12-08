@@ -238,6 +238,10 @@ void Bloodworks::init()
 	Perk *perk;
 
 	perk = new Perk();
+	perk->load("resources/perks/experience/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
 	perk->load("resources/perks/regen/data.json");
 	perks.push_back(perk);
 
@@ -529,12 +533,6 @@ void Bloodworks::tick()
 
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
-
-	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
-	{
-		perks[0]->takeLevel();
-		onPerkUsed(perks[0]);
-	}
 
 	if (input.isKeyPressed(key_3))
 	{
