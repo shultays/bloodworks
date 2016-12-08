@@ -70,9 +70,10 @@ void Bullet::tick()
 	table["bullet"] = this;
 	for (auto& particleData : particles)
 	{
-		if (particleData.lastSpawnTime < timer.getTime() - particleData.spawnInterval)
+		particleData.moveDistanceSinceSpawn += moveSpeed * dt;
+		if (particleData.moveDistanceSinceSpawn > particleData.spawnDistance)
 		{
-			particleData.lastSpawnTime = timer.getTime();
+			particleData.moveDistanceSinceSpawn -= particleData.spawnDistance;
 			particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), table);
 		}
 	}
@@ -151,13 +152,13 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 }
 
 
-cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, float spawnInterval, const sol::table& args)
+cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, float spawnDistance, const sol::table& args)
 {
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
-	particleData.spawnInterval = spawnInterval;
-	particleData.lastSpawnTime = timer.getTime();
+	particleData.moveDistanceSinceSpawn = spawnDistance;
+	particleData.spawnDistance = spawnDistance;
 	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
 	return particleData.particle;
