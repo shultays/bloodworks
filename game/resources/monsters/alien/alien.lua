@@ -27,9 +27,8 @@ function Alien.init(monster)
 	
 	monster:playAnimation("walk", math.random())
 	
-	monster.data.closestMonsterIndex = -1
-	
 	StunController.init(monster)
+	MonsterGroupHelper.init(monster)
 end
 
 
@@ -70,50 +69,7 @@ function Alien.onTick(monster)
 	
 	
 	local newAngle = diff:getAngle()
-	
-	
-	local closestMonster = nil
-	
-	if data.closestMonsterIndex ~= -1 then
-		closestMonster = getMonster(data.closestMonsterIndex)
-		if closestMonster ~= nil then
-			if closestMonster.position:distanceSquared(monster.position) > 30.0 * 30.0 then
-				closestMonster = nil
-			end
-		end
-	end
-	
-	if closestMonster == nil then
-		data.ignoreThis = true
-		closestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
-	else
-		data.ignoreThis = true
-		local newClosestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
-		
-		if newClosestMonster ~= nil and newClosestMonster ~= closestMonster then
-			if closestMonster.position:distanceSquared(monster.position) > newClosestMonster.position:distanceSquared(monster.position) + 15 * 15 then
-				closestMonster = newClosestMonster
-			end
-		end
-	end
-	
-	if closestMonster ~= nil then
-		data.closestMonsterIndex = closestMonster.index
-		local toOther = closestMonster.position - monster.position;
-		local c = 1.0 - toOther:length() / 30.0
-		local cPlayer = length / 100
-		if cPlayer < 0.0 then
-			cPlayer = 0.0
-		end
-		local dot = toOther:sideVec():dot(diff)
-		if dot > 0.0 then
-			newAngle = newAngle + 0.6 * c * cPlayer
-		else
-			newAngle = newAngle - 0.6 * c * cPlayer
-		end
-	end
+	newAngle = MonsterGroupHelper.fixAngle(monster, newAngle)
 	
 	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, 0.05)
 	

@@ -70,3 +70,63 @@ end
 function MeleeHitImage.clear(monster)
 
 end
+
+MonsterGroupHelper = {}
+
+function MonsterGroupHelper.init(monster, playerIgnoreDistance) 
+	monster.data.closestMonsterIndex = -1
+	if playerIgnoreDistance == nil then
+		monster.data.playerIgnoreDistance = 0.0
+	else
+		monster.data.playerIgnoreDistance = playerIgnoreDistance
+	end
+end
+
+function MonsterGroupHelper.fixAngle(monster, angle) 
+	local closestMonster = nil
+	local data = monster.data
+	if data.closestMonsterIndex ~= -1 then
+		closestMonster = getMonster(data.closestMonsterIndex)
+		if closestMonster ~= nil then
+			if closestMonster.position:distanceSquared(monster.position) > 30.0 * 30.0 then
+				closestMonster = nil
+			end
+		end
+	end
+	
+	if closestMonster == nil then
+		data.ignoreThis = true
+		closestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
+		data.ignoreThis = false
+	else
+		data.ignoreThis = true
+		local newClosestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
+		data.ignoreThis = false
+		
+		if newClosestMonster ~= nil and newClosestMonster ~= closestMonster then
+			if closestMonster.position:distanceSquared(monster.position) > newClosestMonster.position:distanceSquared(monster.position) + 15 * 15 then
+				closestMonster = newClosestMonster
+			end
+		end
+	end
+	
+	if closestMonster ~= nil then
+		data.closestMonsterIndex = closestMonster.index
+		local toOther = closestMonster.position - monster.position;
+		local c = 1.0 - toOther:length() / 30.0
+			
+		local diff = player.position - monster.position
+		local distancePlayer = diff:length()
+		local cPlayer = (distancePlayer - data.playerIgnoreDistance) / 100
+		if cPlayer < 0.0 then
+			cPlayer = 0.0
+		end
+		local dot = toOther:sideVec():dot(diff)
+		if dot > 0.0 then
+			angle = angle + 0.6 * c * cPlayer
+		else
+			angle = angle - 0.6 * c * cPlayer
+		end
+	end
+	return angle
+end
