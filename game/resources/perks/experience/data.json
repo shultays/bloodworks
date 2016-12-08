@@ -1,0 +1,8 @@
+{
+  "name": "Experience",
+  "description": "You gain experience depending on your level.",
+  "iconFile" : "resources/perks/experience/icon.png",
+  "scriptFile" : "resources/perks/experience/experience.lua",
+  "scriptName" : "ExperiencePerk",
+  "maxLevel" : -1
+}
