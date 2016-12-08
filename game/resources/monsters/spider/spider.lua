@@ -77,7 +77,7 @@ function Spider.onTick(monster)
 	
 	
 
-	local cPlayer = (length - 20.0) / 100.0
+	local cPlayer = (length - 20.0) / 150.0
 	
 	if cPlayer > 1.0 then
 		cPlayer = 1.0
@@ -91,7 +91,7 @@ function Spider.onTick(monster)
 			data.targetAngle = approachAngle(data.targetAngle, diff:getAngle(), 0.04 + 0.08 * cPlayer)
 		end
 		
-		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.03)
+		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.02)
 		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, monster.moveAngle)
 		monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, 0.03)
 		data.moveTimer = data.moveTimer - dt
