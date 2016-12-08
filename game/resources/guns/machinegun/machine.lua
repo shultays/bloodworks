@@ -10,7 +10,9 @@ function MachineGun.onTick(gun)
 	if gun.leftMouseDown then
 		if ShootTimer.CheckGun(gun) then
 			local bullet = gun:addBullet()
-			bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 0.015, {})
+			local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 0.015, {})
+			particle.args.initialScale = 2.0
+			particle.args.fadeOutSpeed = 1.2
 		end
 	end
 end
