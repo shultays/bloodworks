@@ -1,5 +1,6 @@
 
 function Alien.init(monster)
+	data = monster.data
 	monster:setScale(math.random() * 0.4 + 0.5)
 
 	local r = math.floor(255 * math.random())
@@ -29,6 +30,7 @@ function Alien.init(monster)
 	
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
+	MonsterMeleeHelper.init(monster)
 end
 
 
@@ -38,40 +40,18 @@ end
 
 
 function Alien.onTick(monster)
-    local data = monster.data
-	local diff = player.position - monster.position
-	local length = diff:length()
+    data = monster.data
 	
-	if length < 20 + monster.collisionRadius then
-		if data.moving or data.lastHitTime + 1.5 < time then
-			data.lastHitTime = time
-			data.moving = false
-			monster:playAnimation("attack")
-			data.willHit = true
-		end
-		if data.willHit and data.lastHitTime + 0.2 < time then
-			data.willHit = false
-			player:doDamage(math.floor(5 + math.random() * 6))
-			
-            if player.slowdownOnHit then
-                player:slowdown(0.4, 0.15)
-			end
-            
-			MeleeHitImage.build(monster)
-		end
-	else
-		data.willHit = false
-		if data.moving == false then
-			data.moving = true
-			monster:playAnimation("walk", math.random())
-		end
-	end
+	diffToPlayer = player.position - monster.position
+	distanceToPlayer = diffToPlayer:length()
+	angleToPlayer = diffToPlayer:getAngle()
 	
 	
-	local newAngle = diff:getAngle()
-	newAngle = MonsterGroupHelper.fixAngle(monster, newAngle)
+	MonsterMeleeHelper.onTick(monster)
 	
-	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, 0.05)
+	newAngle = MonsterGroupHelper.fixAngle(monster, angleToPlayer)
+	
+	monster.moveAngle = approachAngle(monster.moveAngle, angleToPlayer, 0.05)
 	
 	if data.moving then
 		monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);
