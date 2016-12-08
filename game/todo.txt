@@ -52,8 +52,9 @@ trail particle ları timer değilde distance kullansın
 
 bullet trail a (ve particle lara) uniform layabilelim
 
-knock back
+spider a direction ekle
 
+mosnter melee attack i generalise et
 
 
 ----------------

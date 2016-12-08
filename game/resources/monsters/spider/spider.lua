@@ -20,16 +20,21 @@ function Spider.init(monster)
 	local diff = player.position - monster.position
 	
 	monster.moveSpeed = 0
-	monster.moveAngle =  0
+	monster.moveAngle = math.random() * math.pi * 2.0
+	monster.data.targetAngle = monster.moveAngle - 0.4 + math.random() * 0.8
 	monster.data.moving = true
 	monster.data.lastHitTime = 0.0
 	
+	monster.data.moveTimer = -0.5 + math.random() * 2.5
+	if monster.data.moveTimer > 0.0 then
+		monster:playAnimation("walk", math.random())
+	else
+		monster:playAnimation("stand", math.random())
 	
-	monster:playAnimation("walk", math.random())
-	
-	monster.data.closestMonsterIndex = -1
+	end
 	
 	StunController.init(monster)
+	MonsterGroupHelper.init(monster, 30.0)
 end
 
 
@@ -40,6 +45,7 @@ end
 
 function Spider.onTick(monster)
     local data = monster.data
+	
 	local diff = player.position - monster.position
 	local length = diff:length()
 	
@@ -69,57 +75,41 @@ function Spider.onTick(monster)
 	end
 	
 	
-	local newAngle = diff:getAngle()
 	
+
+	local cPlayer = (length - 100.0) / 50.0
 	
-	local closestMonster = nil
-	
-	if data.closestMonsterIndex ~= -1 then
-		closestMonster = getMonster(data.closestMonsterIndex)
-		if closestMonster ~= nil then
-			if closestMonster.position:distanceSquared(monster.position) > 30.0 * 30.0 then
-				closestMonster = nil
-			end
-		end
+	if cPlayer > 1.0 then
+		cPlayer = 1.0
+	elseif cPlayer < 0.0 then
+		cPlayer = 0.0
 	end
 	
-	if closestMonster == nil then
-		data.ignoreThis = true
-		closestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
-	else
-		data.ignoreThis = true
-		local newClosestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
+	if data.moveTimer > 0.0 then
+
+		if cPlayer < 1.0 then
+			data.targetAngle = approachAngle(data.targetAngle, diff:getAngle(), 0.04 + 0.08 * cPlayer)
+		end
 		
-		if newClosestMonster ~= nil and newClosestMonster ~= closestMonster then
-			if closestMonster.position:distanceSquared(monster.position) > newClosestMonster.position:distanceSquared(monster.position) + 15 * 15 then
-				closestMonster = newClosestMonster
-			end
+		data.targetAngle = MonsterGroupHelper.fixAngle(monster, data.targetAngle)
+		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.03)
+		data.moveTimer = data.moveTimer - dt
+		if data.moveTimer <= 0.0 then
+			monster:playAnimation("stand", math.random())
 		end
-	end
-	
-	if closestMonster ~= nil then
-		data.closestMonsterIndex = closestMonster.index
-		local toOther = closestMonster.position - monster.position;
-		local c = 1.0 - toOther:length() / 30.0
-		local cPlayer = length / 100
-		if cPlayer < 0.0 then
-			cPlayer = 0.0
-		end
-		local dot = toOther:sideVec():dot(diff)
-		if dot > 0.0 then
-			newAngle = newAngle + 0.6 * c * cPlayer
+		if data.moving then
+			monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);
 		else
-			newAngle = newAngle - 0.6 * c * cPlayer
+			monster.moveSpeed = 0.0;
+		end
+	else
+		monster.moveSpeed = 0.0
+		data.moveTimer = data.moveTimer - dt
+		if data.moveTimer <= -1.0 then
+			monster:playAnimation("walk", math.random())
+			monster.data.moveTimer = 0.5 + math.random() * 2.5
+			data.targetAngle = diff:getAngle() + cPlayer * (- 0.8 + math.random() * 1.6)
 		end
 	end
 	
-	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, 0.05)
-	
-	if data.moving then
-		monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);
-	else
-		monster.moveSpeed = 0.0;
-	end
 end
