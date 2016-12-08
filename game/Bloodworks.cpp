@@ -481,6 +481,11 @@ void Bloodworks::tickGameSlowdown()
 	{
 		setSlowdown(pauseSlowdown * gamePlaySlowdown);
 	}
+
+	if (input.isKeyDown(key_m))
+	{
+		setSlowdown(0.1f);
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
