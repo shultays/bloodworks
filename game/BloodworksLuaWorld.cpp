@@ -141,6 +141,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return approachAngle(angle, angleToApproach, maxRotation);
 	});
 
+	lua.set_function("angleDiff",
+		[&](float angle, float angleToApproach) -> float
+	{
+		return angleDiff(angle, angleToApproach);
+	});
+
 	lua.set_function("multiplyGameSpeed", [&](float multiplier)
 	{
 		bloodworks->multiplyGameSpeed(multiplier);
