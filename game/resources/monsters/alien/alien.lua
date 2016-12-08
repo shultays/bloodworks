@@ -51,7 +51,7 @@ function Alien.onTick(monster)
 	
 	newAngle = MonsterGroupHelper.fixAngle(monster, angleToPlayer)
 	
-	monster.moveAngle = approachAngle(monster.moveAngle, angleToPlayer, 0.05)
+	monster.moveAngle = approachAngle(monster.moveAngle, angleToPlayer, 0.05 * timeScale)
 	
 	if data.moving then
 		monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);

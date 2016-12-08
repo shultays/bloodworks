@@ -81,6 +81,8 @@ class Bloodworks : public cGame
 
 	bool paused;
 
+	bool showFps;
+
 protected:
 	virtual void render() override;
 	virtual void tick() override;

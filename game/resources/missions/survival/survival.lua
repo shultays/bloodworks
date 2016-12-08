@@ -19,7 +19,7 @@ function Survival.onTick()
 		local v = Vec2.new(math.random() * 600 - 300, math.random() * 500 - 250)
 		local ang = math.pi * 2.0 * math.random()
 		local vShift = Vec2.new(math.cos(ang), math.sin(ang)) * 50.0
-		local monsters = {"alien", "alien"}
+		local monsters = {"alien", "spider"}
 		local selected = monsters[ math.random( #monsters ) ] 
 		for i = 1, 6 do
 			local monster = addMonster(selected)
