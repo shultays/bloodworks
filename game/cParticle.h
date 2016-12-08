@@ -201,10 +201,10 @@ class cParticle : public cRenderableWithShader
 
 	int maxBufferSize;
 	std::vector<QuadBufferData> quadBuffers;
-	sol::table args;
 
 	bool nextIsStripBegining;
 public:
+	sol::table args; // todo move to private
 
 	cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderableWithShader(game, particleTemplate->shader)
 	{

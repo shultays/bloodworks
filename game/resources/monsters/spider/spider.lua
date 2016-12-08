@@ -1,5 +1,6 @@
 
 function Spider.init(monster)
+	data = monster.data
 	monster:setScale(math.random() * 0.4 + 0.5)
 
 	local r = math.floor(255 * math.random())
@@ -34,7 +35,9 @@ function Spider.init(monster)
 	end
 	
 	StunController.init(monster)
-	MonsterGroupHelper.init(monster, 30.0)
+	MonsterGroupHelper.init(monster)
+	monster.data.playerIgnoreDistance = 30.0
+	MonsterMeleeHelper.init(monster)
 end
 
 
@@ -44,40 +47,16 @@ end
 
 
 function Spider.onTick(monster)
-    local data = monster.data
+    data = monster.data
 	
-	local diff = player.position - monster.position
-	local length = diff:length()
+	diffToPlayer = player.position - monster.position
+	distanceToPlayer = diffToPlayer:length()
+	angleToPlayer = diffToPlayer:getAngle()
 	
-	if length < 20 + monster.collisionRadius then
-		if data.moving or data.lastHitTime + 1.5 < time then
-			data.lastHitTime = time
-			data.moving = false
-			monster:playAnimation("attack")
-			data.willHit = true
-		end
-		if data.willHit and data.lastHitTime + 0.2 < time then
-			data.willHit = false
-			player:doDamage(math.floor(5 + math.random() * 6))
-			
-            if player.slowdownOnHit then
-                player:slowdown(0.4, 0.15)
-			end
-            
-			MeleeHitImage.build(monster)
-		end
-	else
-		data.willHit = false
-		if data.moving == false then
-			data.moving = true
-			monster:playAnimation("walk", math.random())
-		end
-	end
-	
-	
+	MonsterMeleeHelper.onTick(monster)
 	
 
-	local cPlayer = (length - 20.0) / 150.0
+	local cPlayer = (distanceToPlayer - 20.0) / 150.0
 	
 	if cPlayer > 1.0 then
 		cPlayer = 1.0
@@ -88,7 +67,7 @@ function Spider.onTick(monster)
 	if data.moveTimer > 0.0 then
 
 		if cPlayer < 1.0 then
-			data.targetAngle = approachAngle(data.targetAngle, diff:getAngle(), 0.04 + 0.08 * cPlayer)
+			data.targetAngle = approachAngle(data.targetAngle, angelToPlayer, 0.04 + 0.08 * cPlayer)
 		end
 		
 		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.02)
@@ -109,7 +88,7 @@ function Spider.onTick(monster)
 		if data.moveTimer <= -1.0 then
 			monster:playAnimation("walk", math.random())
 			monster.data.moveTimer = 0.5 + math.random() * 2.5
-			data.targetAngle = diff:getAngle() + cPlayer * (- 0.8 + math.random() * 1.6)
+			data.targetAngle = angleToPlayer + cPlayer * (- 0.8 + math.random() * 1.6)
 		end
 	end
 	

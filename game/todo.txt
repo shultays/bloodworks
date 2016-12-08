@@ -50,10 +50,6 @@ renderable group vector tutmasın, linked list i kullansın
 
 trail particle ları timer değilde distance kullansın
 
-bullet trail a (ve particle lara) uniform layabilelim
-
-spider a direction ekle
-
 mosnter melee attack i generalise et
 
 
