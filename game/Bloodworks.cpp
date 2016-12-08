@@ -271,6 +271,8 @@ void Bloodworks::init()
 	pausePostProcess->setEnabled(false);
 
 	levelUpPopup = new LevelUpPopup(this);
+	showFps = true;
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -520,19 +522,32 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
-	tickCount++;
-	if (timer.getRealTime() - lastSetTickTime > 1.0f)
+	if (input.isKeyPressed(key_n))
 	{
-		lastSetTickTime += 1.0f;
-		std::stringstream ss;
-		ss << "FPS " << tickCount;
-		debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+		showFps = !showFps;
+		if (showFps == false)
+		{
+			debugRenderer.removeText(0);
+			debugRenderer.removeText(1);
+		}
+	}
+	if (showFps)
+	{
+		tickCount++;
+		if (timer.getRealTime() - lastSetTickTime > 1.0f)
+		{
+			lastSetTickTime += 1.0f;
+			std::stringstream ss;
+			ss << "FPS " << tickCount;
+			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
-		tickCount = 0;
+			tickCount = 0;
+		}
 	}
 
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
+	lua["timeScale"] = getSlowdown();
 
 	if (input.isKeyPressed(key_3))
 	{
@@ -577,14 +592,17 @@ void Bloodworks::tick()
 
 void Bloodworks::render()
 {
-	renderCount++;
-	if (timer.getRealTime() - lastSetRenderTime > 1.0f)
+	if (showFps)
 	{
-		lastSetRenderTime += 1.0f;
-		std::stringstream ss;
-		ss << "Render " << renderCount;
-		debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+		renderCount++;
+		if (timer.getRealTime() - lastSetRenderTime > 1.0f)
+		{
+			lastSetRenderTime += 1.0f;
+			std::stringstream ss;
+			ss << "Render " << renderCount;
+			debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
-		renderCount = 0;
+			renderCount = 0;
+		}
 	}
 }

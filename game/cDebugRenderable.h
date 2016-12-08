@@ -65,6 +65,9 @@ public:
 
 	void init();
 
+	void removeText(int id);
+	void removeLine(int id);
+
 	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
 	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
 
