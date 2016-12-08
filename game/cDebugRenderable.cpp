@@ -226,4 +226,29 @@ void cDebugRenderable::tick(float dt)
 	}
 }
 
+void cDebugRenderable::removeText(int id)
+{
+	for (int i = 0; i < textData.size(); i++)
+	{
+		if (textData[i].id == id)
+		{
+			textData[i] = textData[textData.size() - 1];
+			textData.resize(textData.size() - 1);
+			return;
+		}
+	}
+}
+
+void cDebugRenderable::removeLine(int id)
+{
+	for (int i = 0; i < lineData.size(); i++)
+	{
+		if (lineData[i].id == id)
+		{
+			lineData[i] = lineData[lineData.size() - 1];
+			lineData.resize(lineData.size() - 1);
+			return;
+		}
+	}
+}
 
