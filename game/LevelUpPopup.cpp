@@ -90,7 +90,7 @@ void LevelUpPopup::show()
 	{
 		cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath().c_str(), "resources/default");
 		Vec2 pos = Vec2(-i * 140.0f + (levelupPerks.size() - 1) * 140.0f * 0.5f, 20.0f);
-		levelupPerksRenderablePosition.push_back(pos + bloodworks->getScreenDimensions().toVec() * 0.5f);
+		levelupPerksRenderablePosition.push_back(pos);
 		t->setWorldMatrix(Mat3::scaleMatrix(Vec2(40.0f)).translateBy(pos));
 		t->setAlignment(RenderableAlignment::center);
 		t->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -117,9 +117,11 @@ void LevelUpPopup::tick()
 			levelupPerksRenderables[i]->setColor(color);
 		}
 	}
+
+	Vec2 mouseScreenPos = input.getMousePos() - bloodworks->getScreenDimensions().toVec() * 0.5f;
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		bool inside = levelupPerksRenderablePosition[i].manhattanDistance(input.getMousePos()) < 40.0f;
+		bool inside = max(fabs(levelupPerksRenderablePosition[i].x - mouseScreenPos.x), fabs(levelupPerksRenderablePosition[i].y - mouseScreenPos.y)) < 40.0f;
 		if (hoverLevelupPerkIndex != i)
 		{
 			if (inside)
