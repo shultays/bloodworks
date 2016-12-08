@@ -77,7 +77,7 @@ function Spider.onTick(monster)
 	
 	
 
-	local cPlayer = (length - 100.0) / 50.0
+	local cPlayer = (length - 20.0) / 100.0
 	
 	if cPlayer > 1.0 then
 		cPlayer = 1.0
@@ -91,14 +91,15 @@ function Spider.onTick(monster)
 			data.targetAngle = approachAngle(data.targetAngle, diff:getAngle(), 0.04 + 0.08 * cPlayer)
 		end
 		
-		data.targetAngle = MonsterGroupHelper.fixAngle(monster, data.targetAngle)
 		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.03)
+		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, monster.moveAngle)
+		monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, 0.03)
 		data.moveTimer = data.moveTimer - dt
 		if data.moveTimer <= 0.0 then
 			monster:playAnimation("stand", math.random())
 		end
 		if data.moving then
-			monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);
+			monster.moveSpeed = 100.0 * StunController.getSlowAmount(monster);
 		else
 			monster.moveSpeed = 0.0;
 		end
