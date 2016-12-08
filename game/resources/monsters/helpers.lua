@@ -1,8 +1,7 @@
 
 StunController = {}
 
-function StunController.init( monster )
-    local data = monster.data
+function StunController.init(monster)
 	data.stunDuration = 0.02
 	data.slowDuration = 0.15
 	data.slowMultiplier = 0.4
@@ -10,9 +9,8 @@ function StunController.init( monster )
 	data.slowTime = 0.0
 end
 
-function StunController.getSlowAmount( monster)
+function StunController.getSlowAmount(monster)
 	local mul = 1.0
-    local data = monster.data
 
 	if data.stunTime > 0.0 then
 		mul = 0.0
@@ -71,18 +69,13 @@ end
 
 MonsterGroupHelper = {}
 
-function MonsterGroupHelper.init(monster, playerIgnoreDistance) 
+function MonsterGroupHelper.init(monster) 
 	monster.data.closestMonsterIndex = -1
-	if playerIgnoreDistance == nil then
-		monster.data.playerIgnoreDistance = 0.0
-	else
-		monster.data.playerIgnoreDistance = playerIgnoreDistance
-	end
+	monster.data.playerIgnoreDistance = 0.0
 end
 
 function MonsterGroupHelper.fixAngle(monster, angle) 
 	local closestMonster = nil
-	local data = monster.data
 	if data.closestMonsterIndex ~= -1 then
 		closestMonster = getMonster(data.closestMonsterIndex)
 		if closestMonster ~= nil then
@@ -113,13 +106,11 @@ function MonsterGroupHelper.fixAngle(monster, angle)
 		local toOther = closestMonster.position - monster.position;
 		local c = 1.0 - toOther:length() / 30.0
 			
-		local diff = player.position - monster.position
-		local distancePlayer = diff:length()
-		local cPlayer = (distancePlayer - data.playerIgnoreDistance) / 100
+		local cPlayer = (distanceToPlayer - data.playerIgnoreDistance) / 100
 		if cPlayer < 0.0 then
 			cPlayer = 0.0
 		end
-		local dot = toOther:sideVec():dot(diff)
+		local dot = toOther:sideVec():dot(diffToPlayer)
 		if dot > 0.0 then
 			angle = angle + 0.6 * c * cPlayer
 		else
@@ -127,4 +118,44 @@ function MonsterGroupHelper.fixAngle(monster, angle)
 		end
 	end
 	return angle
+end
+
+MonsterMeleeHelper = {}
+
+function MonsterMeleeHelper.init(monster) 
+	monster.data.moving = true
+	monster.data.lastHitTime = -1.0
+	monster.data.hitInterval = 1.5
+	monster.data.hitWaitTime = 0.2
+	monster.data.minDamage = 5
+	monster.data.maxDamage = 11
+	monster.data.slowdownAmount = 0.4
+	monster.data.slowdownDuration = 0.15
+end
+
+function MonsterMeleeHelper.onTick(monster) 
+	if distanceToPlayer < 20 + monster.collisionRadius then
+		if data.moving or data.lastHitTime + data.hitInterval < time then
+			data.lastHitTime = time
+			data.moving = false
+			monster:playAnimation("attack")
+			data.willHit = true
+		end
+		if data.willHit and data.lastHitTime + data.hitWaitTime < time then
+			data.willHit = false
+			player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)))
+			
+            if player.slowdownOnHit then
+                player:slowdown(data.slowdownAmount, data.slowdownDuration)
+			end
+            
+			MeleeHitImage.build(monster)
+		end
+	else
+		data.willHit = false
+		if data.moving == false then
+			data.moving = true
+			monster:playAnimation("walk", math.random())
+		end
+	end
 end
