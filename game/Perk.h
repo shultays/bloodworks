@@ -66,7 +66,7 @@ public:
 
 	bool isTakenFully() const
 	{
-		return level >= maxLevel;
+		return maxLevel != -1 && level >= maxLevel;
 	}
 
 	const std::string& getIconPath() const
