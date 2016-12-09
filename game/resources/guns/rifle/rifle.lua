@@ -14,7 +14,7 @@ function Rifle.onTick(gun)
 	if gun.spreadAngle < 0.0 then
 		gun.spreadAngle = 0
 	end
-	if gun.leftMouseDown then
+	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			gun.spreadAngle = gun.spreadAngle + 0.020
 			if gun.spreadAngle > 0.15 then

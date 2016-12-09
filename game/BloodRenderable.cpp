@@ -250,7 +250,7 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	{
 		bodyPartData.rotateSpeed = -bodyPartData.rotateSpeed;
 	}
-	bloodworks->addRenderable(partRenderable, BACKGROUND + 1);
+	bloodworks->addRenderable(partRenderable, BACKGROUND + 2);
 
 	bodyParts.push_back(bodyPartData);
 }

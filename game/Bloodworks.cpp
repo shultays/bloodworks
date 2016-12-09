@@ -160,6 +160,7 @@ void Bloodworks::init()
 	gun = new Gun();
 	gun->init(this, "resources/guns/laser_pistol/data.json");
 	guns.push_back(gun);
+	player->setSecondaryGun(gun);
 
 	gun = new Gun();
 	gun->init(this, "resources/guns/machinegun/data.json");
