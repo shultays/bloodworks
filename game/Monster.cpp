@@ -165,7 +165,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	{
 		scriptTable["onKilled"](this);
 	}
-	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 22.0f);
+	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
 
 	if (randFloat() < 0.1f || input.isKeyDown(key_1))
 	{

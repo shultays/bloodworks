@@ -178,16 +178,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"spreadAngle", &Gun::spreadAngle,
 		"crosshairDistance", &Gun::crosshairDistance,
 
-		"leftMousePressed", &Gun::leftMousePressed,
-		"leftMouseDown", &Gun::leftMouseDown,
-		"leftMouseReleased", &Gun::leftMouseReleased,
-
-		"middleMousePressed", &Gun::middleMousePressed,
-		"middleMouseDown", &Gun::middleMouseDown,
-		"middleMouseReleased", &Gun::middleMouseReleased,
-		"rightMousePressed", &Gun::rightMousePressed,
-		"rightMouseDown", &Gun::rightMouseDown,
-		"rightMouseReleased", &Gun::rightMouseReleased,
+		"isTriggered", &Gun::isTriggered,
 
 		"addBullet", &Gun::addBullet
 		);

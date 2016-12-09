@@ -26,6 +26,7 @@ class Player
 	cRenderable *spread;
 	Vec2 crosshairPos;
 	Gun *gun;
+	Gun *secondaryGun;
 	Vec2 aimDir;
 	Vec2 moveDir;
 	Vec2 moveSpeedDir;
@@ -73,6 +74,9 @@ public:
 
 	void setGun(Gun* gun);
 	Gun* getGun();
+
+	void setSecondaryGun(Gun* gun);
+	Gun* getSecondaryGun();
 
 	void doDamage(int damage);
 	void slowdown(float slowdownAmount, float slowdownDuration);
