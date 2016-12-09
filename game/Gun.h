@@ -36,17 +36,9 @@ class Gun
 	float crosshairDistance;
 	IntVec2 damage;
 
-	bool leftMousePressed;
-	bool leftMouseDown;
-	bool leftMouseReleased;
-	bool middleMousePressed;
-	bool middleMouseDown;
-	bool middleMouseReleased;
-	bool rightMousePressed;
-	bool rightMouseDown;
-	bool rightMouseReleased;
-
 	bool hideSpread;
+
+	bool isTriggered;
 
 public:
 	Gun() {}
@@ -66,4 +58,5 @@ public:
 	}
 	const std::string& getIconPath() const;
 	bool spreadVisible() const;
+	void setTriggered(bool param1);
 };

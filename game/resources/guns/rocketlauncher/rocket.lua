@@ -7,7 +7,7 @@ end
 
 
 function RocketLauncher.onTick(gun)
-	if gun.leftMouseDown then
+	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			local bullet = gun:addBullet()
 			bullet.damage = math.floor(110 + math.random() * 40)

@@ -7,7 +7,7 @@ end
 
 
 function Shotgun.onTick(gun)
-	if gun.leftMouseDown then
+	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			for i = 1, 6 do
 				local bullet = gun:addBullet()

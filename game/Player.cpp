@@ -84,7 +84,7 @@ Player::Player(Bloodworks *bloodworks)
 	data = lua.create_table();
 	lua["player"] = this;
 	updateHitPoints();
-	gun = nullptr;
+	secondaryGun = gun = nullptr;
 
 	experience = 0;
 	level = 1;
@@ -306,28 +306,55 @@ void Player::tick()
 
 	if (gun)
 	{
+		gun->setTriggered(input.isKeyDown(mouse_button_left));
 		gun->tick(dt);
+	}
+
+	if (secondaryGun)
+	{
+		secondaryGun->setTriggered(input.isKeyDown(mouse_button_right));
+		secondaryGun->tick(dt);
 	}
 }
 
 void Player::setGun(Gun *gun)
 {
-	if (gun)
+	if (this->gun)
 	{
-		gun->stop();
+		this->gun->stop();
 	}
 
 	this->gun = gun;
 
-	if (gun)
+	if (this->gun)
 	{
-		gun->start();
+		this->gun->start();
+	}
+}
+
+void Player::setSecondaryGun(Gun *gun)
+{
+	if (this->secondaryGun)
+	{
+		this->secondaryGun->stop();
+	}
+
+	this->secondaryGun = gun;
+
+	if (this->secondaryGun)
+	{
+		this->secondaryGun->start();
 	}
 }
 
 Gun* Player::getGun()
 {
 	return gun;
+}
+
+Gun* Player::getSecondaryGun()
+{
+	return secondaryGun;
 }
 
 void Player::doDamage(int damage)

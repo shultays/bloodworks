@@ -71,27 +71,15 @@ void Gun::init(Bloodworks *bloodworks, const char *gunData)
 
 void Gun::stop()
 {
-
 }
 
 void Gun::start()
 {
+	isTriggered = false;
 }
 
 void Gun::tick(float dt)
 {
-	leftMousePressed = input.isKeyPressed(mouse_button_left);
-	leftMouseDown = input.isKeyDown(mouse_button_left);
-	leftMouseReleased = input.isKeyReleased(mouse_button_left);
-
-	middleMousePressed = input.isKeyPressed(mouse_button_middle);
-	middleMouseDown = input.isKeyDown(mouse_button_middle);
-	middleMouseReleased = input.isKeyReleased(mouse_button_middle);
-
-	rightMousePressed = input.isKeyPressed(mouse_button_right);
-	rightMouseDown = input.isKeyDown(mouse_button_right);
-	rightMouseReleased = input.isKeyReleased(mouse_button_right);
-
 	scriptTable["onTick"](this);
 }
 
@@ -123,6 +111,11 @@ const std::string& Gun::getIconPath() const
 bool Gun::spreadVisible() const
 {
 	return !hideSpread;
+}
+
+void Gun::setTriggered(bool triggered)
+{
+	this->isTriggered = triggered;
 }
 
 Gun::~Gun()
