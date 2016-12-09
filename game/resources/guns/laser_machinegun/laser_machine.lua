@@ -7,7 +7,7 @@ end
 
 
 function LaserMachineGun.onTick(gun)
-	if gun.leftMouseDown then
+	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			gun:addBullet();
 		end

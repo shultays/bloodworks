@@ -7,7 +7,7 @@ end
 
 
 function MachineGun.onTick(gun)
-	if gun.leftMouseDown then
+	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			local bullet = gun:addBullet()
 			local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 15.0, {})
