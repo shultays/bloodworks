@@ -41,7 +41,12 @@
 		"frameDuration" : 0.1,
 		"frames":
 		[
-			"s0.png"
+			"s0.png",
+			"a0.png",
+			"a1.png",
+			"a2.png",
+			"a3.png",
+			"a1.png"
 		]
 	}
   },
