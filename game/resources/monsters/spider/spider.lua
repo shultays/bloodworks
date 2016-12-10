@@ -38,6 +38,10 @@ function Spider.init(monster)
 	MonsterGroupHelper.init(monster)
 	monster.data.playerIgnoreDistance = 30.0
 	MonsterMeleeHelper.init(monster)
+	monster.data.hitWaitTime = 0.1
+	monster.data.hitInterval = 0.9
+	monster.data.minDamage = 3
+	monster.data.maxDamage = 9
 end
 
 
@@ -56,7 +60,6 @@ function Spider.onTick(monster)
 	MonsterMeleeHelper.onTick(monster)
 	
 	local cPlayer = (distanceToPlayer - 20.0) / 50.0
-	cPlayer = 0.0
 	if cPlayer > 1.0 then
 		cPlayer = 1.0
 	elseif cPlayer < 0.0 then
@@ -65,10 +68,13 @@ function Spider.onTick(monster)
 	if data.moveTimer > 0.0 then
 
 		if cPlayer < 1.0 then
-			data.targetAngle = approachAngle(data.targetAngle, angleToPlayer, (0.04 + 0.08 * cPlayer) * timeScale)
+			data.targetAngle = approachAngle(data.targetAngle, angleToPlayer, (0.08 + 0.08 * (1.0 - cPlayer)) * timeScale)
 		end
-		
-		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.02 * timeScale)
+		local cPlayer2 = cPlayer * 5
+		if cPlayer2 > 1.0 then
+			cPlayer2 = 1.0
+		end
+		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.02 * timeScale + (1.0 - cPlayer2) * 0.1)
 		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, monster.moveAngle)
 		monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, 0.03 * timeScale)
 		data.moveTimer = data.moveTimer - dt
@@ -76,7 +82,7 @@ function Spider.onTick(monster)
 			monster:playAnimation("stand", math.random())
 		end
 		if data.moving then
-			monster.moveSpeed = 120.0 * StunController.getSlowAmount(monster);
+			monster.moveSpeed = 160.0 * StunController.getSlowAmount(monster);
 		else
 			monster.moveSpeed = 0.0;
 		end

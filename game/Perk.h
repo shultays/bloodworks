@@ -22,6 +22,7 @@ class Perk
 
 	sol::function onAddGunBulletFunc;
 	sol::function onTickFunc;
+	sol::function onPlayerDamagedFunc;
 public:
 	void load(const std::string& perkData)
 	{
@@ -49,6 +50,7 @@ public:
 		lua.script_file(scriptPath);
 
 		onAddGunBulletFunc = scriptTable["onAddGunBullet"];
+		onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
 		onTickFunc = scriptTable["onTick"];
 	}
 
@@ -86,4 +88,5 @@ public:
 
 	void onTick();
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
+	int onPlayerDamaged(int damage, sol::table& params);
 };

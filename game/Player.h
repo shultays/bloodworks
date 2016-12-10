@@ -78,7 +78,8 @@ public:
 	void setSecondaryGun(Gun* gun);
 	Gun* getSecondaryGun();
 
-	void doDamage(int damage);
+	int doDamage(int damage);
+	int doDamageWithParams(int damage, sol::table& params);
 	void slowdown(float slowdownAmount, float slowdownDuration);
 	const Vec2& getCrosshairPos() const 
 	{
