@@ -4,7 +4,7 @@
 
 class Gun;
 class Bonus;
-class cRenderable;
+class cRenderableGroup;
 class Bloodworks;
 
 class DropController
@@ -15,7 +15,8 @@ class DropController
 		Gun *gun;
 		Bonus *bonus;
 		Vec2 pos;
-		cRenderable *renderable;
+		cRenderableGroup *renderable;
+		float time;
 	};
 
 	std::vector<Drop> drops;

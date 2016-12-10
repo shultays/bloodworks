@@ -21,7 +21,7 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 {
 	Drop drop;
 	drop.bonus = nullptr;
-
+	drop.time = timer.getTime();
 	auto& guns = bloodworks->getGuns();
 
 	if (forceIndex == -1)
@@ -69,6 +69,7 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 void DropController::createBonus(const Vec2& position, int forceIndex)
 {
 	Drop drop;
+	drop.time = timer.getTime();
 	auto& bonuses = bloodworks->getBonuses();
 	if (forceIndex >= 0)
 	{
@@ -79,7 +80,6 @@ void DropController::createBonus(const Vec2& position, int forceIndex)
 		drop.bonus = bonuses[randInt((int)bonuses.size())];
 	}
 	drop.gun = nullptr;
-
 	drop.pos = position;
 
 	cRenderableGroup *group = new cRenderableGroup(bloodworks);
@@ -108,6 +108,7 @@ void DropController::tick()
 	for (int i = 0; i < drops.size(); i++)
 	{
 		auto& drop = drops[i];
+		bool remove = false;
 		if (drop.pos.distanceSquared(playerPos) < 20.0f * 20.0f)
 		{
 			if (drop.gun)
@@ -118,13 +119,26 @@ void DropController::tick()
 			{
 				drop.bonus->spawnAt(drop.pos);
 			}
+			remove = true;
+		}
+		
+		if (drop.time + 15.0f < timer.getTime())
+		{
+			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, ((int)((timer.getTime() - drop.time) * 3)) % 2 != 0 ? 0.2f : 1.0f));
+		}
+		else if(drop.time + 20.0f < timer.getTime())
+		{
+			remove = true;
+		}
+
+		if (remove)
+		{
 			SAFE_DELETE(drop.renderable);
 			drops[i] = drops[(int)drops.size() - 1];
 			drops.resize((int)drops.size() - 1);
 			i--;
 		}
 	}
-
 }
 
 void DropController::addDrop(const Vec2& position)
