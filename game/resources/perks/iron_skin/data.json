@@ -1,0 +1,8 @@
+{
+  "name": "Iron Skin",
+  "description": "Your skin reduces the damage you take",
+  "iconFile" : "resources/perks/iron_skin/icon.png",
+  "scriptFile" : "resources/perks/iron_skin/iron_skin.lua",
+  "scriptName" : "IronSkin",
+  "maxLevel" : 3
+}
