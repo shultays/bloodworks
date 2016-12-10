@@ -239,6 +239,14 @@ void Bloodworks::init()
 	Perk *perk;
 
 	perk = new Perk();
+	perk->load("resources/perks/dodger/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
+	perk->load("resources/perks/iron_skin/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
 	perk->load("resources/perks/experience/data.json");
 	perks.push_back(perk);
 
@@ -372,7 +380,23 @@ std::vector<Perk*> Bloodworks::getAvailablePerks() const
 
 void Bloodworks::onPerkUsed(Perk *levelupPerks)
 {
-	usedPerks.push_back(levelupPerks);
+	if (levelupPerks->getLevel() == 1)
+	{
+		usedPerks.push_back(levelupPerks);
+	}
+}
+
+int Bloodworks::onPlayerDamaged(int damage, sol::table& params)
+{
+	for (auto& perk : usedPerks)
+	{
+		if (damage <= 0)
+		{
+			return damage;
+		}
+		damage = perk->onPlayerDamaged(damage, params);
+	}
+	return damage;
 }
 
 void Bloodworks::tickCamera()
@@ -549,6 +573,12 @@ void Bloodworks::tick()
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
+
+	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
+	{
+		perks[0]->takeLevel();
+		usedPerks.push_back(perks[0]);
+	}
 
 	if (input.isKeyPressed(key_3))
 	{
