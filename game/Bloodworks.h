@@ -2,6 +2,7 @@
 
 #include "cGame.h"
 #include "cSharedPtr.h"
+#include "cLuaWorld.h"
 
 enum Depths
 {
@@ -167,4 +168,5 @@ public:
 	void doUnpause();
 	std::vector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
+	int onPlayerDamaged(int damage, sol::table& params);
 };

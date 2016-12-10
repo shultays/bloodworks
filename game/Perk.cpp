@@ -34,3 +34,12 @@ void Perk::onAddGunBullet(Gun *gun, Bullet *bullet)
 		onAddGunBulletFunc(gun, bullet);
 	}
 }
+
+int Perk::onPlayerDamaged(int damage, sol::table& params)
+{
+	if (onPlayerDamagedFunc)
+	{
+		return onPlayerDamagedFunc(damage, params);
+	}
+	return damage;
+}

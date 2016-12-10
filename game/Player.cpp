@@ -57,6 +57,8 @@ Player::Player(Bloodworks *bloodworks)
 
 	barSize = Vec2(256.0f, 32.0f);
 	barSize *= 0.4f;
+	barSize.x = round(barSize.x);
+	barSize.y = round(barSize.y);
 	Mat3 barMat = Mat3::scaleMatrix(barSize).translateBy(Vec2(0.0f, -50.0f));
 
 	healthBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_bg.png", "resources/default");
@@ -67,6 +69,7 @@ Player::Player(Bloodworks *bloodworks)
 	healthBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_active.png", "resources/default");
 	healthBarActive->setWorldMatrix(barMat);
 	healthBarActive->setAlignment(RenderableAlignment::top);
+	healthBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.6f));
 	bloodworks->addRenderable(healthBarActive, GUI + 11);
 
 	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_fg.png", "resources/default");
@@ -357,14 +360,24 @@ Gun* Player::getSecondaryGun()
 	return secondaryGun;
 }
 
-void Player::doDamage(int damage)
+int Player::doDamage(int damage)
 {
-	hitPoints -= damage;
-	if (hitPoints <= 0)
+	return doDamageWithParams(damage, lua.create_table());
+}
+
+int Player::doDamageWithParams(int damage, sol::table& params)
+{
+	damage = bloodworks->onPlayerDamaged(damage, params);
+	if (damage > 0)
 	{
-		hitPoints = maxHitPoints;
+		hitPoints -= damage;
+		if (hitPoints <= 0)
+		{
+			hitPoints = maxHitPoints;
+		}
+		updateHitPoints();
 	}
-	updateHitPoints();
+	return damage;
 }
 
 void Player::slowdown(float slowdownAmount, float slowdownDuration)
@@ -378,7 +391,16 @@ void Player::updateHitPoints()
 	std::stringstream ss;
 	ss << hitPoints;
 	healthRenderable->setText(ss.str().c_str());
-	healthBarActive->setWorldMatrix(Mat3::scaleMatrix(Vec2(barSize.x * (hitPoints / 100.0f), barSize.y)).translateBy(Vec2(0.0f, -50.0f)));
+	float scale = (barSize.x - 9.0f) * (hitPoints / 100.0f);
+	if (hitPoints > 1)
+	{
+		healthBarActive->setVisible(true);
+		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(Vec2(scale, barSize.y - 5.0f)).translateBy(Vec2(0.0f, -50.0f)));
+	}
+	else
+	{
+		healthBarActive->setVisible(false);
+	}
 }
 
 void Player::gainExperience(int e)
