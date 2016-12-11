@@ -239,6 +239,10 @@ void Bloodworks::init()
 	Perk *perk;
 
 	perk = new Perk();
+	perk->load("resources/perks/sprint/data.json");
+	perks.push_back(perk);
+
+	perk = new Perk();
 	perk->load("resources/perks/dodger/data.json");
 	perks.push_back(perk);
 
