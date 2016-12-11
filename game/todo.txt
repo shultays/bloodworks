@@ -52,7 +52,6 @@ renderable group vector tutmasın, linked list i kullansın
 perkler
 homing?
 blink?
-sprint?
 zehir
 radyasyon
 mıknatıs
