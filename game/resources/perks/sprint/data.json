@@ -1,0 +1,7 @@
+{
+  "name": "Sprint on Damage",
+  "description": "You make a short sprint when you get damaged.",
+  "iconFile" : "resources/perks/sprint/icon.png",
+  "scriptFile" : "resources/perks/sprint/sprint.lua",
+  "scriptName" : "Sprint"
+}
