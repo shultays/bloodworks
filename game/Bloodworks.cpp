@@ -21,10 +21,23 @@
 
 #include <sstream>
 
+#include "DirentHelper.h"
+
 int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
+	// Folder folder("./resources");
+	// std::vector<File> files = folder.getAllFiles(true);
+	// for (auto& f : files)
+	// {
+	// 	if (f.isTypeOf("png"))
+	// 	{
+	// 		printf("%s%s\n", f.folder.c_str(), f.file.c_str());
+	// 	}
+	// }
+
+
 	lua.script_file("resources/helpers.lua");
 	luaWorld = new BloodworksLuaWorld(this);
 
