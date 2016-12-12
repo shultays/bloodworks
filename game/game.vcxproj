@@ -229,6 +229,8 @@
     <ClInclude Include="cVecImp.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cLuaWorld.h" />
+    <ClInclude Include="dirent.h" />
+    <ClInclude Include="DirentHelper.h" />
     <ClInclude Include="DropController.h" />
     <ClInclude Include="ExplosionController.h" />
     <ClInclude Include="GameObject.h" />

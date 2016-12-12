@@ -16,6 +16,9 @@
     <Filter Include="Bloodworks">
       <UniqueIdentifier>{e0b470c8-0387-4bfd-80ca-81fe66917caa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Coral\dirent">
+      <UniqueIdentifier>{e09093c5-13a3-457b-a2f1-b0dd5a26c8c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cMat.cpp">
@@ -233,6 +236,12 @@
     </ClInclude>
     <ClInclude Include="BloodworksLuaWorld.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="dirent.h">
+      <Filter>Coral\dirent</Filter>
+    </ClInclude>
+    <ClInclude Include="DirentHelper.h">
+      <Filter>Coral\dirent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
