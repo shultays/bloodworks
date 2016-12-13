@@ -78,12 +78,6 @@ public:
 
 		AnimationData& addFrame(const std::string& texturePath, float duration)
 		{
-			return addFrame(texturePath.c_str(), duration);
-		}
-
-		AnimationData& addFrame(const char *texturePath, float duration)
-		{
-
 			FrameData data;
 			data.texture = resources.getTexture(texturePath);
 			data.duration = duration;
@@ -104,7 +98,7 @@ private:
 	std::vector<AnimationData> animations;
 
 public:
-	cAnimatedTexturedQuadRenderable(cGame *game, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
+	cAnimatedTexturedQuadRenderable(cGame *game, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
 	{
 		defaultAnimation = 0;
 		nextAnimation = 0;
@@ -151,12 +145,7 @@ public:
 		}
 	}
 
-	AnimationData& addAnimation(const std::string name, bool looping = false)
-	{
-		return addAnimation(name.c_str(), looping);
-	}
-
-	AnimationData& addAnimation(const char *name, bool looping = false)
+	AnimationData& addAnimation(const std::string& name, bool looping = false)
 	{
 		AnimationData animationData;
 		animationData.name = name;

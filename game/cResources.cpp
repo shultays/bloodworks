@@ -30,20 +30,20 @@ void cResources::objectFreed(cShader* object)
 	shaders.erase(got);
 }
 
-std::string cResources::shaderID(const char* vertexShaderFile, const char* pixelShaderFile) const
+std::string cResources::shaderID(const std::string& vertexShaderFile, const std::string& pixelShaderFile) const
 {
 	std::string ID = vertexShaderFile;
 	ID += pixelShaderFile;
 	return ID;
 }
 
-std::string cResources::textureID(const char* textureName) const
+std::string cResources::textureID(const std::string& textureName) const
 {
 	std::string ID = textureName;
 	return ID;
 }
 
-std::string cResources::fontId(const char* textureName) const
+std::string cResources::fontId(const std::string& textureName) const
 {
 	std::string ID = textureName;
 	return ID;
@@ -74,7 +74,7 @@ cResources::~cResources()
 	freeAll();
 }
 
-cShaderShr cResources::getShader(const char* vertexShaderFile, const char* pixelShaderFile)
+cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 {
 	std::string ID = shaderID(vertexShaderFile, pixelShaderFile);
 	std::unordered_map<std::string, cShaderShr>::iterator got = shaders.find(ID);
@@ -91,7 +91,7 @@ cShaderShr cResources::getShader(const char* vertexShaderFile, const char* pixel
 	return shader;
 }
 
-cTextureShr cResources::getTexture(const char* textureName)
+cTextureShr cResources::getTexture(const std::string& textureName)
 {
 	std::string ID = textureID(textureName);
 	std::unordered_map<std::string, cTextureShr>::iterator got = textures.find(ID);
@@ -107,7 +107,7 @@ cTextureShr cResources::getTexture(const char* textureName)
 	return texture;
 }
 
-cFontShr cResources::getFont(const char* fontDataPath)
+cFontShr cResources::getFont(const std::string& fontDataPath)
 {
 	std::string ID = textureID(fontDataPath);
 	std::unordered_map<std::string, cFontShr>::iterator got = fonts.find(ID);

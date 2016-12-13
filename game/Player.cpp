@@ -390,7 +390,7 @@ void Player::updateHitPoints()
 {
 	std::stringstream ss;
 	ss << hitPoints;
-	healthRenderable->setText(ss.str().c_str());
+	healthRenderable->setText(ss.str());
 	float scale = (barSize.x - 9.0f) * (hitPoints / 100.0f);
 	if (hitPoints > 1)
 	{
