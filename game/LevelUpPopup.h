@@ -22,7 +22,7 @@ class LevelUpPopup
 	std::vector<Vec2> levelupPerksRenderablePosition;
 	std::vector<Perk*> levelupPerks;
 	int hoverLevelupPerkIndex;
-
+	int pressLevelupPerkIndex;
 public:
 
 	LevelUpPopup(Bloodworks *bloodworks);
