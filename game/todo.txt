@@ -31,7 +31,6 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 !! mermi çarpınca efekt
 
 resource manager ı iyileştir
-char * almasınlar
 default resource default olsun
 
 mermiler vurunca veya namlunun ucunda çıkaracağı ateşler
@@ -44,7 +43,11 @@ bonuslara şans faktörü ekle
 
 bonuslar yanyana spawn olmasın
 
+bonuslar spawn olurken efekt
+
 renderable group vector tutmasın, linked list i kullansın
+
+bonus homing e particle
 
 ----------------
 
