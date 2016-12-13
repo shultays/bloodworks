@@ -2,7 +2,7 @@
 #include "cShader.h"
 #include "cTexture.h"
 
-cFont::cFont(const char *fontData)
+cFont::cFont(const std::string& fontData)
 {
 	this->fontData = fontData;
 	for (int i = 0; i < 128; i++)
@@ -18,7 +18,7 @@ cFont::cFont(const char *fontData)
 
 	ifs >> leftPadding >> rightPadding >> topPadding >> bottomPadding;
 	ifs >> defaultSize;
-	texture = resources.getTexture(fontImagePath.c_str());
+	texture = resources.getTexture(fontImagePath);
 
 	Vec2 size = texture->getDimensions().toVec();
 	maxWidth = maxHeight = -1;

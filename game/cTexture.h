@@ -16,12 +16,12 @@ public:
 		gTexture = -1;
 	};
 
-	cTexture(const char *fileName)
+	cTexture(const std::string& fileName)
 	{
-		SDL_Surface* surf = IMG_Load(fileName);
+		SDL_Surface* surf = IMG_Load(fileName.c_str());
 		if (surf == NULL)
 		{
-			printf("%s Error: \"%s\"\n", fileName, SDL_GetError()); return;
+			printf("%s Error: \"%s\"\n", fileName.c_str(), SDL_GetError()); return;
 		}
 
 		GLenum data_fmt = GL_RGBA;
@@ -58,9 +58,9 @@ public:
 		glBindTexture(GL_TEXTURE_2D, gTexture);
 	}
 
-	const char* getName() const
+	const std::string& getName() const
 	{
-		return name.c_str();
+		return name;
 	}
 
 	const IntVec2 getDimensions()

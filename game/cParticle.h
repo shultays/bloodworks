@@ -49,7 +49,7 @@ public:
 
 	cParticleTemplate(nlohmann::json &j)
 	{
-		shader = resources.getShader(j["vertexShader"].get<std::string>().c_str(), j["pixelShader"].get<std::string>().c_str());
+		shader = resources.getShader(j["vertexShader"].get<std::string>(), j["pixelShader"].get<std::string>());
 		scriptName = j["scriptName"].get<std::string>();
 		scriptTable = lua[scriptName] = lua.create_table();
 		std::string scriptPath = j["scriptFile"].get<std::string>();
@@ -88,7 +88,7 @@ public:
 				assert(!"Unknown attribute type");
 			}
 
-			const cShader::Attribute& a = shader->addAttribute(attributeName.c_str(), attribute.type);
+			const cShader::Attribute& a = shader->addAttribute(attributeName, attribute.type);
 			attribute.index = a.index;
 			attribute.begin = attributeSize;
 			attribute.size = a.getCount() * 4;
@@ -130,7 +130,7 @@ public:
 				assert(!"Unknown uniform type");
 			}
 			uniform.name = uniformName;
-			uniform.index = shader->addUniform(uniformName.c_str(), uniform.type).index;
+			uniform.index = shader->addUniform(uniformName, uniform.type).index;
 			uniforms.push_back(uniform);
 		};
 
@@ -149,12 +149,12 @@ public:
 		{
 			for (auto& t : j["textures"])
 			{
-				textures.push_back(resources.getTexture(t.get<std::string>().c_str()));
+				textures.push_back(resources.getTexture(t.get<std::string>()));
 			}
 		}
 		else
 		{
-			textures.push_back(resources.getTexture(j["textures"].get<std::string>().c_str()));
+			textures.push_back(resources.getTexture(j["textures"].get<std::string>()));
 		}
 		scriptTable["initSystem"]();
 	}

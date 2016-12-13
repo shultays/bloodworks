@@ -145,7 +145,7 @@ float Bullet::getMeshRotation()
 
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)
 {
-	cTexturedQuadRenderable* quad = new cTexturedQuadRenderable(bloodworks, texture.c_str(), "resources/default");
+	cTexturedQuadRenderable* quad = new cTexturedQuadRenderable(bloodworks, texture, "resources/default");
 	quad->setWorldMatrix(Mat3::scaleMatrix(dimensions.isNonZero() ? dimensions : quad->getTexture()->getDimensions().toVec()).translateBy(pos));
 	addRenderable(quad);
 	updateDrawable();
