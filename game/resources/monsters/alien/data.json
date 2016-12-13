@@ -2,7 +2,6 @@
   "type" : "monster",
   "name": "Alien",
   "hitPoint": 100,
-  "artFolder" : "resources/monsters/alien/art",
   "size" : [24.0, 34.0],
   "textureShift" : [0.0, -16.0],
   "bulletRadius" : 16.0,
@@ -15,7 +14,7 @@
   {
 	"stand" : 
 	{
-		"default" : true,
+		"baseFolder" : "resources/monsters/alien/art",
 		"looped" : true,
 		"frameDuration" : 0.5,
 		"frames":
@@ -26,6 +25,7 @@
 	
 	"walk" : 
 	{
+		"baseFolder" : "resources/monsters/alien/art",
 		"looped" : true,
 		"frameDuration" : 0.1,
 		"frames":
@@ -43,6 +43,7 @@
 	
 	"attack" : 
 	{
+		"baseFolder" : "resources/monsters/alien/art",
 		"frameDuration" : 0.1,
 		"frames":
 		[
@@ -59,13 +60,13 @@
   "scriptName" : "Alien",
   
   "bodyParts" : [
-  "head.png", 
-  ["arm1.png", 15.0, 6.0],
-  ["arm2.png", -15.0, 6.0],
-  ["part1.png", 13.0, -3.0],
-  ["part2.png", -15.0, 6.0],
-  ["part3.png", -5.0, -4.0],
-  ["part4.png", 13.0, 9.0],
-  ["part5.png", -14.0, 7.0]
+	"resources/monsters/alien/art/head.png", 
+	["resources/monsters/alien/art/arm1.png", 15.0, 6.0],
+	["resources/monsters/alien/art/arm2.png", -15.0, 6.0],
+	["resources/monsters/alien/art/part1.png", 13.0, -3.0],
+	["resources/monsters/alien/art/part2.png", -15.0, 6.0],
+	["resources/monsters/alien/art/part3.png", -5.0, -4.0],
+	["resources/monsters/alien/art/part4.png", 13.0, 9.0],
+	["resources/monsters/alien/art/part5.png", -14.0, 7.0]
   ]
 }

@@ -2,7 +2,6 @@
   "type" : "monster",
   "name": "Spider",
   "hitPoint": 100,
-  "artFolder" : "resources/monsters/spider/art",
   "size" : [30.0, 30.0],
   "textureShift" : [0.0, 0.0],
   "bulletRadius" : 16.0,
@@ -15,7 +14,7 @@
   {
 	"stand" : 
 	{
-		"default" : true,
+		"baseFolder" : "resources/monsters/spider/art",
 		"looped" : true,
 		"frameDuration" : 0.5,
 		"frames":
@@ -26,6 +25,7 @@
 	
 	"walk" : 
 	{
+		"baseFolder" : "resources/monsters/spider/art",
 		"looped" : true,
 		"frameDuration" : 0.1,
 		"frames":
@@ -39,6 +39,7 @@
 	
 	"attack" : 
 	{
+		"baseFolder" : "resources/monsters/spider/art",
 		"frameDuration" : 0.1,
 		"frames":
 		[

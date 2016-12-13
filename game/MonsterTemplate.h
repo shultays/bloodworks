@@ -22,7 +22,6 @@ class MonsterTemplate
 	std::string scriptPath;
 	sol::table scriptTable;
 
-	std::string defaultAnimation;
 	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
 
 	struct BodyPartData
@@ -51,49 +50,13 @@ public:
 		{
 			hasBlood = true;
 		}
-		std::string artFolder = j["artFolder"].get<std::string>();
-		fixFolderPath(artFolder);
+
 		auto& animations = j["animations"];
 
 		for (nlohmann::json::iterator it = animations.begin(); it != animations.end(); ++it)
 		{
-			auto& animData = it.value();
-			bool looped = false;
-			if (animData.count("looped"))
-			{
-				looped = animData["looped"].get<bool>();
-			}
-
-			if (animData.count("default"))
-			{
-				if (animData["default"].get<bool>())
-				{
-					defaultAnimation = it.key();
-				}
-			}
-			cAnimatedTexturedQuadRenderable::AnimationData animation(it.key(), looped);
-
-			float frameDuration = 0.1f;
-
-			if (animData.count("frameDuration"))
-			{
-				frameDuration = animData["frameDuration"].get<float>();
-			}
-
-			for (auto& frame : animData["frames"])
-			{
-				if (frame.is_string())
-				{
-					animation.addFrame(artFolder + frame.get<std::string>(), frameDuration);
-				}
-				else
-				{
-					float duration = frame["frameDuration"].get<float>();
-					animation.addFrame(artFolder + frame["frame"].get<std::string>(), duration);
-				}
-			}
-
-			animationData.push_back(animation);
+			cAnimatedTexturedQuadRenderable::AnimationData data = getAnimationData(it);
+			animationData.push_back(data);
 		}
 
 		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
@@ -108,18 +71,27 @@ public:
 			BodyPartData data;
 			if (val.is_array())
 			{
-				data.texture = resources.getTexture((artFolder + val[0].get<std::string>()));
+				data.texture = resources.getTexture((val[0].get<std::string>()));
 				data.shift = Vec2(val[1].get<float>(), val[2].get<float>());
 			}
 			else
 			{
-				data.texture = resources.getTexture((artFolder + it.value().get<std::string>()));
+				data.texture = resources.getTexture((it.value().get<std::string>()));
 				data.shift.setZero();
 			}
 			bodyParts.push_back(data);
 		}
 	}
 
+	~MonsterTemplate()
+	{
+		animationData.clear();
+		for (auto& bodyPart : bodyParts)
+		{
+			bodyPart.texture = nullptr;
+		}
+		bodyParts.clear();
+	}
 
 	const std::string& getName() const
 	{
