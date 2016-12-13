@@ -48,10 +48,10 @@ float approachAngle(float moveAngle, float wantedAngle, float rotation)
 	return moveAngle;
 }
 
-bool textFileRead(const char *fileName, std::string &data) 
+bool textFileRead(std::string path, std::string &data)
 {
 	data = "";
-	std::ifstream t(fileName);
+	std::ifstream t(path);
 	if (!t.good()) {
 		return false;
 	}

@@ -5,6 +5,7 @@
 #include "cVec.h"
 #include "cResources.h"
 #include "sol.h"
+#include "json.h"	
 
 class Bloodworks;
 class Bullet;
@@ -41,9 +42,8 @@ class Gun
 	bool isTriggered;
 
 public:
-	Gun() {}
+	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
-	void init(Bloodworks *bloodworks, const char *gunData);
 	void stop();
 	void start();
 	void tick(float dt);

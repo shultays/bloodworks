@@ -1,4 +1,5 @@
 {
+  "type" : "bonus",
   "name": "Homing Orb",
   "iconFile" : "resources/bonuses/homing/icon.png",
   "scriptFile" : "resources/bonuses/homing/homing.lua",

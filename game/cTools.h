@@ -81,7 +81,7 @@ float angleDiff(float a, float b);
 
 float approachAngle(float moveAngle, float wantedAngle, float rotation);
 
-bool textFileRead(const char *fileName, std::string &data);
+bool textFileRead(std::string path, std::string &data);
 
 void sleepMS(int ms);
 

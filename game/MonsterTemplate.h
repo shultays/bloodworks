@@ -8,8 +8,6 @@
 #include "cAnimatedRenderable.h"
 #include "json.h"
 
-using json = nlohmann::json;
-
 class MonsterTemplate
 {
 	friend class Monster;
@@ -35,16 +33,8 @@ class MonsterTemplate
 	std::vector<BodyPartData> bodyParts;
 public:
 	MonsterTemplate(){}
-	MonsterTemplate(const std::string& monsterData)
+	MonsterTemplate(nlohmann::json &j)
 	{
-		init(monsterData);
-	}
-	void init(const std::string& monsterData)
-	{
-		std::string jsonFile;
-		textFileRead(monsterData.c_str(), jsonFile);
-		json j = json::parse(jsonFile.c_str());
-
 		name = j["name"].get<std::string>();
 		size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
 		textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
@@ -65,7 +55,7 @@ public:
 		fixFolderPath(artFolder);
 		auto& animations = j["animations"];
 
-		for (json::iterator it = animations.begin(); it != animations.end(); ++it)
+		for (nlohmann::json::iterator it = animations.begin(); it != animations.end(); ++it)
 		{
 			auto& animData = it.value();
 			bool looped = false;
@@ -112,7 +102,7 @@ public:
 
 		auto& parts = j["bodyParts"];
 
-		for (json::iterator it = parts.begin(); it != parts.end(); ++it)
+		for (nlohmann::json::iterator it = parts.begin(); it != parts.end(); ++it)
 		{
 			auto& val = it.value();
 			BodyPartData data;
@@ -130,4 +120,9 @@ public:
 		}
 	}
 
+
+	const std::string& getName() const
+	{
+		return name;
+	}
 };

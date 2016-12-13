@@ -92,7 +92,7 @@ protected:
 	void tickCamera();
 	void tickGameSlowdown();
 public:
-	Bloodworks() {}
+	Bloodworks();
 	virtual ~Bloodworks();
 
 	MonsterController* getMonsterController() const

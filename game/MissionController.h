@@ -11,22 +11,30 @@ class cRenderable;
 class Bullet;
 class GameObject;
 
+#include "json.h"
 
 class MissionController
 {
 	Bloodworks *bloodworks;
-
-	std::string scriptPath;
 	sol::table scriptTable;
-
-	std::string name;
 	
 	std::unordered_map<int, GameObject*> gameObjects;
+
+	struct MissionData
+	{
+		std::string name;
+		std::string scriptName;
+		std::string scriptFile;
+	};
+
+	std::vector<MissionData> missions;
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
-	void loadMissionController(const std::string& missionControllerData);
 	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);
+	void addMission(nlohmann::json &j);
+
+	void loadMission(const std::string& name);
 };
