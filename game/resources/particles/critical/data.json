@@ -1,13 +1,12 @@
-
-
 {
-	"maxLifeTime" : 3.0,
-	
-	"vertexShader" : "resources/particles/critical/shader.vs",
-	"pixelShader" : "resources/particles/critical/shader.ps",
-	
-	"textures" : "resources/particles/critical/critical.png",
-	
-	"scriptFile" : "resources/particles/critical/script.lua",
-	"scriptName" : "CriticalParticle"
+  "type" : "particle",
+  "maxLifeTime" : 3.0,
+  
+  "vertexShader" : "resources/particles/critical/shader.vs",
+  "pixelShader" : "resources/particles/critical/shader.ps",
+  
+  "textures" : "resources/particles/critical/critical.png",
+  
+  "scriptFile" : "resources/particles/critical/script.lua",
+  "scriptName" : "CriticalParticle"
 }

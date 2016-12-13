@@ -11,11 +11,6 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
 
 	lua["mission"] = lua.create_table();
-
-	lua.script_file("resources/monsters/helpers.lua");
-
-	monsterTemplates["alien"] = new MonsterTemplate("resources/monsters/alien/data.json");
-	monsterTemplates["spider"] = new MonsterTemplate("resources/monsters/spider/data.json");
 }
 
 void MonsterController::tick()
@@ -247,6 +242,12 @@ Monster* MonsterController::getMonster(int id) const
 {
 	auto& element = monstersMap.find(id);
 	return element == monstersMap.end() ? nullptr : element->second;
+}
+
+void MonsterController::addMonsterTemplate(nlohmann::json &j)
+{
+	MonsterTemplate *t = new MonsterTemplate(j);
+	monsterTemplates[t->getName()] = t;
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

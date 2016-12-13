@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Dodger",
   "description": "You have a chance to dodge hits.",
   "iconFile" : "resources/perks/dodger/icon.png",

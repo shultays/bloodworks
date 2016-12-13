@@ -6,7 +6,6 @@
 #include "json.h"
 #include "cTools.h"
 
-using json = nlohmann::json;
 class Gun;
 class Bullet;
 
@@ -24,13 +23,9 @@ class Perk
 	sol::function onTickFunc;
 	sol::function onPlayerDamagedFunc;
 public:
-	void load(const std::string& perkData)
+	Perk(nlohmann::json& j)
 	{
 		level = 0;
-
-		std::string jsonFile;
-		textFileRead(perkData.c_str(), jsonFile);
-		json j = json::parse(jsonFile.c_str());
 
 		name = j["name"].get<std::string>();
 		description = j["description"].get<std::string>();

@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Experience",
   "description": "You gain experience depending on your level.",
   "iconFile" : "resources/perks/experience/icon.png",

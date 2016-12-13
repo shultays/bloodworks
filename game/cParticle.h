@@ -7,8 +7,6 @@
 #include "cGame.h"
 #include "json.h"
 
-using json = nlohmann::json;
-
 #define MAX_QUAD 256
 
 class cParticleTemplate
@@ -49,12 +47,8 @@ class cParticleTemplate
 	int uCurrentTime;
 public:
 
-	void init(const std::string& particleData)
+	cParticleTemplate(nlohmann::json &j)
 	{
-		std::string jsonFile;
-		textFileRead(particleData.c_str(), jsonFile);
-		json j = json::parse(jsonFile.c_str());
-
 		shader = resources.getShader(j["vertexShader"].get<std::string>().c_str(), j["pixelShader"].get<std::string>().c_str());
 		scriptName = j["scriptName"].get<std::string>();
 		scriptTable = lua[scriptName] = lua.create_table();

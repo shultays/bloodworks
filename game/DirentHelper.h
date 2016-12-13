@@ -13,8 +13,8 @@ public:
 
 	bool isTypeOf(const std::string& type)
 	{
-		int pos = file.find_last_of(".");
-		if (pos != -1 && file.substr(pos + 1) == type)
+		size_t pos = file.find_last_of(".");
+		if (pos != std::string::npos && file.substr(pos + 1) == type)
 		{
 			return true;
 		}

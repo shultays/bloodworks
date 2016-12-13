@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Long Distance Runner",
   "description": "Your movement speed gets higher.",
   "iconFile" : "resources/perks/faster_movement/icon.png",

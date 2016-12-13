@@ -1,4 +1,5 @@
 {
+  "type" : "gun",
   "name": "Machine Gun",
   "artFolder" : "resources/guns/machinegun/",
   "icon" : "icon.png",
