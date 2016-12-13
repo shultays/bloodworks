@@ -59,16 +59,15 @@ function Spider.onTick(monster)
 	
 	MonsterMeleeHelper.onTick(monster)
 	
-	local cPlayer = (distanceToPlayer - 20.0) / 50.0
+	local cPlayer = (distanceToPlayer - 100.0) / 100.0
 	if cPlayer > 1.0 then
 		cPlayer = 1.0
 	elseif cPlayer < 0.0 then
 		cPlayer = 0.0
 	end
 	if data.moveTimer > 0.0 then
-
 		if cPlayer < 1.0 then
-			data.targetAngle = approachAngle(data.targetAngle, angleToPlayer, (0.08 + 0.08 * (1.0 - cPlayer)) * timeScale)
+			data.targetAngle = approachAngle(data.targetAngle, angleToPlayer, (0.08 + 1.38 * (1.0 - cPlayer)) * timeScale)
 		end
 		local cPlayer2 = cPlayer * 5
 		if cPlayer2 > 1.0 then
