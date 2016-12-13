@@ -4,6 +4,7 @@
 #include "Gun.h"
 #include "cFont.h"
 #include "cRenderable.h"
+#include "cAnimatedRenderable.h"
 
 #include <sstream>
 
@@ -76,6 +77,12 @@ Player::Player(Bloodworks *bloodworks)
 	healthBarFG->setWorldMatrix(barMat);
 	healthBarFG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(healthBarFG, GUI + 12);
+
+	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
+	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
+	shootRenderable->addAnimation(getAnimationData("resources/assault/gun_fire/data.json"));
+	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
+	renderable->addRenderable(shootRenderable);
 
 	slowdownAmount = 0.0f;
 
@@ -433,4 +440,9 @@ void Player::doHeal(int hp)
 int Player::getLevel() const
 {
 	return level;
+}
+
+void Player::playShootAnimation()
+{
+	shootRenderable->playAnimation(1);
 }

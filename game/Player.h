@@ -9,6 +9,7 @@ class Gun;
 class cTextRenderable;
 class cRenderable;
 class cRenderableGroup;
+class cAnimatedTexturedQuadRenderable;
 
 class Player
 {
@@ -35,6 +36,8 @@ class Player
 	int hitPoints;
 	int maxHitPoints;
 	cTextRenderable *healthRenderable;
+
+	cAnimatedTexturedQuadRenderable *shootRenderable;
 
 	float slowdownAmount;
 	float slowdownDuration;
@@ -95,4 +98,5 @@ public:
 	void doLevelup();
 	void doHeal(int hp);
 	int getLevel() const;
+	void playShootAnimation();
 };

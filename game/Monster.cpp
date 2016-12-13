@@ -31,10 +31,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	renderable->addAnimation(monsterTemplate->animationData);
 	bloodworks->addRenderable(renderable, MONSTERS);
 
-	if (monsterTemplate->defaultAnimation.size())
-	{
-		renderable->setDefaultAnimation(renderable->getAnimationIndex(monsterTemplate->defaultAnimation));
-	}
+	renderable->setDefaultAnimation(renderable->getAnimationIndex("stand"));
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setTextAllignment(TextAlignment::center);
