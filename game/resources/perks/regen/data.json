@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Regeneration",
   "description": "You slowly regenerate your life.",
   "iconFile" : "resources/perks/regen/icon.png",

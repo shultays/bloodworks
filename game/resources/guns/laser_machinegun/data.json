@@ -1,4 +1,5 @@
 {
+  "type" : "gun",
   "name": "Laser Machine Gun",
   "artFolder" : "resources/guns/laser_machinegun/",
   "icon" : "icon.png",

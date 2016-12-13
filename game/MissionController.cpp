@@ -11,25 +11,6 @@
 #include "BulletController.h"
 #include "Bullet.h"
 
-using json = nlohmann::json;
-
-void MissionController::loadMissionController(const std::string& missionControllerData)
-{
-	lua["gameObjects"] = lua.create_table();
-
-	this->bloodworks = bloodworks;
-	std::string jsonFile;
-	textFileRead(missionControllerData.c_str(), jsonFile);
-	json j = json::parse(jsonFile.c_str());
-
-	name = j["name"].get<std::string>();
-
-	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
-	scriptPath = j["scriptFile"].get<std::string>();
-	lua.script_file(scriptPath);
-	scriptTable["init"]();
-}
-
 MissionController::~MissionController()
 {
 	scriptTable["clear"]();
@@ -49,6 +30,8 @@ MissionController::~MissionController()
 MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
+	lua["gameObjects"] = lua.create_table();
+
 }
 
 void MissionController::tick()
@@ -99,3 +82,27 @@ void MissionController::removeGameObject(int id)
 	SAFE_DELETE(gameObject);
 	gameObjects.erase(id);
 }
+
+void MissionController::addMission(nlohmann::json &j)
+{
+	MissionData data;
+	data.name = j["name"].get<std::string>();
+	data.scriptName = j["scriptName"].get<std::string>();
+	data.scriptFile = j["scriptFile"].get<std::string>();
+	missions.push_back(data);
+}
+
+void MissionController::loadMission(const std::string& name)
+{
+	for (auto& mission : missions)
+	{
+		if (mission.name == name)
+		{
+			scriptTable = lua[mission.scriptName] = lua.create_table();
+			lua.script_file(mission.scriptFile);
+			scriptTable["init"]();
+			return;
+		}
+	}
+}
+

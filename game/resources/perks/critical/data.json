@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Critical Bullets",
   "description": "Some of your bullets become critical and do more damage.",
   "iconFile" : "resources/perks/critical/icon.png",

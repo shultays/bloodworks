@@ -5,17 +5,9 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "cRenderable.h"
-#include "json.h"	
-
-using json = nlohmann::json;
-
-void Gun::init(Bloodworks *bloodworks, const char *gunData)
+Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 {
 	this->bloodworks = bloodworks;
-
-	std::string jsonFile;
-	textFileRead(gunData, jsonFile);
-	json j = json::parse(jsonFile.c_str());
 
 	name = j["name"].get<std::string>();
 	artFolder = j["artFolder"].get<std::string>();

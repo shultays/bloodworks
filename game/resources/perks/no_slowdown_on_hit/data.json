@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "No Slowdown On Hit",
   "description": "Monsters no longer slow you down when they hit you.",
   "iconFile" : "resources/perks/no_slowdown_on_hit/icon.png",
