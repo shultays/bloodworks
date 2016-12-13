@@ -21,15 +21,15 @@ class cFont
 	int maxWidth;
 	int maxHeight;
 
-	const char *fontData;
+	std::string fontData;
 
 	friend class cTextRenderable;
 	float defaultSize;
 public:
-	cFont(const char *fontData);
+	cFont(const std::string& fontData);
 	~cFont();
 
-	const char* getFontDataPath() const
+	const std::string& getFontDataPath() const
 	{
 		return fontData;
 	}
@@ -76,17 +76,12 @@ public:
 		font = nullptr;
 	}
 
-	void setText(const std::string& text)
-	{
-		setText(text.c_str());
-	}
-
 	void setTextAllignment(TextAlignment alignment)
 	{
 		this->textAlignment = alignment;
 	}
 
-	void setText(const char* text)
+	void setText(const std::string& text)
 	{
 		this->text = text;
 		lengthDirty = true;

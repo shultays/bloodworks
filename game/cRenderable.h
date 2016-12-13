@@ -135,13 +135,13 @@ protected:
 
 	std::unordered_map<int, UniformData> uniforms;
 public:
-	cRenderableWithShader(cGame *game, const char* shaderPath) : cRenderable(game)
+	cRenderableWithShader(cGame *game, const std::string& shaderPath) : cRenderable(game)
 	{
 		std::string vs = shaderPath;
 		vs.append(".vs");
 		std::string ps = shaderPath;
 		ps.append(".ps");
-		shader = resources.getShader(vs.c_str(), ps.c_str());
+		shader = resources.getShader(vs, ps);
 	}
 
 	cRenderableWithShader(cGame *game, cShaderShr shader) : cRenderable(game)
@@ -159,7 +159,7 @@ public:
 		this->shader = shader;
 	}
 
-	cRenderableWithShader(cGame *game, const char* vs, const char* ps) : cRenderable(game)
+	cRenderableWithShader(cGame *game, const std::string& vs, const std::string& ps) : cRenderable(game)
 	{
 		shader = resources.getShader(vs, ps);
 	}
@@ -181,7 +181,7 @@ protected:
 	cTextureShr texture[4];
 
 public:
-	cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath);
+	cTexturedQuadRenderable(cGame *game, const std::string& texturePath, const std::string& shaderPath);
 
 	virtual ~cTexturedQuadRenderable()
 	{
@@ -193,12 +193,12 @@ public:
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 
-	void setTexture(const char* texturePath)
+	void setTexture(const std::string& texturePath)
 	{
 		setTexture(0, texturePath);
 	}
 
-	void setTexture(int i, const char* texturePath)
+	void setTexture(int i, const std::string& texturePath)
 	{
 		texture[i] = resources.getTexture(texturePath);
 	}

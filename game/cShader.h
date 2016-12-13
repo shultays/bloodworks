@@ -184,10 +184,10 @@ public:
 	private:
 	GLuint vertexShader;
 	GLuint pixelShader;
-	char vertexShaderFile[64];
-	char pixelShaderFile[64];
+	std::string vertexShaderFile;
+	std::string pixelShaderFile;
 
-	void printShaderInfoLog(const char *name, GLuint obj)
+	void printShaderInfoLog(const std::string& name, GLuint obj)
 	{
 		int infologLength = 0;
 		int charsWritten = 0;
@@ -198,7 +198,7 @@ public:
 		if (infologLength > 1) {
 			infoLog = (char *)malloc(infologLength);
 			glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
-			printf("%s\n%s\n\n", name, infoLog);
+			printf("%s\n%s\n\n", name.c_str(), infoLog);
 			free(infoLog);
 		}
 	}
@@ -220,7 +220,7 @@ public:
 	}
 
 
-	GLuint buildShader(const char *name, const std::string& source, int shaderType) 
+	GLuint buildShader(const std::string& name, const std::string& source, int shaderType)
 	{
 		assert(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
@@ -243,7 +243,7 @@ public:
 		return shader;
 	}
 
-	GLuint loadShader(const char *fileName, int shaderType) 
+	GLuint loadShader(const std::string& fileName, int shaderType)
 	{
 		std::string shaderSource;
 		if (!textFileRead(fileName, shaderSource)) {
@@ -278,7 +278,7 @@ public:
 	{
 		if (shaderProgram != -1)
 		{
-			printf("unloading %s %s\n", vertexShaderFile, pixelShaderFile);
+			printf("unloading %s %s\n", vertexShaderFile.c_str(), pixelShaderFile.c_str());
 		}
 		if (pixelShader != -1)
 		{
@@ -294,33 +294,36 @@ public:
 		}
 	}
 
-	const char* getVertexShaderFileName() const 
+	const std::string& getVertexShaderFileName() const 
 	{
 		return vertexShaderFile;
 	}
 
-	const char* getPixelShaderFileName() const 
+	const std::string& getPixelShaderFileName() const
 	{
 		return pixelShaderFile;
 	}
 
-	bool loadFromFile(const char* vertexShaderFile, const char* pixelShaderFile) 
+	bool loadFromFile(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 	{
-		printf("loading %s %s\n", vertexShaderFile, pixelShaderFile);
-		strcpy_s(this->vertexShaderFile, vertexShaderFile);
-		strcpy_s(this->pixelShaderFile, pixelShaderFile);
+		printf("loading %s %s\n", vertexShaderFile.c_str(), pixelShaderFile.c_str());
+		this->vertexShaderFile = vertexShaderFile;
+		this->pixelShaderFile = pixelShaderFile;
 
 		vertexShader = loadShader(vertexShaderFile, GL_VERTEX_SHADER);
-		if (!vertexShader) {
+		if (!vertexShader) 
+		{
 			return false;
 		}
 		pixelShader = loadShader(pixelShaderFile, GL_FRAGMENT_SHADER);
-		if (!pixelShader) {
+		if (!pixelShader) 
+		{
 			return false;
 		}
 
 		shaderProgram = glCreateProgram();
-		if (!shaderProgram) {
+		if (!shaderProgram) 
+		{
 			return false;
 		}
 		glAttachShader(shaderProgram, vertexShader);
@@ -385,17 +388,8 @@ public:
 		glVertexAttribPointer(attribute.location, attribute.getCount(), attribute.getType(), attribute.isNormalized(), stride, (const void*)(long long)pointer);
 	}
 
-	/*
-	void bindAttribute(const char *name, int stride, int pointer) 
-	{
-		Attribute& attribute = attributes.at(name);
-		glEnableVertexAttribArray(attribute.location);
-		glVertexAttribPointer(attribute.location, attribute.getCount(), attribute.getType(), attribute.isNormalized(), stride, (const void*)(long long)pointer);
-	}
-	*/
 
-
-	const Attribute& addAttribute(const char *name, int attributeType, bool normalized = false, int attributeLocation = -1)
+	const Attribute& addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
 		if (attributeIndices.count(name))
 		{
@@ -405,12 +399,12 @@ public:
 		Attribute attribute(attributeType, normalized);
 		if (attributeLocation == -1) 
 		{
-			attribute.location = glGetAttribLocation(shaderProgram, name);
+			attribute.location = glGetAttribLocation(shaderProgram, name.c_str());
 		}
 		else 
 		{
 			attribute.location = attributeLocation;
-			glBindAttribLocation(shaderProgram, attributeLocation, name);
+			glBindAttribLocation(shaderProgram, attributeLocation, name.c_str());
 		}
 		attribute.index = attributeIndices[name] = (int)attributes.size();
 		attributes.push_back(attribute);
@@ -438,7 +432,7 @@ public:
 		uTextures[3] = addUniform("uTexture3", TypeInt).index;
 	}
 
-	const Uniform& addUniform(const char *name, int uniformType) 
+	const Uniform& addUniform(const std::string& name, int uniformType) 
 	{
 		if (uniformIndices.count(name))
 		{
@@ -447,7 +441,7 @@ public:
 
 		Uniform uniform(uniformType);
 		uniform.index = uniformIndices[name] = (int)uniforms.size();
-		uniform.location = glGetUniformLocation(shaderProgram, name);
+		uniform.location = glGetUniformLocation(shaderProgram, name.c_str());
 		uniforms.push_back(uniform);
 		return uniforms[uniform.index];
 	}
@@ -652,115 +646,6 @@ public:
 		attributes[index].setData((void*)&data);
 	}
 
-	/*
-	void setUniform(const char *name, void* data)
-	{
-		uniforms[uniformIndices[name]].setData(data);
-	}
-
-	void setUniform(const char *name, float data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const Vec2& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const Vec3& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const Vec4& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const Mat3& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const Mat2& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, int data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const IntVec2& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const IntVec3& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-
-	void setUniform(const char *name, const IntVec4& data)
-	{
-		uniforms[uniformIndices[name]].setData((void*)&data);
-	}
-	void setAttributeConstant(const char *name, void* data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData(data);
-	}
-
-	void setAttributeConstant(const char *name, float data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const Vec2& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const Vec3& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const Vec4& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, int data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const IntVec2& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const IntVec3& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-
-	void setAttributeConstant(const char *name, const IntVec4& data) 
-	{
-		glDisableVertexAttribArray(attributes.at(name).location);
-		attributes.at(name).setData((void*)&data);
-	}
-	*/
 	void deleteSelf()
 	{
 		delete this;

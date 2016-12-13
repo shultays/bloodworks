@@ -25,7 +25,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	if (j.count("bulletTexture"))
 	{
 		bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
-		bulletTexture = resources.getTexture(bulletTexturePath.c_str());
+		bulletTexture = resources.getTexture(bulletTexturePath);
 	}
 	if (j.count("bulletMeshShift"))
 	{
@@ -127,7 +127,7 @@ Bullet* Gun::addBullet()
 	bullet->damage = randInt(damage.x, damage.y);
 	if (bulletTexture != nullptr)
 	{
-		cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath.c_str(), "resources/default");
+		cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath, "resources/default");
 		renderable->setWorldMatrix(Mat3::scaleMatrix(bulletSize).translateBy(bulletMeshShift));
 		bullet->addRenderable(renderable);
 	}

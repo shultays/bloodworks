@@ -66,7 +66,7 @@ void LevelUpPopup::show()
 
 	ss << "You are now level " << bloodworks->getPlayer()->getLevel() << "!";
 
-	levelupGroupTitle->setText(ss.str().c_str());
+	levelupGroupTitle->setText(ss.str());
 	currentPerkName->setText("");
 	currentPerkExplanation->setText("");
 	hoverLevelupPerkIndex = -1;
@@ -88,7 +88,7 @@ void LevelUpPopup::show()
 	levelupPerksRenderablePosition.clear();
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath().c_str(), "resources/default");
+		cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath(), "resources/default");
 		Vec2 pos = Vec2(-i * 140.0f + (levelupPerks.size() - 1) * 140.0f * 0.5f, 20.0f);
 		levelupPerksRenderablePosition.push_back(pos);
 		t->setWorldMatrix(Mat3::scaleMatrix(Vec2(40.0f)).translateBy(pos));
@@ -133,8 +133,8 @@ void LevelUpPopup::tick()
 				{
 					name << " (Level : " << (levelupPerks[i]->getLevel() + 1) << ")";
 				}
-				currentPerkName->setText(name.str().c_str());
-				currentPerkExplanation->setText(levelupPerks[i]->getDescription().c_str());
+				currentPerkName->setText(name.str());
+				currentPerkExplanation->setText(levelupPerks[i]->getDescription());
 				hoverLevelupPerkIndex = i;
 			}
 		}
