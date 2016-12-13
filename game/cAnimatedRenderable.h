@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cRenderable.h"
+#include "json.h"
 
 class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 {
@@ -22,7 +23,7 @@ class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 
 	void checkAnimationTime()
 	{
-		while (currentAnimationTime > animations[currentAnimation].frames[currentAnimationFrame].endTime)
+		while (animations[currentAnimation].frames.size() > 0 && animations[currentAnimation].animationDuration > 0.0f && currentAnimationTime > animations[currentAnimation].frames[currentAnimationFrame].endTime)
 		{
 			currentAnimationFrame++;
 			if (currentAnimationFrame >= animations[currentAnimation].frames.size())
@@ -88,9 +89,24 @@ public:
 			return *this;
 		}
 
+		~AnimationData()
+		{
+			for (auto& frame : frames)
+			{
+				frame.texture = nullptr;
+			}
+
+			frames.clear();
+		}
+
 		int getIndex() const
 		{
 			return index;
+		}
+
+		const std::string& getName() const
+		{
+			return name;
 		}
 	};
 
@@ -196,3 +212,13 @@ public:
 		this->color = color;
 	}
 };
+
+
+
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json &animData);
+
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j);
+
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::iterator& it);
+
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& file);

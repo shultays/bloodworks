@@ -134,5 +134,6 @@ Bullet* Gun::addBullet()
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	bloodworks->onAddedGunBullet(this, bullet);
+	player->playShootAnimation();
 	return bullet;
 }
