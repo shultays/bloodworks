@@ -108,12 +108,12 @@ public:
 			BodyPartData data;
 			if (val.is_array())
 			{
-				data.texture = resources.getTexture((artFolder + val[0].get<std::string>()).c_str());
+				data.texture = resources.getTexture((artFolder + val[0].get<std::string>()));
 				data.shift = Vec2(val[1].get<float>(), val[2].get<float>());
 			}
 			else
 			{
-				data.texture = resources.getTexture((artFolder + it.value().get<std::string>()).c_str());
+				data.texture = resources.getTexture((artFolder + it.value().get<std::string>()));
 				data.shift.setZero();
 			}
 			bodyParts.push_back(data);

@@ -173,7 +173,7 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 	glActiveTexture(GL_TEXTURE0);
 }
 
-cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const char* texturePath, const char* shaderPath) : cRenderableWithShader(game, shaderPath)
+cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const std::string& texturePath, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
 {
 	setTexture(texturePath);
 	setWorldMatrix(Mat3::translationMatrix(texture[0]->getDimensions().toVec()));

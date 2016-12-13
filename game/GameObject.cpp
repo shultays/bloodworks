@@ -48,7 +48,7 @@ GameObject::RenderableData& GameObject::addTexture(const std::string& texture, c
 
 	renderableData.type = RenderableDataType::texture;
 
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable((cGame*)bloodworks, texture.c_str(), shader.length() > 0 ? shader.c_str() : "resources/default");
+	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable((cGame*)bloodworks, texture, shader.length() > 0 ? shader : "resources/default");
 	renderable->setWorldMatrix(Mat3::identity());
 	renderableData.renderable = renderable;
 	renderableData.pos = Vec2::zero();
@@ -84,7 +84,7 @@ GameObject::RenderableData& GameObject::addText(const std::string& text, const s
 	renderableData.textAlignment = 1;
 	renderableData.gameObject = this;
 
-	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font.c_str() : "resources/fontData.txt"), text);
+	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font : "resources/fontData.txt"), text);
 	renderableData.renderable = renderable;
 	renderableGroup->addRenderable(renderable);
 	updateMatrix();

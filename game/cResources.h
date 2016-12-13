@@ -25,22 +25,22 @@ class cResources : public cCustomDeallocator<cShader>, public cCustomDeallocator
 
 	void objectFreed(cFont* object) override;
 
-	std::string shaderID(const char* vertexShaderFile, const char* pixelShaderFile) const;
+	std::string shaderID(const std::string& vertexShaderFile, const std::string& pixelShaderFile) const;
 
-	std::string textureID(const char* textureName) const;
+	std::string textureID(const std::string& textureName) const;
 
-	std::string fontId(const char* textureName) const;
+	std::string fontId(const std::string& textureName) const;
 
 public:
 	cResources();
 
 	~cResources();
 
-	cShaderShr getShader(const char* vertexShaderFile, const char* pixelShaderFile);
+	cShaderShr getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile);
 
-	cTextureShr getTexture(const char* textureName);
+	cTextureShr getTexture(const std::string& textureName);
 
-	cFontShr getFont(const char* fontDataPath);
+	cFontShr getFont(const std::string& fontDataPath);
 
 	void freeAll();
 

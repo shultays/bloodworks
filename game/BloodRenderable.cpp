@@ -188,7 +188,7 @@ void BloodRenderable::init()
 	{
 		std::stringstream ss;
 		ss << "resources/blood/blood" << i << ".png";
-		cachedBloods.push_back(resources.getTexture(ss.str().c_str()));
+		cachedBloods.push_back(resources.getTexture(ss.str()));
 	}
 	bloodBg = resources.getTexture("resources/blood/blood_bg.png");
 	
