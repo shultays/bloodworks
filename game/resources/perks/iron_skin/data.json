@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Iron Skin",
   "description": "Your skin reduces the damage you take",
   "iconFile" : "resources/perks/iron_skin/icon.png",

@@ -1,4 +1,5 @@
 {
+  "type" : "bonus",
   "name": "Reflex Boost",
   "iconFile" : "resources/bonuses/reflex_boost/icon.png",
   "scriptFile" : "resources/bonuses/reflex_boost/reflex_boost.lua",

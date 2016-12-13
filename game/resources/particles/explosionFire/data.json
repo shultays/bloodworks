@@ -1,13 +1,12 @@
-
-
 {
-	"maxLifeTime" : 5.0,
-	
-	"vertexShader" : "resources/particles/explosionFire/shader.vs",
-	"pixelShader" : "resources/particles/explosionFire/shader.ps",
-	
-	"textures" : ["resources/particles/explosionFire/fire.png", "resources/particles/explosionFire/clouds.png"],
-	
-	"scriptFile" : "resources/particles/explosionFire/script.lua",
-	"scriptName" : "ExplosionFireParticle"
+  "type" : "particle",
+  "maxLifeTime" : 5.0,
+  
+  "vertexShader" : "resources/particles/explosionFire/shader.vs",
+  "pixelShader" : "resources/particles/explosionFire/shader.ps",
+  
+  "textures" : ["resources/particles/explosionFire/fire.png", "resources/particles/explosionFire/clouds.png"],
+  
+  "scriptFile" : "resources/particles/explosionFire/script.lua",
+  "scriptName" : "ExplosionFireParticle"
 }

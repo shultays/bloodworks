@@ -8,6 +8,7 @@ class Bloodworks;
 class MonsterTemplate;
 
 #include "cGrid.h"
+#include "json.h"
 
 class MonsterController
 {
@@ -35,4 +36,6 @@ public:
 	Monster* addMonster(const std::string& monsterTemplateName);
 	int getMonsterCount() const;
 	Monster* getMonster(int id) const;
+
+	void addMonsterTemplate(nlohmann::json &j);
 };

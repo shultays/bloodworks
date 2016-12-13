@@ -27,27 +27,60 @@ int Bloodworks::nextUniqueId = 0;
 
 void Bloodworks::init()
 {
-	// Folder folder("./resources");
-	// std::vector<File> files = folder.getAllFiles(true);
-	// for (auto& f : files)
-	// {
-	// 	if (f.isTypeOf("png"))
-	// 	{
-	// 		printf("%s%s\n", f.folder.c_str(), f.file.c_str());
-	// 	}
-	// }
-
-
-	lua.script_file("resources/helpers.lua");
 	luaWorld = new BloodworksLuaWorld(this);
 
-	postProcessEndLevel = (GUI + FOREGROUND) / 2;
+	lua.script_file("resources/helpers.lua");
+	lua.script_file("resources/guns/helpers.lua");
+	lua.script_file("resources/monsters/helpers.lua");
 
-	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
-	paused = false;
-	mapSize = 1048.0f;
-	mapBegin = -mapSize*0.5f;
-	mapEnd = mapBegin + mapSize;
+
+	dropController = new DropController(this);
+	monsterController = new MonsterController(this);
+	bulletController = new BulletController(this);
+	missionController = new MissionController(this);
+
+	Folder folder("./resources");
+	std::vector<File> files = folder.getAllFiles(true);
+	for (auto& f : files)
+	{
+		if (f.isTypeOf("json"))
+		{
+			std::string jsonFile;
+			textFileRead(f.folder + f.file, jsonFile);
+			nlohmann::json j = nlohmann::json::parse(jsonFile.c_str());
+
+			std::string type = j["type"].get<std::string>();
+			if (type == "gun")
+			{
+				Gun *gun = new Gun(this, j);
+				guns.push_back(gun);
+			}
+			else if (type == "bonus")
+			{
+				Bonus *bonus = new Bonus(j);
+				bonuses.push_back(bonus);
+			}
+			else if (type == "particle")
+			{
+				cParticleTemplate *particleTemplate = new cParticleTemplate(j);
+				particles[particleTemplate->getName()] = particleTemplate;
+			}
+			else if (type == "perk")
+			{
+				Perk *perk = new Perk(j);
+				perks.push_back(perk);
+			}
+			else if (type == "monster")
+			{
+				monsterController->addMonsterTemplate(j);
+			}
+			else if (type == "mission")
+			{
+				missionController->addMission(j);
+			}
+		}
+	}
+
 
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
@@ -61,8 +94,6 @@ void Bloodworks::init()
 	addRenderable(bg, BACKGROUND);
 
 	cTexturedQuadRenderable *fg;
-
-
 	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapBegin.x, 0.0f));
 	fg->setShader(shader);
@@ -156,140 +187,14 @@ void Bloodworks::init()
 
 	input.hideMouse();
 
-	lastSetTickTime = lastSetRenderTime = 0.0f;
-	tickCount = renderCount = 0;
-
 	player = new Player(this);
+	player->setGun(guns[0]);
 	
-	lua.script_file("resources/guns/helpers.lua");
-
-	Gun *gun;
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/pistol/data.json");
-	guns.push_back(gun);
-	player->setGun(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/laser_pistol/data.json");
-	guns.push_back(gun);
-	player->setSecondaryGun(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/machinegun/data.json");
-	guns.push_back(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/laser_machinegun/data.json");
-	guns.push_back(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/rocketlauncher/data.json");
-	guns.push_back(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/shotgun/data.json");
-	guns.push_back(gun);
-
-	gun = new Gun();
-	gun->init(this, "resources/guns/rifle/data.json");
-	guns.push_back(gun);
-
-	Bonus *bonus;
-
-	bonus = new Bonus("resources/bonuses/experience/data.json");
-	bonuses.push_back(bonus);
-
-	bonus = new Bonus("resources/bonuses/medikit/data.json");
-	bonuses.push_back(bonus);
-
-	bonus = new Bonus("resources/bonuses/reflex_boost/data.json");
-	bonuses.push_back(bonus);
-
-	bonus = new Bonus("resources/bonuses/circle_fire/data.json");
-	bonuses.push_back(bonus);
-
-	bonus = new Bonus("resources/bonuses/homing/data.json");
-	bonuses.push_back(bonus);
-
-	bonus = new Bonus("resources/bonuses/explosion/data.json");
-	bonuses.push_back(bonus);
-
-	dropController = new DropController(this);
-
-	monsterController = new MonsterController(this);
-	bulletController = new BulletController(this);
-	missionController = new MissionController(this);
-
-	missionController->loadMissionController("resources/missions/survival/data.json");
-
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, BACKGROUND + 1);
 
-	cParticleTemplate *particleTemplate;
-
-	particleTemplate = new cParticleTemplate();
-	particleTemplate->init("resources/particles/rocketSmoke/data.json");
-	particles[particleTemplate->getName()] = particleTemplate;
-
-	particleTemplate = new cParticleTemplate();
-	particleTemplate->init("resources/particles/critical/data.json");
-	particles[particleTemplate->getName()] = particleTemplate;
-
-	particleTemplate = new cParticleTemplate();
-	particleTemplate->init("resources/particles/explosionFire/data.json");
-	particles[particleTemplate->getName()] = particleTemplate;
-
-	particleTemplate = new cParticleTemplate();
-	particleTemplate->init("resources/particles/bulletTrail/data.json");
-	particles[particleTemplate->getName()] = particleTemplate;
-
-	cameraCenterPos.setZero();
-
 	explosionController = new ExplosionController(this);
-
-	Perk *perk;
-
-	perk = new Perk();
-	perk->load("resources/perks/sprint/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/dodger/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/iron_skin/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/experience/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/regen/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/critical/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/no_slowdown_on_hit/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/faster_shoot/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/faster_bullets/data.json");
-	perks.push_back(perk);
-
-	perk = new Perk();
-	perk->load("resources/perks/faster_movement/data.json");
-	perks.push_back(perk);
 
 	pausePostProcess = new cPostProcess();
 	pausePostProcess->init(this, resources.getShader("resources/post_process/default.vs", "resources/post_process/pause.ps"), 0);
@@ -297,9 +202,29 @@ void Bloodworks::init()
 	pausePostProcess->setEnabled(false);
 
 	levelUpPopup = new LevelUpPopup(this);
-	showFps = true;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	missionController->loadMission("Survival");
+}
+
+Bloodworks::Bloodworks()
+{
+	mapSize = 1048.0f;
+	mapBegin = -mapSize*0.5f;
+	mapEnd = mapBegin + mapSize;
+
+	postProcessEndLevel = (GUI + FOREGROUND) / 2;
+
+	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
+	paused = false;
+
+	lastSetTickTime = lastSetRenderTime = 0.0f;
+	tickCount = renderCount = 0;
+
+	showFps = true;
+
+	cameraCenterPos.setZero();
 }
 
 Bloodworks::~Bloodworks()

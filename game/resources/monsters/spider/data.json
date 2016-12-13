@@ -1,4 +1,5 @@
 {
+  "type" : "monster",
   "name": "Spider",
   "hitPoint": 100,
   "artFolder" : "resources/monsters/spider/art",

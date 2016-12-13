@@ -1,4 +1,5 @@
 {
+  "type" : "perk",
   "name": "Faster Shoot",
   "description": "Your rate of fire increases.",
   "iconFile" : "resources/perks/faster_shoot/icon.png",

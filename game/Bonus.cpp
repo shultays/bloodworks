@@ -1,17 +1,10 @@
 #include "Bonus.h"
 
-#include "json.h"
 #include "cTools.h"
 #include "cGlobals.h"
 
-using json = nlohmann::json;
-
-Bonus::Bonus(const std::string& bonusDataFile)
+Bonus::Bonus(nlohmann::json& j)
 {
-	std::string jsonFile;
-	textFileRead(bonusDataFile.c_str(), jsonFile);
-	json j = json::parse(jsonFile.c_str());
-
 	name = j["name"].get<std::string>();
 	iconPath = j["iconFile"].get<std::string>();
 	scriptName = j["scriptName"].get<std::string>();

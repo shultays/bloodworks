@@ -1,4 +1,5 @@
 {
+  "type" : "gun",
   "name": "Rifle",
   "artFolder" : "resources/guns/rifle/",
   "icon" : "icon.png",

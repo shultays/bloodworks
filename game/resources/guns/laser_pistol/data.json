@@ -1,4 +1,5 @@
 {
+  "type" : "gun",
   "name": "Laser Pistol",
   "artFolder" : "resources/guns/laser_pistol/",
   "icon" : "icon.png",
