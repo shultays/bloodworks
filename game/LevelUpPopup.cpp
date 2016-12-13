@@ -69,7 +69,7 @@ void LevelUpPopup::show()
 	levelupGroupTitle->setText(ss.str());
 	currentPerkName->setText("");
 	currentPerkExplanation->setText("");
-	hoverLevelupPerkIndex = -1;
+	pressLevelupPerkIndex = hoverLevelupPerkIndex = -1;
 
 	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
@@ -149,7 +149,12 @@ void LevelUpPopup::tick()
 		}
 	}
 
-	if (input.isKeyReleased(mouse_button_left) && hoverLevelupPerkIndex >= 0)
+	if (input.isKeyPressed(mouse_button_left))
+	{
+		pressLevelupPerkIndex = hoverLevelupPerkIndex;
+	}
+
+	if (input.isKeyReleased(mouse_button_left) && hoverLevelupPerkIndex >= 0 && hoverLevelupPerkIndex == pressLevelupPerkIndex)
 	{
 		levelupPerks[hoverLevelupPerkIndex]->takeLevel();
 		bloodworks->onPerkUsed(levelupPerks[hoverLevelupPerkIndex]);

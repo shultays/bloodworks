@@ -33,7 +33,7 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 resource manager ı iyileştir
 default resource default olsun
 
-mermiler vurunca veya namlunun ucunda çıkaracağı ateşler
+mermiler vurunca veya namlunun ucunda çıkaracağı ateşler (daha fazla ateşler)
 
 mutli line text
 
