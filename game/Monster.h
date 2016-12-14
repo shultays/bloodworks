@@ -61,7 +61,7 @@ public:
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(std::string anim, float startPercentage);
 	void doDamage(int damage, const Vec2& dir);
-
+	void doDamageWithArgs(int damage, const Vec2& dir, sol::table& args);
 	bool isRemoved()
 	{
 		return isDead;

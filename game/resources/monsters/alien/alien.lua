@@ -34,8 +34,8 @@ function Alien.init(monster)
 end
 
 
-function Alien.onHit(monster, damage)
-	StunController.onHit(monster, damage)
+function Alien.onHit(monster, damage, args)
+	StunController.onHit(monster, damage, args)
 end
 
 

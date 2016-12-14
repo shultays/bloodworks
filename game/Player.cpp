@@ -49,7 +49,7 @@ Player::Player(Bloodworks *bloodworks)
 	bloodworks->addRenderable(renderable, PLAYER);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
-	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f));
+	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f).translateBy(0.0f, 50.0f));
 	bloodworks->addRenderable(crosshair, GUI + 100);
 
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
@@ -86,7 +86,7 @@ Player::Player(Bloodworks *bloodworks)
 
 	slowdownAmount = 0.0f;
 
-	crosshairPos = Vec2(10.0f);
+	crosshairPos = Vec2(0.0f, 50.0f);
 
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
@@ -338,6 +338,7 @@ void Player::setGun(Gun *gun)
 
 	if (this->gun)
 	{
+		shootRenderable->setColor(this->gun->getShootingParticleColor());
 		this->gun->start();
 	}
 }
