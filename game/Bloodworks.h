@@ -137,6 +137,10 @@ public:
 
 	int getUniqueId()
 	{
+		if (nextUniqueId < 1)
+		{
+			nextUniqueId = 1;
+		}
 		return nextUniqueId++;
 	}
 	const Vec2& getMapSize() const
