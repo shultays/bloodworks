@@ -197,6 +197,8 @@ class cParticle : public cRenderableWithShader
 	std::vector<QuadBufferData> quadBuffers;
 
 	bool nextIsStripBegining;
+	std::vector<cTextureShr> textures;
+
 public:
 	sol::table args; // todo move to private
 
@@ -209,10 +211,36 @@ public:
 		this->args = args;
 		maxBufferSize = 0;
 		nextIsStripBegining = true;
+
+		if (particleTemplate->scriptTable["setDefaultArgs"])
+		{
+			particleTemplate->scriptTable["setDefaultArgs"](args);
+		}
+		textures = particleTemplate->textures;
+	}
+
+	void setTexture(const std::string& path)
+	{
+		cTextureShr texture = resources.getTexture(path);
+		if (textures.size() == 0)
+		{
+			textures.push_back(texture);
+		}
+		else
+		{
+			textures[0] = texture;
+		}
+	}
+
+	void addTexture(const std::string& path)
+	{
+		cTextureShr texture = resources.getTexture(path);
+		textures.push_back(texture);
 	}
 
 	~cParticle()
 	{
+		textures.clear();
 		SAFE_DELETE(buff);
 
 		for (auto& bufferData : quadBuffers)
@@ -377,10 +405,10 @@ public:
 			cRenderableWithShader::render(isIdentity, mat);
 			glActiveTexture(GL_TEXTURE0);
 
-			for (int i = (int)particleTemplate->textures.size() - 1; i >= 0; i--)
+			for (int i = (int)textures.size() - 1; i >= 0; i--)
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
-				particleTemplate->textures[i]->bindTexture();
+				textures[i]->bindTexture();
 				particleTemplate->shader->setTexture(i, i);
 			}
 
