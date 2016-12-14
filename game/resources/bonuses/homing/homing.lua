@@ -56,11 +56,10 @@ function HomingOrbBullet.onHit(bullet, monster)
 	end
 	
 	bullet.data.lastHitIndex = monster.index
-	local ignoreId = "ignoreHoming" .. bullet.index
 	
-	monster.data[ignoreId] = true
+	monster:addIgnoreId(bullet.index)
 	
-	local newMonster = getClosestMonsterWithIgnoreData(bullet.position, ignoreId)
+	local newMonster = getClosestMonsterWithIgnoreId(bullet.position, bullet.index)
 
 	if newMonster == nil then
 		bullet.diesOnHit = true

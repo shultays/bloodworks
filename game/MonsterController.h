@@ -25,13 +25,13 @@ public:
 	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;
 
 	Monster* getClosestMonster(const Vec2& pos);
-	Monster* getClosestMonsterWithIgnoreData(const Vec2& pos, const std::string& ignoreData);
+	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
 	Monster* getClosestMonsterInRange(const Vec2& pos, float range);
-	Monster* getClosestMonsterInRangeWithIgnoreData(const Vec2& pos, float range, const std::string& ignoreData);
+	Monster* getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId);
 	std::vector<Monster*> getAllMonstersInRange(const Vec2& pos, float range);
 
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);
-	void damageMonstersInRangeWithIgnoreData(const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData);
+	void damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId);
 
 	Monster* addMonster(const std::string& monsterTemplateName);
 	int getMonsterCount() const;

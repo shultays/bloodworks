@@ -88,13 +88,9 @@ function MonsterGroupHelper.fixAngle(monster, angle)
 	end
 	
 	if closestMonster == nil then
-		data.ignoreThis = true
-		closestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
+		closestMonster = getClosestMonsterInRangeWithIgnoreId(monster.position, 25.0, monster.index)
 	else
-		data.ignoreThis = true
-		local newClosestMonster = getClosestMonsterInRangeWithIgnoreData(monster.position, 25.0, "ignoreThis")
-		data.ignoreThis = false
+		local newClosestMonster = getClosestMonsterInRangeWithIgnoreId(monster.position, 25.0, monster.index)
 		
 		if newClosestMonster ~= nil and newClosestMonster ~= closestMonster then
 			if closestMonster.position:distanceSquared(monster.position) > newClosestMonster.position:distanceSquared(monster.position) + 15 * 15 then

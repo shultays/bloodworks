@@ -66,16 +66,16 @@ const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  c
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)
 {
-	return getClosestMonsterWithIgnoreData(pos, "");
+	return getClosestMonsterWithIgnoreId(pos, -1);
 }
 
 
 Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float range)
 {
-	return getClosestMonsterInRangeWithIgnoreData(pos, range, "");
+	return getClosestMonsterInRangeWithIgnoreId(pos, range, -1);
 }
 
-Monster* MonsterController::getClosestMonsterInRangeWithIgnoreData(const Vec2& pos, float range, const std::string& ignoreData)
+Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId)
 {
 	float closest = range * range;
 	Monster *closestMonster = nullptr;
@@ -116,7 +116,7 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreData(const Vec2& p
 					if (monster->isDead == false
 						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
 						&& (d = monster->getPosition().distanceSquared(pos)) < closest
-						&& (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
+						&& (ignoreId == -1 || monster->hasIgnoreId(ignoreId) == false))
 					{
 						closest = d;
 						closestMonster = monster;
@@ -130,7 +130,7 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreData(const Vec2& p
 		for (auto& monster : monsters)
 		{
 			float d;
-			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
+			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreId == -1 ||  monster->hasIgnoreId(ignoreId) == false))
 			{
 				closest = d;
 				closestMonster = monster;
@@ -205,17 +205,17 @@ std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, 
 	return foundMonsters;
 }
 
-void MonsterController::damageMonstersInRangeWithIgnoreData(const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData)
+void MonsterController::damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId)
 {
 	std::vector<Monster*> monsters = getAllMonstersInRange(pos, range);
 	for (auto& monster : monsters)
 	{
-		if (ignoreData.length() == 0|| ((bool)monster->data[ignoreData]) == false)
+		if (ignoreId  == -1|| monster->hasIgnoreId(ignoreId) == false)
 		{
 			monster->doDamage(randInt(minRange, maxRange), (monster->position - pos).normalized());
 			if (mark)
 			{
-				monster->data[ignoreData] = true;
+				monster->addIgnoreId(ignoreId);
 			}
 		}
 	}
@@ -252,17 +252,17 @@ void MonsterController::addMonsterTemplate(nlohmann::json &j)
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
 {
-	damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, false, "");
+	damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, false, -1);
 }
 
-Monster* MonsterController::getClosestMonsterWithIgnoreData(const Vec2& pos, const std::string& ignoreData)
+Monster* MonsterController::getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId)
 {
 	float closest = FLT_MAX;
 	Monster *closestMonster = nullptr;
 	for (auto& monster : monsters)
 	{
 		float d;
-		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreData.length() == 0 || ((bool)monster->data[ignoreData]) == false))
+		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreId == -1 || monster->hasIgnoreId(ignoreId) == false))
 		{
 			closest = d;
 			closestMonster = monster;
