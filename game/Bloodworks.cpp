@@ -23,7 +23,7 @@
 
 #include "DirentHelper.h"
 
-int Bloodworks::nextUniqueId = 0;
+int Bloodworks::nextUniqueId = 1;
 
 void Bloodworks::init()
 {
