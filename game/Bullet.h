@@ -50,7 +50,7 @@ class Bullet
 		cParticle* particle;
 		Vec2 spawnShift;
 		float spawnDistance;
-		float moveDistanceSinceSpawn;
+		Vec2 lastSpawnPos;
 	};
 
 	std::vector<Particledata> particles;

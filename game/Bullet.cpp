@@ -70,11 +70,18 @@ void Bullet::tick()
 	table["bullet"] = this;
 	for (auto& particleData : particles)
 	{
-		particleData.moveDistanceSinceSpawn += moveSpeed * dt;
-		if (particleData.moveDistanceSinceSpawn > particleData.spawnDistance)
+		Vec2 finalPos = pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2));
+		Vec2 toFinalPos = (finalPos - particleData.lastSpawnPos).normalized();
+		while (particleData.lastSpawnPos.distanceSquared(finalPos) > particleData.spawnDistance * particleData.spawnDistance)
 		{
-			particleData.moveDistanceSinceSpawn -= particleData.spawnDistance;
-			particleData.particle->addParticle(pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2)), table);
+			
+			particleData.lastSpawnPos += toFinalPos * particleData.spawnDistance;
+			if (Vec2::dot(toFinalPos, finalPos - particleData.lastSpawnPos) < 0.0f)
+			{
+				particleData.lastSpawnPos = finalPos;
+			}
+
+			particleData.particle->addParticle(particleData.lastSpawnPos, table);
 		}
 	}
 
@@ -157,7 +164,7 @@ cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, 
 	Particledata particleData;
 	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particleData.spawnShift = shift;
-	particleData.moveDistanceSinceSpawn = spawnDistance;
+	particleData.lastSpawnPos = pos;
 	particleData.spawnDistance = spawnDistance;
 	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
