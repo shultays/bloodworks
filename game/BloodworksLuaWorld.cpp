@@ -96,7 +96,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setColor", &cParticle::setColor,
 		"setWorldMatrix", &cParticle::setWorldMatrix,
 		"addParticle", &cParticle::addParticle,
-		"args", &cParticle::args
+		"args", &cParticle::args,
+
+		"setTexture", &cParticle::setTexture,
+		"addTexture", &cParticle::addTexture
 		);
 
 	lua.new_usertype<Bullet>("Bullet",

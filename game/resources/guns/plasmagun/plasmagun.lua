@@ -10,7 +10,8 @@ function PlasmaGun.onTick(gun)
 	if gun.isTriggered then
 		if ShootTimer.CheckGun(gun) then
 			local bullet = gun:addBullet()
-			bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 3.0, {})
+			local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 3.0, {})
+			particle.args.color = Vec3.new(0.0, 0.6, 0.8)
 		end
 	end
 end

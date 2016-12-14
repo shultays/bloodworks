@@ -530,6 +530,17 @@ void Bloodworks::tick()
 		usedPerks.push_back(perks[0]);
 	}
 
+	if (input.isKeyPressed(key_1))
+	{
+		for (auto& bonus : bonuses)
+		{
+			if (bonus->getName() == "Homing Orb")
+			{
+				bonus->spawnAt(player->getPos());
+			}
+		}
+	}
+
 	if (input.isKeyPressed(key_3))
 	{
 		bonuses[0]->spawnAt(player->getPos());

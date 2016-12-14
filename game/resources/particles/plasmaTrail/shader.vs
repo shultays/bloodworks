@@ -2,7 +2,7 @@ attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
 
-attribute float color;
+attribute vec3 color;
 attribute float initialScale;
 attribute float scaleSpeed;
 attribute float initialAlpha;
@@ -25,8 +25,7 @@ void main(void)
 	vec3 viewPos = uViewMatrix * worldPos;
 	gl_Position = vec4(viewPos.x, viewPos.y, 0.0, 1.0);
 	
-	vec3 finalColor = vec3(color);
-	vColor = vec4(finalColor, initialAlpha - fadeOutSpeed * dt);
+	vColor = vec4(color, initialAlpha - fadeOutSpeed * dt);
 	
 	vVertexUV = uv;
 }
