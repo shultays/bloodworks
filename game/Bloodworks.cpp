@@ -189,6 +189,14 @@ void Bloodworks::init()
 
 	player = new Player(this);
 	player->setGun(guns[0]);
+
+	for (auto& gun : guns)
+	{
+		if (gun->getName() == "Plasma Gun")
+		{
+			player->setGun(gun);
+		}
+	}
 	
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();

@@ -49,6 +49,8 @@ renderable group vector tutmasın, linked list i kullansın
 
 bonus homing e particle
 
+particle ları dt de birden fazla eklesin
+
 ----------------
 
 

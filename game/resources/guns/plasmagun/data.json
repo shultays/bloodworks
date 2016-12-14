@@ -1,0 +1,14 @@
+{
+  "type" : "gun",
+  "name": "Plasma Gun",
+  "artFolder" : "resources/guns/plasmagun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [6.0, 6.0],
+  "bulletRadius" : 5.0,
+  "bulletSpeed" : 550.0,
+  "bulletDamage" : [30, 70],
+  
+  "scriptFile" : "resources/guns/plasmagun/plasmagun.lua",
+  "scriptName" : "PlasmaGun"
+}
