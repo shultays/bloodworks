@@ -10,5 +10,7 @@
   "bulletDamage" : [30, 70],
   
   "scriptFile" : "resources/guns/plasmagun/plasmagun.lua",
-  "scriptName" : "PlasmaGun"
+  "scriptName" : "PlasmaGun",
+  
+  "shootParticleColor" : [0.0, 0.6, 0.8]
 }

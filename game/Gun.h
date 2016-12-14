@@ -41,6 +41,7 @@ class Gun
 
 	bool isTriggered;
 
+	Vec4 shootParticleColor;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
@@ -59,4 +60,5 @@ public:
 	const std::string& getIconPath() const;
 	bool spreadVisible() const;
 	void setTriggered(bool param1);
+	const Vec4& getShootingParticleColor() const;
 };

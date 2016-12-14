@@ -11,7 +11,7 @@ function Shotgun.onTick(gun)
 		if ShootTimer.CheckGun(gun) then
 			for i = 1, 6 do
 				local bullet = gun:addBullet()
-				local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 0.0), 15.0, {})
+				local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
 				particle.args.initialScale = 2.5
 				particle.args.fadeOutSpeed = 1.6
 				bullet.moveSpeed = bullet.moveSpeed * (math.random() * 0.3 + 0.7)

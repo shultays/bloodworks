@@ -45,8 +45,8 @@ function Spider.init(monster)
 end
 
 
-function Spider.onHit(monster, damage)
-	StunController.onHit(monster, damage)
+function Spider.onHit(monster, damage, args)
+	StunController.onHit(monster, damage, args)
 end
 
 

@@ -5,7 +5,7 @@ renderable da ki uniform hash ini kaldır
 
 mermi collision unu monster a taşı (monster azdır)
 
-grid için linked belki
+grid için linked belki (bu zor)
 
 GPU da hareket eden mermi ekle
 mermiler kasabilir çok render ihtiyacı olunca
@@ -47,9 +47,8 @@ bonuslar spawn olurken efekt
 
 renderable group vector tutmasın, linked list i kullansın
 
-bonus homing e particle
 
-particle ları dt de birden fazla eklesin
+spread i generalize et
 
 ----------------
 

@@ -22,6 +22,22 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		hideSpread = false;
 	}
 
+	if (j.count("shootParticleColor"))
+	{
+		Vec4 color(1.0);
+		if (j["shootParticleColor"].size() == 4)
+		{
+			color.a = j["shootParticleColor"].at(3).get<float>();
+		}
+		color.r = j["shootParticleColor"].at(0).get<float>();
+		color.g = j["shootParticleColor"].at(1).get<float>();
+		color.b = j["shootParticleColor"].at(2).get<float>();
+		shootParticleColor = color;
+	}
+	else
+	{
+		shootParticleColor = Vec4(1.0f, 0.4f, 0.2f, 1.0f);
+	}
 	if (j.count("bulletTexture"))
 	{
 		bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
@@ -108,6 +124,11 @@ bool Gun::spreadVisible() const
 void Gun::setTriggered(bool triggered)
 {
 	this->isTriggered = triggered;
+}
+
+const Vec4& Gun::getShootingParticleColor() const
+{
+	return shootParticleColor;
 }
 
 Gun::~Gun()
