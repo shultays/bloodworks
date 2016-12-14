@@ -49,6 +49,9 @@ function FadeOutImage.init(gameObject)
 	if gameObject.data.fadeInDuration == nil then
 		gameObject.data.fadeInDuration = 0.0
 	end
+	if gameObject.data.startAlpha == nil then
+		gameObject.data.startAlpha = 1.0
+	end
 end
 
 
@@ -66,7 +69,7 @@ function FadeOutImage.onTick(gameObject)
 			alpha = 1.0
 		end
 	end
-	local a =  math.floor(255 * alpha)
+	local a =  math.floor(255 * alpha * gameObject.data.startAlpha)
     
 	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
 	gameObject.data.renderable:update()
