@@ -272,7 +272,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setScale", &Monster::setScale,
 		"setColor", &Monster::setColor,
 
-		"doDamage", &Monster::doDamage
+		"doDamage", &Monster::doDamage,
+		"doDamageWithArgs", &Monster::doDamageWithArgs
 		);
 
 
