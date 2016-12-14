@@ -130,6 +130,11 @@ void Monster::playAnimation(std::string anim, float startPercentage)
 
 void Monster::doDamage(int damage, const Vec2& dir)
 {
+	sol::table t = lua.create_table();
+	doDamageWithArgs(damage, dir, t);
+}
+void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
+{
 	if (isDead)
 	{
 		return;
@@ -144,7 +149,7 @@ void Monster::doDamage(int damage, const Vec2& dir)
 		bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
 		if (scriptTable["onHit"])
 		{
-			scriptTable["onHit"](this, damage);
+			scriptTable["onHit"](this, damage, args);
 		}
 	}
 }

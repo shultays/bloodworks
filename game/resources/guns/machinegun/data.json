@@ -5,7 +5,7 @@
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
-  "bulletMeshShift" : [-14.0, 0.0],
+  "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 1.0,
   "bulletSpeed" : 550.0,
   "bulletDamage" : [10, 25],
