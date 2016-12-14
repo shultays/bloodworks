@@ -50,6 +50,12 @@ class Monster
 	sol::function luaTick;
 	float scale;
 	//~lua
+
+	std::vector<int> ignoreIds;
+
+protected:
+	void killSelf(const Vec2& blowDir);
+
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
@@ -79,6 +85,7 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
-private:
-	void killSelf(const Vec2& blowDir);
+
+	void addIgnoreId(int id);
+	bool hasIgnoreId(int id);
 };

@@ -27,12 +27,11 @@ function PlasmaGun.onTick(gun)
 end
 
 function PlasmaGun.onBulletHit(gun, bullet, monster)
-	local ignoreId = "bullet" .. bullet.index
 	local m = monster
 	
 	local oldGameObjectPos = nil
 	while m ~= nill do
-		m.data[ignoreId] = true
+		m:addIgnoreId(bullet.index)
 	
 		local gameObject = addGameObject("FadeOutImage")
 		gameObject.data.startTime = time
@@ -71,7 +70,7 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 			oldGameObjectPos = bullet.position
 		end
 		
-		m = getClosestMonsterInRangeWithIgnoreData(bullet.position, 80.0, ignoreId)
+		m = getClosestMonsterInRangeWithIgnoreId(bullet.position, 80.0, bullet.index)
 	end
 	
 end

@@ -156,6 +156,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		bloodworks->multiplyGameSpeed(multiplier);
 	});
 
+	lua.set_function("getUniqueId", [&]()
+	{
+		return bloodworks->getUniqueId();
+	});
+
 	lua.set_function("addLine",
 		[&](const Vec2& pos0, const Vec2& pos1)
 	{
@@ -223,10 +228,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonster(pos);
 	});
 
-	lua.set_function("getClosestMonsterWithIgnoreData",
-		[&](const Vec2& pos, const std::string& ignoreData) -> Monster*
+	lua.set_function("getClosestMonsterWithIgnoreId",
+		[&](const Vec2& pos, int ignoreId) -> Monster*
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterWithIgnoreData(pos, ignoreData);
+		return bloodworks->getMonsterController()->getClosestMonsterWithIgnoreId(pos, ignoreId);
 	});
 
 	lua.set_function("getClosestMonsterInRange",
@@ -235,16 +240,16 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonsterInRange(pos, range);
 	});
 
-	lua.set_function("getClosestMonsterInRangeWithIgnoreData",
-		[&](const Vec2& pos, float range, const std::string& ignoreData) -> Monster*
+	lua.set_function("getClosestMonsterInRangeWithIgnoreId",
+		[&](const Vec2& pos, float range, int ignoreId) -> Monster*
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterInRangeWithIgnoreData(pos, range, ignoreData);
+		return bloodworks->getMonsterController()->getClosestMonsterInRangeWithIgnoreId(pos, range, ignoreId);
 	});
 
-	lua.set_function("damageMonstersInRangeWithIgnoreData",
-		[&](const Vec2& pos, float range, int minRange, int maxRange, bool mark, const std::string& ignoreData)
+	lua.set_function("damageMonstersInRangeWithIgnoreId",
+		[&](const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId)
 	{
-		return bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreData(pos, range, minRange, maxRange, mark, ignoreData);
+		return bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, mark, ignoreId);
 	});
 
 	lua.new_usertype<Monster>("Monster",
@@ -273,7 +278,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setColor", &Monster::setColor,
 
 		"doDamage", &Monster::doDamage,
-		"doDamageWithArgs", &Monster::doDamageWithArgs
+		"doDamageWithArgs", &Monster::doDamageWithArgs,
+		"addIgnoreId", &Monster::addIgnoreId,
+		"hasIgnoreId", &Monster::hasIgnoreId
 		);
 
 

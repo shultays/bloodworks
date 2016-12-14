@@ -13,6 +13,7 @@ Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	id = bloodworks->getUniqueId();
+	addIgnoreId(id);
 }
 
 void Monster::init(const MonsterTemplate* monsterTemplate)
@@ -152,6 +153,30 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 			scriptTable["onHit"](this, damage, args);
 		}
 	}
+}
+
+void Monster::addIgnoreId(int id)
+{
+	if (ignoreIds.size() == 0 || ignoreIds[ignoreIds.size() - 1] < id)
+	{
+		ignoreIds.push_back(id);
+	}
+	else
+	{
+		ignoreIds.push_back(INT_MAX);
+		int i = (int)ignoreIds.size() - 1;
+		while (i > 0 && ignoreIds[i - 1] > id)
+		{
+			ignoreIds[i] = ignoreIds[i - 1];
+			i--;
+		}
+		ignoreIds[i] = id;
+	}
+}
+
+bool Monster::hasIgnoreId(int id)
+{
+	return std::binary_search(ignoreIds.begin(), ignoreIds.end(), id);
 }
 
 int Monster::getId()
