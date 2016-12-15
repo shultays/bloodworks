@@ -46,7 +46,6 @@ bonuslar spawn olurken efekt
 renderable group vector tutmasın, linked list i kullansın
 
 
-spread i generalize et
 
 ----------------
 

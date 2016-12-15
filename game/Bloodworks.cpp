@@ -33,6 +33,7 @@ void Bloodworks::init()
 	lua.script_file("resources/guns/helpers.lua");
 	lua.script_file("resources/monsters/helpers.lua");
 
+	lua["time"] = timer.getTime();
 
 	dropController = new DropController(this);
 	monsterController = new MonsterController(this);
