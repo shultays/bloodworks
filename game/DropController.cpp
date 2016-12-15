@@ -109,6 +109,18 @@ void DropController::tick()
 	{
 		auto& drop = drops[i];
 		bool remove = false;
+
+		if (timer.getTime() - drop.time < 0.3f)
+		{
+			float s = (timer.getTime() - drop.time) / 0.34f;
+			//drop.renderable->setWorldMatrix(Mat3::scaleMatrix(s).translateBy(drop.pos));
+			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, s));
+		}
+		else
+		{
+			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		}
+
 		if (drop.pos.distanceSquared(playerPos) < 20.0f * 20.0f)
 		{
 			if (drop.gun)

@@ -41,6 +41,7 @@ bonuslara şans faktörü ekle
 
 bonuslar yanyana spawn olmasın
 
+text renderable scale olamıyor
 bonuslar spawn olurken efekt
 
 renderable group vector tutmasın, linked list i kullansın
