@@ -2,24 +2,22 @@
 function Pistol.init(gun)
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 350.0
-	ShootTimer.InitGun(gun, 0.25)
+	ShootTimer.initGun(gun, 0.25)
+	
+	SpreadHelper.initGun(gun)
+	gun.data.minSpread = 0.0
+	gun.data.maxSpread = 0.10
+	gun.data.spreadDecreaseSpeed = 0.25
+	gun.data.spreadIncreasePerShoot = 0.02
 end
 
 
 function Pistol.onTick(gun)
-	if gun.data.timeToNextShoot < time - 0.1 then
-		gun.spreadAngle = gun.spreadAngle - dt * 0.15
-	end
-	
-	if gun.spreadAngle < 0.0 then
-		gun.spreadAngle = 0
-	end
+	SpreadHelper.onTick(gun)
 	if gun.isTriggered then
-		if ShootTimer.CheckGun(gun) then
-			gun.spreadAngle = gun.spreadAngle + 0.025
-			if gun.spreadAngle > 0.15 then
-				gun.spreadAngle = 0.15
-			end
+		if ShootTimer.checkGun(gun) then
+		
+			SpreadHelper.onShoot(gun)
 			local bullet = gun:addBullet()
 			local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
 			particle.args.initialScale = 2.0

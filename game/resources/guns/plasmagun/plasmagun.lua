@@ -2,23 +2,19 @@
 function PlasmaGun.init(gun)
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 400.0
-	ShootTimer.InitGun(gun, 0.35)
+	ShootTimer.initGun(gun, 0.35)
+	SpreadHelper.initGun(gun)
+	gun.data.maxSpread = 0.10
+	gun.data.spreadDecreaseStartTime = 0.0
+	gun.data.spreadDecreaseSpeed = 0.05
 end
 
 
 function PlasmaGun.onTick(gun)
-	gun.spreadAngle = gun.spreadAngle - dt * 0.05
-	if gun.spreadAngle < 0.0 then
-		gun.spreadAngle = 0
-	end
-	
+	SpreadHelper.onTick(gun)
 	if gun.isTriggered then
-		if ShootTimer.CheckGun(gun) then
-		
-			gun.spreadAngle = gun.spreadAngle + 0.025
-			if gun.spreadAngle > 0.10 then
-				gun.spreadAngle = 0.10
-			end
+		if ShootTimer.checkGun(gun) then
+			SpreadHelper.onShoot(gun)
 			local bullet = gun:addBullet()
 			local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 3.0, {})
 			particle.args.color = Vec3.new(0.0, 0.6, 0.8)
