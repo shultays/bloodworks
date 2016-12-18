@@ -109,6 +109,9 @@
       <Filter>Bloodworks</Filter>
     </ClCompile>
     <ClCompile Include="Perk.cpp" />
+    <ClCompile Include="LaserRenderable.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -242,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="DirentHelper.h">
       <Filter>Coral\dirent</Filter>
+    </ClInclude>
+    <ClInclude Include="LaserRenderable.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
