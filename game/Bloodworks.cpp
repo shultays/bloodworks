@@ -18,15 +18,20 @@
 #include "BulletController.h"
 #include "MissionController.h"
 #include "BloodworksLuaWorld.h"
+#include "DirentHelper.h"
 
 #include <sstream>
 
-#include "DirentHelper.h"
+#include "LaserRenderable.h"
 
 int Bloodworks::nextUniqueId = 1;
 
 void Bloodworks::init()
 {
+	// LaserRenderable *rr = new LaserRenderable(this);
+	// rr->setWorldMatrix(Mat3::identity());
+	// 
+	// addRenderable(rr, PLAYER+1);
 	luaWorld = new BloodworksLuaWorld(this);
 
 	lua.script_file("resources/helpers.lua");
