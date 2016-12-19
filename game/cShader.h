@@ -389,7 +389,7 @@ public:
 	}
 
 
-	const Attribute& addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
+	Attribute addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
 		if (attributeIndices.count(name))
 		{
@@ -432,7 +432,7 @@ public:
 		uTextures[3] = addUniform("uTexture3", TypeInt).index;
 	}
 
-	const Uniform& addUniform(const std::string& name, int uniformType) 
+	Uniform addUniform(const std::string& name, int uniformType) 
 	{
 		if (uniformIndices.count(name))
 		{
