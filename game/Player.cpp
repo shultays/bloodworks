@@ -316,7 +316,13 @@ void Player::tick()
 
 	if (gun)
 	{
-		gun->setTriggered(input.isKeyDown(mouse_button_left));
+		bool trigerred = input.isKeyDown(mouse_button_left);
+		gun->setTriggered(trigerred);
+		if (trigerred && gun->isLaser())
+		{
+			Vec2 startPos = pos + aimDir * 20.0f - aimDir.sideVec() * 5.0f;
+			gun->setLaserData(startPos, -aimAngle, 100.0f);
+		}
 		gun->tick(dt);
 	}
 

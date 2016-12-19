@@ -36,6 +36,8 @@ public:
 
 	~cResources();
 
+	cShaderShr getShader(const std::string& file);
+
 	cShaderShr getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile);
 
 	cTextureShr getTexture(const std::string& textureName);

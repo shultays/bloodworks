@@ -9,6 +9,7 @@
 
 class Bloodworks;
 class Bullet;
+class LaserRenderable;
 
 class Gun
 {
@@ -42,6 +43,7 @@ class Gun
 	bool isTriggered;
 
 	Vec4 shootParticleColor;
+	LaserRenderable *laser;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
@@ -61,4 +63,11 @@ public:
 	bool spreadVisible() const;
 	void setTriggered(bool param1);
 	const Vec4& getShootingParticleColor() const;
+
+	bool isLaser() const
+	{
+		return laser != nullptr;
+	}
+
+	void setLaserData(const Vec2& pos, float angle, float length);
 };

@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "cRenderable.h"
+#include "LaserRenderable.h"
+
 Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 {
 	this->bloodworks = bloodworks;
@@ -75,6 +77,18 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	lua.script_file(scriptFilePath);
 	scriptTable["init"](this);
 
+
+	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
+	{
+		laser = new LaserRenderable(bloodworks, j);
+		laser->setWorldMatrix(Mat3::identity());
+		bloodworks->addRenderable(laser, PLAYER + 1);
+		laser->setVisible(false);
+	}
+	else
+	{
+		laser = nullptr;
+	}
 }
 
 void Gun::stop()
@@ -124,6 +138,10 @@ bool Gun::spreadVisible() const
 void Gun::setTriggered(bool triggered)
 {
 	this->isTriggered = triggered;
+	if (laser)
+	{
+		laser->setVisible(isTriggered);
+	}
 }
 
 const Vec4& Gun::getShootingParticleColor() const
@@ -131,9 +149,15 @@ const Vec4& Gun::getShootingParticleColor() const
 	return shootParticleColor;
 }
 
+void Gun::setLaserData(const Vec2& pos, float angle, float length)
+{
+	laser->setLaserData(pos, angle, length);
+}
+
 Gun::~Gun()
 {
 	bulletTexture = nullptr;
+	SAFE_DELETE(laser);
 }
 
 Bullet* Gun::addBullet()
