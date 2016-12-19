@@ -6,20 +6,20 @@
 
 GLuint laserQuad = -1;
 
-LaserRenderable::LaserRenderable(Bloodworks *bloodworks) : cRenderable((cGame*)bloodworks)
+LaserRenderable::LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j) : cRenderable((cGame*)bloodworks)
 {
 	laserLength = 100.0f;
-	laserSize = 20.0f;
 
-	laserBeginWidth = 10.0f;
-	laserEndWidth = 10.0f;
+	laserThickness = j["laserThickness"].get<float>();
 
-	laserBeginShift = 0;
-	laserEndShift = 0;
+	laserBeginWidth = j["laserBeginWidth"].get<float>();
+	laserEndWidth = j["laserEndWidth"].get<float>();
+
+	laserBeginShift = j["laserBeginShift"].get<float>();
+	laserEndShift = j["laserEndShift"].get<float>();
 	
-
-	laserTexture = resources.getTexture("resources/guns/laser/laser.png");
-	shader = resources.getShader("resources/guns/laser/laser.vs", "resources/guns/laser/laser.ps");
+	laserTexture = resources.getTexture(j["laserTexture"].get<std::string>());
+	shader = resources.getShader(j["laserShader"].get<std::string>());
 
 	aYShift = shader->addAttribute("yShift", TypeFloat);
 	widthMult1 = shader->addAttribute("widthMult1", TypeFloat);
@@ -67,13 +67,20 @@ LaserRenderable::~LaserRenderable()
 	shader = nullptr;
 }
 
+void LaserRenderable::setLaserData(const Vec2& pos, float angle, float length)
+{
+	Mat3 mat = Mat3::rotationMatrix(angle).translateBy(pos);
+	laserLength = length;
+	setWorldMatrix(mat);
+}
+
 void LaserRenderable::render(bool isIdentity, const Mat3& mat)
 {
 	game->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
 	shader->begin();
 	shader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
-	shader->setWorldMatrix(Mat3::identity());
+	shader->setWorldMatrix(worldMatrix);
 	glActiveTexture(0);
 	shader->setTexture0(0);
 	laserTexture->bindTexture();
@@ -91,7 +98,7 @@ void LaserRenderable::render(bool isIdentity, const Mat3& mat)
 	shader->setUniform(width2.index, laserLength + laserEndShift - laserBeginShift);
 	shader->setUniform(width3.index, laserEndWidth);
 
-	shader->setUniform(laserWidth.index, laserSize);
+	shader->setUniform(laserWidth.index, laserThickness);
 
 	glDrawArrays(GL_QUADS, 0, 12);
 	/*

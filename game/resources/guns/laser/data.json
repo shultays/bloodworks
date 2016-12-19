@@ -1,0 +1,29 @@
+{
+  "type" : "gun",
+  "name": "Laser",
+  "artFolder" : "resources/guns/laser/",
+  "icon" : "icon.png",
+  "bulletTexture" : "laser.png",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 4.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [45, 80],
+  
+  "scriptFile" : "resources/guns/laser/laser.lua",
+  "scriptName" : "Laser",
+  
+  
+  
+  "isLaser" : true,
+  "laserTexture" : "resources/guns/laser/laser.png",
+  "laserShader" : "resources/guns/laser/laser",
+  
+  "laserThickness" : 20.0,
+  
+  "laserBeginShift" : 0.0,
+  "laserBeginWidth" : 10.0,
+  
+  "laserEndShift" : 0.0,
+  "laserEndWidth" : 10.0
+  
+}
