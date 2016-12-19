@@ -30,8 +30,8 @@ void Bloodworks::init()
 {
 	// LaserRenderable *rr = new LaserRenderable(this);
 	// rr->setWorldMatrix(Mat3::identity());
-	// 
 	// addRenderable(rr, PLAYER+1);
+
 	luaWorld = new BloodworksLuaWorld(this);
 
 	lua.script_file("resources/helpers.lua");
