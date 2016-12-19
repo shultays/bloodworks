@@ -74,6 +74,11 @@ cResources::~cResources()
 	freeAll();
 }
 
+cShaderShr cResources::getShader(const std::string& file)
+{
+	return getShader(file + ".vs", file + ".ps");
+}
+
 cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 {
 	std::string ID = shaderID(vertexShaderFile, pixelShaderFile);

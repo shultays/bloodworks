@@ -71,7 +71,7 @@ Bullet* BulletController::addCustomBullet(const sol::table& params)
 	Bullet *bullet = new Bullet(bloodworks, nullptr);
 	Player *player = bloodworks->getPlayer();
 
-	bullet->pos = player->getPos() + player->getAimDir() * 20;
+	bullet->pos = player->getPos() + player->getAimDir() * 20.0f;
 	bullet->moveSpeed = 20.0f;
 	bullet->moveAngle = player->getAimDir().toAngle();
 	bullet->radius = 2.0f;
