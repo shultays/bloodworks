@@ -1,22 +1,37 @@
 #pragma once
 
+#include "cShader.h"
 #include "cRenderable.h"
 #include "json.h"
 
 class Bloodworks;
 
-class LaserRenderable : public cRenderableGroup
+class LaserRenderable : public cRenderable
 {
-	cTexturedQuadRenderable *laserBeginRenderable;
-	cTexturedQuadRenderable *laserMidrenderable;
-	cTexturedQuadRenderable *laserEndRenderable;
-	float laserLength;
-	float laserScale;
-	Vec2 laserBeginShift;
-	Vec2 laserEndShift;
+	cTextureShr laserTexture;
+	cShaderShr shader;
 
+	float laserLength;
+	float laserSize;
+
+	float laserBeginShift;
+	float laserBeginWidth;
+	float laserEndShift;
+	float laserEndWidth;
+
+	cShader::Attribute aYShift;
+	cShader::Attribute widthMult1;
+	cShader::Attribute widthMult2;
+	cShader::Attribute widthMult3;
+	cShader::Attribute xUV;
+
+	cShader::Uniform beginX;
+	cShader::Uniform width1;
+	cShader::Uniform width2;
+	cShader::Uniform width3;
+	cShader::Uniform laserWidth;
 public:
 	LaserRenderable(Bloodworks *bloodworks);
-private:
-	void updateRenderables();
+	~LaserRenderable();
+	virtual void render(bool isIdentity, const Mat3& mat) override;
 };
