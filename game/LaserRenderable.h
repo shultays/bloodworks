@@ -12,7 +12,7 @@ class LaserRenderable : public cRenderable
 	cShaderShr shader;
 
 	float laserLength;
-	float laserSize;
+	float laserThickness;
 
 	float laserBeginShift;
 	float laserBeginWidth;
@@ -31,7 +31,8 @@ class LaserRenderable : public cRenderable
 	cShader::Uniform width3;
 	cShader::Uniform laserWidth;
 public:
-	LaserRenderable(Bloodworks *bloodworks);
+	LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j);
 	~LaserRenderable();
+	void setLaserData(const Vec2& pos, float angle, float length);
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 };
