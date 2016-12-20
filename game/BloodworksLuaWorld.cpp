@@ -149,6 +149,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"isDead", sol::readonly(&Bullet::isDead),
 
 		"data", &Bullet::data,
+		"onDamageArgs", &Bullet::onDamageArgs,
 
 		"addRenderableTexture", &Bullet::addRenderableTexture,
 		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
