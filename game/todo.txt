@@ -46,6 +46,7 @@ bonuslar spawn olurken efekt
 
 renderable group vector tutmasın, linked list i kullansın
 
+silahlar sadece yavaşlatabilsin
 
 
 ----------------
@@ -87,7 +88,8 @@ ekstra exp duration
 
 
 silahlar
-laser
+cone şeklinde silahlar, ray of frost? 
+frost laser?
 pompalı
 bullet trail
 laser
