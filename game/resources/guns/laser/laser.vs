@@ -12,7 +12,6 @@ uniform float beginX;
 uniform float width1;
 uniform float width2;
 uniform float width3;
-uniform float maxLength;
 
 uniform float laserWidth;
 
