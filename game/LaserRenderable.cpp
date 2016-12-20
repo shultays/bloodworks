@@ -63,8 +63,8 @@ void LaserRenderable::updateMatrix()
 void LaserTemplate::render(float laserLength, const Mat3& worldMatrix)
 {
 	game->lastShader = nullptr;
-	shader->begin();
 	glEnable(GL_TEXTURE_2D);
+	shader->begin();
 	shader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
 	shader->setWorldMatrix(worldMatrix);
 	glActiveTexture(0);
