@@ -169,6 +169,15 @@ public:
 		this->shader = shader;
 	}
 
+	cShaderShr getShader() const
+	{
+		return shader;
+	}
+
+	int addUniformFloat(const std::string uniform, float val);
+	int addUniformVec2(const std::string uniform, const Vec2& data);
+	int addUniformVec3(const std::string uniform, const Vec3& data);
+	int addUniformVec4(const std::string uniform, const Vec4& data);
 	void setUniform(int index, float data);
 	void setUniform(int index, const Vec2& data);
 	void setUniform(int index, const Vec3& data);

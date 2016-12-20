@@ -96,6 +96,34 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 	}
 }
 
+int cRenderableWithShader::addUniformFloat(const std::string uniform, float val)
+{
+	int index = shader->addUniform(uniform, TypeFloat).index;
+	setUniform(index, val);
+	return index;
+}
+
+int cRenderableWithShader::addUniformVec2(const std::string uniform, const Vec2& data)
+{
+	int index = shader->addUniform(uniform, TypeVec2).index;
+	setUniform(index, data);
+	return index;
+}
+
+int cRenderableWithShader::addUniformVec3(const std::string uniform, const Vec3& data)
+{
+	int index = shader->addUniform(uniform, TypeVec3).index;
+	setUniform(index, data);
+	return index;
+}
+
+int cRenderableWithShader::addUniformVec4(const std::string uniform, const Vec4& data)
+{
+	int index = shader->addUniform(uniform, TypeVec4).index;
+	setUniform(index, data);
+	return index;
+}
+
 void cRenderableWithShader::setUniform(int index, float data)
 {
 	UniformData uniform;
