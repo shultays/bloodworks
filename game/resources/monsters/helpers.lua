@@ -23,8 +23,10 @@ function StunController.getSlowAmount(monster)
 end
 
 function StunController.onHit(monster, damage, args)
-	if args ~= nil and args.doNotStun ~= true then
-		local data = monster.data
+	local data = monster.data
+	if args.slowdownOnly then
+		data.slowTime = data.slowDuration
+	elseif args.doNotStun ~= true then
 		data.stunTime = data.stunDuration
 		data.slowTime = data.slowDuration
 	end
