@@ -133,14 +133,14 @@ void DropController::tick()
 			}
 			remove = true;
 		}
-		
-		if (drop.time + 15.0f < timer.getTime())
-		{
-			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, ((int)((timer.getTime() - drop.time) * 3)) % 2 != 0 ? 0.2f : 1.0f));
-		}
-		else if(drop.time + 20.0f < timer.getTime())
+
+		if (drop.time + 20.0f < timer.getTime())
 		{
 			remove = true;
+		}
+		else if (drop.time + 15.0f < timer.getTime())
+		{
+			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, ((int)((timer.getTime() - drop.time) * 3)) % 2 != 0 ? 0.2f : 1.0f));
 		}
 
 		if (remove)
