@@ -13,6 +13,8 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "LaserRenderable.h"
+#include "cShader.h"
+#include "cRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -99,7 +101,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setPositionAndAngle", &LaserRenderable::setPositionAndAngle,
 		"setPosition", &LaserRenderable::setPosition,
 		"setAngle", &LaserRenderable::setAngle,
-		"setLength", &LaserRenderable::setLength
+		"setLength", &LaserRenderable::setLength,
+
+		"addUniformFloat", &LaserRenderable::addUniformFloat,
+		"addUniformVec2", &LaserRenderable::addUniformVec2,
+		"addUniformVec3", &LaserRenderable::addUniformVec3,
+		"addUniformVec4", &LaserRenderable::addUniformVec4
 		);
 	lua.new_usertype<cParticle>("Particle",
 		"setLevel", &cParticle::setLevel,

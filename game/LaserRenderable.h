@@ -34,13 +34,13 @@ class LaserTemplate
 	cShader::Uniform laserWidth;
 
 public:
-	void render(float laserLength, const Mat3& worldMatrix);
+	void render(float laserLength);
 	LaserTemplate(nlohmann::json& j);
 	~LaserTemplate();
 	const std::string& getName() const;
 };
 
-class LaserRenderable : public cRenderable
+class LaserRenderable : public cRenderableWithShader
 {
 	float laserLength;
 

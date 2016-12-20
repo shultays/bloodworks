@@ -12,8 +12,9 @@ uniform float beginX;
 uniform float width1;
 uniform float width2;
 uniform float width3;
-
 uniform float laserWidth;
+
+uniform float maxRange;
 
 varying vec4 vColor;
 varying vec2 vVertexUV;

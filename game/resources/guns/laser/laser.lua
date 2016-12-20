@@ -1,7 +1,8 @@
 
 function Laser.init(gun)
 	gun.spreadAngle = 0.0
-	gun.crosshairDistance = 350.0
+	gun.crosshairDistance = 550.0
+	gun.data.maxRangeUniform = gun.laser:addUniformFloat("maxRange", 250.0)
 	ShootTimer.initGun(gun, 0.1)
 end
 
