@@ -28,10 +28,6 @@ int Bloodworks::nextUniqueId = 1;
 
 void Bloodworks::init()
 {
-	// LaserRenderable *rr = new LaserRenderable(this);
-	// rr->setWorldMatrix(Mat3::identity());
-	// addRenderable(rr, PLAYER+1);
-
 	luaWorld = new BloodworksLuaWorld(this);
 
 	lua.script_file("resources/helpers.lua");
@@ -198,7 +194,7 @@ void Bloodworks::init()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Plasma Gun")
+		if (gun->getName() == "Laser")
 		{
 			player->setGun(gun);
 		}
@@ -248,6 +244,11 @@ Bloodworks::~Bloodworks()
 		SAFE_DELETE(particle.second);
 	}
 	particles.clear();
+	for (auto& laser : laserTemplates)
+	{
+		SAFE_DELETE(laser.second);
+	}
+	laserTemplates.clear();
 
 	player->setGun(nullptr);
 	SAFE_DELETE(bloodRenderable);
@@ -353,6 +354,11 @@ int Bloodworks::onPlayerDamaged(int damage, sol::table& params)
 		damage = perk->onPlayerDamaged(damage, params);
 	}
 	return damage;
+}
+
+void Bloodworks::addLaserTemplate(LaserTemplate *laserTemplate)
+{
+	laserTemplates[laserTemplate->getName()] = laserTemplate;
 }
 
 void Bloodworks::tickCamera()

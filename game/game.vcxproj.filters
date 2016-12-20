@@ -249,5 +249,8 @@
     <ClInclude Include="LaserRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="cMath.h">
+      <Filter>Coral\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

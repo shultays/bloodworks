@@ -338,7 +338,7 @@ public:
 		{
 			ret += data[i] * data[i];
 		}
-		return (G_SQRT_RET_TYPE)sqrt((double)ret);
+		return (G_SQRT_RET_TYPE)sqrt(ret);
 	}
 
 	G_VEC_TYPE lengthSquared() const 

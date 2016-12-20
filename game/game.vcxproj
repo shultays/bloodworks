@@ -212,6 +212,7 @@
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cMat.h" />
+    <ClInclude Include="cMath.h" />
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />

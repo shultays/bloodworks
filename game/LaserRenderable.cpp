@@ -6,9 +6,94 @@
 
 GLuint laserQuad = -1;
 
-LaserRenderable::LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j) : cRenderable((cGame*)bloodworks)
+LaserRenderable::LaserRenderable(Bloodworks *bloodworks, LaserTemplate *laserTemplate) : cRenderable((cGame*)bloodworks)
 {
 	laserLength = 100.0f;
+	this->laserTemplate = laserTemplate;
+}
+
+LaserRenderable::~LaserRenderable()
+{
+}
+
+void LaserRenderable::setLaserData(const Vec2& pos, float angle, float length)
+{
+	this->pos = pos;
+	this->angle = angle;
+	laserLength = length;
+	updateMatrix();
+}
+
+void LaserRenderable::setPositionAndAngle(const Vec2& pos, float angle)
+{
+	this->pos = pos;
+	this->angle = angle;
+	updateMatrix();
+}
+
+void LaserRenderable::setPosition(const Vec2& pos)
+{
+	this->pos = pos;
+	updateMatrix();
+}
+
+void LaserRenderable::setAngle(float angle)
+{
+	this->angle = angle;
+	updateMatrix();
+}
+
+void LaserRenderable::setLength(float length)
+{
+	laserLength = length;
+
+}
+
+void LaserRenderable::render(bool isIdentity, const Mat3& mat)
+{
+	laserTemplate->render(laserLength, isIdentity ? worldMatrix : worldMatrix * mat);
+}
+
+void LaserRenderable::updateMatrix()
+{
+	Mat3 mat = Mat3::rotationMatrix(angle).translateBy(pos);
+	setWorldMatrix(mat);
+}
+
+void LaserTemplate::render(float laserLength, const Mat3& worldMatrix)
+{
+	game->lastShader = nullptr;
+	shader->begin();
+	glEnable(GL_TEXTURE_2D);
+	shader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
+	shader->setWorldMatrix(worldMatrix);
+	glActiveTexture(0);
+	shader->setTexture0(0);
+	laserTexture->bindTexture();
+
+	glBindBuffer(GL_ARRAY_BUFFER, laserQuad);
+	shader->bindAttribute(aYShift.index, 4 * 5, 4 * 0);
+	shader->bindAttribute(widthMult1.index, 4 * 5, 4 * 1);
+	shader->bindAttribute(widthMult2.index, 4 * 5, 4 * 2);
+	shader->bindAttribute(widthMult3.index, 4 * 5, 4 * 3);
+	shader->bindAttribute(xUV.index, 4 * 5, 4 * 4);
+
+
+	shader->setUniform(beginX.index, laserBeginShift - laserBeginWidth);
+	shader->setUniform(width1.index, laserBeginWidth);
+	shader->setUniform(width2.index, laserLength + laserEndShift - laserBeginShift);
+	shader->setUniform(width3.index, laserEndWidth);
+
+	shader->setUniform(laserWidth.index, laserThickness);
+
+	glDrawArrays(GL_QUADS, 0, 12);
+}
+LaserTemplate::LaserTemplate(nlohmann::json& j)
+{
+	if (j.count("name"))
+	{
+		name = j["name"].get<std::string>();
+	}
 
 	laserThickness = j["laserThickness"].get<float>();
 
@@ -17,7 +102,7 @@ LaserRenderable::LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j) : cR
 
 	laserBeginShift = j["laserBeginShift"].get<float>();
 	laserEndShift = j["laserEndShift"].get<float>();
-	
+
 	laserTexture = resources.getTexture(j["laserTexture"].get<std::string>());
 	shader = resources.getShader(j["laserShader"].get<std::string>());
 
@@ -59,51 +144,13 @@ LaserRenderable::LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j) : cR
 	}
 }
 
-
-
-LaserRenderable::~LaserRenderable()
+LaserTemplate::~LaserTemplate()
 {
-	laserTexture = nullptr;
 	shader = nullptr;
+	laserTexture = nullptr;
 }
 
-void LaserRenderable::setLaserData(const Vec2& pos, float angle, float length)
+const std::string& LaserTemplate::getName() const
 {
-	Mat3 mat = Mat3::rotationMatrix(angle).translateBy(pos);
-	laserLength = length;
-	setWorldMatrix(mat);
-}
-
-void LaserRenderable::render(bool isIdentity, const Mat3& mat)
-{
-	game->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
-	shader->begin();
-	shader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
-	shader->setWorldMatrix(worldMatrix);
-	glActiveTexture(0);
-	shader->setTexture0(0);
-	laserTexture->bindTexture();
-
-	glBindBuffer(GL_ARRAY_BUFFER, laserQuad);
-	shader->bindAttribute(aYShift.index, 4 * 5, 4 * 0);
-	shader->bindAttribute(widthMult1.index, 4 * 5,  4 * 1);
-	shader->bindAttribute(widthMult2.index, 4 * 5,  4 * 2);
-	shader->bindAttribute(widthMult3.index, 4 * 5,  4 * 3);
-	shader->bindAttribute(xUV.index, 4 * 5, 4 * 4);
-
-
-	shader->setUniform(beginX.index, laserBeginShift - laserBeginWidth);
-	shader->setUniform(width1.index, laserBeginWidth);
-	shader->setUniform(width2.index, laserLength + laserEndShift - laserBeginShift);
-	shader->setUniform(width3.index, laserEndWidth);
-
-	shader->setUniform(laserWidth.index, laserThickness);
-
-	glDrawArrays(GL_QUADS, 0, 12);
-	/*
-	glBindBuffer(GL_ARRAY_BUFFER, laserQuadMid);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	glBindBuffer(GL_ARRAY_BUFFER, laserQuadEnd);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);*/
+	return name;
 }

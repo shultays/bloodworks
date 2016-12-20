@@ -69,5 +69,10 @@ public:
 		return laser != nullptr;
 	}
 
-	void setLaserData(const Vec2& pos, float angle, float length);
+	void updateLaser(const Vec2& pos, float angle);
+
+	int getRandomDamage() const
+	{
+		return randInt(damage[0], damage[1]);
+	}
 };

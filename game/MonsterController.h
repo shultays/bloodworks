@@ -12,17 +12,27 @@ class MonsterTemplate;
 
 class MonsterController
 {
+	friend class BloodworksLuaWorld;
 	std::vector<Monster*> monsters;
 	std::unordered_map<int, Monster*> monstersMap;
 	Bloodworks *bloodworks;
 
 	cGrid<Monster> grid;
 	std::unordered_map<std::string, MonsterTemplate*> monsterTemplates;
+
+	class MonsterHitResult
+	{
+	public:
+		Monster *monster;
+		float distance;
+	};
 public:
 	MonsterController(Bloodworks *bloodworks);
 	~MonsterController();
 	void tick();
 	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;
+
+	MonsterHitResult getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId);
 
 	Monster* getClosestMonster(const Vec2& pos);
 	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
