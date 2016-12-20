@@ -15,7 +15,9 @@ function LaserMachineGun.onTick(gun)
 	if gun.isTriggered then
 		if ShootTimer.checkGun(gun) then
 			SpreadHelper.onShoot(gun)
-			gun:addBullet();
+			local bullet = gun:addBullet()
+			
+			bullet.onDamageArgs.slowdownOnly = true
 		end
 	end
 end
