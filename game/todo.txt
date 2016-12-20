@@ -46,8 +46,7 @@ bonuslar spawn olurken efekt
 
 renderable group vector tutmasın, linked list i kullansın
 
-silahlar sadece yavaşlatabilsin
-
+!! bufflar çarpılma gibi olmasın, istediği buffları verebilsin herşey. istediği gibi arttırsın azaltsın vs
 
 ----------------
 
@@ -103,7 +102,9 @@ mayın?
 yavaşlatan bir silahchian lighting
 space ace teki lazer? gittikçe büyüyen mermili
 daha kısa ama açılı pompalı
-
+büyüyen ring atan silah
+atınca t şeklinde patlayan silah
+döne döne laser atan silah
 
 
 ulti silahlar?

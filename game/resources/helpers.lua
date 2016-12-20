@@ -21,3 +21,14 @@ RenderableLevel = {
 	foreground = 6000,
 	gui = 7000
 }
+
+
+function printTable(myTable)
+	if myTable == nil then
+		print("nil")
+	else 
+		for k, v in pairs( myTable ) do
+		   print(k, v)
+		end
+	end
+ end
