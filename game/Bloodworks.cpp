@@ -194,7 +194,7 @@ void Bloodworks::init()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Laser")
+		if (gun->getName() == "Machine Gun")
 		{
 			player->setGun(gun);
 		}

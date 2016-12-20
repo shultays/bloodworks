@@ -59,7 +59,11 @@ public:
 	{
 		return worldMatrix;
 	}
-
+	
+	const Vec2& getPosition() const
+	{
+		return worldMatrix.row2.vec2;
+	}
 	void setWorldMatrix(const Mat3& worldMatrix);
 
 	void setColor(const Vec4& color)
