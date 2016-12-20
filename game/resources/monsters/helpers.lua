@@ -16,7 +16,7 @@ function StunController.getSlowAmount(monster)
 		mul = 0.0
 		data.stunTime = data.stunTime - dt
 	elseif data.slowTime > 0.0 then
-		mul = data.slowMultiplier * (data.slowDuration - data.slowTime)/ data.slowDuration
+		mul = data.customSlowdownAmount * data.slowMultiplier * (data.slowDuration - data.slowTime)/ data.slowDuration
 		data.slowTime = data.slowTime - dt
 	end
 	return mul
@@ -24,6 +24,11 @@ end
 
 function StunController.onHit(monster, damage, args)
 	local data = monster.data
+	if args.customSlowdownAmount ~= nil then
+		data.customSlowdownAmount = args.customSlowdownAmount
+	else
+		data.customSlowdownAmount = 1.0
+	end
 	if args.slowdownOnly then
 		data.slowTime = data.slowDuration
 	elseif args.doNotStun ~= true then

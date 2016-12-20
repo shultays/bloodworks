@@ -20,6 +20,9 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	diesOnHit = true;
 	meshScale = Vec2(1.0f);
 	data = lua.create_table();
+	onDamageArgs = lua.create_table();
+	onDamageArgs["bullet"] = this;
+	onDamageArgs["gun"] = gun;
 	meshRotation = -1500;
 }
 
@@ -113,7 +116,7 @@ void Bullet::tick()
 				script[onHitCallback](this, monster);
 			}
 
-			monster->doDamage(damage, moveDir);
+			monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
 			if (diesOnHit)
 			{
 				removeSelf();

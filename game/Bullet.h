@@ -42,6 +42,7 @@ class Bullet
 	std::string shouldHitMonsterTest;
 
 	sol::table data;
+	sol::table onDamageArgs;
 
 	bool diesOnHit;
 
