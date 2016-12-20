@@ -2,6 +2,9 @@
 #include "Bloodworks.h"
 #include "Monster.h"
 #include "sol.h"
+#include "cMath.h"
+
+#include "Player.h"
 
 
 MonsterController::MonsterController(Bloodworks *bloodworks)
@@ -36,7 +39,7 @@ void MonsterController::tick()
 			grid.relocate(monster);
 		}
 	}
-
+	
 	if (input.isKeyDown(key_f1))
 	{
 		grid.drawDebug();
@@ -62,6 +65,43 @@ MonsterController::~MonsterController()
 const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  const
 {
 	return grid.getNodeAtPos(pos);
+}
+
+MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId)
+{
+	MonsterHitResult result;
+	result.distance = FLT_MAX;
+	result.monster = nullptr;
+
+	if (input.isKeyDown(key_f3))
+	{
+		debugRenderer.addLine(begin, begin + ray);
+		for (auto& monster : monsters)
+		{
+			float t;
+			if ((t = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius())) >= 0.0f)
+			{
+				debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+				debugRenderer.addCircle(begin + ray.normalized() * t, 5, 0.0f, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+			else
+			{
+				debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+		}
+	}
+
+	for (auto & monster : monsters)
+	{
+		float distance = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius());
+		if (distance >= 0.0f && distance < result.distance)
+		{
+			result.distance = distance;
+			result.monster = monster;
+		}
+	}
+
+	return result;
 }
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)

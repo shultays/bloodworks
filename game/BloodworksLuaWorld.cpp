@@ -12,6 +12,7 @@
 #include "cRenderable.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "LaserRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -89,6 +90,17 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setWorldMatrix", &cRenderable::setWorldMatrix
 		);
 
+	lua.new_usertype<LaserRenderable>("Laser",
+		"setLevel", &LaserRenderable::setLevel,
+		"setAllignment", &LaserRenderable::setAlignment,
+		"setVisible", &LaserRenderable::setVisible,
+		"setColor", &LaserRenderable::setColor,
+		"setLaserData", &LaserRenderable::setLaserData,
+		"setPositionAndAngle", &LaserRenderable::setPositionAndAngle,
+		"setPosition", &LaserRenderable::setPosition,
+		"setAngle", &LaserRenderable::setAngle,
+		"setLength", &LaserRenderable::setLength
+		);
 	lua.new_usertype<cParticle>("Particle",
 		"setLevel", &cParticle::setLevel,
 		"setAllignment", &cParticle::setAlignment,
@@ -174,6 +186,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 
+
 	lua.new_usertype<Gun>("Gun",
 		"index", sol::readonly(&Gun::id),
 		"data", &Gun::data,
@@ -188,7 +201,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"isTriggered", &Gun::isTriggered,
 
-		"addBullet", &Gun::addBullet
+		"getRandomDamage", &Gun::getRandomDamage,
+
+		"addBullet", &Gun::addBullet,
+		"laser", &Gun::laser
 		);
 
 	lua.set_function("addGameObject",
@@ -250,6 +266,17 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId)
 	{
 		return bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, mark, ignoreId);
+	});
+
+	lua.new_usertype<MonsterController::MonsterHitResult>("MonsterHitResult",
+		"monster", &MonsterController::MonsterHitResult::monster,
+		"distance", &MonsterController::MonsterHitResult::distance
+		);
+
+	lua.set_function("getClosestMonsterOnLine",
+		[&](const Vec2& pos, const Vec2& ray, int ignoreId)
+	{
+		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId);
 	});
 
 	lua.new_usertype<Monster>("Monster",
@@ -317,7 +344,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"position", &Player::pos,
 		"moveSpeed", &Player::moveSpeed,
 		"moveAngle", &Player::moveAngle,
-		"crosshairPos", &Player::crosshairPos,
+		"crosshairPos", sol::readonly(&Player::crosshairPos),
+		"gunPos", sol::readonly(&Player::gunPos),
 		"aimDir", sol::readonly(&Player::aimDir),
 		"moveDir", sol::readonly(&Player::moveDir),
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),

@@ -6,14 +6,16 @@
 
 class Bloodworks;
 
-class LaserRenderable : public cRenderable
+
+class LaserTemplate
 {
+	std::string name;
+
+	friend class LaserRenderable;
 	cTextureShr laserTexture;
 	cShaderShr shader;
 
-	float laserLength;
 	float laserThickness;
-
 	float laserBeginShift;
 	float laserBeginWidth;
 	float laserEndShift;
@@ -30,9 +32,30 @@ class LaserRenderable : public cRenderable
 	cShader::Uniform width2;
 	cShader::Uniform width3;
 	cShader::Uniform laserWidth;
+
 public:
-	LaserRenderable(Bloodworks *bloodworks, nlohmann::json& j);
+	void render(float laserLength, const Mat3& worldMatrix);
+	LaserTemplate(nlohmann::json& j);
+	~LaserTemplate();
+	const std::string& getName() const;
+};
+
+class LaserRenderable : public cRenderable
+{
+	float laserLength;
+
+	LaserTemplate *laserTemplate;
+	float angle;
+	Vec2 pos;
+
+	void updateMatrix();
+public:
+	LaserRenderable(Bloodworks *bloodworks, LaserTemplate *laserTemplate);
 	~LaserRenderable();
 	void setLaserData(const Vec2& pos, float angle, float length);
+	void setPositionAndAngle(const Vec2& pos, float angle);
+	void setPosition(const Vec2& pos);
+	void setAngle(float angle);
+	void setLength(float length);
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 };

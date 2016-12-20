@@ -80,7 +80,9 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
-		laser = new LaserRenderable(bloodworks, j);
+		LaserTemplate *laserTemplate = new LaserTemplate(j);
+		bloodworks->addLaserTemplate(laserTemplate);
+		laser = new LaserRenderable(bloodworks, laserTemplate);
 		laser->setWorldMatrix(Mat3::identity());
 		bloodworks->addRenderable(laser, PLAYER + 1);
 		laser->setVisible(false);
@@ -149,9 +151,9 @@ const Vec4& Gun::getShootingParticleColor() const
 	return shootParticleColor;
 }
 
-void Gun::setLaserData(const Vec2& pos, float angle, float length)
+void Gun::updateLaser(const Vec2& pos, float angle)
 {
-	laser->setLaserData(pos, angle, length);
+	laser->setPositionAndAngle(pos, angle);
 }
 
 Gun::~Gun()
@@ -165,7 +167,7 @@ Bullet* Gun::addBullet()
 	Vec2 dir = bloodworks->getPlayer()->getAimDir();
 	Bullet *bullet = new Bullet(bloodworks, this);
 	Player *player = bloodworks->getPlayer();
-	bullet->pos = player->getPos() + player->getAimDir() * 22 - player->getAimDir().sideVec() * 4.0f;
+	bullet->pos = player->getGunPos();
 	bullet->moveSpeed = bulletSpeed;
 	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
