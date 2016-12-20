@@ -36,6 +36,7 @@ class MissionController;
 class MonsterController;
 class BulletController;
 class BloodworksLuaWorld;
+class LaserTemplate;
 
 
 class Bloodworks : public cGame
@@ -67,6 +68,7 @@ class Bloodworks : public cGame
 	std::vector<cTexturedQuadRenderable*> fgs;
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
+	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
 
 	static int nextUniqueId;
 
@@ -173,4 +175,5 @@ public:
 	std::vector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
 	int onPlayerDamaged(int damage, sol::table& params);
+	void addLaserTemplate(LaserTemplate * laserTemplate);
 };

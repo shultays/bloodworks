@@ -26,6 +26,7 @@ class Player
 	cRenderable *crosshair;
 	cRenderable *spread;
 	Vec2 crosshairPos;
+	Vec2 gunPos;
 	Gun *gun;
 	Gun *secondaryGun;
 	Vec2 aimDir;
@@ -99,4 +100,5 @@ public:
 	void doHeal(int hp);
 	int getLevel() const;
 	void playShootAnimation();
+	const Vec2& getGunPos() const;
 };

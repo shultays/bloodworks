@@ -22,7 +22,7 @@ Player::Player(Bloodworks *bloodworks)
 	slowdownOnHit = true;
 
 	oldSpreadAngle = 0.0f;
-	oldMoveAmount = oldPos = pos = Vec2::zero();
+	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
 	renderable = new cRenderableGroup(bloodworks);
 	aimAngle = 0.0f;
 	aimDir = Vec2::fromAngle(aimAngle);
@@ -309,6 +309,8 @@ void Player::tick()
 	
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
+	gunPos = pos + aimDir * 22.0f - aimDir.sideVec() * 4.0f;
+
 	Mat3 mat = Mat3::identity();
 	mat.rotateBy(pi_d2 - aimAngle);
 	mat.translateBy(pos);
@@ -320,8 +322,7 @@ void Player::tick()
 		gun->setTriggered(trigerred);
 		if (trigerred && gun->isLaser())
 		{
-			Vec2 startPos = pos + aimDir * 20.0f - aimDir.sideVec() * 5.0f;
-			gun->setLaserData(startPos, -aimAngle, 100.0f);
+			gun->updateLaser(gunPos, -aimAngle);
 		}
 		gun->tick(dt);
 	}
@@ -452,4 +453,9 @@ int Player::getLevel() const
 void Player::playShootAnimation()
 {
 	shootRenderable->playAnimation(1);
+}
+
+const Vec2& Player::getGunPos() const
+{
+	return gunPos;
 }
