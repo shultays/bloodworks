@@ -75,7 +75,6 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	crosshairDistance = 400.0f;
 
 	lua.script_file(scriptFilePath);
-	scriptTable["init"](this);
 
 
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
@@ -91,10 +90,16 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	{
 		laser = nullptr;
 	}
+
+	scriptTable["init"](this);
 }
 
 void Gun::stop()
 {
+	if (laser)
+	{
+		laser->setVisible(false);
+	}
 }
 
 void Gun::start()
