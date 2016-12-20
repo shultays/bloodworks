@@ -8,28 +8,6 @@
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	bloodworks->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
-	cShaderShr shader = defaultShader;
-	shader->begin();
-	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
-
-	shader->bindPosition(sizeof(float) * 8, 0);
-	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
-	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
-	shader->setColor(Vec4(1.0f));
-	shader->setTexture0(0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-	glDisableVertexAttribArray(0);
-
-	glDisable(GL_TEXTURE_2D);
-	bloodworks->lastShader = nullptr;
-
 	for(int i=0; i<bloods.size(); i++)
 	{
 		auto& blood = bloods[i];
@@ -127,6 +105,29 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 			bloodworks->lastShader = nullptr;
 		}
 	}
+
+	bloodworks->lastShader = nullptr;
+	glEnable(GL_TEXTURE_2D);
+	cShaderShr shader = defaultShader;
+	shader->begin();
+	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
+	glBindBuffer(GL_ARRAY_BUFFER, quad);
+
+	shader->bindPosition(sizeof(float) * 8, 0);
+	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
+	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
+	shader->setColor(Vec4(1.0f));
+	shader->setTexture0(0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
+	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glDisableVertexAttribArray(0);
+
+	glDisable(GL_TEXTURE_2D);
+	bloodworks->lastShader = nullptr;
+
 }
 
 void BloodRenderable::tick()
@@ -223,7 +224,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(8.0f, 14.0f)).translateBy(pos));
 	renderable->setTexture(1, "resources/blood/blood_bg.png");
 	renderable->setColor(Vec4::fromColor(0xFF660000));
-	bloodworks->addRenderable(renderable, BACKGROUND + 1);
+	bloodworks->addRenderable(renderable, BACKGROUND + 2);
 
 	BloodData data;
 	data.renderable = renderable;
@@ -250,7 +251,7 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	{
 		bodyPartData.rotateSpeed = -bodyPartData.rotateSpeed;
 	}
-	bloodworks->addRenderable(partRenderable, BACKGROUND + 2);
+	bloodworks->addRenderable(partRenderable, BACKGROUND + 3);
 
 	bodyParts.push_back(bodyPartData);
 }

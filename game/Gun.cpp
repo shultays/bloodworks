@@ -145,7 +145,7 @@ bool Gun::spreadVisible() const
 void Gun::setTriggered(bool triggered)
 {
 	this->isTriggered = triggered;
-	if (laser)
+	if (laser && timer.getDt() > 0.0f)
 	{
 		laser->setVisible(isTriggered);
 	}

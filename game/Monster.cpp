@@ -206,7 +206,6 @@ void Monster::killSelf(const Vec2& blowDir)
 	{
 		partCount = maxCount;
 	}
-
 	for (int i = 0; i < partCount; i++)
 	{
 		int t = randInt(maxCount);
