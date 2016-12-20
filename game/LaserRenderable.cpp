@@ -6,7 +6,7 @@
 
 GLuint laserQuad = -1;
 
-LaserRenderable::LaserRenderable(Bloodworks *bloodworks, LaserTemplate *laserTemplate) : cRenderable((cGame*)bloodworks)
+LaserRenderable::LaserRenderable(Bloodworks *bloodworks, LaserTemplate *laserTemplate) : cRenderableWithShader((cGame*)bloodworks, laserTemplate->shader)
 {
 	laserLength = 100.0f;
 	this->laserTemplate = laserTemplate;
@@ -51,7 +51,9 @@ void LaserRenderable::setLength(float length)
 
 void LaserRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	laserTemplate->render(laserLength, isIdentity ? worldMatrix : worldMatrix * mat);
+	cRenderableWithShader::render(isIdentity, mat);
+	shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
+	laserTemplate->render(laserLength);
 }
 
 void LaserRenderable::updateMatrix()
@@ -60,13 +62,11 @@ void LaserRenderable::updateMatrix()
 	setWorldMatrix(mat);
 }
 
-void LaserTemplate::render(float laserLength, const Mat3& worldMatrix)
+void LaserTemplate::render(float laserLength)
 {
 	game->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
 	shader->begin();
-	shader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
-	shader->setWorldMatrix(worldMatrix);
 	glActiveTexture(0);
 	shader->setTexture0(0);
 	laserTexture->bindTexture();
