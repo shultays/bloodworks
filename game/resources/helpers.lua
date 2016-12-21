@@ -32,3 +32,45 @@ function printTable(myTable)
 		end
 	end
  end
+ 
+FadeOutImage = {}
+
+function FadeOutImage.init(gameObject)
+	if gameObject.data.fadeOutStartTime == nil then
+		gameObject.data.fadeOutStartTime = 1.0
+	end
+	if gameObject.data.fadeOutDuration == nil then
+		gameObject.data.fadeOutDuration = 1.0
+	end
+	if gameObject.data.fadeInDuration == nil then
+		gameObject.data.fadeInDuration = 0.0
+	end
+	if gameObject.data.startAlpha == nil then
+		gameObject.data.startAlpha = 1.0
+	end
+end
+
+
+function FadeOutImage.onTick(gameObject)
+	local timeDiff = time - gameObject.data.startTime
+	local alpha
+	if timeDiff < gameObject.data.fadeInDuration then
+		alpha = timeDiff / gameObject.data.fadeInDuration
+	else 
+		alpha = 1.0 - (timeDiff - gameObject.data.fadeOutStartTime) / gameObject.data.fadeOutDuration
+		if alpha < 0.0 then 
+			gameObject.toBeRemoved = true
+			alpha = 0.0
+		elseif alpha > 1.0 then
+			alpha = 1.0
+		end
+	end
+	local a =  math.floor(255 * alpha * gameObject.data.startAlpha)
+    
+	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
+	gameObject.data.renderable:update()
+end
+
+function FadeOutImage.clear(gameObjectId)
+
+end

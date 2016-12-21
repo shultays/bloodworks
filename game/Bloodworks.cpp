@@ -26,6 +26,24 @@
 
 int Bloodworks::nextUniqueId = 1;
 
+
+void appendJson(nlohmann::json& j, const std::string& fileName)
+{
+	std::string jsonFile2;
+	textFileRead(fileName, jsonFile2);
+	nlohmann::json j2 = nlohmann::json::parse(jsonFile2.c_str());
+
+	if (j2.count("baseFile"))
+	{
+		appendJson(j, j2["baseFile"].get<std::string>());
+	}
+
+	for (nlohmann::json::iterator it = j2.begin(); it != j2.end(); ++it)
+	{
+		j[it.key()] = it.value();
+	}
+}
+
 void Bloodworks::init()
 {
 	luaWorld = new BloodworksLuaWorld(this);
@@ -47,10 +65,8 @@ void Bloodworks::init()
 	{
 		if (f.isTypeOf("json"))
 		{
-			std::string jsonFile;
-			textFileRead(f.folder + f.file, jsonFile);
-			nlohmann::json j = nlohmann::json::parse(jsonFile.c_str());
-
+			nlohmann::json j;
+			appendJson(j, f.folder + f.file);
 			std::string type = j["type"].get<std::string>();
 			if (type == "gun")
 			{
@@ -363,21 +379,21 @@ void Bloodworks::addLaserTemplate(LaserTemplate *laserTemplate)
 
 void Bloodworks::tickCamera()
 {
-	if (cameraCenterPos.x > player->getPos().x + 50.0f)
+	if (cameraCenterPos.x > player->getPosition().x + 50.0f)
 	{
-		cameraCenterPos.x = player->getPos().x + 50;
+		cameraCenterPos.x = player->getPosition().x + 50;
 	}
-	else if (cameraCenterPos.x < player->getPos().x - 50.0f)
+	else if (cameraCenterPos.x < player->getPosition().x - 50.0f)
 	{
-		cameraCenterPos.x = player->getPos().x - 50;
+		cameraCenterPos.x = player->getPosition().x - 50;
 	}
-	if (cameraCenterPos.y > player->getPos().y + 50.0f)
+	if (cameraCenterPos.y > player->getPosition().y + 50.0f)
 	{
-		cameraCenterPos.y = player->getPos().y + 50;
+		cameraCenterPos.y = player->getPosition().y + 50;
 	}
-	else if (cameraCenterPos.y < player->getPos().y - 50.0f)
+	else if (cameraCenterPos.y < player->getPosition().y - 50.0f)
 	{
-		cameraCenterPos.y = player->getPos().y - 50;
+		cameraCenterPos.y = player->getPosition().y - 50;
 	}
 
 	Vec2 playerAimDir = player->getCrosshairPos();
@@ -548,26 +564,26 @@ void Bloodworks::tick()
 		{
 			if (bonus->getName() == "Homing Orb")
 			{
-				bonus->spawnAt(player->getPos());
+				bonus->spawnAt(player->getPosition());
 			}
 		}
 	}
 
 	if (input.isKeyPressed(key_3))
 	{
-		bonuses[0]->spawnAt(player->getPos());
+		bonuses[0]->spawnAt(player->getPosition());
 	}
 
 	if (input.isKeyPressed(key_4))
 	{
 		for (int i = 0; i < guns.size(); i++)
 		{
-			dropController->createGun(player->getPos() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+			dropController->createGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
 		}
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
-			dropController->createBonus(player->getPos() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
+			dropController->createBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
 		}
 	}
 

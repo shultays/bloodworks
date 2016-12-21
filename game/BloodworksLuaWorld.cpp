@@ -15,6 +15,7 @@
 #include "LaserRenderable.h"
 #include "cShader.h"
 #include "cRenderable.h"
+#include "MonsterTemplate.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -264,6 +265,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonsterInRange(pos, range);
 	});
 
+	lua.set_function("getRandomMapPosition",
+		[&]() -> Vec2
+	{
+		return Vec2(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50), randFloat(bloodworks->getMapMin().y + 50, bloodworks->getMapMax().y - 50));
+	});
+
+	lua.set_function("getRandomMonsterSpawnPos",
+		[&]() -> Vec2
+	{
+		return bloodworks->getMonsterController()->getRandomMonsterSpawnPos();
+	});
+
 	lua.set_function("getClosestMonsterInRangeWithIgnoreId",
 		[&](const Vec2& pos, float range, int ignoreId) -> Monster*
 	{
@@ -286,6 +299,21 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	{
 		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId);
 	});
+
+	lua.new_usertype<MonsterTemplate>("MonsterTemplate",
+		"name", sol::readonly(&MonsterTemplate::name),
+		"experience", sol::readonly(&MonsterTemplate::experience),
+		"textureSize", sol::readonly(&MonsterTemplate::size),
+		"textureShift", sol::readonly(&MonsterTemplate::textureShift),
+		"hitPoint", sol::readonly(&MonsterTemplate::hitPoint),
+		"collisionRadius", sol::readonly(&MonsterTemplate::collisionRadius),
+		"bulletRadius", sol::readonly(&MonsterTemplate::bulletRadius),
+		"hasBlood", sol::readonly(&MonsterTemplate::hasBlood),
+		"scriptPath", sol::readonly(&MonsterTemplate::scriptPath),
+		"scriptTable", sol::readonly(&MonsterTemplate::scriptTable),
+		"scriptArgs", sol::readonly(&MonsterTemplate::scriptArgs)
+	);
+
 
 	lua.new_usertype<Monster>("Monster",
 		"name", &Monster::name,
@@ -315,7 +343,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"doDamage", &Monster::doDamage,
 		"doDamageWithArgs", &Monster::doDamageWithArgs,
 		"addIgnoreId", &Monster::addIgnoreId,
-		"hasIgnoreId", &Monster::hasIgnoreId
+		"hasIgnoreId", &Monster::hasIgnoreId,
+
+		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 
 

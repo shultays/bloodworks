@@ -176,4 +176,5 @@ public:
 	void onPerkUsed(Perk *levelupPerks);
 	int onPlayerDamaged(int damage, sol::table& params);
 	void addLaserTemplate(LaserTemplate * laserTemplate);
+
 };
