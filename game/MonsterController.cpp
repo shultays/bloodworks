@@ -290,6 +290,42 @@ void MonsterController::addMonsterTemplate(nlohmann::json &j)
 	monsterTemplates[t->getName()] = t;
 }
 
+Vec2 MonsterController::getRandomMonsterSpawnPos()
+{
+	float bestScore = FLT_MAX;
+	Vec2 bestPos;
+	int tryCount = 0;
+	while (tryCount++ < 10)
+	{
+		float score = 0.0f;
+		Vec2 pos(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50), randFloat(bloodworks->getMapMin().y + 50, bloodworks->getMapMax().y - 50));
+
+		auto monstersInrange = getAllMonstersInRange(pos, 100.0f);
+		for (auto& m : monstersInrange)
+		{
+			score += 100.0f * 100.0f - m->getPosition().distanceSquared(pos);
+		}
+
+		float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
+		if (distanceSquaredToPlayer < 100.0f)
+		{
+			score += 100.0f;
+			score += (100.0f * 100.0f - bloodworks->getPlayer()->getPosition().distanceSquared(pos)) * 20.0f;
+		}
+		if (score == 0.0f)
+		{
+			return pos;
+		}
+		else if (score < bestScore)
+		{
+			bestScore = score;
+			bestPos = pos;
+		}
+	}
+
+	return bestPos;
+}
+
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
 {
 	damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, false, -1);

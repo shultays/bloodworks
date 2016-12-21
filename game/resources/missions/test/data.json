@@ -1,0 +1,7 @@
+{
+  "type": "mission",
+  "name": "Test Mission",
+  
+  "scriptFile" : "resources/missions/test/test.lua",
+  "scriptName" : "TestMission"
+}

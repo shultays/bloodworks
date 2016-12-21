@@ -48,4 +48,6 @@ public:
 	Monster* getMonster(int id) const;
 
 	void addMonsterTemplate(nlohmann::json &j);
+
+	Vec2 getRandomMonsterSpawnPos();
 };
