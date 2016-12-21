@@ -66,7 +66,7 @@ public:
 	~Player();
 	void tick();
 
-	const Vec2& getPos() const
+	const Vec2& getPosition() const
 	{
 		return pos;
 	}
