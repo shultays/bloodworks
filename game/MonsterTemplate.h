@@ -10,6 +10,7 @@
 
 class MonsterTemplate
 {
+	friend class BloodworksLuaWorld;
 	friend class Monster;
 	Vec2 size;
 	Vec2 textureShift;
@@ -21,6 +22,7 @@ class MonsterTemplate
 	bool hasBlood;
 	std::string scriptPath;
 	sol::table scriptTable;
+	sol::table scriptArgs;
 
 	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
 
@@ -80,6 +82,36 @@ public:
 				data.shift.setZero();
 			}
 			bodyParts.push_back(data);
+		}
+
+		scriptArgs = lua.create_table();
+		if (j.count("scriptArgs"))
+		{
+
+			auto& scriptArgsJson = j["scriptArgs"];
+			for (nlohmann::json::iterator it = scriptArgsJson.begin(); it != scriptArgsJson.end(); ++it)
+			{
+				switch (it.value().type())
+				{
+				case nlohmann::json::value_t::boolean:
+					scriptArgs[it.key()] = it.value().get<bool>();
+					break;
+				case nlohmann::json::value_t::number_float:
+					scriptArgs[it.key()] = it.value().get<float>();
+					break;
+				case nlohmann::json::value_t::number_integer:
+					scriptArgs[it.key()] = it.value().get<int>();
+					break;
+				case nlohmann::json::value_t::number_unsigned:
+					scriptArgs[it.key()] = it.value().get<unsigned>();
+					break;
+				case nlohmann::json::value_t::string:
+					scriptArgs[it.key()] = it.value().get<std::string>();
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 

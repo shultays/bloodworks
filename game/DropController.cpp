@@ -69,7 +69,7 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 void DropController::createBonus(const Vec2& position, int forceIndex)
 {
 	Drop drop;
-	drop.time = timer.getTime();
+	drop.time = floor(timer.getTime());
 	auto& bonuses = bloodworks->getBonuses();
 	if (forceIndex >= 0)
 	{
@@ -104,7 +104,7 @@ void DropController::createBonus(const Vec2& position, int forceIndex)
 
 void DropController::tick()
 {
-	Vec2 playerPos = bloodworks->getPlayer()->getPos();
+	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
 	for (int i = 0; i < drops.size(); i++)
 	{
 		auto& drop = drops[i];
