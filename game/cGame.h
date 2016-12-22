@@ -86,4 +86,19 @@ public:
 	void resetToBackBuffer();
 	void addPostProcess(cPostProcess *postProcess, int level);
 	void removePostProcess(cPostProcess *postProcess);
+
+	const Vec2& getCameraPos() const
+	{
+		return cameraPos;
+	}
+
+	float getCameraZoom() const
+	{
+		return cameraZoom;
+	}
+
+	float getCameraAngle() const
+	{
+		return cameraAngle;
+	}
 };

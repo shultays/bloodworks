@@ -290,12 +290,16 @@ void MonsterController::addMonsterTemplate(nlohmann::json &j)
 	monsterTemplates[t->getName()] = t;
 }
 
-Vec2 MonsterController::getRandomMonsterSpawnPos()
+Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
 {
 	float bestScore = FLT_MAX;
 	Vec2 bestPos;
-	int tryCount = 0;
-	while (tryCount++ < 10)
+	int tryCount = outsideScreen ? 20 : 10;
+
+	Vec2 screenMin = bloodworks->getCameraPos() - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 50;
+	Vec2 screenMax = bloodworks->getCameraPos() + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 50;
+
+	while (tryCount --> 0)
 	{
 		float score = 0.0f;
 		Vec2 pos(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50), randFloat(bloodworks->getMapMin().y + 50, bloodworks->getMapMax().y - 50));
@@ -307,11 +311,20 @@ Vec2 MonsterController::getRandomMonsterSpawnPos()
 		}
 
 		float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
-		if (distanceSquaredToPlayer < 100.0f)
+		if (distanceSquaredToPlayer < 200.0f)
 		{
-			score += 100.0f;
-			score += (100.0f * 100.0f - bloodworks->getPlayer()->getPosition().distanceSquared(pos)) * 20.0f;
+			score += 200.0f;
+			score += (200.0f * 200.0f - bloodworks->getPlayer()->getPosition().distanceSquared(pos)) * 20.0f;
 		}
+
+		if (outsideScreen)
+		{
+			if (pos.x > screenMin.x && pos.x < screenMax.x && pos.y > screenMin.y && pos.y < screenMax.y)
+			{
+				score += 100.0f * 100.0f;
+			}
+		}
+
 		if (score == 0.0f)
 		{
 			return pos;
@@ -321,9 +334,20 @@ Vec2 MonsterController::getRandomMonsterSpawnPos()
 			bestScore = score;
 			bestPos = pos;
 		}
+
 	}
 
 	return bestPos;
+}
+
+Vec2 MonsterController::getRandomMonsterSpawnPos()
+{
+	return getRandomMonsterSpawnPosAux(false);
+}
+
+Vec2 MonsterController::getRandomMonsterSpawnPosOutsideScreen()
+{
+	return getRandomMonsterSpawnPosAux(true);
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

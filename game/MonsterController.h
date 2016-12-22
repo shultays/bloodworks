@@ -49,5 +49,7 @@ public:
 
 	void addMonsterTemplate(nlohmann::json &j);
 
+	Vec2 getRandomMonsterSpawnPosAux(bool outsideScreen);
+	Vec2 getRandomMonsterSpawnPosOutsideScreen();
 	Vec2 getRandomMonsterSpawnPos();
 };
