@@ -236,7 +236,7 @@ void Bloodworks::init()
 
 Bloodworks::Bloodworks()
 {
-	mapSize = 1048.0f;
+	mapSize = 2048.0f;
 	mapBegin = -mapSize*0.5f;
 	mapEnd = mapBegin + mapSize;
 

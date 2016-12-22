@@ -22,8 +22,8 @@ function Alien.init(monster)
 	
 	monster.moveSpeed = 0
 	monster.moveAngle =  0
-	monster.data.moving = true
-	monster.data.lastHitTime = 0.0
+	data.moving = true
+	data.lastHitTime = 0.0
 	
 	local scriptArgs = monster.monsterTemplate.scriptArgs
 	if scriptArgs.isRandom then
@@ -32,6 +32,9 @@ function Alien.init(monster)
 	
 	monster:playAnimation("walk", math.random())
 	
+    data.maxMoveSpeed = 50.0
+    data.maxRotateSpeed = 0.03
+    
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
 	MonsterMeleeHelper.init(monster)
@@ -78,10 +81,10 @@ function Alien.onTick(monster)
 	
 	newAngle = MonsterGroupHelper.fixAngle(monster, angleToMovePos)
 	
-	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, 0.03 * timeScale)
+	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, data.maxRotateSpeed * timeScale)
 	
 	if data.moving then
-		monster.moveSpeed = 50.0 * StunController.getSlowAmount(monster);
+		monster.moveSpeed = data.maxMoveSpeed * StunController.getSlowAmount(monster);
 	else
 		monster.moveSpeed = 0.0;
 	end
