@@ -5,8 +5,6 @@ renderable da ki uniform hash ini kaldır
 
 mermi collision unu monster a taşı (monster azdır)
 
-grid için linked belki (bu zor)
-
 GPU da hareket eden mermi ekle
 mermiler kasabilir çok render ihtiyacı olunca
 
@@ -23,8 +21,6 @@ explosionları güzelleştir (belki smoke & şarapnel?)
 !!! game objeler için timer (reflex e lazım)
 
 !! post process belirli levellere
-
-!! ateş edince efekt silaha
 
 !! mermi çarpınca efekt
 
@@ -47,6 +43,13 @@ bonuslar spawn olurken efekt
 renderable group vector tutmasın, linked list i kullansın
 
 !! bufflar çarpılma gibi olmasın, istediği buffları verebilsin herşey. istediği gibi arttırsın azaltsın vs
+
+mission iyileştirmeleri
+boss tipi canavarlar
+vuruş değerleri random olabilsin
+daha fazla yaratık gibi
+yaratıklar daha random
+
 
 ----------------
 
