@@ -25,15 +25,11 @@ function Alien.init(monster)
 	data.moving = true
 	data.lastHitTime = 0.0
 	
-	local scriptArgs = monster.monsterTemplate.scriptArgs
-	if scriptArgs.isRandom then
-		monster.data.randomMove = true
-	end
-	
 	monster:playAnimation("walk", math.random())
 	
     data.maxMoveSpeed = 50.0
     data.maxRotateSpeed = 0.03
+    data.playerSeeRange = 100.0
     
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
@@ -51,11 +47,11 @@ function Alien.onTick(monster)
 	
 	local posToMove = player.position
 	
-	if monster.data.randomMove then
-		posToMove = monster.data.randomPos
+	if data.randomMove then
+		posToMove = data.randomPos
 		if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
 			posToMove = getRandomMapPosition()
-			monster.data.randomPos = posToMove
+			data.randomPos = posToMove
 		end
 	end
 	
@@ -63,19 +59,17 @@ function Alien.onTick(monster)
 	distanceToPlayer = diffToPlayer:length()
 	angleToPlayer = diffToPlayer:getAngle()
 	
-	if distanceToPlayer < 100 then
-		local c = (distanceToPlayer - 50) / 50
+	if distanceToPlayer < data.playerSeeRange then
+		local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
 		if c < 0.0 then
 			c = 0.0
 		end
 		posToMove = posToMove * c + player.position * (1.0 - c)
 	end
 	
-	
 	diffToMovePos = posToMove - monster.position
 	distanceToMovePos = diffToMovePos:length()
 	angleToMovePos = diffToMovePos:getAngle()
-	
 	
 	MonsterMeleeHelper.onTick(monster)
 	
