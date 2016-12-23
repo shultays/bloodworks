@@ -541,7 +541,7 @@ void Bloodworks::tick()
 		{
 			lastSetTickTime += 1.0f;
 			std::stringstream ss;
-			ss << "FPS " << tickCount;
+			ss << "FPS " << tickCount << " Monster " << monsterController->getMonsterCount();
 			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 			tickCount = 0;

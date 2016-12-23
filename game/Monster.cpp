@@ -75,7 +75,7 @@ Monster::~Monster()
 void Monster::tick()
 {
 	scriptTable["onTick"](this);
-
+	healthRenderable->setVisible(input.isKeyDown(key_f6));
 	std::vector<int> toTrigger;
 	for (int i = (int)timers.size() - 1; i >= 0; i--)
 	{
