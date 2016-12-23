@@ -377,6 +377,11 @@ void Bloodworks::addLaserTemplate(LaserTemplate *laserTemplate)
 	laserTemplates[laserTemplate->getName()] = laserTemplate;
 }
 
+bool Bloodworks::isLevelUpPopupVisible() const
+{
+	return levelUpPopup->isVisible();
+}
+
 void Bloodworks::tickCamera()
 {
 	if (cameraCenterPos.x > player->getPosition().x + 50.0f)

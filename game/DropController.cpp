@@ -22,6 +22,7 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 	Drop drop;
 	drop.bonus = nullptr;
 	drop.time = timer.getTime();
+	drop.canFadeout = false;
 	auto& guns = bloodworks->getGuns();
 
 	if (forceIndex == -1)
@@ -69,7 +70,8 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 void DropController::createBonus(const Vec2& position, int forceIndex)
 {
 	Drop drop;
-	drop.time = floor(timer.getTime());
+	drop.canFadeout = false;
+	drop.time = timer.getTime();
 	auto& bonuses = bloodworks->getBonuses();
 	if (forceIndex >= 0)
 	{
@@ -113,7 +115,6 @@ void DropController::tick()
 		if (timer.getTime() - drop.time < 0.3f)
 		{
 			float s = (timer.getTime() - drop.time) / 0.34f;
-			//drop.renderable->setWorldMatrix(Mat3::scaleMatrix(s).translateBy(drop.pos));
 			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, s));
 		}
 		else
@@ -140,7 +141,12 @@ void DropController::tick()
 		}
 		else if (drop.time + 15.0f < timer.getTime())
 		{
-			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, ((int)((timer.getTime() - drop.time) * 3)) % 2 != 0 ? 0.2f : 1.0f));
+			bool isFadeout = ((int)(timer.getTime() * 3)) % 2 != 0;
+			if (isFadeout == false)
+			{
+				drop.canFadeout = true;
+			}
+			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, (isFadeout && drop.canFadeout) ? 0.2f : 1.0f));
 		}
 
 		if (remove)

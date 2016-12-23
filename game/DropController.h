@@ -17,6 +17,8 @@ class DropController
 		Vec2 pos;
 		cRenderableGroup *renderable;
 		float time;
+
+		bool canFadeout;
 	};
 
 	std::vector<Drop> drops;

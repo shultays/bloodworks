@@ -422,7 +422,7 @@ void Player::updateHitPoints()
 void Player::gainExperience(int e)
 {
 	this->experience += e;
-	if (experience >= experienceForNextLevel)
+	if (experience >= experienceForNextLevel && bloodworks->isLevelUpPopupVisible() == false)
 	{
 		experience -= experienceForNextLevel;
 		doLevelup();
