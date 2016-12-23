@@ -12441,7 +12441,7 @@ namespace sol {
 		if (message) {
 			std::string err = message;
 			lua_pop(L, 1);
-			throw error(err);
+ 			throw error(err);
 		}
 		throw error(std::string("An unexpected error occurred and forced the lua state to call atpanic"));
 #endif

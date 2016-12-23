@@ -1,6 +1,0 @@
-{
-  "type" : "monster",
-  "baseFile" : "resources/monsters/alien/moving.json",
-  "name" : "Alien2",
-  "scriptArgs" : {"isRandom" : true}
-}

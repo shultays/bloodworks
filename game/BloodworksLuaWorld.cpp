@@ -277,6 +277,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getRandomMonsterSpawnPos();
 	});
 
+
+	lua.set_function("getRandomMonsterSpawnPosOutsideScreen",
+		[&]() -> Vec2
+	{
+		return bloodworks->getMonsterController()->getRandomMonsterSpawnPosOutsideScreen();
+	});
+
 	lua.set_function("getClosestMonsterInRangeWithIgnoreId",
 		[&](const Vec2& pos, float range, int ignoreId) -> Monster*
 	{
