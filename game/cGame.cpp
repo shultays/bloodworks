@@ -175,9 +175,7 @@ void cGame::setCameraZoom(float zoom)
 
 IntVec2 cGame::getScreenDimensions() const
 {
-	IntVec2 ret;
-	SDL_GetWindowSize(mainWindow, &ret.w, &ret.h);
-	return ret;
+	return IntVec2(coral.windowWidth, coral.windowHeight);
 }
 
 void cGame::addRenderable(cRenderable* renderable, int level)
@@ -224,4 +222,9 @@ void cGame::addPostProcess(cPostProcess *postProcess, int level)
 void cGame::removePostProcess(cPostProcess *postProcess)
 {
 	postProcesses.remove(postProcess);
+}
+
+void cGame::windowResized(int width, int height)
+{
+
 }

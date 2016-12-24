@@ -258,7 +258,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getBulletController()->addCustomBullet(params);
 	});
 
-
 	lua.set_function("addMonster",
 		[&](std::string monsterTemplate) -> Monster*
 	{

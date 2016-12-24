@@ -29,7 +29,7 @@ bool Init()
 	}
 
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		800, 600, SDL_WINDOW_OPENGL);
+		800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 	if (!mainWindow)
 	{
@@ -91,8 +91,6 @@ void RunGame()
 {
 	bool loop = true;
 
-	int w, h;
-	SDL_GetWindowSize(mainWindow, &w, &h);
 	while (loop)
 	{
 		SDL_Event event;
@@ -100,7 +98,7 @@ void RunGame()
 		{
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				input.setMousePos(Vec2((float)event.motion.x, (float)(h - event.motion.y)), Vec2((float)event.motion.xrel, (float)-event.motion.yrel));
+				input.setMousePos(Vec2((float)event.motion.x, (float)(coral.windowHeight - event.motion.y)), Vec2((float)event.motion.xrel, (float)-event.motion.yrel));
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -125,9 +123,26 @@ void RunGame()
 			{
 				input.releaseKey(event.key.keysym.scancode);
 			}
-			else if (event.type == SDL_QUIT)
-					loop = false;
+			else if (event.type == SDL_WINDOWEVENT)
+			{
 
+				switch (event.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					coral.windowResized(event.window.data1, event.window.data2);
+					game->windowResized(event.window.data1, event.window.data2);
+					break;
+				}
+			}
+			else if(event.type == SDL_QUIT)
+			{
+				loop = false;
+			}
+			else
+			{
+				int a = 5;
+			}
 		}
 		coral.tick();
 	}
