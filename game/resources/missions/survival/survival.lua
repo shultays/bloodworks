@@ -52,17 +52,21 @@ function Survival.init()
 end
 
 function Survival.onTick()
-
+	if isKeyReleased(keys.home) then
+		dumpTable(_G)
+	end
+	
+	
 	if isKeyReleased(keys.pageup) then
 		Survival.extraMin = Survival.extraMin + 0.5
-		print("Extra Min " .. Survival.extraMin);
+		print("Extra Min " .. Survival.extraMin)
 	end
 	if isKeyReleased(keys.pagedown) then
 		Survival.extraMin = Survival.extraMin - 0.5
 		if Survival.extraMin < 0.0 then
 			Survival.extraMin = 0.0
 		end
-		print("Extra Min " .. Survival.extraMin);
+		print("Extra Min " .. Survival.extraMin)
 	end
 	
 	if isKeyReleased(keys.delete) then	
