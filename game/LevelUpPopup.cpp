@@ -119,6 +119,7 @@ void LevelUpPopup::tick()
 	}
 
 	Vec2 mouseScreenPos = input.getMousePos() - bloodworks->getScreenDimensions().toVec() * 0.5f;
+	//debugRenderer.addText("O", mouseScreenPos.x, mouseScreenPos.y, 0.0f, Vec4(1.0f), 12.0f, TextAlignment::center, RenderableAlignment::center);
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
 		bool inside = max(fabs(levelupPerksRenderablePosition[i].x - mouseScreenPos.x), fabs(levelupPerksRenderablePosition[i].y - mouseScreenPos.y)) < 40.0f;

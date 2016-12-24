@@ -316,10 +316,10 @@ Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
 		}
 
 		float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
-		if (distanceSquaredToPlayer < 200.0f)
+		if (distanceSquaredToPlayer < 200.0f * 200.0f)
 		{
 			score += 200.0f;
-			score += (200.0f * 200.0f - bloodworks->getPlayer()->getPosition().distanceSquared(pos)) * 20.0f;
+			score += (200.0f * 200.0f - distanceSquaredToPlayer) * 20.0f;
 		}
 
 		if (outsideScreen)

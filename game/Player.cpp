@@ -253,7 +253,10 @@ void Player::tick()
 	}
 
 	pos = pos + moveAmount;
-	crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
+	if (bloodworks->isPaused() == false)
+	{
+		crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
+	}
 
 	float maxCrosshairDistance = gun->getMaxCrosshairDistance();
 	float lengthSquared = crosshairPos.lengthSquared();
