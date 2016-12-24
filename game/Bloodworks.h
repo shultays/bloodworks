@@ -177,4 +177,8 @@ public:
 	int onPlayerDamaged(int damage, sol::table& params);
 	void addLaserTemplate(LaserTemplate * laserTemplate);
 	bool isLevelUpPopupVisible() const;
+	bool isPaused() const
+	{
+		return paused;
+	}
 };

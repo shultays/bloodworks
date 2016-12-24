@@ -16,8 +16,8 @@ function addRandomMonster()
     end
     local monster = addMonster(m)
     monster.data.randomMove = (math.random() > (0.05 + clamp(min * 0.2) * 0.5))
-    monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 3.0)
-    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 2.0)
+    monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 1.25)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
 	
 	
@@ -26,7 +26,7 @@ function addRandomMonster()
 	monster.data.minDamage = math.floor(monster.data.minDamage * (1.0 + min * 0.2))
 	monster.data.maxDamage = math.floor(monster.data.maxDamage * (1.0 + min * 0.2))
 	
-	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + min * 0.1))
+	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
     return monster
 end
 
