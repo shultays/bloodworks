@@ -278,6 +278,11 @@ int MonsterController::getMonsterCount() const
 	return (int)monsters.size();
 }
 
+Monster* MonsterController::getMonsterAtIndex(int index) const
+{
+	return monsters[index];
+}
+
 Monster* MonsterController::getMonster(int id) const
 {
 	auto& element = monstersMap.find(id);

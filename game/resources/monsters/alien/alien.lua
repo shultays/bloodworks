@@ -30,7 +30,7 @@ function Alien.init(monster)
     data.maxMoveSpeed = 50.0
     data.maxRotateSpeed = 0.03
     data.playerSeeRange = 100.0
-    
+	
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
 	MonsterMeleeHelper.init(monster)

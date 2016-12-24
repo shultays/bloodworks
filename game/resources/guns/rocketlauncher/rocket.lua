@@ -25,7 +25,7 @@ function RocketLauncher.onTick(gun)
 end
 
 function RocketLauncher.onBulletHit(gun, bullet, monster)
-	addExplosion(bullet.position, 40.0, 80.0, 70, 130)
+	addExplosion(bullet.position, 60.0, 120.0, 70, 130)
 end
 
 function RocketLauncher.onBulletTick(gun, bullet)

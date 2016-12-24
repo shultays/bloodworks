@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <unordered_map>
 #include "cMat.h"
 #include "cVec.h"
 
@@ -275,6 +276,9 @@ private:
 	Vec2 prevMousePos;
 	bool mouseShown;
 	bool ignoreNextMove;
+
+	std::unordered_map<std::string, int> nameMap;
+	void setLuaKeys();
 public:
 	void tick();
 
