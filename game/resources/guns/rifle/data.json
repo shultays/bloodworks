@@ -8,7 +8,7 @@
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 950.0,
-  "bulletDamage" : [85, 130],
+  "bulletDamage" : [95, 140],
   
   "scriptFile" : "resources/guns/rifle/rifle.lua",
   "scriptName" : "Rifle"

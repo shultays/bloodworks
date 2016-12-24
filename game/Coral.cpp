@@ -20,7 +20,8 @@ void Coral::tick()
 	float slowdown = game->getSlowdown();
 
 	float t;
-	while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval)
+	int maxTick = 4;
+	while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval && maxTick --> 0)
 	{
 		timer.currentTime = update_interval * slowdown + timer.currentTime;
 		timer.dt = update_interval * slowdown;
