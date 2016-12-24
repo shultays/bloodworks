@@ -20,6 +20,13 @@
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
 	this->bloodworks = b;
+	
+#ifdef DEBUG
+	lua["DEBUG"] = true;
+#else
+	lua["DEBUG"] = false;
+#endif
+
 	lua.new_usertype<Vec2>("Vec2",
 		sol::constructors<sol::types<>, sol::types<float, float>>(),
 		"x", &Vec2::x,
@@ -166,6 +173,29 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return approachAngle(angle, angleToApproach, maxRotation);
 	});
 
+	lua.set_function("isKeyReleased",
+		[&](int key) -> bool
+	{
+		return input.isKeyReleased(key);
+	});
+
+	lua.set_function("isKeyPressed",
+		[&](int key) -> bool
+	{
+		return input.isKeyPressed(key);
+	});
+	lua.set_function("isKeyUp",
+		[&](int key) -> bool
+	{
+		return input.isKeyUp(key);
+	});
+
+	lua.set_function("isKeyDown",
+		[&](int key) -> bool
+	{
+		return input.isKeyDown(key);
+	});
+
 	lua.set_function("angleDiff",
 		[&](float angle, float angleToApproach) -> float
 	{
@@ -241,6 +271,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getMonsterCount();
 	});
 
+	lua.set_function("getMonsterAtIndex",
+		[&](int i) -> Monster*
+	{
+		return bloodworks->getMonsterController()->getMonsterAtIndex(i);
+	});
 	lua.set_function("getMonster",
 		[&](int i) -> Monster*
 	{

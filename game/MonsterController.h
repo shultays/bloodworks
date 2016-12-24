@@ -44,6 +44,7 @@ public:
 	void damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId);
 
 	Monster* addMonster(const std::string& monsterTemplateName);
+	Monster* getMonsterAtIndex(int index) const;
 	int getMonsterCount() const;
 	Monster* getMonster(int id) const;
 
