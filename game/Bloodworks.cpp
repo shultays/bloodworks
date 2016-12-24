@@ -613,6 +613,11 @@ void Bloodworks::tick()
 	explosionController->tick();
 	levelUpPopup->tick();
 	tickGameSlowdown();
+
+	if (input.isKeyPressed(key_f10))
+	{
+		coral.setFullScreen(!coral.isFullScreen());
+	}
 }
 
 void Bloodworks::render()

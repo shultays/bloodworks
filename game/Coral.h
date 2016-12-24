@@ -10,6 +10,8 @@ extern GLuint postProcessQuad;
 class Coral 
 {
 	friend class cGame;
+	friend void RunGame();
+	friend void InitGame();
 
 	float lastDrawTime;
 	float lastUpdateTime;
@@ -17,9 +19,19 @@ class Coral
 
 	GLuint tempFrameBuffer[2];
 	GLuint tempFrameBufferTexture[2];
+
+	bool fullScreen;
+	void initFrameBuffers();
+	int windowWidth, windowHeight;
 public:
 
 	Coral();
 	void init();
 	void tick();
+	void setFullScreen(bool fullScreen);
+	bool isFullScreen() const
+	{
+		return fullScreen;
+	}
+	void windowResized(int width, int height);
 };

@@ -6,12 +6,16 @@
 #include "cGame.h"
 #include "cTools.h"
 
+GLuint postProcessQuad;
+
 extern SDL_Window *mainWindow;
 
 Coral::Coral()
 {
 	lastDrawTime = 0.0f;
 	lastUpdateTime = 0.0f;
+
+	tempFrameBuffer[0] = -1;
 
 }
 
@@ -74,23 +78,40 @@ void Coral::tick()
 	}
 }
 
-GLuint postProcessQuad;
-
-void Coral::init()
+void Coral::setFullScreen(bool fullScreen)
 {
-
-	GLfloat vertexData[] =
+	if (this->fullScreen != fullScreen)
 	{
-		-1.0f, 1.0f,
-		1.0f,  1.0f,
-		1.0f,  -1.0f,
-		-1.0f, -1.0f,
-	};
+		this->fullScreen = fullScreen;
+		if (fullScreen)
+		{
+			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			//SDL_SetWindowSize(mainWindow, 1200, 800);
+		}
+		else
+		{
+			SDL_SetWindowFullscreen(mainWindow, 0);
+			//SDL_SetWindowSize(mainWindow, 800, 600);
+		}
+	}
+}
 
-	glGenBuffers(1, &postProcessQuad);
-	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+void Coral::windowResized(int width, int height)
+{
+	this->windowWidth = width;
+	this->windowHeight = height;
+	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, width, height);
+	initFrameBuffers();
+}
 
+void Coral::initFrameBuffers()
+{
+	if (tempFrameBuffer[0] == -1)
+	{
+		glDeleteBuffers(2, tempFrameBuffer);
+		glDeleteTextures(2, tempFrameBufferTexture);
+	}
 
 	glGenFramebuffers(2, tempFrameBuffer);
 	glGenTextures(2, tempFrameBufferTexture);
@@ -112,6 +133,25 @@ void Coral::init()
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Coral::init()
+{
+	fullScreen = false;
+	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
+	GLfloat vertexData[] =
+	{
+		-1.0f, 1.0f,
+		1.0f,  1.0f,
+		1.0f,  -1.0f,
+		-1.0f, -1.0f,
+	};
+
+	glGenBuffers(1, &postProcessQuad);
+	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+	initFrameBuffers();
 	timer.init();
 	input.init();
 	tickedBeforeRender = false;
