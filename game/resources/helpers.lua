@@ -33,6 +33,32 @@ function printTable(myTable)
 	end
  end
  
+local seen={}
+
+ function dumpTable(t)
+	seen={}
+	dump(t, "")
+ end
+ 
+ 
+
+function dump(t,i)
+	seen[t]=true
+	local s={}
+	local n=0
+	for k in pairs(t) do
+		n=n+1 s[n]=k
+	end
+	for k,v in ipairs(s) do
+		print(i,v)
+		v=t[v]
+		if type(v)=="table" and not seen[v] then
+			dump(v,i.."\t")
+		end
+	end
+end
+
+ 
 FadeOutImage = {}
 
 function FadeOutImage.init(gameObject)
