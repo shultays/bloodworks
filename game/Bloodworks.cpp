@@ -418,6 +418,9 @@ void Bloodworks::tickCamera()
 	float horizontalMaxMove = getScreenDimensions().x * 0.5f - approachToEdgeSize;
 	float verticalMaxMove = getScreenDimensions().y * 0.5f - approachToEdgeSize;
 
+	horizontalMaxMove *= cameraZoom;
+	verticalMaxMove *= cameraZoom;
+
 	if (cameraPos.x < mapBegin.x + horizontalMaxMove)
 	{
 		cameraPos.x = mapBegin.x + horizontalMaxMove;
@@ -617,6 +620,14 @@ void Bloodworks::tick()
 	if (input.isKeyPressed(key_f10))
 	{
 		coral.setFullScreen(!coral.isFullScreen());
+		if (coral.isFullScreen())
+		{
+			cameraZoom = 0.8f;
+		}
+		else
+		{
+			cameraZoom = 1.0f;
+		}
 	}
 }
 
