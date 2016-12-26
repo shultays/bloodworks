@@ -53,9 +53,9 @@ class Monster
 
 	std::vector<int> ignoreIds;
 
-protected:
-	void killSelf(const Vec2& blowDir);
+	int experience;
 
+	void killSelf(const Vec2& blowDir);
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
