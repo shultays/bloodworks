@@ -8,6 +8,7 @@ class Bloodworks;
 class MonsterTemplate;
 
 #include "cGrid.h"
+#include "sol.h"
 #include "json.h"
 
 class MonsterController
@@ -49,8 +50,5 @@ public:
 	Monster* getMonster(int id) const;
 
 	void addMonsterTemplate(nlohmann::json &j);
-
-	Vec2 getRandomMonsterSpawnPosAux(bool outsideScreen);
-	Vec2 getRandomMonsterSpawnPosOutsideScreen();
-	Vec2 getRandomMonsterSpawnPos();
+	Vec2 getRandomPos(sol::table& args);
 };
