@@ -308,7 +308,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	bool notNearMonsters = args["notNearMonsters"];
 	bool nearPlayer = args["nearPlayer"];
 	bool notNearPlayer = nearPlayer == false && (bool)(args["notNearPlayer"]);
-	float playerRange = args["playerRange"].get<float>();
+	float playerRange = args["playerRange"] ? args["playerRange"].get<float>() : 200.0f;
 	
 	float bestScore = FLT_MAX;
 	Vec2 bestPos;
@@ -329,7 +329,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 		{
 			pos = bloodworks->getPlayer()->getPosition() + Vec2::fromAngle(randFloat(pi_2)) * playerRange * sqrtf(randFloat());
 		}
-		else if (onEdges || (canGoEdge && randFloat() < 0.5f))
+		else if (onEdges || (canGoEdge && randFloat() < 0.2f))
 		{
 			const Vec2& mapMin = bloodworks->getMapMin();
 			const Vec2& mapMax = bloodworks->getMapMax();
@@ -363,10 +363,10 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 		if (notNearPlayer)
 		{
 			float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
-			if (distanceSquaredToPlayer < 200.0f * 200.0f)
+			if (distanceSquaredToPlayer < playerRange * playerRange)
 			{
 				score += 200.0f;
-				score += (200.0f * 200.0f - distanceSquaredToPlayer) * 20.0f;
+				score += (playerRange * playerRange - distanceSquaredToPlayer) * 20.0f;
 			}
 		}
 
