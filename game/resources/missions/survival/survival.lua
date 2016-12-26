@@ -37,13 +37,12 @@ function Survival.init()
 	
 	
 	if DEBUG then
-		Survival.maxMonster = 10
+		Survival.maxMonster = 11
 	else
 		Survival.maxMonster = 350
 	end
-	
 	for i = 1, Survival.maxMonster - 10 do
-		local pos = getRandomMonsterSpawnPos()
+		local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true})
         local monster = addRandomMonster()
 		monster.position = pos
 		monster.moveAngle =  math.random() * math.pi * 2.0
@@ -73,7 +72,9 @@ function Survival.onTick()
 		local count = getMonsterCount()
 		
 		for i = 0, count - 1 do
-			getMonsterAtIndex(i):doDamage(10000, Vec2.new(1.0, 0.0))
+			local monster = getMonsterAtIndex(i)
+			monster.experience = 0
+			monster:doDamage(10000, Vec2.new(1.0, 0.0))
 		end
 	end
 	
@@ -81,7 +82,7 @@ function Survival.onTick()
 		local t = Survival.maxMonster - getMonsterCount()
 		for i = 1, t - 10 do
 			local pos = getRandomMonsterSpawnPos()
-			local monster = addRandomMonster()
+			local monster = addRandomMonster({canBeEdge, notNearPlayer, notNearMonsters})
 			monster.position = pos
 			monster.moveAngle =  math.random() * math.pi * 2.0
 		end
@@ -90,7 +91,7 @@ function Survival.onTick()
     local min = time / 60.0
     if time - Survival.lastSpawnTime > (1.0 - clamp(min * 10.0) * 0.8) and getMonsterCount() < Survival.maxMonster then
         Survival.lastSpawnTime = time
-		local pos = getRandomMonsterSpawnPosOutsideScreen()
+		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreeb=true})
         local monster = addRandomMonster()
 		monster.position = pos
 		monster.moveAngle =  math.random() * math.pi * 2.0

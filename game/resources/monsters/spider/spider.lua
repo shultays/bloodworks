@@ -45,7 +45,7 @@ function Spider.init(monster)
 	data.minDamage = 3
 	data.maxDamage = 9
     
-    data.maxMoveSpeed = 50.0
+    data.maxMoveSpeed = 120.0
     data.maxRotateSpeed = 0.03
     data.playerSeeRange = 100.0
 end
@@ -111,7 +111,7 @@ function Spider.onTick(monster)
 			monster:playAnimation("stand", math.random())
 		end
 		if data.moving then
-			monster.moveSpeed = 160.0 * StunController.getSlowAmount(monster);
+			monster.moveSpeed = data.maxMoveSpeed * StunController.getSlowAmount(monster);
 		else
 			monster.moveSpeed = 0.0;
 		end

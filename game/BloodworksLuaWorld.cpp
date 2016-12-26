@@ -302,20 +302,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("getRandomMapPosition",
 		[&]() -> Vec2
 	{
-		return Vec2(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50), randFloat(bloodworks->getMapMin().y + 50, bloodworks->getMapMax().y - 50));
-	});
-
-	lua.set_function("getRandomMonsterSpawnPos",
-		[&]() -> Vec2
-	{
-		return bloodworks->getMonsterController()->getRandomMonsterSpawnPos();
+		return Vec2(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50.0f), randFloat(bloodworks->getMapMin().y + 50.0f, bloodworks->getMapMax().y - 50));
 	});
 
 
-	lua.set_function("getRandomMonsterSpawnPosOutsideScreen",
-		[&]() -> Vec2
+	lua.set_function("getRandomPosition",
+		[&](sol::table args) -> Vec2
 	{
-		return bloodworks->getMonsterController()->getRandomMonsterSpawnPosOutsideScreen();
+		return bloodworks->getMonsterController()->getRandomPos(args);
 	});
 
 	lua.set_function("getClosestMonsterInRangeWithIgnoreId",
@@ -373,6 +367,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"bulletRadius", &Monster::bulletRadius,
 
 		"data", &Monster::data,
+		"experience", &Monster::experience,
 
 		"isDead", sol::readonly(&Monster::isDead),
 
