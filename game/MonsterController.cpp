@@ -295,8 +295,21 @@ void MonsterController::addMonsterTemplate(nlohmann::json &j)
 	monsterTemplates[t->getName()] = t;
 }
 
-Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
+Vec2 MonsterController::getRandomPos(sol::table& args)
 {
+	const Vec2& mapMin = bloodworks->getMapMin();
+	const Vec2& mapMax = bloodworks->getMapMax();
+
+	bool canGoEdge = args["canBeEdge"];
+	bool onEdges = args["onEdges"];
+	bool onScreen = args["onScreen"];
+
+	bool outsideScreen = onScreen == false && ((bool)args["notOnScreen"]);
+	bool notNearMonsters = args["notNearMonsters"];
+	bool nearPlayer = args["nearPlayer"];
+	bool notNearPlayer = nearPlayer == false && (bool)(args["notNearPlayer"]);
+	float playerRange = args["playerRange"].get<float>();
+	
 	float bestScore = FLT_MAX;
 	Vec2 bestPos;
 	int tryCount = outsideScreen ? 20 : 10;
@@ -307,19 +320,54 @@ Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
 	while (tryCount --> 0)
 	{
 		float score = 0.0f;
-		Vec2 pos(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50), randFloat(bloodworks->getMapMin().y + 50, bloodworks->getMapMax().y - 50));
-
-		auto monstersInrange = getAllMonstersInRange(pos, 100.0f);
-		for (auto& m : monstersInrange)
+		Vec2 pos;
+		if (onScreen)
 		{
-			score += 100.0f * 100.0f - m->getPosition().distanceSquared(pos);
+			pos = Vec2(randFloat(screenMin.x, screenMax.x), randFloat(screenMin.y, screenMax.y));
+		}
+		else if (nearPlayer)
+		{
+			pos = bloodworks->getPlayer()->getPosition() + Vec2::fromAngle(randFloat(pi_2)) * playerRange * sqrtf(randFloat());
+		}
+		else if (onEdges || (canGoEdge && randFloat() < 0.5f))
+		{
+			const Vec2& mapMin = bloodworks->getMapMin();
+			const Vec2& mapMax = bloodworks->getMapMax();
+			int r = randInt(4);
+			switch (r)
+			{
+			case 0:
+				return Vec2(mapMin.x - randFloat(50.0f, 150.0f), randFloat(mapMin.y, mapMax.y));
+			case 1:
+				return Vec2(mapMax.x + randFloat(50.0f, 150.0f), randFloat(mapMin.y, mapMax.y));
+			case 2:
+				return Vec2(randFloat(mapMin.x - 150.0f, mapMax.x + 150.0f), mapMin.y - randFloat(50.0f, 150.0f));
+			case 3:
+				return Vec2(randFloat(mapMin.x - 150.0f, mapMax.x + 150.0f), mapMax.y + randFloat(50.0f, 150.0f));
+			}
+		}
+		else
+		{
+			pos = Vec2(randFloat(mapMin.x + 50.0f, mapMax.x - 50.0f), randFloat(mapMin.y + 50.0f, mapMax.y - 50.0f));
 		}
 
-		float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
-		if (distanceSquaredToPlayer < 200.0f * 200.0f)
+		if (notNearMonsters)
 		{
-			score += 200.0f;
-			score += (200.0f * 200.0f - distanceSquaredToPlayer) * 20.0f;
+			auto monstersInrange = getAllMonstersInRange(pos, 100.0f);
+			for (auto& m : monstersInrange)
+			{
+				score += 100.0f * 100.0f - m->getPosition().distanceSquared(pos);
+			}
+		}
+
+		if (notNearPlayer)
+		{
+			float distanceSquaredToPlayer = bloodworks->getPlayer()->getPosition().distanceSquared(pos);
+			if (distanceSquaredToPlayer < 200.0f * 200.0f)
+			{
+				score += 200.0f;
+				score += (200.0f * 200.0f - distanceSquaredToPlayer) * 20.0f;
+			}
 		}
 
 		if (outsideScreen)
@@ -330,7 +378,7 @@ Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
 			}
 		}
 
-		if (score == 0.0f)
+		if (score <= 0.1f)
 		{
 			return pos;
 		}
@@ -339,20 +387,9 @@ Vec2 MonsterController::getRandomMonsterSpawnPosAux(bool outsideScreen)
 			bestScore = score;
 			bestPos = pos;
 		}
-
 	}
 
 	return bestPos;
-}
-
-Vec2 MonsterController::getRandomMonsterSpawnPos()
-{
-	return getRandomMonsterSpawnPosAux(false);
-}
-
-Vec2 MonsterController::getRandomMonsterSpawnPosOutsideScreen()
-{
-	return getRandomMonsterSpawnPosAux(true);
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

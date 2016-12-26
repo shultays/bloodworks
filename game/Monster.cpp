@@ -20,9 +20,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 {
 	this->monsterTemplate = monsterTemplate;
 	name = monsterTemplate->name;
-
+	experience = -1;
 	isDead = false;
-
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
@@ -240,6 +239,6 @@ void Monster::killSelf(const Vec2& blowDir)
 
 	if (bloodworks->getPlayer())
 	{
-		bloodworks->getPlayer()->gainExperience(monsterTemplate->experience);
+		bloodworks->getPlayer()->gainExperience(experience == -1 ? monsterTemplate->experience : experience);
 	}
 }
