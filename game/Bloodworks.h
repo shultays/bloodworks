@@ -37,7 +37,7 @@ class MonsterController;
 class BulletController;
 class BloodworksLuaWorld;
 class LaserTemplate;
-
+class MainMenu;
 
 class Bloodworks : public cGame
 {
@@ -85,7 +85,7 @@ class Bloodworks : public cGame
 	bool paused;
 
 	bool showFps;
-
+	MainMenu *mainMenu;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -181,4 +181,7 @@ public:
 	{
 		return paused;
 	}
+
+	virtual void windowResized(int width, int height);
+	void startGame();
 };

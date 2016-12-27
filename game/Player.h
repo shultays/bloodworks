@@ -55,6 +55,7 @@ class Player
 	int level;
 	int experience;
 	int experienceForNextLevel;
+	bool visible;
 
 	int calculateExperienceForLevel(int level);
 
@@ -101,4 +102,10 @@ public:
 	int getLevel() const;
 	void playShootAnimation();
 	const Vec2& getGunPos() const;
+	bool isVisible() const
+	{
+		return visible;
+	}
+	void setVisible(bool visible);
+
 };

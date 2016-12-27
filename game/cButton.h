@@ -4,7 +4,7 @@
 #include "cTexture.h"
 #include "cGame.h"
 
-class cButton : public cTexturedQuadRenderable
+class cButton : public cRenderableGroup
 {
 	bool hovering;
 	bool prevHovering;
@@ -26,13 +26,13 @@ class cButton : public cTexturedQuadRenderable
 	float hoverTime;
 	float hoverSpeed;
 public:
-	cButton(cGame *game, const std::string& texturePath, const std::string& shaderPath) : cTexturedQuadRenderable(game, texturePath, shaderPath)
+	cButton(cGame *game) : cRenderableGroup(game)
 	{
 		down = prevDown = false;
 		hovering = prevHovering = false;
 
-		beginRange = -texture[0]->getDimensions().toVec() * 0.5f;
-		endRange = texture[0]->getDimensions().toVec() * 0.5f;
+		beginRange = Vec2(-100.0f);
+		endRange = Vec2(100.0f);
 
 		pressedInside = false;
 
@@ -49,41 +49,7 @@ public:
 		this->endRange = endRange;
 	}
 
-	void check(const Vec2& mousePos)
-	{
-		prevDown = down;
-		prevHovering = hovering;
-
-		hovering = down = false;
-		
-		Vec2 diff = mousePos - defaultShift;
-
-		if (diff.x > beginRange.x && diff.x < endRange.x && diff.y > beginRange.y && diff.y < endRange.y)
-		{
-			hovering = true;
-			down = hovering && input.isKeyDown(mouse_button_left);
-		}
-		else
-		{
-			prevDown = false;
-		}
-
-		if (input.isKeyPressed(mouse_button_left))
-		{
-			pressedInside = hovering;
-		}
-
-		if (hovering)
-		{
-			hoverTime += timer.getDt() * hoverSpeed;
-		}
-		else
-		{
-			hoverTime -= timer.getDt() * hoverSpeed;
-		}
-		saturate(hoverTime);
-		setWorldMatrix(Mat3::scaleMatrix(lerp(defaultScale, hoverScale, hoverTime)).rotateBy(lerp(defaultRotation, hoverRotation, hoverTime)).translateBy(lerp(defaultShift, hoverShift, hoverTime)));
-	}
+	void check(const Vec2& mousePos);
 
 	bool isDown() const
 	{

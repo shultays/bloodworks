@@ -1,7 +1,7 @@
 
 function addRandomMonster()
     local m = "Alien"
-    local min = time / 60.0 +  math.random() * 1.5 + Survival.extraMin
+    local min = missionTime / 60.0 +  math.random() * 1.5 + Survival.extraMin
     if math.random() < 0.1 + clamp(min * 0.5) * 0.2 then
         m = "Spider"
     end
@@ -82,11 +82,11 @@ function Survival.onTick()
 		end
 	end
 	
-    local min = time / 60.0
+    local min = missionTime / 60.0
 	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.1)))
 	
-    if time - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster then
-        Survival.lastSpawnTime = time
+    if missionTime - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster then
+        Survival.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
 		monster.position = pos

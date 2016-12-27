@@ -28,6 +28,8 @@ class MissionController
 	};
 
 	std::vector<MissionData> missions;
+	bool missionLoaded;
+	float missionLoadTime;
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
