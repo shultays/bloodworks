@@ -59,9 +59,9 @@ bool SetOpenGLAttributes()
 
 void InitGame()
 {
+	coral.init();
 	game = new Bloodworks();
 	game->initInternal();
-	coral.init();
 }
 
 int main(int argc, char *argv[])

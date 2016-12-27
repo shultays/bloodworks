@@ -177,6 +177,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="cAnimatedRenderable.cpp" />
+    <ClCompile Include="cButton.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cGlobals.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cTime.cpp" />
     <ClCompile Include="cTools.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MissionController.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterController.cpp" />
@@ -243,6 +245,7 @@
     <ClInclude Include="json.h" />
     <ClInclude Include="LaserRenderable.h" />
     <ClInclude Include="LevelUpPopup.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MissionController.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />

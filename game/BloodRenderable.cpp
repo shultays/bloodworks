@@ -215,7 +215,8 @@ void BloodRenderable::init()
 	Vec4 color = Vec4::fromColor(0xFF660000);
 	glClearColor(color.r, color.g, color.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	bloodworks->resetToBackBuffer();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float size)

@@ -99,6 +99,8 @@ Player::Player(Bloodworks *bloodworks)
 	experience = 0;
 	level = 1;
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
+
+	setVisible(false);
 }
 
 Player::~Player()
@@ -114,6 +116,11 @@ Player::~Player()
 
 void Player::tick()
 {
+	if (visible == false)
+	{
+		return;
+	}
+
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -414,7 +421,7 @@ void Player::updateHitPoints()
 	if (hitPoints > 1)
 	{
 		healthBarActive->setVisible(true);
-		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(Vec2(scale, barSize.y - 5.0f)).translateBy(Vec2(0.0f, -50.0f)));
+		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, barSize.y - 5.0f).translateBy(0.0f, -50.0f));
 	}
 	else
 	{
@@ -462,4 +469,17 @@ void Player::playShootAnimation()
 const Vec2& Player::getGunPos() const
 {
 	return gunPos;
+}
+
+void Player::setVisible(bool visible)
+{
+	this->visible = visible;
+
+	crosshair->setVisible(visible);
+	renderable->setVisible(visible);
+	spread->setVisible(visible);
+	healthRenderable->setVisible(visible);
+	healthBarBG->setVisible(visible);
+	healthBarActive->setVisible(visible);
+	healthBarFG->setVisible(visible);
 }
