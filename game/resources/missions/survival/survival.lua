@@ -1,13 +1,4 @@
 
-function clamp(t)
-    if t < 0.0 then
-        return 0.0
-    elseif t > 1.0 then
-        return 1.0
-    end
-    return t
-end
-
 function addRandomMonster()
     local m = "Alien"
     local min = time / 60.0 +  math.random() * 1.5 + Survival.extraMin
@@ -35,13 +26,16 @@ function Survival.init()
     Survival.extraMin = 0.0
     Survival.lastSpawnTime = 0.0
 	
-	
+	local spawn
 	if DEBUG then
-		Survival.maxMonster = 11
+		Survival.maxMonster = 10
+		spawn = 10
 	else
-		Survival.maxMonster = 350
+		Survival.maxMonster = 550
+		spawn = 50
 	end
-	for i = 1, Survival.maxMonster - 10 do
+	
+	for i = 1, spawn do
 		local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
         local monster = addRandomMonster()
 		monster.position = pos
@@ -89,7 +83,9 @@ function Survival.onTick()
 	end
 	
     local min = time / 60.0
-    if time - Survival.lastSpawnTime > (1.0 - clamp(min * 10.0) * 0.8) and getMonsterCount() < Survival.maxMonster then
+	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.1)))
+	
+    if time - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster then
         Survival.lastSpawnTime = time
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()

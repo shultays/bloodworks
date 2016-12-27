@@ -19,12 +19,9 @@
 #include "MissionController.h"
 #include "BloodworksLuaWorld.h"
 #include "DirentHelper.h"
-
-#include <sstream>
-
 #include "LaserRenderable.h"
 
-int Bloodworks::nextUniqueId = 1;
+#include <sstream>
 
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
@@ -236,6 +233,8 @@ void Bloodworks::init()
 
 Bloodworks::Bloodworks()
 {
+	nextUniqueId = 1;
+
 	mapSize = 2048.0f;
 	mapBegin = -mapSize*0.5f;
 	mapEnd = mapBegin + mapSize;
