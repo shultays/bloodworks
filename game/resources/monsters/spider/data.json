@@ -63,5 +63,17 @@
 	["resources/monsters/spider/art/part3.png", 12.0, -7.0],
 	["resources/monsters/spider/art/part4.png", -2.0, -7.0],
 	["resources/monsters/spider/art/part5.png", 0.0, 0.0]
+  ],
+  
+  "bodyPartBits" : [
+	"resources/monsters/spider/art/bit0.png", 
+	"resources/monsters/spider/art/bit1.png", 
+	"resources/monsters/spider/art/bit2.png", 
+	"resources/monsters/spider/art/bit3.png", 
+	"resources/monsters/spider/art/bit4.png", 
+	"resources/monsters/spider/art/bit5.png", 
+	"resources/monsters/spider/art/bit6.png", 
+	"resources/monsters/spider/art/bit7.png", 
+	"resources/monsters/spider/art/bit8.png"
   ]
 }
