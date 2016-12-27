@@ -45,6 +45,18 @@ inline const T& clamped(const T& a, const T& min, const T& max)
 
 
 template <class T>
+inline const T& clamp(T& a, const T& min, const T& max)
+{
+	return a = clamped(a, min, max);
+}
+
+template <class T>
+inline const T& saturate(T& a)
+{
+	return clamp(a, 0.0f, 1.0f);
+}
+
+template <class T>
 inline const T& min(const T& a, const T& b, const T& c)
 {
 	return a < b ? min(a, c) : min(b, c);

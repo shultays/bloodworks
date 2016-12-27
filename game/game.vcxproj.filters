@@ -252,5 +252,8 @@
     <ClInclude Include="cMath.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
+    <ClInclude Include="cButton.h">
+      <Filter>Coral\Renderable</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

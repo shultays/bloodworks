@@ -211,6 +211,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
+    <ClInclude Include="cButton.h" />
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cMat.h" />
