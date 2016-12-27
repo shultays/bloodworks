@@ -72,15 +72,26 @@ void cGame::renderInternal()
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
 
-	viewMatrices[(int)RenderableAlignment::left] = center * Mat3::translationMatrix(-1.0f, 0.0f);
-	viewMatrices[(int)RenderableAlignment::right] = center * Mat3::translationMatrix(1.0f, 0.0f);
-	viewMatrices[(int)RenderableAlignment::top] = center * Mat3::translationMatrix(0.0f, 1.0f);
-	viewMatrices[(int)RenderableAlignment::bottom] = center * Mat3::translationMatrix(0.0f, -1.0f);
+	Vec2 viewWindowSize = getScreenDimensions().toVec();
+	float viewHalfWidth = viewWindowSize.w * 0.5f;
+	float viewHalfHeight = viewWindowSize.h * 0.5f;
 
-	viewMatrices[(int)RenderableAlignment::topLeft] = center * Mat3::translationMatrix(-1.0f, 1.0f);
-	viewMatrices[(int)RenderableAlignment::topRight] = center * Mat3::translationMatrix(1.0f, 1.0f);
-	viewMatrices[(int)RenderableAlignment::bottomLeft] = center * Mat3::translationMatrix(-1.0f, -1.0f);
-	viewMatrices[(int)RenderableAlignment::bottomRight] = center * Mat3::translationMatrix(1.0f, -1.0f);
+	Mat3 viewCenter = 
+		Mat3::identity()
+		.translateBy(-viewHalfWidth, -viewHalfHeight)
+		.scaleBy(1.0f / viewWindowSize.w, 1.0f / viewWindowSize.h)
+		.translateBy(0.5f)
+		.scaleBy(2.0f);
+
+	viewMatrices[(int)RenderableAlignment::left] = viewCenter * Mat3::translationMatrix(-1.0f, 0.0f);
+	viewMatrices[(int)RenderableAlignment::right] = viewCenter * Mat3::translationMatrix(1.0f, 0.0f);
+	viewMatrices[(int)RenderableAlignment::top] = viewCenter * Mat3::translationMatrix(0.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::bottom] = viewCenter * Mat3::translationMatrix(0.0f, -1.0f);
+
+	viewMatrices[(int)RenderableAlignment::topLeft] = viewCenter * Mat3::translationMatrix(-1.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::topRight] = viewCenter * Mat3::translationMatrix(1.0f, 1.0f);
+	viewMatrices[(int)RenderableAlignment::bottomLeft] = viewCenter * Mat3::translationMatrix(-1.0f, -1.0f);
+	viewMatrices[(int)RenderableAlignment::bottomRight] = viewCenter * Mat3::translationMatrix(1.0f, -1.0f);
 
 	int lastPostProcess = -1;
 	int nextBackBufferIndex = 1;

@@ -45,7 +45,7 @@ cFont::cFont(const std::string& fontData)
 			continue;
 		}
 
-		float pad = 0.0015f; //todo remove this
+		float pad = 0.0030f; //todo remove this
 
 		GLfloat vertexData[] =
 		{
@@ -111,29 +111,31 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 	cRenderableWithShader::render(isIdentity, mat);
 	font->texture->bindTexture();
 	Mat3 temp2 = worldMatrix;
-	temp2.row0.x *= textSize;
-	temp2.row1.y *= textSize;
-	temp2.row2.vec2 += Vec2((float)font->leftPadding, (float)font->bottomPadding);
+	temp2 = Mat3::scaleMatrix(textSize) * temp2;
+	temp2.translateBy((float)font->leftPadding, (float)font->bottomPadding);
 
-	if (textAlignment == TextAlignment::center)
+	if (verticalTextAlignment == VerticalTextAlignment::top)
 	{
-		temp2.row2.x -= length;
+		temp2.translateBy(0.0f, -textSize);
 	}
-	else if (textAlignment == TextAlignment::right)
+	else if (verticalTextAlignment == VerticalTextAlignment::mid)
 	{
-		temp2.row2.x -= length * 2.0f;
+		temp2.translateBy(0.0f, -textSize * 0.5f);
 	}
+
 
 	Mat3 temp = isIdentity ? temp2 : temp2 * mat;
 
 	if (textAlignment == TextAlignment::center)
 	{
-		temp.translateBy(Vec2(length * 0.5f, 0.0f));
+		temp.translateBy(-length * 0.5f, 0.0f);
 	}
 	else if (textAlignment == TextAlignment::right)
 	{
-		temp.translateBy(Vec2(length, 0.0f));
+		temp.translateBy(-length, 0.0f);
 	}
+
+
 	glActiveTexture(GL_TEXTURE0);
 	shader->setColor(color);
 	shader->setTexture0(0);
@@ -156,10 +158,20 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 			charSize = (float)font->charInfos[text[i]].w;
 		}
 
-		temp.translateBy(Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f));
+		Vec2 shift = Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
+		if (isIdentity == false)
+		{
+			shift = (Vec3(shift.x, shift.y, 0.0f) * mat).vec2;
+		}
+		temp.translateBy(shift);
 	}
 
 	glDisableVertexAttribArray(0);
 
 	glDisable(GL_TEXTURE_2D);
+}
+
+void cTextRenderable::setVerticalTextAllignment(VerticalTextAlignment verticalTextAlignment)
+{
+	this->verticalTextAlignment = verticalTextAlignment;
 }

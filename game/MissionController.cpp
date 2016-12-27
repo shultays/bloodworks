@@ -13,8 +13,10 @@
 
 MissionController::~MissionController()
 {
-	scriptTable["clear"]();
-
+	if (missionLoaded)
+	{
+		scriptTable["clear"]();
+	}
 
 	for (auto& g : gameObjects)
 	{
@@ -23,19 +25,23 @@ MissionController::~MissionController()
 		SAFE_DELETE(gameObject);
 	}
 	gameObjects.clear();
-
-	lua["gameObjects"] = lua.create_table();
 }
 
 MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	lua["gameObjects"] = lua.create_table();
-
+	missionLoaded = false;
 }
 
 void MissionController::tick()
 {
+	if (missionLoaded == false)
+	{
+		return;
+	}
+	lua["missionTime"] = timer.getTime() - missionLoadTime;
+	lua["missionLoadTime"] = missionLoadTime;
 	scriptTable["onTick"]();
 
 	std::vector<int> toBeRemoved;
@@ -99,8 +105,14 @@ void MissionController::loadMission(const std::string& name)
 		if (mission.name == name)
 		{
 			scriptTable = lua[mission.scriptName] = lua.create_table();
+
+			lua["missionTime"] = timer.getTime() - missionLoadTime;
+			lua["missionLoadTime"] = missionLoadTime;
+
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
+			missionLoaded = true;
+			missionLoadTime = timer.getTime();
 			return;
 		}
 	}
