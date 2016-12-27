@@ -32,6 +32,7 @@ class MonsterTemplate
 		Vec2 shift;
 	};
 	std::vector<BodyPartData> bodyParts;
+	std::vector<cTextureShr> bodyPartBits;
 public:
 	MonsterTemplate(){}
 	MonsterTemplate(nlohmann::json &j)
@@ -84,6 +85,12 @@ public:
 			bodyParts.push_back(data);
 		}
 
+		auto& partBits = j["bodyPartBits"];
+
+		for (nlohmann::json::iterator it = partBits.begin(); it != partBits.end(); ++it)
+		{
+			bodyPartBits.push_back(resources.getTexture(it.value().get<std::string>()));
+		}
 		scriptArgs = lua.create_table();
 		if (j.count("scriptArgs"))
 		{
@@ -123,6 +130,11 @@ public:
 			bodyPart.texture = nullptr;
 		}
 		bodyParts.clear();
+		for (auto& bodyPart : bodyPartBits)
+		{
+			bodyPart = nullptr;
+		}
+		bodyPartBits.clear();
 	}
 
 	const std::string& getName() const

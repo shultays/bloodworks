@@ -62,6 +62,7 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 
 	group->setWorldMatrix(Mat3::translationMatrix(position));
 	drop.renderable = group;
+	drop.text = text;
 	bloodworks->addRenderable(drop.renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
@@ -99,6 +100,7 @@ void DropController::createBonus(const Vec2& position, int forceIndex)
 
 	group->setWorldMatrix(Mat3::translationMatrix(position));
 	drop.renderable = group;
+	drop.text = text;
 	bloodworks->addRenderable(drop.renderable, OBJECT_GUI);
 
 	drops.push_back(drop);
@@ -107,6 +109,7 @@ void DropController::createBonus(const Vec2& position, int forceIndex)
 void DropController::tick()
 {
 	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
+	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (int i = 0; i < drops.size(); i++)
 	{
 		auto& drop = drops[i];
@@ -121,6 +124,8 @@ void DropController::tick()
 		{
 			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
+
+		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 40.0f * 40.0f);
 
 		if (drop.pos.distanceSquared(playerPos) < 20.0f * 20.0f)
 		{

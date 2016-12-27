@@ -146,6 +146,10 @@ void MainMenu::tick()
 	{
 		bloodworks->startGame();
 	}
+	else if (quit->isClicked())
+	{
+		coral.quitGame();
+	}
 }
 
 void MainMenu::setVisible(bool visible)

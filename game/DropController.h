@@ -16,6 +16,7 @@ class DropController
 		Bonus *bonus;
 		Vec2 pos;
 		cRenderableGroup *renderable;
+		cTextRenderable *text;
 		float time;
 
 		bool canFadeout;
