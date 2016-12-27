@@ -23,8 +23,8 @@ class Coral
 	bool fullScreen;
 	void initFrameBuffers();
 	int windowWidth, windowHeight;
+	bool gameRunning;
 public:
-
 	Coral();
 	void init();
 	void tick();
@@ -34,4 +34,10 @@ public:
 		return fullScreen;
 	}
 	void windowResized(int width, int height);
+	void quitGame()
+	{
+		gameRunning = false;
+	}
+
+	bool isDebuggerPresent();
 };

@@ -48,6 +48,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	collisionRadius = monsterTemplate->collisionRadius;
 	position = 100.0f;
 	scale = 1.0f;
+	lastBitTime = timer.getTime();
 	scriptTable["init"](this);
 }
 
@@ -142,6 +143,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	hitPoint -= damage;
 	if (hitPoint <= 1.0f)
 	{
+		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 2);
 		killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 	}
 	else
@@ -151,6 +153,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 		{
 			scriptTable["onHit"](this, damage, args);
 		}
+		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 	}
 }
 
@@ -176,6 +179,37 @@ void Monster::addIgnoreId(int id)
 bool Monster::hasIgnoreId(int id)
 {
 	return std::binary_search(ignoreIds.begin(), ignoreIds.end(), id);
+}
+
+void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)
+{
+	if (monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
+	{
+		return;
+	}
+
+	lastBitTime = timer.getTime();
+
+	int bitCount = randInt(0, 2) + extraBits;
+
+	for (int i = 0; i < bitCount; i++)
+	{
+		Vec2 dir = Vec2::fromAngle(randFloat(0.0f, pi_2));
+		float r = randFloat();
+		r = sqrtf(r);
+		int t = randInt((int)monsterTemplate->bodyPartBits.size());
+		cTextureShr s = monsterTemplate->bodyPartBits[t];
+		cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
+		partRenderable->setColor(renderable->getColor());
+		Mat3 mat = renderable->getWorldMatrix();
+		partRenderable->setWorldMatrix(mat);
+		bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
+			position + dir * r * collisionRadius * 2.0f,
+			s->getDimensions().toVec() * scale * randFloat(0.5f, 1.0f),
+			randFloat(0.0f, pi_2),
+			Vec2::zero(),
+			blowDir * 2.0f);
+	}
 }
 
 int Monster::getId()
@@ -222,6 +256,7 @@ void Monster::killSelf(const Vec2& blowDir)
 			parts.push_back(t);
 		}
 	}
+
 	for (int i : parts)
 	{
 		cTextureShr s = monsterTemplate->bodyParts[i].texture;
@@ -236,7 +271,6 @@ void Monster::killSelf(const Vec2& blowDir)
 			textureShift + monsterTemplate->bodyParts[i].shift * scale, 
 			blowDir * 2.0f);
 	}
-
 	if (bloodworks->getPlayer())
 	{
 		bloodworks->getPlayer()->gainExperience(experience == -1 ? monsterTemplate->experience : experience);
