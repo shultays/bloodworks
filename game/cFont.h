@@ -47,6 +47,13 @@ enum class TextAlignment
 	right
 };
 
+enum class VerticalTextAlignment
+{
+	top,
+	mid,
+	bottom
+};
+
 class cTextRenderable : public cRenderableWithShader
 {
 private:
@@ -57,6 +64,7 @@ private:
 	float length;
 	bool lengthDirty;
 	TextAlignment textAlignment;
+	VerticalTextAlignment verticalTextAlignment;
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 public:
@@ -68,6 +76,7 @@ public:
 		this->textSize = textSize;
 		this->color = textColor;
 		setTextAllignment(TextAlignment::left);
+		setVerticalTextAllignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
 	}
 
@@ -97,4 +106,5 @@ public:
 	{
 		this->color = color;
 	}
+	void setVerticalTextAllignment(VerticalTextAlignment param1);
 };

@@ -20,6 +20,7 @@
 #include "BloodworksLuaWorld.h"
 #include "DirentHelper.h"
 #include "LaserRenderable.h"
+#include "MainMenu.h"
 
 #include <sstream>
 
@@ -228,14 +229,14 @@ void Bloodworks::init()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	missionController->loadMission("Survival");
+	mainMenu = new MainMenu(this);
 }
 
 Bloodworks::Bloodworks()
 {
 	nextUniqueId = 1;
 
-	mapSize = 2048.0f;
+	mapSize = 2000.0f;
 	mapBegin = -mapSize*0.5f;
 	mapEnd = mapBegin + mapSize;
 
@@ -302,6 +303,8 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(monsterController);
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
+
+	SAFE_DELETE(mainMenu);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -379,6 +382,21 @@ void Bloodworks::addLaserTemplate(LaserTemplate *laserTemplate)
 bool Bloodworks::isLevelUpPopupVisible() const
 {
 	return levelUpPopup->isVisible();
+}
+
+void Bloodworks::windowResized(int width, int height)
+{
+	cGame::windowResized(width, height);
+	mainMenu->resize();
+}
+
+void Bloodworks::startGame()
+{
+	mainMenu->setVisible(false);
+	input.hideMouse();
+
+	player->setVisible(true);
+	missionController->loadMission("Survival");
 }
 
 void Bloodworks::tickCamera()
@@ -532,6 +550,8 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
+	mainMenu->tick();
+
 	if (input.isKeyPressed(key_n))
 	{
 		showFps = !showFps;

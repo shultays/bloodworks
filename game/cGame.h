@@ -101,5 +101,5 @@ public:
 	{
 		return cameraAngle;
 	}
-	void windowResized(int width, int height);
+	virtual void windowResized(int width, int height);
 };

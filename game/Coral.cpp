@@ -86,12 +86,12 @@ void Coral::setFullScreen(bool fullScreen)
 		if (fullScreen)
 		{
 			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
-			//SDL_SetWindowSize(mainWindow, 1200, 800);
+			// SDL_SetWindowSize(mainWindow, 1200, 800);
 		}
 		else
 		{
 			SDL_SetWindowFullscreen(mainWindow, 0);
-			//SDL_SetWindowSize(mainWindow, 800, 600);
+			// SDL_SetWindowSize(mainWindow, 800, 600);
 		}
 	}
 }
@@ -139,6 +139,7 @@ void Coral::init()
 {
 	fullScreen = false;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
+
 	GLfloat vertexData[] =
 	{
 		-1.0f, 1.0f,
@@ -151,10 +152,11 @@ void Coral::init()
 	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-	initFrameBuffers();
 	timer.init();
 	input.init();
 	tickedBeforeRender = false;
 	lastDrawTime = timer.getTime() - draw_interval;
 	lastUpdateTime = timer.getTime() - update_interval;
+	initFrameBuffers();
 }
+
