@@ -37,7 +37,7 @@ bonuslara şans faktörü ekle
 
 bonuslar yanyana spawn olmasın
 
-text renderable scale olamıyor
+text renderable rotate olamıyor
 bonuslar spawn olurken efekt
 
 renderable group vector tutmasın, linked list i kullansın
@@ -49,6 +49,16 @@ boss tipi canavarlar
 vuruş değerleri random olabilsin
 daha fazla yaratık gibi
 yaratıklar daha random
+
+
+mission u resetleme
+
+options ekranı
+
+credits ekranı
+
+mods ekranı
+
 
 
 ----------------
