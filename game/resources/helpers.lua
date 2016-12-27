@@ -58,6 +58,19 @@ function dump(t,i)
 	end
 end
 
+function clamp(t)
+    if t < 0.0 then
+        return 0.0
+    elseif t > 1.0 then
+        return 1.0
+    end
+    return t
+end
+
+
+function lerp (a, b, t)
+	return a + (b-a) * t
+end
  
 FadeOutImage = {}
 
