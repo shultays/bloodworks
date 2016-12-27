@@ -89,9 +89,7 @@ int main(int argc, char *argv[])
 
 void RunGame()
 {
-	bool loop = true;
-
-	while (loop)
+	while (coral.gameRunning)
 	{
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
@@ -115,7 +113,7 @@ void RunGame()
 				switch (event.key.keysym.sym)
 				{
 				case SDLK_ESCAPE:
-					loop = false;
+					coral.quitGame();
 					break;
 				}
 			}
@@ -137,11 +135,7 @@ void RunGame()
 			}
 			else if(event.type == SDL_QUIT)
 			{
-				loop = false;
-			}
-			else
-			{
-				int a = 5;
+				coral.quitGame();
 			}
 		}
 		coral.tick();

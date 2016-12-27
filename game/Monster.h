@@ -29,6 +29,7 @@ class Monster
 	int hitPoint;
 	float collisionRadius;
 	float bulletRadius;
+	float lastBitTime;
 
 	bool isDead;
 	bool hasBlood;
@@ -56,6 +57,7 @@ class Monster
 	int experience;
 
 	void killSelf(const Vec2& blowDir);
+	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

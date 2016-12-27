@@ -14,7 +14,10 @@ void cRenderableGroup::render(bool isIdentity, const Mat3& mat)
 {
 	for (auto& childData : renderables)
 	{
-		childData.child->render(false, isIdentity ? worldMatrix : mat * worldMatrix);
+		if (childData.child->isVisible())
+		{
+			childData.child->render(false, isIdentity ? worldMatrix : mat * worldMatrix);
+		}
 	}
 }
 

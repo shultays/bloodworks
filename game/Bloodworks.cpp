@@ -230,6 +230,11 @@ void Bloodworks::init()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	mainMenu = new MainMenu(this);
+
+	if (coral.isDebuggerPresent())
+	{
+		startGame();
+	}
 }
 
 Bloodworks::Bloodworks()

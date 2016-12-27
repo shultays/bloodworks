@@ -6,6 +6,9 @@
 #include "cGame.h"
 #include "cTools.h"
 
+#ifdef _WIN32
+#include "Windows.h"
+#endif
 GLuint postProcessQuad;
 
 extern SDL_Window *mainWindow;
@@ -105,6 +108,14 @@ void Coral::windowResized(int width, int height)
 	initFrameBuffers();
 }
 
+bool Coral::isDebuggerPresent()
+{
+#ifdef _WIN32
+	return IsDebuggerPresent();
+#endif
+	return false;
+}
+
 void Coral::initFrameBuffers()
 {
 	if (tempFrameBuffer[0] == -1)
@@ -137,6 +148,7 @@ void Coral::initFrameBuffers()
 
 void Coral::init()
 {
+	gameRunning = true;
 	fullScreen = false;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
 
