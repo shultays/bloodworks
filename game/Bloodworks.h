@@ -70,7 +70,7 @@ class Bloodworks : public cGame
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
 
-	static int nextUniqueId;
+	int nextUniqueId;
 
 	Vec2 mapSize;
 	Vec2 mapBegin;
