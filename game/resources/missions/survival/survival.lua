@@ -8,7 +8,7 @@ function addRandomMonster()
     local monster = addMonster(m)
     monster.data.randomMove = (math.random() > (0.05 + clamp(min * 0.2) * 0.5))
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
-    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 1.25)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
 	
 	
@@ -98,9 +98,9 @@ function Survival.onTick()
 	end
 	
     local min = missionTime / 60.0
-	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.1)))
+	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.15)))
 	
-    if missionTime - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster and player.isDead == false then
+    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() < curMaxMonster and player.isDead == false then
         Survival.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
