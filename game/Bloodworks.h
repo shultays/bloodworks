@@ -184,4 +184,5 @@ public:
 
 	virtual void windowResized(int width, int height);
 	void startGame();
+	void gotoMainMenu();
 };

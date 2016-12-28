@@ -14,6 +14,7 @@ class Perk
 	std::string name;
 	std::string description;
 	std::string iconPath;
+	std::string scriptName;
 	sol::table scriptTable;
 
 	int level;
@@ -25,12 +26,10 @@ class Perk
 public:
 	Perk(nlohmann::json& j)
 	{
-		level = 0;
-
 		name = j["name"].get<std::string>();
 		description = j["description"].get<std::string>();
 		iconPath = j["iconFile"].get<std::string>();
-		scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+		scriptName = j["scriptName"].get<std::string>();
 
 		if (j.count("maxLevel"))
 		{
@@ -41,12 +40,16 @@ public:
 			maxLevel = 1;
 		}
 
+		level = 0;
+		scriptTable = lua[scriptName] = lua.create_table();
+
 		std::string scriptPath = j["scriptFile"].get<std::string>();
 		lua.script_file(scriptPath);
 
 		onAddGunBulletFunc = scriptTable["onAddGunBullet"];
 		onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
 		onTickFunc = scriptTable["onTick"];
+
 	}
 
 	void takeLevel();
@@ -84,4 +87,5 @@ public:
 	void onTick();
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
 	int onPlayerDamaged(int damage, sol::table& params);
+	void reset();
 };

@@ -107,5 +107,5 @@ public:
 		return visible;
 	}
 	void setVisible(bool visible);
-
+	void reset();
 };

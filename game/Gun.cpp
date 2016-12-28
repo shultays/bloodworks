@@ -66,10 +66,9 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	std::string scriptFilePath = j["scriptFile"].get<std::string>();
 	fixFilePath(scriptFilePath);
 	scriptName = j["scriptName"].get<std::string>();
-	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+	scriptTable = lua[scriptName] = lua.create_table();
 	data = lua.create_table();
 	id = bloodworks->getUniqueId();
-
 
 	spreadAngle = 0.0f;
 	crosshairDistance = 400.0f;
@@ -159,6 +158,16 @@ const Vec4& Gun::getShootingParticleColor() const
 void Gun::updateLaser(const Vec2& pos, float angle)
 {
 	laser->setPositionAndAngle(pos, angle);
+}
+
+void Gun::reset()
+{
+	data = lua.create_table();
+	id = bloodworks->getUniqueId();
+
+	spreadAngle = 0.0f;
+
+	scriptTable["init"](this);
 }
 
 Gun::~Gun()
