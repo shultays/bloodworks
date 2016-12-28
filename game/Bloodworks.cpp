@@ -227,6 +227,10 @@ void Bloodworks::init()
 	{
 		loadMission("Survival");
 	}
+	else
+	{
+		showFps = false;
+	}
 }
 
 Bloodworks::Bloodworks()
