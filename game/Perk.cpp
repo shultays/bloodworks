@@ -5,7 +5,7 @@
 
 void Perk::takeLevel()
 {
-	if (level < maxLevel)
+	if (level < maxLevel || maxLevel == -1)
 	{
 		level++;
 		if (maxLevel == 1)
