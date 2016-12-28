@@ -161,7 +161,7 @@ void DropController::tick()
 
 void DropController::addDrop(const Vec2& position)
 {
-	if (randBool())
+	if (randBool() && input.isKeyDown(key_1) == false)
 	{
 		createBonus(position);
 	}

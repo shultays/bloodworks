@@ -398,7 +398,7 @@ void Player::updateHitPoints()
 	std::stringstream ss;
 	ss << hitPoints;
 	healthRenderable->setText(ss.str());
-	float scale = (barSize.x - 9.0f) * (hitPoints / 100.0f);
+	float scale = (barSize.x - 9.0f) * (hitPoints / (float)maxHitPoints);
 	if (hitPoints > 1)
 	{
 		healthBarActive->setVisible(true);
