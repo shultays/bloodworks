@@ -246,14 +246,20 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"laser", &Gun::laser
 		);
 
+	lua.set_function("isPaused",
+		[&]() -> bool
+	{
+		return bloodworks->isPaused();
+	});
+
 	lua.set_function("loadMission",
-		[&](const std::string& mission)
+		[&](const std::string& mission) -> bool
 	{
 		return bloodworks->loadMission(mission);
 	});
 
 	lua.set_function("gotoMainMenu",
-		[&](const std::string& mission)
+		[&]() -> bool
 	{
 		return bloodworks->gotoMainMenu();
 	});
