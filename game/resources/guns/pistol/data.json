@@ -8,7 +8,7 @@
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 850.0,
-  "bulletDamage" : [30, 70],
+  "bulletDamage" : [40, 90],
   
   "scriptFile" : "resources/guns/pistol/pistol.lua",
   "scriptName" : "Pistol"

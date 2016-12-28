@@ -45,6 +45,21 @@ function Survival.init()
 end
 
 function Survival.onTick()
+	if player.isDead then
+		if isKeyPressed(keys.escape) then
+			gotoMainMenu()
+		elseif isKeyPressed(keys.space) then
+			loadMission("Survival")
+		end
+		
+		return
+	end
+
+	if isKeyPressed(keys.escape) then
+		gotoMainMenu()
+		return
+	end
+
 	if isKeyReleased(keys.home) then
 		dumpTable(_G)
 	end
@@ -85,18 +100,51 @@ function Survival.onTick()
     local min = missionTime / 60.0
 	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.1)))
 	
-    if missionTime - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster then
+    if missionTime - Survival.lastSpawnTime > (1.0 - clamp(min * 0.1) * 0.8) and getMonsterCount() < curMaxMonster and player.isDead == false then
         Survival.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
 		monster.position = pos
 		monster.moveAngle =  math.random() * math.pi * 2.0
-    
     end
 end
 
 
-function Survival.clear()
-
-
+function Survival.onPlayerDied()
+	local gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.gui + 5)
+	gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 120
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, 50))
+	
+	gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.gui + 5)
+	gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 32
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, -40))
+	
+	gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.gui + 5)
+	gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 32
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, -80))
+	
 end
