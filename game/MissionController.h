@@ -40,4 +40,5 @@ public:
 
 	void loadMission(const std::string& name);
 	void reset();
+	void onPlayerDied();
 };

@@ -109,13 +109,6 @@ void RunGame()
 			else if (event.type == SDL_KEYDOWN)
 			{
 				input.pressKey(event.key.keysym.scancode);
-
-				switch (event.key.keysym.sym)
-				{
-				case SDLK_ESCAPE:
-					coral.quitGame();
-					break;
-				}
 			}
 			else if (event.type == SDL_KEYUP)
 			{

@@ -246,6 +246,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"laser", &Gun::laser
 		);
 
+	lua.set_function("loadMission",
+		[&](const std::string& mission)
+	{
+		return bloodworks->loadMission(mission);
+	});
+
+	lua.set_function("gotoMainMenu",
+		[&](const std::string& mission)
+	{
+		return bloodworks->gotoMainMenu();
+	});
+
 	lua.set_function("addGameObject",
 		[&](const std::string& script) -> GameObject*
 	{
@@ -422,6 +434,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"gunPos", sol::readonly(&Player::gunPos),
 		"aimDir", sol::readonly(&Player::aimDir),
 		"moveDir", sol::readonly(&Player::moveDir),
+		"visible", sol::readonly(&Player::visible),
+		"isDead", sol::readonly(&Player::isDead),
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"doDamage", &Player::doDamage,

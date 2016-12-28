@@ -95,6 +95,8 @@ function FadeOutImage.onTick(gameObject)
 	local alpha
 	if timeDiff < gameObject.data.fadeInDuration then
 		alpha = timeDiff / gameObject.data.fadeInDuration
+	elseif gameObject.data.fadeOutStartTime < 0.0 then
+		alpha = 1.0
 	else 
 		alpha = 1.0 - (timeDiff - gameObject.data.fadeOutStartTime) / gameObject.data.fadeOutDuration
 		if alpha < 0.0 then 
