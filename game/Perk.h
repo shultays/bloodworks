@@ -88,4 +88,5 @@ public:
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
 	int onPlayerDamaged(int damage, sol::table& params);
 	void reset();
+	void onPlayerDied();
 };

@@ -144,9 +144,9 @@ void MainMenu::tick()
 
 	if (newGame->isClicked())
 	{
-		bloodworks->startGame();
+		bloodworks->loadMission("Survival");
 	}
-	else if (quit->isClicked())
+	else if (quit->isClicked() || input.isKeyPressed(key_escape))
 	{
 		coral.quitGame();
 	}

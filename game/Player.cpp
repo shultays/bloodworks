@@ -318,6 +318,11 @@ void Player::tick()
 		secondaryGun->setTriggered(input.isKeyDown(mouse_button_right));
 		secondaryGun->tick(dt);
 	}
+
+	if (input.isKeyPressed(key_q))
+	{
+		killSelf();
+	}
 }
 
 void Player::setGun(Gun *gun)
@@ -374,7 +379,8 @@ int Player::doDamageWithParams(int damage, sol::table& params)
 		hitPoints -= damage;
 		if (hitPoints <= 0)
 		{
-			hitPoints = maxHitPoints;
+			hitPoints = 0;
+			killSelf();
 		}
 		updateHitPoints();
 	}
@@ -463,6 +469,7 @@ void Player::reset()
 {
 	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
 	slowdownOnHit = true;
+	isDead = false;
 
 	oldSpreadAngle = 0.0f;
 	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
@@ -486,4 +493,11 @@ void Player::reset()
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	shootRenderable->playAnimation(0);
 	setVisible(false);
+}
+
+void Player::killSelf()
+{
+	isDead = true;
+	setVisible(false);
+	bloodworks->onPlayerDied();
 }

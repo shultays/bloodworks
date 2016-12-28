@@ -62,7 +62,7 @@ function Spider.onTick(monster)
 
 	local posToMove = player.position
 	
-	if data.randomMove then
+	if data.randomMove or player.isDead then
 		posToMove = data.randomPos
 		if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
 			posToMove = getRandomMapPosition()
@@ -74,7 +74,7 @@ function Spider.onTick(monster)
 	distanceToPlayer = diffToPlayer:length()
 	angleToPlayer = diffToPlayer:getAngle()
 	
-	if distanceToPlayer < data.playerSeeRange then
+	if distanceToPlayer < data.playerSeeRange and player.isDead == false then
 		local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
 		if c < 0.0 then
 			c = 0.0

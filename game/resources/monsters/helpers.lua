@@ -139,7 +139,7 @@ function MonsterMeleeHelper.init(monster)
 end
 
 function MonsterMeleeHelper.onTick(monster) 
-	if distanceToPlayer < 20 + monster.collisionRadius then
+	if distanceToPlayer < 20 + monster.collisionRadius and player.isDead == false then
 		if data.moving or data.lastHitTime + data.hitInterval < time then
 			data.lastHitTime = time
 			data.moving = false

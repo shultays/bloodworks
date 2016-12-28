@@ -225,7 +225,7 @@ void Bloodworks::init()
 
 	if (coral.isDebuggerPresent())
 	{
-		startGame();
+		loadMission("Survival");
 	}
 }
 
@@ -387,24 +387,7 @@ void Bloodworks::windowResized(int width, int height)
 	mainMenu->resize();
 }
 
-void Bloodworks::startGame()
-{
-	mainMenu->setVisible(false);
-	input.hideMouse();
-
-	player->setVisible(true);
-
-	for (auto& gun : guns)
-	{
-		if (gun->getName() == "Pistol")
-		{
-			player->setGun(gun);
-		}
-	}
-	missionController->loadMission("Survival");
-}
-
-void Bloodworks::gotoMainMenu()
+void Bloodworks::clearMission()
 {
 	player->reset();
 	monsterController->reset();
@@ -425,7 +408,40 @@ void Bloodworks::gotoMainMenu()
 	}
 	cameraPos.setZero();
 	input.showMouse();
+}
+
+void Bloodworks::gotoMainMenu()
+{
+	clearMission();
 	mainMenu->setVisible(true);
+}
+
+void Bloodworks::loadMission(const std::string& mission)
+{
+	clearMission();
+
+	mainMenu->setVisible(false);
+	input.hideMouse();
+
+	player->setVisible(true);
+
+	for (auto& gun : guns)
+	{
+		if (gun->getName() == "Pistol")
+		{
+			player->setGun(gun);
+		}
+	}
+	missionController->loadMission(mission);
+}
+
+void Bloodworks::onPlayerDied()
+{
+	for (auto& perk : usedPerks)
+	{
+		perk->onPlayerDied();
+	}
+	missionController->onPlayerDied();
 }
 
 void Bloodworks::tickCamera()
@@ -587,7 +603,7 @@ void Bloodworks::tick()
 
 	if (input.isKeyPressed(key_y))
 	{
-		startGame();
+		loadMission("Survival");
 	}
 
 	if (input.isKeyPressed(key_n))
