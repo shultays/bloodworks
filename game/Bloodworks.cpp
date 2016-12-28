@@ -206,14 +206,6 @@ void Bloodworks::init()
 	player = new Player(this);
 	player->setGun(guns[0]);
 
-	for (auto& gun : guns)
-	{
-		if (gun->getName() == "Machine Gun")
-		{
-			player->setGun(gun);
-		}
-	}
-	
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, BACKGROUND + 1);
@@ -401,7 +393,39 @@ void Bloodworks::startGame()
 	input.hideMouse();
 
 	player->setVisible(true);
+
+	for (auto& gun : guns)
+	{
+		if (gun->getName() == "Pistol")
+		{
+			player->setGun(gun);
+		}
+	}
 	missionController->loadMission("Survival");
+}
+
+void Bloodworks::gotoMainMenu()
+{
+	player->reset();
+	monsterController->reset();
+	bloodRenderable->reset();
+	dropController->reset();
+	bulletController->reset();
+	explosionController->reset();
+	missionController->reset();
+	for (auto& perk : usedPerks)
+	{
+		perk->reset();
+	}
+	usedPerks.clear();
+
+	for (auto& gun : guns)
+	{
+		gun->reset();
+	}
+	cameraPos.setZero();
+	input.showMouse();
+	mainMenu->setVisible(true);
 }
 
 void Bloodworks::tickCamera()
@@ -556,6 +580,15 @@ void Bloodworks::addDrop(const Vec2& position)
 void Bloodworks::tick()
 {
 	mainMenu->tick();
+	if (input.isKeyPressed(key_t))
+	{
+		gotoMainMenu();
+	}
+
+	if (input.isKeyPressed(key_y))
+	{
+		startGame();
+	}
 
 	if (input.isKeyPressed(key_n))
 	{

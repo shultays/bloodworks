@@ -13,30 +13,23 @@
 
 MissionController::~MissionController()
 {
-	if (missionLoaded)
+	if (loadedMission != -1)
 	{
 		scriptTable["clear"]();
 	}
-
-	for (auto& g : gameObjects)
-	{
-		auto& gameObject = g.second;
-
-		SAFE_DELETE(gameObject);
-	}
-	gameObjects.clear();
+	reset();
 }
 
 MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	lua["gameObjects"] = lua.create_table();
-	missionLoaded = false;
+	loadedMission = -1;
+	reset();
 }
 
 void MissionController::tick()
 {
-	if (missionLoaded == false)
+	if (loadedMission == -1)
 	{
 		return;
 	}
@@ -100,21 +93,42 @@ void MissionController::addMission(nlohmann::json &j)
 
 void MissionController::loadMission(const std::string& name)
 {
-	for (auto& mission : missions)
+	loadedMission = -1;
+	for (int i = 0; i<missions.size(); i++)
 	{
+		auto& mission = missions[i];
 		if (mission.name == name)
 		{
+			loadedMission = i;
 			scriptTable = lua[mission.scriptName] = lua.create_table();
+			missionLoadTime = timer.getTime();
 
 			lua["missionTime"] = timer.getTime() - missionLoadTime;
 			lua["missionLoadTime"] = missionLoadTime;
 
+			lua["gameObjects"] = lua.create_table();
+			lua["mission"] = lua.create_table();
+
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
-			missionLoaded = true;
-			missionLoadTime = timer.getTime();
 			return;
 		}
 	}
+}
+
+void MissionController::reset()
+{
+	if (loadedMission >= 0)
+	{
+		scriptTable = lua[missions[loadedMission].scriptName] = lua.create_table();
+		loadedMission = -1;
+	}
+	for (auto& g : gameObjects)
+	{
+		auto& gameObject = g.second;
+
+		SAFE_DELETE(gameObject);
+	}
+	gameObjects.clear();
 }
 

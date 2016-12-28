@@ -43,3 +43,11 @@ int Perk::onPlayerDamaged(int damage, sol::table& params)
 	}
 	return damage;
 }
+
+void Perk::reset()
+{
+	if (scriptTable["reset"])
+	{
+		scriptTable["reset"]();
+	}
+}

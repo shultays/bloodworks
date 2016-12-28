@@ -154,18 +154,8 @@ void BloodRenderable::tick()
 	}
 }
 
-BloodRenderable::BloodRenderable(Bloodworks *bloodworks) : cRenderable((cGame*)bloodworks)
+void BloodRenderable::reset()
 {
-	this->bloodworks = bloodworks;
-}
-
-BloodRenderable::~BloodRenderable()
-{
-	for(auto& t : cachedBloods)
-	{
-		t = nullptr;
-	}
-	cachedBloods.clear();
 	for (auto& t : bloods)
 	{
 		SAFE_DELETE(t.renderable);
@@ -176,6 +166,29 @@ BloodRenderable::~BloodRenderable()
 		SAFE_DELETE(t.renderable);
 	}
 	bodyParts.clear();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	Vec4 color = Vec4::fromColor(0xFF660000);
+	glClearColor(color.r, color.g, color.b, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	game->resetToBackBuffer();
+}
+
+BloodRenderable::BloodRenderable(Bloodworks *bloodworks) : cRenderable((cGame*)bloodworks)
+{
+	this->bloodworks = bloodworks;
+}
+
+BloodRenderable::~BloodRenderable()
+{
+	reset();
+	for(auto& t : cachedBloods)
+	{
+		t = nullptr;
+	}
+	cachedBloods.clear();
 	bloodShader = nullptr;
 	defaultShader = nullptr;
 	bloodBg = nullptr;

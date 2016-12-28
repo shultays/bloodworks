@@ -31,4 +31,5 @@ public:
 	~ExplosionController();
 	void tick();
 	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
+	void reset();
 };

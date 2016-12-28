@@ -16,11 +16,7 @@ BulletController::BulletController(Bloodworks *bloodworks)
 
 BulletController::~BulletController()
 {
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		SAFE_DELETE(bullets[i]);
-	}
-	bulletMap.clear();
+	reset();
 }
 
 void BulletController::addBullet(Bullet* bullet)
@@ -79,4 +75,15 @@ Bullet* BulletController::addCustomBullet(const sol::table& params)
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	return bullet;
+}
+
+void BulletController::reset()
+{
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		grid.removeFromGrid(bullets[i]);
+		SAFE_DELETE(bullets[i]);
+	}
+	bullets.clear();
+	bulletMap.clear();
 }

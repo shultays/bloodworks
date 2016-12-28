@@ -9,12 +9,7 @@
 
 DropController::~DropController()
 {
-	for (auto& drop : drops)
-	{
-		SAFE_DELETE(drop.renderable);
-	}
-	drops.clear();
-
+	reset();
 }
 
 void DropController::createGun(const Vec2& position, int forceIndex)
@@ -174,5 +169,14 @@ void DropController::addDrop(const Vec2& position)
 	{
 		createGun(position);
 	}
+}
+
+void DropController::reset()
+{
+	for (auto& drop : drops)
+	{
+		SAFE_DELETE(drop.renderable);
+	}
+	drops.clear();
 }
 
