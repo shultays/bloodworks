@@ -45,9 +45,9 @@ function Spider.init(monster)
 	data.minDamage = 3
 	data.maxDamage = 9
     
-    data.maxMoveSpeed = 120.0
+    data.maxMoveSpeed = 130.0
     data.maxRotateSpeed = 0.03
-    data.playerSeeRange = 100.0
+    data.playerSeeRange = 150.0
 end
 
 
