@@ -130,6 +130,22 @@ angel (görünce duracak, öbür türlü hızlı)
 blink atan? 
 arada invis atan?
 parçalanan
+dune solucanları?
+
+yaratık bosslar
+daha güçlü
+daya hızlı
+ölünce patlayan
+vurunca ateş eden
+arada ateş eden
+ölünce parçalanan
+ölünce yumurta bırakan?
+arada bir ilk vuruşta ölümsüz olan?
+regen olan
+
+minionlar
+
+yumurtalar
 
 
 
