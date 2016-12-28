@@ -56,12 +56,13 @@ class Player
 	int experience;
 	int experienceForNextLevel;
 	bool visible;
-
-	int calculateExperienceForLevel(int level);
+	bool isDead;
 
 	sol::table data;
 
+	int calculateExperienceForLevel(int level);
 	void updateHitPoints();
+	void killSelf();
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

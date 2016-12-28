@@ -183,6 +183,8 @@ public:
 	}
 
 	virtual void windowResized(int width, int height);
-	void startGame();
+	void clearMission();
 	void gotoMainMenu();
+	void loadMission(const std::string& mission);
+	void onPlayerDied();
 };

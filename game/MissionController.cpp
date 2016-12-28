@@ -13,10 +13,6 @@
 
 MissionController::~MissionController()
 {
-	if (loadedMission != -1)
-	{
-		scriptTable["clear"]();
-	}
 	reset();
 }
 
@@ -130,5 +126,13 @@ void MissionController::reset()
 		SAFE_DELETE(gameObject);
 	}
 	gameObjects.clear();
+}
+
+void MissionController::onPlayerDied()
+{
+	if (scriptTable["onPlayerDied"])
+	{
+		scriptTable["onPlayerDied"]();
+	}
 }
 

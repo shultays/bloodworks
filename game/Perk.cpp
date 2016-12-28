@@ -51,3 +51,11 @@ void Perk::reset()
 		scriptTable["reset"]();
 	}
 }
+
+void Perk::onPlayerDied()
+{
+	if (scriptTable["onPlayerDied"])
+	{
+		scriptTable["onPlayerDied"]();
+	}
+}
