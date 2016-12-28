@@ -27,9 +27,9 @@ function Alien.init(monster)
 	
 	monster:playAnimation("walk", math.random())
 	
-    data.maxMoveSpeed = 50.0
+    data.maxMoveSpeed = 70.0
     data.maxRotateSpeed = 0.03
-    data.playerSeeRange = 100.0
+    data.playerSeeRange = 150.0
 	
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
