@@ -410,14 +410,23 @@ void Bloodworks::clearMission()
 	input.showMouse();
 }
 
-void Bloodworks::gotoMainMenu()
+bool Bloodworks::gotoMainMenu()
 {
+	if (levelUpPopup->isVisible())
+	{
+		return false;
+	}
 	clearMission();
 	mainMenu->setVisible(true);
+	return true;
 }
 
-void Bloodworks::loadMission(const std::string& mission)
+bool Bloodworks::loadMission(const std::string& mission)
 {
+	if (levelUpPopup->isVisible())
+	{
+		return false;
+	}
 	clearMission();
 
 	mainMenu->setVisible(false);
@@ -433,6 +442,7 @@ void Bloodworks::loadMission(const std::string& mission)
 		}
 	}
 	missionController->loadMission(mission);
+	return true;
 }
 
 void Bloodworks::onPlayerDied()
