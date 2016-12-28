@@ -596,15 +596,6 @@ void Bloodworks::addDrop(const Vec2& position)
 void Bloodworks::tick()
 {
 	mainMenu->tick();
-	if (input.isKeyPressed(key_t))
-	{
-		gotoMainMenu();
-	}
-
-	if (input.isKeyPressed(key_y))
-	{
-		loadMission("Survival");
-	}
 
 	if (input.isKeyPressed(key_n))
 	{
@@ -615,6 +606,7 @@ void Bloodworks::tick()
 			debugRenderer.removeText(1);
 		}
 	}
+
 	if (showFps)
 	{
 		tickCount++;
@@ -637,17 +629,6 @@ void Bloodworks::tick()
 	{
 		perks[0]->takeLevel();
 		usedPerks.push_back(perks[0]);
-	}
-
-	if (input.isKeyPressed(key_1))
-	{
-		for (auto& bonus : bonuses)
-		{
-			if (bonus->getName() == "Homing Orb")
-			{
-				bonus->spawnAt(player->getPosition());
-			}
-		}
 	}
 
 	if (input.isKeyPressed(key_3))
