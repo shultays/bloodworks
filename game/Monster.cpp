@@ -143,7 +143,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	hitPoint -= damage;
 	if (hitPoint <= 1.0f)
 	{
-		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 2);
+		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
 		killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 	}
 	else
@@ -190,7 +190,7 @@ void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits
 
 	lastBitTime = timer.getTime();
 
-	int bitCount = randInt(0, 2) + extraBits;
+	int bitCount = randInt(0, 1) + extraBits;
 
 	for (int i = 0; i < bitCount; i++)
 	{

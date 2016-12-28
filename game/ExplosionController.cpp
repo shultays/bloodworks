@@ -15,11 +15,7 @@ ExplosionController::ExplosionController(Bloodworks *bloodworks)
 
 ExplosionController::~ExplosionController()
 {
-	for (auto& explosionData : explosions)
-	{
-		SAFE_DELETE(explosionData.ringRenderable);
-	}
-	explosions.clear();
+	reset();
 	ring = nullptr;
 	SAFE_DELETE(explosionParticles);
 }
@@ -102,4 +98,14 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	bloodworks->addRenderable(explosionData.ringRenderable, MONSTERS + 1);
 
 	explosions.push_back(explosionData);
+}
+
+void ExplosionController::reset()
+{
+	for (auto& explosionData : explosions)
+	{
+		SAFE_DELETE(explosionData.ringRenderable);
+	}
+	explosions.clear();
+	explosionParticles->clear();
 }
