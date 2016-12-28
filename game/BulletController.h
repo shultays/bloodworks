@@ -20,4 +20,5 @@ public:
 	void addBullet(Bullet* bullet);
 	void tick();
 	Bullet *addCustomBullet(const sol::table& params);
+	void reset();
 };

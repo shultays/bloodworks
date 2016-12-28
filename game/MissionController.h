@@ -28,8 +28,8 @@ class MissionController
 	};
 
 	std::vector<MissionData> missions;
-	bool missionLoaded;
 	float missionLoadTime;
+	int loadedMission;
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
@@ -39,4 +39,5 @@ public:
 	void addMission(nlohmann::json &j);
 
 	void loadMission(const std::string& name);
+	void reset();
 };

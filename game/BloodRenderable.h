@@ -47,5 +47,5 @@ public:
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 	void tick();
-
+	void reset();
 };

@@ -12,8 +12,6 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 	this->bloodworks = bloodworks;
 
 	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
-
-	lua["mission"] = lua.create_table();
 }
 
 void MonsterController::tick()
@@ -53,7 +51,7 @@ MonsterController::~MonsterController()
 		grid.removeFromGrid(monster);
 		SAFE_DELETE(monster);
 	}
-
+	monsters.clear();
 	for (auto& monsterTemplate : monsterTemplates)
 	{
 		auto& m = monsterTemplate.second;
@@ -390,6 +388,16 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	}
 
 	return bestPos;
+}
+
+void MonsterController::reset()
+{
+	for (auto& monster : monsters)
+	{
+		grid.removeFromGrid(monster);
+		SAFE_DELETE(monster);
+	}
+	monsters.clear();
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

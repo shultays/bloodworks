@@ -35,4 +35,5 @@ public:
 	void createBonus(const Vec2& position, int forceIndex = -1);
 	void tick();
 	void addDrop(const Vec2& position);
+	void reset();
 };

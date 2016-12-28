@@ -242,18 +242,7 @@ public:
 	{
 		textures.clear();
 		SAFE_DELETE(buff);
-
-		for (auto& bufferData : quadBuffers)
-		{
-			if (particleTemplate->emptyBuffers.size() < maxBufferSize * 2)
-			{
-				particleTemplate->emptyBuffers.push_back(bufferData.quadBuffer);
-			}
-			else
-			{
-				glDeleteBuffers(1, &bufferData.quadBuffer);
-			}
-		}
+		clear();
 	}
 
 	void addParticle(const Vec2& pos, sol::table& params)
@@ -447,5 +436,21 @@ public:
 	bool hasParticle()
 	{
 		return quadBuffers.size() > 0;
+	}
+
+	void clear()
+	{
+		for (auto& bufferData : quadBuffers)
+		{
+			if (particleTemplate->emptyBuffers.size() < maxBufferSize * 2)
+			{
+				particleTemplate->emptyBuffers.push_back(bufferData.quadBuffer);
+			}
+			else
+			{
+				glDeleteBuffers(1, &bufferData.quadBuffer);
+			}
+		}
+		quadBuffers.clear();
 	}
 };

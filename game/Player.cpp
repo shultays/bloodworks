@@ -17,21 +17,12 @@ int Player::calculateExperienceForLevel(int level)
 Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	
-	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
-	slowdownOnHit = true;
-
-	oldSpreadAngle = 0.0f;
-	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
-	renderable = new cRenderableGroup(bloodworks);
-	aimAngle = 0.0f;
-	aimDir = Vec2::fromAngle(aimAngle);
 
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(15.7f, 22.9f);
 	mat.translateBy(0.0f, 5.0f);
 
-
+	renderable = new cRenderableGroup(bloodworks);
 	cTexturedQuadRenderable *body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
 	body->setWorldMatrix(mat);
 	renderable->addRenderable(body);
@@ -84,23 +75,7 @@ Player::Player(Bloodworks *bloodworks)
 	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
 	renderable->addRenderable(shootRenderable);
 
-	slowdownAmount = 0.0f;
-
-	crosshairPos = Vec2(0.0f, 50.0f);
-
-	moveSpeed = 0.0f;
-	moveAngle = 0.0f;
-	maxHitPoints = hitPoints = 100;
-	data = lua.create_table();
-	lua["player"] = this;
-	updateHitPoints();
-	secondaryGun = gun = nullptr;
-
-	experience = 0;
-	level = 1;
-	experienceForNextLevel = calculateExperienceForLevel(level + 1);
-
-	setVisible(false);
+	reset();
 }
 
 Player::~Player()
@@ -265,7 +240,7 @@ void Player::tick()
 		crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
 	}
 
-	float maxCrosshairDistance = gun->getMaxCrosshairDistance();
+	float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
 	float lengthSquared = crosshairPos.lengthSquared();
 	if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
 	{
@@ -482,4 +457,33 @@ void Player::setVisible(bool visible)
 	healthBarBG->setVisible(visible);
 	healthBarActive->setVisible(visible);
 	healthBarFG->setVisible(visible);
+}
+
+void Player::reset()
+{
+	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
+	slowdownOnHit = true;
+
+	oldSpreadAngle = 0.0f;
+	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
+	aimAngle = 0.0f;
+	aimDir = Vec2::fromAngle(aimAngle);
+
+	slowdownAmount = 0.0f;
+
+	crosshairPos = Vec2(0.0f, 50.0f);
+
+	moveSpeed = 0.0f;
+	moveAngle = 0.0f;
+	maxHitPoints = hitPoints = 100;
+	data = lua.create_table();
+	lua["player"] = this;
+	updateHitPoints();
+	secondaryGun = gun = nullptr;
+
+	experience = 0;
+	level = 1;
+	experienceForNextLevel = calculateExperienceForLevel(level + 1);
+	shootRenderable->playAnimation(0);
+	setVisible(false);
 }
