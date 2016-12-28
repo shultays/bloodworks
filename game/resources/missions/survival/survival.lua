@@ -54,10 +54,14 @@ function Survival.onTick()
 		
 		return
 	end
-
-	if isKeyPressed(keys.escape) then
-		gotoMainMenu()
-		return
+	
+	if isPaused() == false then
+	
+		if isKeyPressed(keys.escape) then
+			if gotoMainMenu() then
+				return
+			end
+		end
 	end
 
 	if isKeyReleased(keys.home) then

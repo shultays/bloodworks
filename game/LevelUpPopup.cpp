@@ -122,7 +122,7 @@ void LevelUpPopup::tick()
 	//debugRenderer.addText("O", mouseScreenPos.x, mouseScreenPos.y, 0.0f, Vec4(1.0f), 12.0f, TextAlignment::center, RenderableAlignment::center);
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		bool inside = max(fabs(levelupPerksRenderablePosition[i].x - mouseScreenPos.x), fabs(levelupPerksRenderablePosition[i].y - mouseScreenPos.y)) < 40.0f;
+		bool inside = max(fabs(levelupPerksRenderablePosition[i].x / bloodworks->getCameraZoom() - mouseScreenPos.x), fabs(levelupPerksRenderablePosition[i].y / bloodworks->getCameraZoom() - mouseScreenPos.y)) < 40.0f / bloodworks->getCameraZoom();
 		if (hoverLevelupPerkIndex != i)
 		{
 			if (inside)

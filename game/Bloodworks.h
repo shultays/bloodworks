@@ -184,7 +184,7 @@ public:
 
 	virtual void windowResized(int width, int height);
 	void clearMission();
-	void gotoMainMenu();
-	void loadMission(const std::string& mission);
+	bool gotoMainMenu();
+	bool loadMission(const std::string& mission);
 	void onPlayerDied();
 };
