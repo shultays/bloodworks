@@ -39,6 +39,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::multiplication, [](const Vec2& a, float b) { return a * b; },
 		sol::meta_function::division, [](const Vec2& a, const Vec2& b) { return a / b; },
 		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
+		sol::meta_function::unary_minus, [](const Vec2& a) { return -a; },
 
 		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
 		"getAngle", &Vec2::toAngle,
@@ -73,6 +74,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::multiplication, [](const Vec3& a, float b) { return a * b; },
 		sol::meta_function::division, [](const Vec3& a, const Vec3& b) { return a / b; },
 		sol::meta_function::division, [](const Vec3& a, float b) { return a / b; },
+		sol::meta_function::unary_minus, [](const Vec3& a) { return -a; },
 
 
 		"normalize", [](Vec3& a) { a.normalize(); },

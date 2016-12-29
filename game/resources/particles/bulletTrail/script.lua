@@ -12,16 +12,31 @@ function BulletTrailParticle.initSystem()
 end
 
 
+function BulletTrailParticle.setDefaultArgs(args)
+	if args.color == nil then
+		args.color = Vec3.new(0.8, 0.6, 0.3)
+	end
+	if args.scaleSpeed == nil then
+		args.scaleSpeed = 5.0
+	end
+	if args.initialAlpha == nil then
+		args.initialAlpha = 0.4
+	end
+	if args.fadeOutSpeed == nil then
+		args.fadeOutSpeed = 2.0
+	end
+end
+
 function BulletTrailParticle.addParticle(params, pos, args)
 	params.pos = Vec2.new(pos.x, pos.y)
 	
-	params.color = Vec3.new(0.8, 0.6, 0.3)
+	params.color = args.color
 	
 	params.initialScale = args.initialScale
 	
-	params.scaleSpeed = 5.0
+	params.scaleSpeed = args.scaleSpeed
 	
-	params.initialAlpha = 0.4
+	params.initialAlpha = args.initialAlpha
 	
 	params.fadeOutSpeed = args.fadeOutSpeed
 	
