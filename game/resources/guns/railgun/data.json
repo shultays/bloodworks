@@ -1,0 +1,15 @@
+{
+  "type" : "gun",
+  "name": "Railgun",
+  "artFolder" : "resources/guns/railgun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [10.0, 10.0],
+  "bulletMeshShift" : [0.0, 0.0],
+  "bulletRadius" : 5.0,
+  "bulletSpeed" : 950.0,
+  "bulletDamage" : [85, 125],
+  
+  "scriptFile" : "resources/guns/railgun/railgun.lua",
+  "scriptName" : "Railgun"
+}
