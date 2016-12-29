@@ -261,7 +261,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.new_usertype<Gun>("Gun",
 		"index", sol::readonly(&Gun::id),
 		"data", &Gun::data,
-
+		"name", &Gun::name,
 		"bulletSpeed", &Gun::bulletSpeed,
 		"bulletRadius", &Gun::bulletRadius,
 		"bulletSpeed", &Gun::bulletSpeed,
@@ -277,6 +277,20 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addBullet", &Gun::addBullet,
 		"laser", &Gun::laser
 		);
+
+
+
+	lua.set_function("getGunCount",
+		[&]() -> int
+	{
+		return (int)bloodworks->getGuns().size();
+	});
+
+	lua.set_function("getGunAtIndex",
+		[&](int index) -> Gun*
+	{
+		return bloodworks->getGuns()[index];
+	});
 
 	lua.set_function("isPaused",
 		[&]() -> bool
@@ -484,9 +498,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"shootSpeedMult", &Player::shootSpeedMult,
 		"moveSpeedMult", &Player::moveSpeedMult,
 		"slowdownOnHit", &Player::slowdownOnHit,
-
-
+		"setGun", &Player::setGun,
 		"level", sol::readonly(&Player::level),
+		"gun", sol::readonly(&Player::gun),
 		"experience", sol::readonly(&Player::experience),
 		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
 		"data", &Player::data
