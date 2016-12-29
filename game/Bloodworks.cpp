@@ -664,8 +664,8 @@ void Bloodworks::tick()
 
 	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
 	{
-		perks[0]->takeLevel();
-		usedPerks.push_back(perks[0]);
+		perks[8]->takeLevel();
+		usedPerks.push_back(perks[8]);
 	}
 
 	if (input.isKeyPressed(key_3))

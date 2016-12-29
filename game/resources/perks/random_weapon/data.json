@@ -1,0 +1,9 @@
+{
+  "type" : "perk",
+  "name": "Random Weapon",
+  "description": "Get a random weapon. Maybe it is even better!",
+  "iconFile" : "resources/perks/random_weapon/icon.png",
+  "scriptFile" : "resources/perks/random_weapon/random_weapon.lua",
+  "scriptName" : "RandomWeapon",
+  "maxLevel" : -1
+}
