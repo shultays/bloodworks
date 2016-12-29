@@ -467,7 +467,7 @@ void Player::setVisible(bool visible)
 
 void Player::reset()
 {
-	moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
+	damageMult = monsterExperienceMult = moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
 	slowdownOnHit = true;
 	isDead = false;
 
@@ -493,6 +493,16 @@ void Player::reset()
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	shootRenderable->playAnimation(0);
 	setVisible(false);
+}
+
+float Player::getMonsterExperienceMultiplier() const
+{
+	return monsterExperienceMult;
+}
+
+float Player::getDamageMultiplier() const
+{
+	return damageMult;
 }
 
 void Player::killSelf()

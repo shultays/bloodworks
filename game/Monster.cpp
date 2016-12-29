@@ -140,8 +140,9 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	{
 		return;
 	}
+	damage = (int)(damage * bloodworks->getPlayer()->getDamageMultiplier());
 	hitPoint -= damage;
-	if (hitPoint <= 1.0f)
+	if (hitPoint <= 0)
 	{
 		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
 		killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
@@ -273,6 +274,6 @@ void Monster::killSelf(const Vec2& blowDir)
 	}
 	if (bloodworks->getPlayer())
 	{
-		bloodworks->getPlayer()->gainExperience(experience == -1 ? monsterTemplate->experience : experience);
+		bloodworks->getPlayer()->gainExperience((int)((experience == -1 ? monsterTemplate->experience : experience) * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 }
