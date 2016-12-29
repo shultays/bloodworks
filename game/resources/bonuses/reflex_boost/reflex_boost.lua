@@ -1,22 +1,49 @@
 
 function ReflexBoost.spawn(pos)
-	if ReflexBoost.boost == nil then
-		ReflexBoost.boost = addGameObject("ReflexBoost")
+	local data = ReflexBoost.data
+	if data.boost == nil then
+		data.boost = addGameObject("ReflexBoost")
+		data.postProcess = addPostProcess("resources/post_process/sepia.ps")
+		data.postProcess:setShaderWeight(0.0)
+		data.shaderStartTime = time
 	else
-		ReflexBoost.boost.data.time = time
+		data.boost.data.time = time
+	end
+	
+	
+	if ReflexBoost.data.isSlow ~= true then
+		ReflexBoost.data.isSlow = true
+		multiplyGameSpeed(0.5)
 	end
 end
 
 function ReflexBoost.init(gameObject)
 	gameObject.data.time = time
-	multiplyGameSpeed(0.5)
 end
 
 
 function ReflexBoost.onTick(gameObject)
-	if time - gameObject.data.time > 5.0 then
-		ReflexBoost.boost = nil
-		multiplyGameSpeed(1.0 / 0.5)
+	local t = time - ReflexBoost.data.shaderStartTime
+	local a = 0.5
+	
+	if t < 0.25 then
+		a = t * 2.0
+	end
+	t = time - gameObject.data.time
+	
+	if t > 4.75 then
+	    a = (5.0 - t) * 2.0
+		if ReflexBoost.data.isSlow then
+			ReflexBoost.data.isSlow = false
+			multiplyGameSpeed(1.0 / 0.5)
+		end
+	end
+	
+	ReflexBoost.data.postProcess:setShaderWeight(a)
+	if (time - gameObject.data.time) > 5.0 then
+		ReflexBoost.data.boost = nil
+		removePostProcess(ReflexBoost.data.postProcess)
+		ReflexBoost.data.postProcess = nil
 		gameObject.toBeRemoved = true
 	end
 end
