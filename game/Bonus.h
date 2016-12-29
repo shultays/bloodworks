@@ -15,4 +15,5 @@ public:
 	void spawnAt(const Vec2& pos);
 	const std::string& getIconPath() const;
 	const std::string& getName() const;
+	void reset();
 };

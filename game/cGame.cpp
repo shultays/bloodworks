@@ -101,6 +101,7 @@ void cGame::renderInternal()
 		if (postProcesses[i]->isEnabled())
 		{
 			lastPostProcess = i;
+			break;
 		}
 	}
 
@@ -130,26 +131,29 @@ void cGame::renderInternal()
 			postProcessDone = true;
 			for (int i = 0; i < postProcesses.size(); i++)
 			{
-				glBindFramebuffer(GL_FRAMEBUFFER, i == lastPostProcess ? 0 : nextBackBufferIndex);
-				lastShader = postProcesses[0]->shader;
-				postProcesses[0]->bind();
-				glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
-
-				lastShader->bindUV(0, 0);
-				if (nextBackBufferIndex == 0)
+				if (postProcesses[i]->isEnabled())
 				{
-					nextBackBufferIndex = 1;
-					glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[1]);
-				}
-				else
-				{
-					nextBackBufferIndex = 0;
-					glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[0]);
-				}
+					glBindFramebuffer(GL_FRAMEBUFFER, i == lastPostProcess ? 0 : coral.tempFrameBuffer[nextBackBufferIndex]);
+					lastShader = postProcesses[i]->shader;
+					postProcesses[i]->bind();
+					glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
 
-				lastShader->setTexture0(0);
+					lastShader->bindUV(0, 0);
+					if (nextBackBufferIndex == 0)
+					{
+						nextBackBufferIndex = 1;
+						glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[1]);
+					}
+					else
+					{
+						nextBackBufferIndex = 0;
+						glBindTexture(GL_TEXTURE_2D, coral.tempFrameBufferTexture[0]);
+					}
 
-				glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+					lastShader->setTexture0(0);
+
+					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+				}
 			}
 		}
 	}

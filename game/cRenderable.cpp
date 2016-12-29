@@ -65,7 +65,6 @@ void cRenderable::setLevel(int level)
 
 void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 {
-
 	if (game->lastShader != shader)
 	{
 		game->lastShader = shader;
@@ -79,6 +78,11 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 		game->lastAllignment = alignment;
 	}
 
+	setShaderUniforms();
+}
+
+void cUniformDataWithShader::setShaderUniforms()
+{
 	for (auto& uniform : uniforms)
 	{
 		switch (uniform.second.type)
@@ -99,35 +103,35 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 	}
 }
 
-int cRenderableWithShader::addUniformFloat(const std::string uniform, float val)
+int cUniformDataWithShader::addUniformFloat(const std::string uniform, float val)
 {
 	int index = shader->addUniform(uniform, TypeFloat).index;
 	setUniform(index, val);
 	return index;
 }
 
-int cRenderableWithShader::addUniformVec2(const std::string uniform, const Vec2& data)
+int cUniformDataWithShader::addUniformVec2(const std::string uniform, const Vec2& data)
 {
 	int index = shader->addUniform(uniform, TypeVec2).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cRenderableWithShader::addUniformVec3(const std::string uniform, const Vec3& data)
+int cUniformDataWithShader::addUniformVec3(const std::string uniform, const Vec3& data)
 {
 	int index = shader->addUniform(uniform, TypeVec3).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cRenderableWithShader::addUniformVec4(const std::string uniform, const Vec4& data)
+int cUniformDataWithShader::addUniformVec4(const std::string uniform, const Vec4& data)
 {
 	int index = shader->addUniform(uniform, TypeVec4).index;
 	setUniform(index, data);
 	return index;
 }
 
-void cRenderableWithShader::setUniform(int index, float data)
+void cUniformDataWithShader::setUniform(int index, float data)
 {
 	UniformData uniform;
 	uniform.type = TypeFloat;
@@ -135,7 +139,7 @@ void cRenderableWithShader::setUniform(int index, float data)
 	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(int index, const Vec2& data)
+void cUniformDataWithShader::setUniform(int index, const Vec2& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec2;
@@ -143,7 +147,7 @@ void cRenderableWithShader::setUniform(int index, const Vec2& data)
 	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(int index, const Vec3& data)
+void cUniformDataWithShader::setUniform(int index, const Vec3& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec3;
@@ -151,7 +155,7 @@ void cRenderableWithShader::setUniform(int index, const Vec3& data)
 	uniforms[index] = uniform;
 }
 
-void cRenderableWithShader::setUniform(int index, const Vec4& data)
+void cUniformDataWithShader::setUniform(int index, const Vec4& data)
 {
 	UniformData uniform;
 	uniform.type = TypeVec4;

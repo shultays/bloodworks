@@ -2,14 +2,12 @@
 
 #include "cGame.h"
 
-class cPostProcess
+class cPostProcess : public cUniformDataWithShader
 {
 	friend class cGame;
-	cShaderShr shader;
 	cGame *game;
 	bool enabled;
 	int shaderAmountIndex;
-	float shaderAmount;
 public:
 	cPostProcess()
 	{
@@ -21,22 +19,20 @@ public:
 		{
 			game->removePostProcess(this);
 		}
-		shader = nullptr;
 	}
 
 	void init(cGame* game, cShaderShr shader, int level = 10000)
 	{
-		enabled = false;
+		enabled = true;
 		this->shader = shader;
 		this->game = game;
 		game->addPostProcess(this, level);
-		shaderAmountIndex = shader->addUniform("uShaderAmount", TypeFloat).index;
-		shaderAmount = 0.0f;
+		shaderAmountIndex = addUniformFloat("uShaderAmount", 1.0f);
 	}
 
-	void setShaderAmount(float amount)
+	void setShaderWeight(float amount)
 	{
-		this->shaderAmount = amount;
+		setUniform(shaderAmountIndex, amount);
 	}
 
 	cShaderShr& getShader()
@@ -48,7 +44,7 @@ public:
 	{
 		shader->begin();
 
-		shader->setUniform(shaderAmountIndex, shaderAmount);
+		setShaderUniforms();
 	}
 
 	bool isEnabled() const

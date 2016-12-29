@@ -213,8 +213,8 @@ void Bloodworks::init()
 	explosionController = new ExplosionController(this);
 
 	pausePostProcess = new cPostProcess();
-	pausePostProcess->init(this, resources.getShader("resources/post_process/default.vs", "resources/post_process/pause.ps"), 0);
-	pausePostProcess->setShaderAmount(0.0f);
+	pausePostProcess->init(this, resources.getShader("resources/post_process/default.vs", "resources/post_process/pause.ps"), 200);
+	pausePostProcess->setShaderWeight(0.0f);
 	pausePostProcess->setEnabled(false);
 
 	levelUpPopup = new LevelUpPopup(this);
@@ -393,6 +393,9 @@ void Bloodworks::windowResized(int width, int height)
 
 void Bloodworks::clearMission()
 {
+	gamePlaySlowdown = targetGamePlaySlowdown = 1.0f;
+	setSlowdown(1.0f);
+
 	player->reset();
 	monsterController->reset();
 	bloodRenderable->reset();
@@ -400,12 +403,32 @@ void Bloodworks::clearMission()
 	bulletController->reset();
 	explosionController->reset();
 	missionController->reset();
+
+	std::vector<cPostProcess*> toRemove;
+
+	for (int i=0; i<postProcesses.size(); i++)
+	{
+		if (postProcesses[i] != pausePostProcess)
+		{
+			toRemove.push_back(postProcesses[i]);
+		}
+	}
+	for (auto& postProcess : toRemove)
+	{
+		//SAFE_DELETE(postProcess);
+	}
+	toRemove.clear();
+
 	for (auto& perk : usedPerks)
 	{
 		perk->reset();
 	}
 	usedPerks.clear();
 
+	for (auto& bonus : bonuses)
+	{
+		bonus->reset();
+	}
 	for (auto& gun : guns)
 	{
 		gun->reset();
@@ -536,7 +559,7 @@ void Bloodworks::tickGameSlowdown()
 		{
 			pauseSlowdown = 0.0f;
 		}
-		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
+		pausePostProcess->setShaderWeight(1.0f - pauseSlowdown);
 		changeSlowdown = true;
 	}
 	else if (!paused && pauseSlowdown < 1.0f)
@@ -547,7 +570,7 @@ void Bloodworks::tickGameSlowdown()
 			pauseSlowdown = 1.0f;
 			pausePostProcess->setEnabled(false);
 		}
-		pausePostProcess->setShaderAmount(1.0f - pauseSlowdown);
+		pausePostProcess->setShaderWeight(1.0f - pauseSlowdown);
 		changeSlowdown = true;
 	}
 
