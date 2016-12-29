@@ -111,11 +111,10 @@ public:
 	}
 };
 
-class cRenderableWithShader : public cRenderable
+class cUniformDataWithShader
 {
 protected:
 	cShaderShr shader;
-	virtual void render(bool isIdentity, const Mat3& mat) override;
 
 	struct UniformData
 	{
@@ -139,6 +138,43 @@ protected:
 
 	std::unordered_map<int, UniformData> uniforms;
 public:
+	void setShader(cShaderShr shader)
+	{
+		this->shader = shader;
+	}
+
+	cShaderShr getShader() const
+	{
+		return shader;
+	}
+
+	cUniformDataWithShader()
+	{
+		shader = nullptr;
+	}
+
+	virtual ~cUniformDataWithShader()
+	{
+		shader = nullptr;
+	}
+
+	void setShaderUniforms();
+	int addUniformFloat(const std::string uniform, float val);
+	int addUniformVec2(const std::string uniform, const Vec2& data);
+	int addUniformVec3(const std::string uniform, const Vec3& data);
+	int addUniformVec4(const std::string uniform, const Vec4& data);
+	void setUniform(int index, float data);
+	void setUniform(int index, const Vec2& data);
+	void setUniform(int index, const Vec3& data);
+	void setUniform(int index, const Vec4& data);
+};
+
+class cRenderableWithShader : public cRenderable, public cUniformDataWithShader
+{
+protected:
+	virtual void render(bool isIdentity, const Mat3& mat) override;
+
+public:
 	cRenderableWithShader(cGame *game, const std::string& shaderPath) : cRenderable(game)
 	{
 		std::string vs = shaderPath;
@@ -155,7 +191,6 @@ public:
 
 	virtual ~cRenderableWithShader()
 	{
-		shader = nullptr;
 	}
 
 	cRenderableWithShader(cShaderShr shader) : cRenderable(game)
@@ -168,24 +203,6 @@ public:
 		shader = resources.getShader(vs, ps);
 	}
 
-	void setShader(cShaderShr shader)
-	{
-		this->shader = shader;
-	}
-
-	cShaderShr getShader() const
-	{
-		return shader;
-	}
-
-	int addUniformFloat(const std::string uniform, float val);
-	int addUniformVec2(const std::string uniform, const Vec2& data);
-	int addUniformVec3(const std::string uniform, const Vec3& data);
-	int addUniformVec4(const std::string uniform, const Vec4& data);
-	void setUniform(int index, float data);
-	void setUniform(int index, const Vec2& data);
-	void setUniform(int index, const Vec3& data);
-	void setUniform(int index, const Vec4& data);
 };
 
 class cTexturedQuadRenderable : public cRenderableWithShader
