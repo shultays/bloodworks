@@ -498,6 +498,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"shootSpeedMult", &Player::shootSpeedMult,
 		"moveSpeedMult", &Player::moveSpeedMult,
 		"slowdownOnHit", &Player::slowdownOnHit,
+		"monsterExperienceMult", &Player::monsterExperienceMult,
+		"damageMult", &Player::damageMult,
 		"setGun", &Player::setGun,
 		"level", sol::readonly(&Player::level),
 		"gun", sol::readonly(&Player::gun),
