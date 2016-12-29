@@ -108,7 +108,6 @@
     <ClCompile Include="BloodworksLuaWorld.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="Perk.cpp" />
     <ClCompile Include="LaserRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
@@ -117,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="cButton.cpp">
       <Filter>Coral\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Perk.cpp">
+      <Filter>Bloodworks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

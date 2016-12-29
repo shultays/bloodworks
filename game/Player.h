@@ -46,6 +46,8 @@ class Player
 	float bulletSpeedMult;
 	float shootSpeedMult;
 	float moveSpeedMult;
+	float monsterExperienceMult;
+	float damageMult;
 
 	bool slowdownOnHit;
 
@@ -109,4 +111,6 @@ public:
 	}
 	void setVisible(bool visible);
 	void reset();
+	float getMonsterExperienceMultiplier() const;
+	float getDamageMultiplier() const;
 };

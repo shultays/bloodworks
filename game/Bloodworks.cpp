@@ -415,7 +415,7 @@ void Bloodworks::clearMission()
 	}
 	for (auto& postProcess : toRemove)
 	{
-		//SAFE_DELETE(postProcess);
+		SAFE_DELETE(postProcess);
 	}
 	toRemove.clear();
 
