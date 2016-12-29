@@ -111,7 +111,7 @@ void Coral::windowResized(int width, int height)
 bool Coral::isDebuggerPresent()
 {
 #ifdef _WIN32
-	return IsDebuggerPresent();
+	return IsDebuggerPresent() != 0;
 #endif
 	return false;
 }
