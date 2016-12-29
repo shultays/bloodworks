@@ -1,0 +1,8 @@
+{
+  "type" : "perk",
+  "name": "Piercing Bullets",
+  "description": "Some of your bullets pierces enemies.",
+  "iconFile" : "resources/perks/piercing_bullets/icon.png",
+  "scriptFile" : "resources/perks/piercing_bullets/piercing.lua",
+  "scriptName" : "PiercingBullets"
+}
