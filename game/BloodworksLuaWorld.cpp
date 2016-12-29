@@ -16,6 +16,7 @@
 #include "cShader.h"
 #include "cRenderable.h"
 #include "MonsterTemplate.h"
+#include "cPostProcess.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -116,6 +117,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addUniformVec3", &LaserRenderable::addUniformVec3,
 		"addUniformVec4", &LaserRenderable::addUniformVec4
 		);
+
 	lua.new_usertype<cParticle>("Particle",
 		"setLevel", &cParticle::setLevel,
 		"setAllignment", &cParticle::setAlignment,
@@ -128,6 +130,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setTexture", &cParticle::setTexture,
 		"addTexture", &cParticle::addTexture
 		);
+
+
+	lua.new_usertype<cPostProcess>("PostProcess",
+		"isEnabled", &cPostProcess::isEnabled,
+		"setEnabled", &cPostProcess::setEnabled,
+		"setShaderWeight", &cPostProcess::setShaderWeight,
+		"addUniformFloat", &cPostProcess::addUniformFloat,
+		"addUniformVec2", &cPostProcess::addUniformVec2,
+		"addUniformVec3", &cPostProcess::addUniformVec3,
+		"addUniformVec4", &cPostProcess::addUniformVec4
+		);
+
 
 	lua.new_usertype<Bullet>("Bullet",
 		"index", sol::readonly(&Bullet::id),
@@ -166,6 +180,24 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"removeSelf", &Bullet::removeSelf
 		);
+
+
+	lua.set_function("addPostProcess",
+		[&](const std::string& postProcessShader) -> cPostProcess*
+	{
+		printf("addPostProcess %s\n", postProcessShader.c_str());
+		cPostProcess *postProcess = new cPostProcess();
+		postProcess->init(bloodworks, resources.getShader("resources/post_process/default.vs", postProcessShader), 100);
+		return postProcess;
+	});
+
+	lua.set_function("removePostProcess",
+		[&](cPostProcess *postProcess) 
+	{
+		printf("removePostProcess\n");
+		bloodworks->removePostProcess(postProcess);
+		SAFE_DELETE(postProcess);
+	});
 
 	lua.set_function("approachAngle",
 		[&](float angle, float angleToApproach, float maxRotation) -> float

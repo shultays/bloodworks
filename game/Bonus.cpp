@@ -28,3 +28,12 @@ const std::string& Bonus::getName() const
 {
 	return name;
 }
+
+void Bonus::reset()
+{
+	if (lua[scriptName]["clear"])
+	{
+		lua[scriptName]["clear"]();
+	}
+	lua[scriptName]["data"] = lua.create_table();
+}
