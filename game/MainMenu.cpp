@@ -4,6 +4,7 @@
 #include "cTexture.h"
 #include "cButton.h"
 #include "cFont.h"
+#include "cSound.h"
 
 MainMenu::MainMenu(Bloodworks *b)
 {
@@ -60,8 +61,8 @@ MainMenu::MainMenu(Bloodworks *b)
 	bloodworks->addRenderable(quit, GUI + 21);
 
 	resize();
-
-	input.showMouse();
+	music = resources.getSoundSample("resources/sounds/main_menu.ogg");
+	setVisible(false);
 }
 
 MainMenu::~MainMenu()
@@ -161,4 +162,14 @@ void MainMenu::setVisible(bool visible)
 	options->setVisible(visible);
 	credits->setVisible(visible);
 	quit->setVisible(visible);
+	if (visible)
+	{
+		handle = music->play();
+		handle.setLooped(true);
+		input.showMouse();
+	}
+	else
+	{
+		handle.stop();
+	}
 }
