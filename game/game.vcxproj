@@ -188,6 +188,7 @@
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
+    <ClCompile Include="cSoundManager.cpp" />
     <ClCompile Include="DropController.cpp" />
     <ClCompile Include="ExplosionController.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -228,6 +229,8 @@
     <ClInclude Include="cResources.h" />
     <ClInclude Include="cShader.h" />
     <ClInclude Include="cSharedPtr.h" />
+    <ClInclude Include="cSound.h" />
+    <ClInclude Include="cSoundManager.h" />
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cTime.h" />
     <ClInclude Include="cGlobals.h" />

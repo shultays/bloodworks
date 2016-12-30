@@ -7,6 +7,8 @@ const float draw_interval = 1.0f / 60.0f;
 
 extern GLuint postProcessQuad;
 
+class cSoundManager;
+
 class Coral 
 {
 	friend class cGame;
@@ -24,9 +26,11 @@ class Coral
 	void initFrameBuffers();
 	int windowWidth, windowHeight;
 	bool gameRunning;
+	cSoundManager *soundManager;
 public:
 	Coral();
 	void init();
+	void clear();
 	void tick();
 	void setFullScreen(bool fullScreen);
 	bool isFullScreen() const
@@ -40,4 +44,8 @@ public:
 	}
 
 	bool isDebuggerPresent();
+	cSoundManager* getSoundManager() const
+	{
+		return soundManager;
+	}
 };

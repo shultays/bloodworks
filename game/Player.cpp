@@ -5,6 +5,7 @@
 #include "cFont.h"
 #include "cRenderable.h"
 #include "cAnimatedRenderable.h"
+#include "DirentHelper.h"
 
 #include <sstream>
 
@@ -75,6 +76,22 @@ Player::Player(Bloodworks *bloodworks)
 	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
 	renderable->addRenderable(shootRenderable);
 
+
+	DirentHelper::Folder f("resources/sounds/player_hit");
+
+	std::function<void(DirentHelper::File&)> func = [&](DirentHelper::File &file)
+	{
+		if (file.file.find("hit") != std::string::npos)
+		{
+			hitSounds.push_back(resources.getSoundSample(file.folder + file.file));
+		}
+		if (file.file.find("die") != std::string::npos)
+		{
+			killSounds.push_back(resources.getSoundSample(file.folder + file.file));
+		}
+	};
+
+	f.runOnEachFile(func);
 	reset();
 }
 
@@ -87,6 +104,17 @@ Player::~Player()
 	SAFE_DELETE(healthBarBG);
 	SAFE_DELETE(healthBarActive);
 	SAFE_DELETE(healthBarFG);
+
+	for (auto& s : hitSounds)
+	{
+		s = nullptr;
+	}
+	hitSounds.clear();
+	for (auto& s : killSounds)
+	{
+		s = nullptr;
+	}
+	killSounds.clear();
 }
 
 void Player::tick()
@@ -381,6 +409,11 @@ int Player::doDamageWithParams(int damage, sol::table& params)
 		{
 			hitPoints = 0;
 			killSelf();
+			killSounds[randInt((int)killSounds.size())]->play();
+		}
+		else
+		{
+			hitSounds[randInt((int)hitSounds.size())]->play();
 		}
 		updateHitPoints();
 	}

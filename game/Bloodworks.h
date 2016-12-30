@@ -187,4 +187,5 @@ public:
 	bool gotoMainMenu();
 	bool loadMission(const std::string& mission);
 	void onPlayerDied();
+	void playSoundAtMap(const Vec2& pos, cSoundSampleShr s, float volume = 1.0f);
 };

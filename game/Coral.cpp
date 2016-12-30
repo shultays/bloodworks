@@ -5,6 +5,7 @@
 #include "cGlobals.h"
 #include "cGame.h"
 #include "cTools.h"
+#include "cSoundManager.h"
 
 #ifdef _WIN32
 #include "Windows.h"
@@ -170,5 +171,16 @@ void Coral::init()
 	lastDrawTime = timer.getTime() - draw_interval;
 	lastUpdateTime = timer.getTime() - update_interval;
 	initFrameBuffers();
+
+	soundManager = new cSoundManager();
+}
+
+void Coral::clear()
+{
+	glDeleteTextures(2, tempFrameBufferTexture);
+	glDeleteBuffers(2, tempFrameBuffer);
+	glDeleteBuffers(1, &postProcessQuad);
+
+	SAFE_DELETE(soundManager);
 }
 

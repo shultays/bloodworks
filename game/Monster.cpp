@@ -8,6 +8,7 @@
 #include "Bloodworks.h"
 #include "Player.h"
 #include "BloodRenderable.h"
+#include "cSound.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -26,6 +27,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
 	hasBlood = monsterTemplate->hasBlood;
+
+	lastHitSoundPlayTime = timer.getTime();
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate->animationData);
@@ -155,6 +158,13 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 			scriptTable["onHit"](this, damage, args);
 		}
 		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+
+		if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
+		{
+			lastHitSoundPlayTime = timer.getTime();
+			cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
+			bloodworks->playSoundAtMap(position, s, 0.7f);
+		}
 	}
 }
 
@@ -275,5 +285,11 @@ void Monster::killSelf(const Vec2& blowDir)
 	if (bloodworks->getPlayer())
 	{
 		bloodworks->getPlayer()->gainExperience((int)((experience == -1 ? monsterTemplate->experience : experience) * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
+	}
+
+	if (monsterTemplate->killSounds.size())
+	{
+		cSoundSampleShr s = monsterTemplate->killSounds[randInt((int)monsterTemplate->killSounds.size())];
+		bloodworks->playSoundAtMap(position, s, 0.8f);
 	}
 }

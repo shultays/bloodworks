@@ -80,5 +80,23 @@
 	"resources/monsters/alien/art/bit6.png", 
 	"resources/monsters/alien/art/bit7.png", 
 	"resources/monsters/alien/art/bit8.png" 
+  ],
+  
+  "hitSounds" : [
+	"resources/sounds/monster_hit/hit_0.ogg", 
+	"resources/sounds/monster_hit/hit_1.ogg", 
+	"resources/sounds/monster_hit/hit_2.ogg"
+  ],
+  
+  "killSounds" : [
+	"resources/sounds/monster_hit/die_0.ogg", 
+	"resources/sounds/monster_hit/die_1.ogg", 
+	"resources/sounds/monster_hit/die_2.ogg", 
+	"resources/sounds/monster_hit/die_3.ogg", 
+	"resources/sounds/monster_hit/die_4.ogg", 
+	"resources/sounds/monster_hit/die_5.ogg",
+	"resources/sounds/monster_hit/hit_0.ogg", 
+	"resources/sounds/monster_hit/hit_1.ogg", 
+	"resources/sounds/monster_hit/hit_2.ogg"
   ]
 }
