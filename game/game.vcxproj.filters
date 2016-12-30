@@ -120,6 +120,9 @@
     <ClCompile Include="Perk.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cSoundManager.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -264,6 +267,12 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cPostProcess.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="cSoundManager.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="cSound.h">
       <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>

@@ -56,6 +56,8 @@ class Monster
 
 	int experience;
 
+	float lastHitSoundPlayTime;
+
 	void killSelf(const Vec2& blowDir);
 	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
 public:

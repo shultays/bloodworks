@@ -21,6 +21,7 @@
 #include "DirentHelper.h"
 #include "LaserRenderable.h"
 #include "MainMenu.h"
+#include "cSoundManager.h"
 
 #include <sstream>
 
@@ -57,8 +58,8 @@ void Bloodworks::init()
 	bulletController = new BulletController(this);
 	missionController = new MissionController(this);
 
-	Folder folder("./resources");
-	std::vector<File> files = folder.getAllFiles(true);
+	DirentHelper::Folder folder("./resources");
+	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
 	for (auto& f : files)
 	{
 		if (f.isTypeOf("json"))
@@ -205,7 +206,7 @@ void Bloodworks::init()
 
 	player = new Player(this);
 	player->setGun(guns[0]);
-
+	
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, BACKGROUND + 1);
@@ -463,9 +464,13 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pistol")
+		if (gun->getName() == "Shotgun")
 		{
 			player->setGun(gun);
+		}
+		if (gun->getName() == "Pistol")
+		{
+			player->setSecondaryGun(gun);
 		}
 	}
 	missionController->loadMission(mission);
@@ -479,6 +484,24 @@ void Bloodworks::onPlayerDied()
 		perk->onPlayerDied();
 	}
 	missionController->onPlayerDied();
+}
+
+void Bloodworks::playSoundAtMap(const Vec2& pos, cSoundSampleShr s, float volume)
+{
+	float dist = player->getPosition().distanceSquared(pos);
+	if (dist < 700.0f * 700.0f)
+	{
+		float t = sqrtf(dist);
+		t = t / 700.0f;
+		if (t < 0.0f)
+		{
+			t = 0.0f;
+		}
+		t = 1.0f - t;
+		t = t*t;
+		t = 0.1f + t * 0.9f;
+		s->play(t * volume);
+	}
 }
 
 void Bloodworks::tickCamera()

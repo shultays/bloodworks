@@ -10,6 +10,8 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [40, 90],
   
+  "firingSound" : "resources/sounds/pistol.wav",
+  
   "scriptFile" : "resources/guns/pistol/pistol.lua",
   "scriptName" : "Pistol"
 }

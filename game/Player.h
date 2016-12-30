@@ -3,6 +3,7 @@
 #include "cMat.h"
 #include "cVec.h"
 #include "sol.h"
+#include "cResources.h"
 
 class Bloodworks;
 class Gun;
@@ -65,6 +66,10 @@ class Player
 	int calculateExperienceForLevel(int level);
 	void updateHitPoints();
 	void killSelf();
+
+	std::vector<cSoundSampleShr> hitSounds;
+	std::vector<cSoundSampleShr> killSounds;
+public:
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

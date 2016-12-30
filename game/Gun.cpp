@@ -6,10 +6,13 @@
 #include "Bullet.h"
 #include "cRenderable.h"
 #include "LaserRenderable.h"
+#include "cSound.h"
 
 Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 {
 	this->bloodworks = bloodworks;
+
+	lastShootSoundTime = timer.getTime();
 
 	name = j["name"].get<std::string>();
 	artFolder = j["artFolder"].get<std::string>();
@@ -75,6 +78,10 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	lua.script_file(scriptFilePath);
 
+	if (j.count("firingSound"))
+	{
+		gunShootSound.loadSample(j["firingSound"]);
+	}
 
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
@@ -196,5 +203,11 @@ Bullet* Gun::addBullet()
 
 	bloodworks->onAddedGunBullet(this, bullet);
 	player->playShootAnimation();
+
+	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime())
+	{
+		lastShootSoundTime = timer.getTime();
+		gunShootSound.play();
+	}
 	return bullet;
 }

@@ -2,10 +2,12 @@
 #include "cFont.h"
 #include "cTexture.h"
 #include "cShader.h"
+#include "cSoundManager.h"
+#include "cSound.h"
 
 void cResources::objectFreed(cFont* object)
 {
-	std::string ID = fontId(object->getFontDataPath());
+	std::string ID = fontID(object->getFontDataPath());
 	std::unordered_map<std::string, cFontShr>::iterator got = fonts.find(ID);
 	assert(got != fonts.end());
 	got->second.setCustomDeallocator(nullptr);
@@ -30,6 +32,15 @@ void cResources::objectFreed(cShader* object)
 	shaders.erase(got);
 }
 
+void cResources::objectFreed(cSoundSample* object)
+{
+	std::string ID = soundSampleID(object->getName());
+	std::unordered_map<std::string, cSoundSampleShr>::iterator got = soundSamples.find(ID);
+	assert(got != soundSamples.end());
+	got->second.setCustomDeallocator(nullptr);
+	soundSamples.erase(got);
+}
+
 std::string cResources::shaderID(const std::string& vertexShaderFile, const std::string& pixelShaderFile) const
 {
 	std::string ID = vertexShaderFile;
@@ -43,9 +54,15 @@ std::string cResources::textureID(const std::string& textureName) const
 	return ID;
 }
 
-std::string cResources::fontId(const std::string& textureName) const
+std::string cResources::fontID(const std::string& textureName) const
 {
 	std::string ID = textureName;
+	return ID;
+}
+
+std::string cResources::soundSampleID(const std::string& sampleName) const
+{
+	std::string ID = sampleName;
 	return ID;
 }
 
@@ -60,6 +77,11 @@ void cResources::deleteObject(cFont* object)
 }
 
 void cResources::deleteObject(cTexture* object)
+{
+	delete object;
+}
+
+void cResources::deleteObject(cSoundSample* object)
 {
 	delete object;
 }
@@ -110,6 +132,24 @@ cTextureShr cResources::getTexture(const std::string& textureName)
 
 	textures[ID] = texture;
 	return texture;
+}
+
+cSoundSampleShr cResources::getSoundSample(const std::string& soundSamplePath)
+{
+	std::string ID = soundSampleID(soundSamplePath);
+	std::unordered_map<std::string, cSoundSampleShr>::iterator got = soundSamples.find(ID);
+
+	if (got != soundSamples.end())
+	{
+		return got->second;
+	}
+
+	cSoundSampleShr sample = new cSoundSample(coral.getSoundManager());
+	sample->loadSample(soundSamplePath);
+	sample.setCustomDeallocator(this);
+
+	soundSamples[ID] = sample;
+	return sample;
 }
 
 cFontShr cResources::getFont(const std::string& fontDataPath)
@@ -165,6 +205,19 @@ void cResources::freeAll()
 			if (local_it->second.counter->getCount() != 1)
 			{
 				printf("Warning font %s is not released after resource cleanup\n", local_it->first.c_str());
+				err = true;
+			}
+		}
+	}
+
+	for (unsigned i = 0; i < soundSamples.bucket_count(); ++i)
+	{
+		for (auto local_it = soundSamples.begin(i); local_it != soundSamples.end(i); ++local_it)
+		{
+			local_it->second.setCustomDeallocator(nullptr);
+			if (local_it->second.counter->getCount() != 1)
+			{
+				printf("Warning sound sample %s is not released after resource cleanup\n", local_it->first.c_str());
 				err = true;
 			}
 		}
