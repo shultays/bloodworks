@@ -230,6 +230,7 @@ void Bloodworks::init()
 	}
 	else
 	{
+		mainMenu->setVisible(true);
 		showFps = false;
 	}
 }
