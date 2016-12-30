@@ -75,5 +75,19 @@
 	"resources/monsters/spider/art/bit6.png", 
 	"resources/monsters/spider/art/bit7.png", 
 	"resources/monsters/spider/art/bit8.png"
+  ],
+  
+  "hitSounds" : [
+	"resources/sounds/monster_hit/hit_0.ogg", 
+	"resources/sounds/monster_hit/hit_1.ogg", 
+	"resources/sounds/monster_hit/hit_2.ogg"
+  ], 
+  
+  "killSounds" : [
+	"resources/sounds/monster_hit/hit_0.ogg", 
+	"resources/sounds/monster_hit/hit_1.ogg", 
+	"resources/sounds/monster_hit/hit_2.ogg"
   ]
+  
+  
 }

@@ -10,6 +10,11 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [20, 40],
   
+  "firingSound" : {
+	"path" : "resources/sounds/shotgun.wav",
+	"volume" : 0.85
+  },
+  
   "hideSpread" : true,
   
   "scriptFile" : "resources/guns/shotgun/shotgun.lua",

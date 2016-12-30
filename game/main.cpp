@@ -141,6 +141,7 @@ void Cleanup()
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow);
 	SDL_Quit();
+	coral.clear();
 	debugRenderer.freeAll();
 	resources.freeAll();
 }

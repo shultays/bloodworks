@@ -33,6 +33,9 @@ class MonsterTemplate
 	};
 	std::vector<BodyPartData> bodyParts;
 	std::vector<cTextureShr> bodyPartBits;
+
+	std::vector<cSoundSampleShr> hitSounds;
+	std::vector<cSoundSampleShr> killSounds;
 public:
 	MonsterTemplate(){}
 	MonsterTemplate(nlohmann::json &j)
@@ -91,10 +94,32 @@ public:
 		{
 			bodyPartBits.push_back(resources.getTexture(it.value().get<std::string>()));
 		}
+
+
+		if (j.count("hitSounds"))
+		{
+			auto& hitSoundsJson = j["hitSounds"];
+
+			for (nlohmann::json::iterator it = hitSoundsJson.begin(); it != hitSoundsJson.end(); ++it)
+			{
+				hitSounds.push_back(resources.getSoundSample(it.value().get<std::string>()));
+			}
+		}
+
+		if (j.count("killSounds"))
+		{
+			auto& killSoundsJson = j["killSounds"];
+
+			for (nlohmann::json::iterator it = killSoundsJson.begin(); it != killSoundsJson.end(); ++it)
+			{
+				killSounds.push_back(resources.getSoundSample(it.value().get<std::string>()));
+			}
+		}
+
+
 		scriptArgs = lua.create_table();
 		if (j.count("scriptArgs"))
 		{
-
 			auto& scriptArgsJson = j["scriptArgs"];
 			for (nlohmann::json::iterator it = scriptArgsJson.begin(); it != scriptArgsJson.end(); ++it)
 			{
@@ -120,6 +145,7 @@ public:
 				}
 			}
 		}
+
 	}
 
 	~MonsterTemplate()
@@ -135,6 +161,11 @@ public:
 			bodyPart = nullptr;
 		}
 		bodyPartBits.clear();
+		for (auto& hitSound : hitSounds)
+		{
+			hitSound = nullptr;
+		}
+		hitSounds.clear();
 	}
 
 	const std::string& getName() const

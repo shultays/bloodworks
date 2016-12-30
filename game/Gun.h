@@ -6,6 +6,7 @@
 #include "cResources.h"
 #include "sol.h"
 #include "json.h"	
+#include "cSound.h"	
 
 class Bloodworks;
 class Bullet;
@@ -44,6 +45,10 @@ class Gun
 
 	Vec4 shootParticleColor;
 	LaserRenderable *laser;
+
+	cSoundSampleWithParams gunShootSound;
+
+	float lastShootSoundTime;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();

@@ -2,7 +2,7 @@
 function Shotgun.init(gun)
 	gun.spreadAngle = 0.15
 	gun.crosshairDistance = 350.0
-	ShootTimer.initGun(gun, 0.85)
+	ShootTimer.initGun(gun, 1.05)
 end
 
 

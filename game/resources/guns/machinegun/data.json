@@ -10,6 +10,8 @@
   "bulletSpeed" : 550.0,
   "bulletDamage" : [10, 25],
   
+  "firingSound" : "resources/sounds/assault.wav",
+  
   "scriptFile" : "resources/guns/machinegun/machine.lua",
   "scriptName" : "MachineGun"
 }
