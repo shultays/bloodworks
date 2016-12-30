@@ -31,7 +31,8 @@ void cSoundSample::loadSample(const std::string& file)
 {
 	this->file = file;
 	sample = new SoLoud::Wav();
-	assert(sample->load(file.c_str()) == 0);
+	int ret = sample->load(file.c_str());
+	assert(ret == 0);
 }
 
 cSoundHandle cSoundSample::play(float volume, float pan)
@@ -39,6 +40,45 @@ cSoundHandle cSoundSample::play(float volume, float pan)
 	cSoundHandle handle;
 	handle.handle = soundManager->soloud->play(*sample, volume, pan);
 	return handle;
+}
+
+void cSoundHandle::stop()
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->stop(handle);
+	}
+}
+
+void cSoundHandle::setLooped(bool looped)
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setLooping(handle, looped);
+	}
+}
+void cSoundHandle::setVolume(float volume)
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setVolume(handle, volume);
+	}
+}
+
+void cSoundHandle::setPan(float pan)
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setPan(handle, pan);
+	}
+}
+
+void cSoundHandle::setSpeed(float speed)
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setRelativePlaySpeed(handle, speed);
+	}
 }
 
 cSoundSample::~cSoundSample()

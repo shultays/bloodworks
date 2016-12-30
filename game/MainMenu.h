@@ -1,5 +1,8 @@
 #pragma once
 
+#include "cResources.h"
+#include "cSound.h"
+
 class Bloodworks;
 class cTexturedQuadRenderable;
 class cButton;
@@ -14,6 +17,9 @@ class MainMenu
 	cButton *options;
 	cButton *credits;
 	cButton *quit;
+
+	cSoundSampleShr music;
+	cSoundHandle handle;
 public:
 	MainMenu(Bloodworks *b);
 	~MainMenu();
