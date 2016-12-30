@@ -5,6 +5,7 @@
 #include "json.h"
 #include "cResources.h"
 
+
 class cSoundManager;
 class Wav;
 
@@ -17,6 +18,16 @@ class cSoundHandle
 	friend class cSoundSample;
 public:
 	int handle;
+	cSoundHandle()
+	{
+		handle = -1;
+	}
+
+	void stop();
+	void setLooped(bool looped);
+	void setVolume(float volume);
+	void setPan(float volume);
+	void setSpeed(float volume);
 };
 
 class cSoundSample
@@ -31,6 +42,8 @@ public:
 	cSoundHandle play(float volume = -1.0f, float pan = 0.0f);
 	~cSoundSample();
 	const std::string& getName() const;
+
+
 };
 
 class cSoundSampleWithParams
