@@ -103,12 +103,9 @@ void Bullet::tick()
 				}
 			}
 
-			if (gun != nullptr)
+			if (gun)
 			{
-				if (gun->getScriptTable()["onBulletHit"])
-				{
-					gun->getScriptTable()["onBulletHit"](gun, this, monster);
-				}
+				gun->onBulletHit(this, monster);
 			}
 
 			if (script && onHitCallback.length())

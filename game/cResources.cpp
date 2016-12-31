@@ -4,6 +4,9 @@
 #include "cShader.h"
 #include "cSoundManager.h"
 #include "cSound.h"
+#include "cSharedPtr.h"
+
+int nextSharedPtrUniqueId = 0;
 
 void cResources::objectFreed(cFont* object)
 {

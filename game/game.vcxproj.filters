@@ -275,5 +275,8 @@
     <ClInclude Include="cSound.h">
       <Filter>Coral</Filter>
     </ClInclude>
+    <ClInclude Include="OneShotSoundManager.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

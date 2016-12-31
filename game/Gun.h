@@ -11,6 +11,7 @@
 class Bloodworks;
 class Bullet;
 class LaserRenderable;
+class Monster;
 
 class Gun
 {
@@ -49,6 +50,8 @@ class Gun
 	cSoundSampleWithParams gunShootSound;
 	cSoundHandle gunShootSoundHandle;
 
+	cSoundSampleWithParams bulletHitSound;
+
 	float lastShootSoundTime;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
@@ -82,4 +85,5 @@ public:
 		return randInt(damage[0], damage[1]);
 	}
 	void reset();
+	void onBulletHit(Bullet *bullet, Monster* monster);
 };
