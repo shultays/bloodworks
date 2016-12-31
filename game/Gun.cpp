@@ -78,11 +78,6 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	lua.script_file(scriptFilePath);
 
-	if (j.count("firingSound"))
-	{
-		gunShootSound.loadSample(j["firingSound"]);
-	}
-
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
 		LaserTemplate *laserTemplate = new LaserTemplate(j);
@@ -97,15 +92,17 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		laser = nullptr;
 	}
 
+	if (j.count("firingSound"))
+	{
+		gunShootSound.loadSample(j["firingSound"]);
+	}
+
 	scriptTable["init"](this);
 }
 
 void Gun::stop()
 {
-	if (laser)
-	{
-		laser->setVisible(false);
-	}
+	setTriggered(false);
 }
 
 void Gun::start()
@@ -154,6 +151,20 @@ void Gun::setTriggered(bool triggered)
 	if (laser && timer.getDt() > 0.0f)
 	{
 		laser->setVisible(isTriggered);
+
+		if (gunShootSound.isValid())
+		{
+			if (isTriggered && gunShootSoundHandle.isValid() == false)
+			{
+				gunShootSoundHandle = gunShootSound.play();
+				gunShootSoundHandle.setLooped(true);
+			}
+			else if (!isTriggered && gunShootSoundHandle.isValid())
+			{
+				gunShootSoundHandle.stop();
+				gunShootSoundHandle.clear();
+			}
+		}
 	}
 }
 

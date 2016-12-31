@@ -12,7 +12,10 @@
   "scriptFile" : "resources/guns/laser/laser.lua",
   "scriptName" : "Laser",
   
-  
+  "firingSound" : {
+	"path" : "resources/sounds/laser.wav",
+	"volume" : 0.55
+  },
   
   "isLaser" : true,
   "laserTexture" : "resources/guns/laser/laser.png",

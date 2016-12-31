@@ -11,7 +11,7 @@
   "bulletDamage" : [20, 40],
   
   "firingSound" : {
-	"path" : "resources/sounds/shotgun.wav",
+	"path" : "resources/sounds/shotgun.ogg",
 	"volume" : 0.85
   },
   
