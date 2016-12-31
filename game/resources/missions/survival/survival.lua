@@ -68,7 +68,6 @@ function Survival.onTick()
 		dumpTable(_G)
 	end
 	
-	
 	if isKeyReleased(keys.pageup) then
 		Survival.extraMin = Survival.extraMin + 0.5
 		print("Extra Min " .. Survival.extraMin)

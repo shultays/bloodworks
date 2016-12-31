@@ -10,6 +10,7 @@
   "bulletDamage" : [30, 70],
   
   "firingSound" : "resources/sounds/plasma.wav",
+  "bulletHitSound" : "resources/sounds/plasma_hit.wav",
   
   "scriptFile" : "resources/guns/plasmagun/plasmagun.lua",
   "scriptName" : "PlasmaGun",

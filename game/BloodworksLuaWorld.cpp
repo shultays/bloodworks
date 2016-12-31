@@ -258,6 +258,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage);
 	});
 
+	lua.set_function("playSound",
+		[&](sol::table& args)
+	{
+		bloodworks->playOneShotSound(args);
+	});
 
 
 	lua.new_usertype<Gun>("Gun",
@@ -273,6 +278,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"crosshairDistance", &Gun::crosshairDistance,
 
 		"isTriggered", &Gun::isTriggered,
+
+		"onBulletHit", &Gun::onBulletHit,
 
 		"getRandomDamage", &Gun::getRandomDamage,
 

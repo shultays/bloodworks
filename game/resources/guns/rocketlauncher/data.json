@@ -10,6 +10,7 @@
   "bulletDamage" : [30, 70],
   
   "firingSound" : "resources/sounds/rocket.wav",
+  "bulletHitSound" : "resources/sounds/missile_explosion.ogg",
   
   "scriptFile" : "resources/guns/rocketlauncher/rocket.lua",
   "scriptName" : "RocketLauncher"
