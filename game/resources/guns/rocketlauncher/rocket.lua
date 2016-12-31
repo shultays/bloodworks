@@ -33,7 +33,7 @@ function RocketLauncher.onBulletTick(gun, bullet)
 	data.lifeTime = data.lifeTime - dt
 	
 	if data.lifeTime < 0.0 then
-		RocketLauncher.onBulletHit(gun, bullet, nil)
+		gun:onBulletHit(bullet, nil)
 		bullet:removeSelf()
 	end
 	data.moveSpeed = data.moveSpeed + dt * 250

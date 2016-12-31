@@ -253,6 +253,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="MonsterTemplate.h" />
+    <ClInclude Include="OneShotSoundManager.h" />
     <ClInclude Include="Perk.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sol.h" />

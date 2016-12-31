@@ -12,7 +12,6 @@ class cSoundManager
 	friend class cSoundSample;
 	friend class cSoundHandle;
 	SoLoud::Soloud *soloud;
-
 public:
 	cSoundManager();
 	~cSoundManager();

@@ -3,6 +3,7 @@
 
 #include "cTools.h"
 
+extern int nextSharedPtrUniqueId;
 
 template <class T>
 class cCustomDeallocator 
@@ -11,7 +12,6 @@ public:
 	virtual void objectFreed(T* object) = 0;
 };
 
-
 template <class T>
 class cSharedPtr 
 {
@@ -19,15 +19,24 @@ class cSharedPtr
 	class cSharedPtrCounter 
 	{
 		int referenceCount;
+		int uniqueId;
+
+		static int nextUniqueId;
 	public:
 		cSharedPtrCounter() 
 		{
 			referenceCount = 0;
+			uniqueId = nextSharedPtrUniqueId++;
 		}
 
-		int getCount() const 
+		int getCount() const
 		{
 			return referenceCount;
+		}
+
+		int getUniqueId() const
+		{
+			return uniqueId;
 		}
 
 		void increment() 
@@ -167,6 +176,11 @@ public:
 	T* getObject() 
 	{
 		return object;
+	}
+
+	int getUniqueId() const
+	{
+		return counter->getUniqueId();
 	}
 
 	void setCustomDeallocator(cCustomDeallocator<T> *deallocator) 
