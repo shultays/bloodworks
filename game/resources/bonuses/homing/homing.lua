@@ -30,6 +30,8 @@ function HomingOrb.spawn(pos)
 		particle.args.initialAlpha = 0.4
 		particle.args.scaleSpeed = -20
 		particle:setTexture("resources/bonuses/homing/particle.png")
+		
+		playSound({path = "resources/sounds/plasma.ogg"})
 	end
 end
 
@@ -38,8 +40,6 @@ HomingOrbBullet = {}
 function HomingOrbBullet.onTick(bullet)
 
 	if bullet.data.monster ~= nil then
-	
-		
 		bullet.moveAngle = approachAngle(bullet.moveAngle, (bullet.data.monster.position - bullet.position):getAngle(), 10 * dt)
 		if bullet.data.monster.isDead then
 			bullet.onTickCallback = ""
@@ -49,6 +49,7 @@ function HomingOrbBullet.onTick(bullet)
 end
 
 function HomingOrbBullet.onHit(bullet, monster)
+	playSound({path = "resources/sounds/plasma_hit.ogg", position = bullet.position})
 	bullet.data.lifeLeft = bullet.data.lifeLeft - 1
 	if bullet.data.lifeLeft == 0 then
 		bullet.diesOnHit = true

@@ -68,7 +68,10 @@ public:
 			}
 		}
 		handle = sample.play();
-		bloodworks->addGameSound(handle);
+		if (!(bool)args["uiSound"])
+		{
+			bloodworks->addGameSound(handle);
+		}
 		return handle;
 	}
 
