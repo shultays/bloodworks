@@ -13,7 +13,7 @@
   "scriptName" : "Laser",
   
   "firingSound" : {
-	"path" : "resources/sounds/laser.wav",
+	"path" : "resources/sounds/laser.ogg",
 	"volume" : 0.55
   },
   
