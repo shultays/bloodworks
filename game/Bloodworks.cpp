@@ -397,6 +397,8 @@ void Bloodworks::windowResized(int width, int height)
 void Bloodworks::clearMission()
 {
 	gamePlaySlowdown = targetGamePlaySlowdown = 1.0f;
+	coral.getSoundManager()->clearAllSounds();
+
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 

@@ -21,6 +21,11 @@ cSoundManager::~cSoundManager()
 	SAFE_DELETE(soloud);
 }
 
+void cSoundManager::clearAllSounds()
+{
+	soloud->stopAll();
+}
+
 cSoundSample::cSoundSample(cSoundManager* soundManager)
 {
 	this->soundManager = soundManager;
