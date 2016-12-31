@@ -3,6 +3,7 @@
 #include "cGame.h"
 #include "cSharedPtr.h"
 #include "cLuaWorld.h"
+#include "cSound.h"
 
 enum Depths
 {
@@ -38,6 +39,7 @@ class BulletController;
 class BloodworksLuaWorld;
 class LaserTemplate;
 class MainMenu;
+class OneShotSoundManager;
 
 class Bloodworks : public cGame
 {
@@ -54,6 +56,7 @@ class Bloodworks : public cGame
 	ExplosionController *explosionController;
 	DropController *dropController;
 	BloodworksLuaWorld *luaWorld;
+	OneShotSoundManager *oneShotSoundManager;
 
 	BloodRenderable *bloodRenderable;
 	cPostProcess *pausePostProcess;
@@ -86,6 +89,11 @@ class Bloodworks : public cGame
 
 	bool showFps;
 	MainMenu *mainMenu;
+
+	float soundSpeed;
+	bool soundPaused;
+
+	std::vector<cSoundHandle> gameSounds;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -188,4 +196,9 @@ public:
 	bool loadMission(const std::string& mission);
 	void onPlayerDied();
 	void playSoundAtMap(const Vec2& pos, cSoundSampleShr s, float volume = 1.0f);
+	void playSoundAtMap(const Vec2& pos, cSoundSampleWithParams s);
+	void playOneShotSound(sol::table& args);
+	float getVolumeMultiplier(const Vec2& pos) const;
+	void addGameSound(cSoundHandle& handle);
+	void setSoundSpeed(float newSoundSpeed);
 };

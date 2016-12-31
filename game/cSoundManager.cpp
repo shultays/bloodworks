@@ -81,6 +81,56 @@ void cSoundHandle::setSpeed(float speed)
 	}
 }
 
+void cSoundHandle::pause()
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setPause(handle, true);
+	}
+}
+
+bool cSoundHandle::isFinished()
+{
+	if (handle != -1)
+	{
+		return coral.getSoundManager()->soloud->isValidVoiceHandle(handle) == false;
+	}
+	return true;
+}
+
+void cSoundHandle::resume()
+{
+	if (handle != -1)
+	{
+		coral.getSoundManager()->soloud->setPause(handle, false);
+	}
+}
+/*
+cSoundHandleGroup::cSoundHandleGroup()
+{
+	handle = -1;
+}
+
+cSoundHandleGroup::~cSoundHandleGroup()
+{
+	coral.getSoundManager()->getSoloud()->destroyVoiceGroup(handle);
+}
+
+void cSoundHandleGroup::init()
+{
+	handle = coral.getSoundManager()->getSoloud()->createVoiceGroup();
+}
+
+bool cSoundHandleGroup::isEmpty()
+{
+	return coral.getSoundManager()->getSoloud()->isVoiceGroupEmpty(handle);
+}
+
+void cSoundHandleGroup::addHandle(cSoundHandle& handle)
+{
+	coral.getSoundManager()->getSoloud()->addVoiceToGroup(this->handle, handle.handle);
+}
+*/
 cSoundSample::~cSoundSample()
 {
 	SAFE_DELETE(sample);
@@ -116,6 +166,28 @@ void cSoundSampleWithParams::loadSample(nlohmann::json& j)
 		{
 			looped = j["looped"].get<bool>();
 		}
+	}
+}
+
+
+void cSoundSampleWithParams::loadSample(sol::table& t)
+{
+	sample = resources.getSoundSample(t["path"].get<std::string>());
+	if (t["volume"])
+	{
+		volume = t["volume"].get<float>();
+	}
+	if (t["pan"])
+	{
+		pan = t["pan"].get<float>();
+	}
+	if (t["speed"])
+	{
+		speed = t["speed"].get<float>();
+	}
+	if (t["looped"])
+	{
+		looped = t["looped"].get<bool>();
 	}
 }
 

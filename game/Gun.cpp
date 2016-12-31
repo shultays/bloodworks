@@ -7,6 +7,7 @@
 #include "cRenderable.h"
 #include "LaserRenderable.h"
 #include "cSound.h"
+#include "Monster.h"
 
 Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 {
@@ -97,6 +98,11 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		gunShootSound.loadSample(j["firingSound"]);
 	}
 
+	if (j.count("bulletHitSound"))
+	{
+		bulletHitSound.loadSample(j["bulletHitSound"]);
+	}
+
 	scriptTable["init"](this);
 }
 
@@ -158,6 +164,7 @@ void Gun::setTriggered(bool triggered)
 			{
 				gunShootSoundHandle = gunShootSound.play();
 				gunShootSoundHandle.setLooped(true);
+				bloodworks->addGameSound(gunShootSoundHandle);
 			}
 			else if (!isTriggered && gunShootSoundHandle.isValid())
 			{
@@ -186,6 +193,19 @@ void Gun::reset()
 	spreadAngle = 0.0f;
 
 	scriptTable["init"](this);
+}
+
+void Gun::onBulletHit(Bullet *bullet, Monster* monster)
+{
+	if (scriptTable["onBulletHit"])
+	{
+		scriptTable["onBulletHit"](this, bullet, monster);
+	}
+
+	if (bulletHitSound.isValid())
+	{
+		bloodworks->playSoundAtMap(bullet->getPosition(), bulletHitSound);
+	}
 }
 
 Gun::~Gun()
@@ -218,7 +238,7 @@ Bullet* Gun::addBullet()
 	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime())
 	{
 		lastShootSoundTime = timer.getTime();
-		gunShootSound.play();
+		bloodworks->addGameSound(gunShootSound.play());
 	}
 	return bullet;
 }

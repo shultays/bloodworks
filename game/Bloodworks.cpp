@@ -22,6 +22,7 @@
 #include "LaserRenderable.h"
 #include "MainMenu.h"
 #include "cSoundManager.h"
+#include "OneShotSoundManager.h"
 
 #include <sstream>
 
@@ -57,6 +58,7 @@ void Bloodworks::init()
 	monsterController = new MonsterController(this);
 	bulletController = new BulletController(this);
 	missionController = new MissionController(this);
+	oneShotSoundManager = new OneShotSoundManager(this);
 
 	DirentHelper::Folder folder("./resources");
 	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
@@ -97,7 +99,6 @@ void Bloodworks::init()
 			}
 		}
 	}
-
 
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
@@ -252,7 +253,7 @@ Bloodworks::Bloodworks()
 	tickCount = renderCount = 0;
 
 	showFps = true;
-
+	soundPaused = false;
 	cameraCenterPos.setZero();
 }
 
@@ -301,13 +302,13 @@ Bloodworks::~Bloodworks()
 	perks.clear();
 
 	SAFE_DELETE(levelUpPopup);
+	SAFE_DELETE(mainMenu);
 	SAFE_DELETE(dropController);
 
 	SAFE_DELETE(monsterController);
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
-
-	SAFE_DELETE(mainMenu);
+	SAFE_DELETE(oneShotSoundManager);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -396,6 +397,7 @@ void Bloodworks::windowResized(int width, int height)
 void Bloodworks::clearMission()
 {
 	gamePlaySlowdown = targetGamePlaySlowdown = 1.0f;
+	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
 	player->reset();
@@ -489,6 +491,32 @@ void Bloodworks::onPlayerDied()
 
 void Bloodworks::playSoundAtMap(const Vec2& pos, cSoundSampleShr s, float volume)
 {
+	float volumeMultiplier = getVolumeMultiplier(pos);
+
+	if (volumeMultiplier > 0.0f)
+	{
+		addGameSound(s->play(volumeMultiplier * volume));
+	}
+}
+
+void Bloodworks::playSoundAtMap(const Vec2& pos, cSoundSampleWithParams s)
+{
+	float volumeMultiplier = getVolumeMultiplier(pos);
+
+	if (volumeMultiplier > 0.0f)
+	{
+		s.setVolume(s.getVolume() * volumeMultiplier);
+		addGameSound(s.play());
+	}
+}
+
+void Bloodworks::playOneShotSound(sol::table& args)
+{
+	oneShotSoundManager->playSample(args);
+}
+
+float Bloodworks::getVolumeMultiplier(const Vec2& pos) const
+{
 	float dist = player->getPosition().distanceSquared(pos);
 	if (dist < 700.0f * 700.0f)
 	{
@@ -501,7 +529,178 @@ void Bloodworks::playSoundAtMap(const Vec2& pos, cSoundSampleShr s, float volume
 		t = 1.0f - t;
 		t = t*t;
 		t = 0.1f + t * 0.9f;
-		s->play(t * volume);
+		return t;
+	}
+	return 0.0f;
+}
+
+void Bloodworks::addGameSound(cSoundHandle& handle)
+{
+	gameSounds.push_back(handle);
+	if (soundSpeed < 0.95f)
+	{
+		handle.setSpeed(soundSpeed);
+	}
+}
+
+void Bloodworks::setSoundSpeed(float newSoundSpeed)
+{
+	soundSpeed = newSoundSpeed;
+	if (soundSpeed >= 0.05f)
+	{
+		if (soundPaused)
+		{
+			soundPaused = false;
+			for (auto& handle : gameSounds)
+			{
+				handle.resume();
+				handle.setSpeed(soundSpeed);
+			}
+		}
+		else
+		{
+			for (auto& handle : gameSounds)
+			{
+				handle.setSpeed(soundSpeed);
+			}
+		}
+	}
+	else
+	{
+		soundPaused = true;
+		for (auto& handle : gameSounds)
+		{
+			handle.pause();
+		}
+	}
+}
+
+BloodRenderable* Bloodworks::getBloodRenderable()
+{
+	return bloodRenderable;
+}
+
+bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
+{
+	return pos.x + radius < mapBegin.x || pos.y + radius < mapBegin.x || pos.x - radius> mapEnd.x || pos.y - radius> mapEnd.y;
+}
+
+bool Bloodworks::isCoorOutside(const Vec2& pos) const
+{
+	return pos.x < mapBegin.x || pos.y < mapBegin.x || pos.x > mapEnd.x || pos.y > mapEnd.y;
+}
+
+
+void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
+{
+	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage);
+}
+
+void Bloodworks::addDrop(const Vec2& position)	
+{
+	dropController->addDrop(position);
+}
+
+void Bloodworks::tick()
+{
+	if (input.isKeyPressed(key_n))
+	{
+		showFps = !showFps;
+		if (showFps == false)
+		{
+			debugRenderer.removeText(0);
+			debugRenderer.removeText(1);
+		}
+	}
+
+	if (showFps)
+	{
+		tickCount++;
+		if (timer.getRealTime() - lastSetTickTime > 1.0f)
+		{
+			lastSetTickTime += 1.0f;
+			std::stringstream ss;
+			ss << "FPS " << tickCount << " Monster " << monsterController->getMonsterCount();
+			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+
+			tickCount = 0;
+		}
+	}
+
+	lua["dt"] = timer.getDt();
+	lua["time"] = timer.getTime();
+	lua["timeScale"] = getSlowdown();
+
+	mainMenu->tick();
+	oneShotSoundManager->tick();
+
+	for (int i = 0; i < gameSounds.size(); i++)
+	{
+		if (gameSounds[i].isFinished())
+		{
+			gameSounds[i] = gameSounds[gameSounds.size() - 1];
+			gameSounds.resize((int)gameSounds.size() - 1);
+			i--;
+		}
+	}
+
+	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
+	{
+		perks[8]->takeLevel();
+		usedPerks.push_back(perks[8]);
+	}
+
+	if (input.isKeyPressed(key_3))
+	{
+		bonuses[0]->spawnAt(player->getPosition());
+	}
+
+	if (input.isKeyPressed(key_4))
+	{
+		for (int i = 0; i < guns.size(); i++)
+		{
+			dropController->createGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+		}
+
+		for (int i = 0; i < bonuses.size(); i++)
+		{
+			dropController->createBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
+		}
+	}
+
+	if (input.isKeyPressed(key_5) && levelUpPopup->isVisible() == false)
+	{
+		player->doLevelup();
+	}
+	bloodRenderable->tick();
+	missionController->tick();
+
+	player->tick();
+
+	for (auto& perk : usedPerks)
+	{
+		perk->onTick();
+	}
+
+	tickCamera();
+	monsterController->tick();
+	bulletController->tick();
+	dropController->tick();
+	explosionController->tick();
+	levelUpPopup->tick();
+	tickGameSlowdown();
+
+	if (input.isKeyPressed(key_f10))
+	{
+		coral.setFullScreen(!coral.isFullScreen());
+		if (coral.isFullScreen())
+		{
+			cameraZoom = 0.8f;
+		}
+		else
+		{
+			cameraZoom = 1.0f;
+		}
 	}
 }
 
@@ -617,132 +816,27 @@ void Bloodworks::tickGameSlowdown()
 		changeSlowdown = true;
 	}
 
+	if (input.isKeyPressed(key_z))
+	{
+		changeSlowdown = true;
+		targetGamePlaySlowdown = gamePlaySlowdown = 0.1f;
+	}
+	if (input.isKeyPressed(key_x))
+	{
+		changeSlowdown = true;
+		targetGamePlaySlowdown = gamePlaySlowdown = 1.0f;
+	}
+
 	if (changeSlowdown)
 	{
+		float newSoundSpeed = pauseSlowdown * gamePlaySlowdown;
+		newSoundSpeed = round(newSoundSpeed * 10.0f) / 10.0f;
+		if (abs(newSoundSpeed - soundSpeed) > 0.05f)
+		{
+			setSoundSpeed(newSoundSpeed);
+		}
+
 		setSlowdown(pauseSlowdown * gamePlaySlowdown);
-	}
-
-	if (input.isKeyDown(key_m))
-	{
-		setSlowdown(0.1f);
-	}
-}
-
-BloodRenderable* Bloodworks::getBloodRenderable()
-{
-	return bloodRenderable;
-}
-
-bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
-{
-	return pos.x + radius < mapBegin.x || pos.y + radius < mapBegin.x || pos.x - radius> mapEnd.x || pos.y - radius> mapEnd.y;
-}
-
-bool Bloodworks::isCoorOutside(const Vec2& pos) const
-{
-	return pos.x < mapBegin.x || pos.y < mapBegin.x || pos.x > mapEnd.x || pos.y > mapEnd.y;
-}
-
-
-void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
-{
-	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage);
-}
-
-void Bloodworks::addDrop(const Vec2& position)	
-{
-	dropController->addDrop(position);
-}
-
-void Bloodworks::tick()
-{
-	mainMenu->tick();
-
-	if (input.isKeyPressed(key_n))
-	{
-		showFps = !showFps;
-		if (showFps == false)
-		{
-			debugRenderer.removeText(0);
-			debugRenderer.removeText(1);
-		}
-	}
-
-	if (showFps)
-	{
-		tickCount++;
-		if (timer.getRealTime() - lastSetTickTime > 1.0f)
-		{
-			lastSetTickTime += 1.0f;
-			std::stringstream ss;
-			ss << "FPS " << tickCount << " Monster " << monsterController->getMonsterCount();
-			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
-
-			tickCount = 0;
-		}
-	}
-
-	lua["dt"] = timer.getDt();
-	lua["time"] = timer.getTime();
-	lua["timeScale"] = getSlowdown();
-
-	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
-	{
-		perks[8]->takeLevel();
-		usedPerks.push_back(perks[8]);
-	}
-
-	if (input.isKeyPressed(key_3))
-	{
-		bonuses[0]->spawnAt(player->getPosition());
-	}
-
-	if (input.isKeyPressed(key_4))
-	{
-		for (int i = 0; i < guns.size(); i++)
-		{
-			dropController->createGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
-		}
-
-		for (int i = 0; i < bonuses.size(); i++)
-		{
-			dropController->createBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
-		}
-	}
-
-	if (input.isKeyPressed(key_5) && levelUpPopup->isVisible() == false)
-	{
-		player->doLevelup();
-	}
-	bloodRenderable->tick();
-	missionController->tick();
-
-	player->tick();
-
-	for (auto& perk : usedPerks)
-	{
-		perk->onTick();
-	}
-
-	tickCamera();
-	monsterController->tick();
-	bulletController->tick();
-	dropController->tick();
-	explosionController->tick();
-	levelUpPopup->tick();
-	tickGameSlowdown();
-
-	if (input.isKeyPressed(key_f10))
-	{
-		coral.setFullScreen(!coral.isFullScreen());
-		if (coral.isFullScreen())
-		{
-			cameraZoom = 0.8f;
-		}
-		else
-		{
-			cameraZoom = 1.0f;
-		}
 	}
 }
 
