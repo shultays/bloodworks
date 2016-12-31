@@ -63,3 +63,5 @@ http://opengameart.org/content/4-projectile-launches
 http://opengameart.org/content/chaingun-pistol-rifle-shotgun-shots
 qubodup
 http://opengameart.org/content/wind-hit-time-morph
+www.littlerobotsoundfactory.com
+http://opengameart.org/content/sci-fi-sound-effects-library
