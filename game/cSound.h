@@ -28,6 +28,16 @@ public:
 	void setVolume(float volume);
 	void setPan(float volume);
 	void setSpeed(float volume);
+
+	bool isValid() const
+	{
+		return handle != -1;
+	}
+
+	void clear()
+	{
+		handle = -1;
+	}
 };
 
 class cSoundSample
@@ -52,12 +62,14 @@ class cSoundSampleWithParams
 	float volume;
 	float pan;
 	float speed;
+	bool looped;
 
 public:
 	cSoundSampleWithParams()
 	{
 		volume = speed = 1.0f;
 		pan = 0.0f;
+		looped = false;
 	}
 	~cSoundSampleWithParams()
 	{
@@ -69,5 +81,10 @@ public:
 	bool isValid() const
 	{
 		return sample != nullptr;
+	}
+
+	void setLooped(bool looped)
+	{
+		this->looped = true;
 	}
 };

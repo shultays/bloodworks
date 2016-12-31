@@ -9,6 +9,8 @@
   "bulletSpeed" : 550.0,
   "bulletDamage" : [30, 70],
   
+  "firingSound" : "resources/sounds/plasma.wav",
+  
   "scriptFile" : "resources/guns/plasmagun/plasmagun.lua",
   "scriptName" : "PlasmaGun",
   
