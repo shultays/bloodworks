@@ -9,6 +9,11 @@
   "bulletSpeed" : 450.0,
   "bulletDamage" : [55, 70],
   
+  "firingSound" : {
+	"path" : "resources/sounds/laser_machinegun.wav",
+	"volume" : 2.55
+  },
+  
   "scriptFile" : "resources/guns/laser_machinegun/laser_machine.lua",
   "scriptName" : "LaserMachineGun"
 }

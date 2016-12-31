@@ -10,6 +10,11 @@
   "bulletSpeed" : 950.0,
   "bulletDamage" : [85, 125],
   
+  "firingSound" : {
+	"path" : "resources/sounds/railgun.ogg",
+	"volume" : 0.75
+  },
+  
   "scriptFile" : "resources/guns/railgun/railgun.lua",
   "scriptName" : "Railgun"
 }

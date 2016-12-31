@@ -9,6 +9,8 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [30, 70],
   
+  "firingSound" : "resources/sounds/rocket.wav",
+  
   "scriptFile" : "resources/guns/rocketlauncher/rocket.lua",
   "scriptName" : "RocketLauncher"
 }

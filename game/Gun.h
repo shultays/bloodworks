@@ -47,6 +47,7 @@ class Gun
 	LaserRenderable *laser;
 
 	cSoundSampleWithParams gunShootSound;
+	cSoundHandle gunShootSoundHandle;
 
 	float lastShootSoundTime;
 public:

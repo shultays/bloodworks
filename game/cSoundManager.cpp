@@ -112,6 +112,10 @@ void cSoundSampleWithParams::loadSample(nlohmann::json& j)
 		{
 			speed = j["speed"].get<float>();
 		}
+		if (j.count("looped"))
+		{
+			looped = j["looped"].get<bool>();
+		}
 	}
 }
 
@@ -122,6 +126,9 @@ cSoundHandle cSoundSampleWithParams::play()
 	{
 		sample->soundManager->getSoloud()->setRelativePlaySpeed(h.handle, speed);
 	}
-
+	if (looped)
+	{
+		sample->soundManager->getSoloud()->setLooping(h.handle, true);
+	}
 	return h;
 }
