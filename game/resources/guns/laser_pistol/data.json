@@ -9,7 +9,7 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [55, 80],
   
-  "firingSound" : "resources/sounds/laser_pistol.wav",
+  "firingSound" : "resources/sounds/laser_pistol.ogg",
   
   "scriptFile" : "resources/guns/laser_pistol/laser_pistol.lua",
   "scriptName" : "LaserPistol"

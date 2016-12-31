@@ -28,8 +28,12 @@ function CircleFire.onTick(gameObject)
         
 		gameObject.data.i = gameObject.data.i + 1
         if gameObject.data.i == 4 then
+			if gameObject.data.lastShootIndex % 2 == 0 then
+				playSound({path = "resources/sounds/laser_machinegun.ogg", position = gameObject.data.position})
+			end
             gameObject.data.i = 0
             gameObject.data.lastShootIndex = gameObject.data.lastShootIndex + 1
+			
         end
 		
 		if gameObject.data.lastShootIndex == 40
