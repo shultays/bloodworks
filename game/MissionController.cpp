@@ -181,3 +181,8 @@ void MissionController::onPlayerDied()
 	}
 }
 
+bool MissionController::isLoaded() const
+{
+	return loadedMission >= 0;
+}
+
