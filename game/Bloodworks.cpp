@@ -392,6 +392,7 @@ void Bloodworks::windowResized(int width, int height)
 {
 	cGame::windowResized(width, height);
 	mainMenu->resize();
+	player->resize();
 }
 
 void Bloodworks::clearMission()
@@ -779,7 +780,7 @@ void Bloodworks::tickGameSlowdown()
 	bool changeSlowdown = false;
 	if (paused && pauseSlowdown > 0.0f)
 	{
-		pauseSlowdown -= timer.realDt * 2.0f;
+		pauseSlowdown -= timer.getNonSlowedDt() * 2.0f;
 		if (pauseSlowdown < 0.0f)
 		{
 			pauseSlowdown = 0.0f;
@@ -789,7 +790,7 @@ void Bloodworks::tickGameSlowdown()
 	}
 	else if (!paused && pauseSlowdown < 1.0f)
 	{
-		pauseSlowdown += timer.realDt * 2.0f;
+		pauseSlowdown += timer.getNonSlowedDt() * 2.0f;
 		if (pauseSlowdown >= 1.0f)
 		{
 			pauseSlowdown = 1.0f;
@@ -801,7 +802,7 @@ void Bloodworks::tickGameSlowdown()
 
 	if (gamePlaySlowdown > targetGamePlaySlowdown)
 	{
-		gamePlaySlowdown -= timer.realDt;
+		gamePlaySlowdown -= timer.getNonSlowedDt() * 0.3f;
 		if (gamePlaySlowdown < targetGamePlaySlowdown)
 		{
 			gamePlaySlowdown = targetGamePlaySlowdown;
@@ -810,7 +811,7 @@ void Bloodworks::tickGameSlowdown()
 	}
 	else if (gamePlaySlowdown < targetGamePlaySlowdown)
 	{
-		gamePlaySlowdown += timer.realDt;
+		gamePlaySlowdown += timer.getNonSlowedDt() * 0.3f;
 		if (gamePlaySlowdown > targetGamePlaySlowdown)
 		{
 			gamePlaySlowdown = targetGamePlaySlowdown;

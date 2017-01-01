@@ -13,6 +13,9 @@ MainMenu::MainMenu(Bloodworks *b)
 	bloodworksText->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(bloodworksText, GUI + 20);
 
+	cSoundSampleShr hover = resources.getSoundSample("resources/sounds/hover.ogg");
+	cSoundSampleShr click = resources.getSoundSample("resources/sounds/click.ogg");
+
 	cTextRenderable *text;
 
 	newGame = new cButton(bloodworks);
@@ -22,6 +25,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	newGame->addRenderable(text);
 	newGame->setHoverSpeed(10.0f);
+	newGame->setSounds(click, hover);
 	bloodworks->addRenderable(newGame, GUI + 21);
 
 	mods = new cButton(bloodworks);
@@ -31,6 +35,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	mods->addRenderable(text);
 	mods->setHoverSpeed(10.0f);
+	mods->setSounds(click, hover);
 	bloodworks->addRenderable(mods, GUI + 21);
 
 	options = new cButton(bloodworks);
@@ -40,6 +45,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	options->addRenderable(text);
 	options->setHoverSpeed(10.0f);
+	options->setSounds(click, hover);
 	bloodworks->addRenderable(options, GUI + 21);
 
 	credits = new cButton(bloodworks);
@@ -49,6 +55,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	credits->addRenderable(text);
 	credits->setHoverSpeed(10.0f);
+	credits->setSounds(click, hover);
 	bloodworks->addRenderable(credits, GUI + 21);
 
 	quit = new cButton(bloodworks);
@@ -58,6 +65,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	quit->addRenderable(text);
 	quit->setHoverSpeed(10.0f);
+	quit->setSounds(click, hover);
 	bloodworks->addRenderable(quit, GUI + 21);
 
 	resize();
@@ -167,6 +175,7 @@ void MainMenu::setVisible(bool visible)
 		handle = music->play();
 		handle.setLooped(true);
 		input.showMouse();
+		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
 	}
 	else
 	{

@@ -1,4 +1,5 @@
 #include "cButton.h"
+#include "cSound.h"
 
 void cButton::check(const Vec2& mousePos)
 {
@@ -31,11 +32,20 @@ void cButton::check(const Vec2& mousePos)
 
 	if (hovering)
 	{
-		hoverTime += timer.getDt() * hoverSpeed;
+		hoverTime += timer.getNonSlowedDt() * hoverSpeed;
 	}
 	else
 	{
-		hoverTime -= timer.getDt() * hoverSpeed;
+		hoverTime -= timer.getNonSlowedDt() * hoverSpeed;
+	}
+
+	if (isClicked() && clickSound != nullptr)
+	{
+		clickSound->play();
+	}
+	if (isEntered() && hoverSound != nullptr)
+	{
+		hoverSound->play();
 	}
 	saturate(hoverTime);
 	setWorldMatrix(Mat3::scaleMatrix(lerp(defaultScale, hoverScale, hoverTime)).rotateBy(lerp(defaultRotation, hoverRotation, hoverTime)).translateBy(lerp(defaultShift, hoverShift, hoverTime)));

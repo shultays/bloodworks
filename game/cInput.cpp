@@ -2,6 +2,9 @@
 #include "cGlobals.h"
 #include <stdio.h>
 #include <string.h>
+#include "SDL.h" 
+
+extern SDL_Window *mainWindow;
 
 void cInput::init()
 {
@@ -26,6 +29,11 @@ void cInput::tick()
 {
 	memcpy(prevKeyStates, keyStates, sizeof(prevKeyStates));
 	prevMousePos = mousePos;
+}
+
+void cInput::setMousePosition(int x, int y)
+{
+	SDL_WarpMouseInWindow(mainWindow, x, y);
 }
 
 void cInput::releaseKey(int key)

@@ -349,4 +349,5 @@ public:
 	{
 		prevKeyStates[key] = false;
 	}
+	void setMousePosition(int x, int y);
 };

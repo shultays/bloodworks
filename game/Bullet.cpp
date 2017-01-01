@@ -87,19 +87,18 @@ void Bullet::tick()
 			particleData.particle->addParticle(particleData.lastSpawnPos, table);
 		}
 	}
-
-	const auto& monsters = bloodworks->getMonsterController()->getMonsterAt(pos);
-	for (auto& monster : monsters)
+	
+	std::function<bool(Monster *monster)> func = [&](Monster *monster) -> bool
 	{
 		Vec2 monsterPos = monster->getPosition();
 		float radiusToCheck = monster->getRadius() + radius;
-		if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck)
+		if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (diesOnHit || monster->hasIgnoreId(id) == false))
 		{
 			if (script && shouldHitMonsterTest.size())
 			{
 				if (((bool)script[shouldHitMonsterTest](this, monster)) == false)
 				{
-					continue;
+					return true;
 				}
 			}
 
@@ -118,10 +117,15 @@ void Bullet::tick()
 			{
 				removeSelf();
 			}
-			break;
+			else
+			{
+				monster->addIgnoreId(id);
+			}
+			return false;
 		}
-	}
-
+		return true;
+	};
+	bloodworks->getMonsterController()->runForEachMonsterInRadius(pos, radius, func);
 }
 
 void Bullet::addRenderable(cRenderable *renderable)
