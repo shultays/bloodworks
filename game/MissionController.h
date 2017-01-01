@@ -5,6 +5,7 @@
 #include "Sol.h"
 #include "cMat.h"
 #include "cVec.h"
+#include "cSound.h"
 
 class Bloodworks;
 class cRenderable;
@@ -30,6 +31,11 @@ class MissionController
 	std::vector<MissionData> missions;
 	float missionLoadTime;
 	int loadedMission;
+
+	cSoundSampleWithParams missionLoop;
+	cSoundHandle missionLoopHandle;
+	float soundSpeed;
+	float musicVolume;
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
