@@ -400,6 +400,31 @@ void MonsterController::reset()
 	monsters.clear();
 }
 
+void MonsterController::runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const
+{
+	IntVec2 start = grid.getNodeIndex(pos - radius);
+	IntVec2 end = grid.getNodeIndex(pos + radius);
+	int runIndex = bloodworks->getUniqueId();
+	for (int i = start.x; i <= end.x; i++)
+	{
+		for (int j = start.y; j <= end.y; j++)
+		{
+			auto node = grid.getNodeAtIndex(IntVec2(i, j));
+			for (Monster *monster : node)
+			{
+				if (monster->lastRunCheck != runIndex)
+				{
+					monster->lastRunCheck = runIndex;
+					if (func(monster) == false)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+}
+
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
 {
 	damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, false, -1);

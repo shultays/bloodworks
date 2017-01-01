@@ -9,7 +9,10 @@
   "bulletSpeed" : 550.0,
   "bulletDamage" : [30, 70],
   
-  "firingSound" : "resources/sounds/plasma.ogg",
+  "firingSound" : {
+	"path" : "resources/sounds/plasma.ogg",
+	"volume" : 0.75
+  },
   "bulletHitSound" : "resources/sounds/plasma_hit.ogg",
   
   "scriptFile" : "resources/guns/plasmagun/plasmagun.lua",
