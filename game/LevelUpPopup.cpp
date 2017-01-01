@@ -3,6 +3,7 @@
 #include "cRenderable.h"
 #include "cFont.h"
 #include "cTexture.h"
+#include "cButton.h"
 #include "Player.h"
 #include "Perk.h"
 #include <sstream>
@@ -37,19 +38,19 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 
 	bloodworks->addRenderable(levelupGroup, GUI + 150);
 
+	levelUpSound = resources.getSoundSample("resources/sounds/level_up.ogg");
 }
 
 LevelUpPopup::~LevelUpPopup()
 {
 	SAFE_DELETE(levelupGroup);
 
-
 	for (auto& t : levelupPerksRenderables)
 	{
 		SAFE_DELETE(t);
 	}
 	levelupPerksRenderables.clear();
-
+	levelUpSound = nullptr;
 }
 
 bool LevelUpPopup::isVisible() const
@@ -60,6 +61,7 @@ bool LevelUpPopup::isVisible() const
 void LevelUpPopup::show()
 {
 	input.showMouse();
+	input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2 + 70);
 	bloodworks->doPause();
 	levelupGroup->setVisible(true);
 	std::stringstream ss;
@@ -69,7 +71,7 @@ void LevelUpPopup::show()
 	levelupGroupTitle->setText(ss.str());
 	currentPerkName->setText("");
 	currentPerkExplanation->setText("");
-	pressLevelupPerkIndex = hoverLevelupPerkIndex = -1;
+	hoverLevelupPerkIndex = -1;
 
 	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
@@ -84,19 +86,27 @@ void LevelUpPopup::show()
 		availablePerks[r] = availablePerks[availablePerks.size() - 1];
 		availablePerks.resize(availablePerks.size() - 1);
 	}
-	levelupPerksRenderables.clear();
-	levelupPerksRenderablePosition.clear();
+	assert(levelupPerksRenderables.size() == 0);
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath(), "resources/default");
+		cButton *t = new cButton(bloodworks);
 		Vec2 pos = Vec2(-i * 140.0f + (levelupPerks.size() - 1) * 140.0f * 0.5f, 20.0f);
-		levelupPerksRenderablePosition.push_back(pos);
-		t->setWorldMatrix(Mat3::scaleMatrix(Vec2(40.0f)).translateBy(pos));
+		t->setDefaultMatrix(pos, 1.0f, 0.0f);
+		t->setHoverMatrix(pos, 1.25f, 0.0f);
 		t->setAlignment(RenderableAlignment::center);
 		t->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+		t->setHitArea(Vec2(-50.0f), Vec2(50.0f));
+		t->setHoverSpeed(10.0f);
+		t->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
+
+		cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath(), "resources/default");
+		quad->setWorldMatrix(Mat3::scaleMatrix(40.0f));
+		t->addRenderable(quad);
 		bloodworks->addRenderable(t, GUI + 151);
 		levelupPerksRenderables.push_back(t);
 	}
+
+	levelUpSound->play();
 }
 
 void LevelUpPopup::tick()
@@ -108,7 +118,7 @@ void LevelUpPopup::tick()
 	float alpha = levelupGroup->getColor().a;
 	if (alpha < 1.0f)
 	{
-		alpha += timer.realDt * 4.0f;
+		alpha += timer.getNonSlowedDt() * 4.0f;
 		alpha = min(1.0f, alpha);
 		Vec4 color = Vec4(1.0f, 1.0f, 1.0f, alpha);
 		levelupGroup->setColor(color);
@@ -122,10 +132,10 @@ void LevelUpPopup::tick()
 	//debugRenderer.addText("O", mouseScreenPos.x, mouseScreenPos.y, 0.0f, Vec4(1.0f), 12.0f, TextAlignment::center, RenderableAlignment::center);
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		bool inside = max(fabs(levelupPerksRenderablePosition[i].x / bloodworks->getCameraZoom() - mouseScreenPos.x), fabs(levelupPerksRenderablePosition[i].y / bloodworks->getCameraZoom() - mouseScreenPos.y)) < 40.0f / bloodworks->getCameraZoom();
+		levelupPerksRenderables[i]->check(mouseScreenPos);
 		if (hoverLevelupPerkIndex != i)
 		{
-			if (inside)
+			if (levelupPerksRenderables[i]->isHovering())
 			{
 				hoverLevelupPerkIndex = i;
 				std::stringstream name;
@@ -141,33 +151,27 @@ void LevelUpPopup::tick()
 		}
 		else if (hoverLevelupPerkIndex == i)
 		{
-			if (!inside)
+			if (!levelupPerksRenderables[i]->isHovering())
 			{
 				hoverLevelupPerkIndex = -1;
 				currentPerkName->setText("");
 				currentPerkExplanation->setText("");
 			}
 		}
-	}
-
-	if (input.isKeyPressed(mouse_button_left))
-	{
-		pressLevelupPerkIndex = hoverLevelupPerkIndex;
-	}
-
-	if (input.isKeyReleased(mouse_button_left) && hoverLevelupPerkIndex >= 0 && hoverLevelupPerkIndex == pressLevelupPerkIndex)
-	{
-		levelupPerks[hoverLevelupPerkIndex]->takeLevel();
-		bloodworks->onPerkUsed(levelupPerks[hoverLevelupPerkIndex]);
-		input.hideMouse();
-		bloodworks->doUnpause();
-		levelupGroup->setVisible(false);
-		levelupPerks.clear();
-		levelupPerksRenderablePosition.clear();
-		for (auto& t : levelupPerksRenderables)
+		if (levelupPerksRenderables[i]->isClicked())
 		{
-			SAFE_DELETE(t);
+			levelupPerks[i]->takeLevel();
+			bloodworks->onPerkUsed(levelupPerks[i]);
+			input.hideMouse();
+			bloodworks->doUnpause();
+			levelupGroup->setVisible(false);
+			levelupPerks.clear();
+			for (auto& t : levelupPerksRenderables)
+			{
+				SAFE_DELETE(t);
+			}
+			levelupPerksRenderables.clear();
+			return;
 		}
-		levelupPerksRenderables.clear();
 	}
 }

@@ -60,6 +60,8 @@ class Monster
 
 	void killSelf(const Vec2& blowDir);
 	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
+
+	int lastRunCheck;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

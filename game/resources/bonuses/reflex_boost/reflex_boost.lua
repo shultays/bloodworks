@@ -6,11 +6,11 @@ function ReflexBoost.spawn(pos)
 		data.postProcess = addPostProcess("resources/post_process/sepia.ps")
 		data.postProcess:setShaderWeight(0.0)
 		data.shaderStartTime = time
-		playSound({path = "resources/sounds/slowdown.ogg", uiSound = "true"})
 	else
 		data.boost.data.time = time
 	end
 	
+	playSound({path = "resources/sounds/clock.ogg", volume = "0.5"})
 	
 	if ReflexBoost.data.isSlow ~= true then
 		ReflexBoost.data.isSlow = true

@@ -8,7 +8,7 @@
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 5.0,
   "bulletSpeed" : 950.0,
-  "bulletDamage" : [85, 125],
+  "bulletDamage" : [65, 105],
   
   "firingSound" : {
 	"path" : "resources/sounds/railgun.ogg",

@@ -25,6 +25,9 @@ class cButton : public cRenderableGroup
 	bool pressedInside;
 	float hoverTime;
 	float hoverSpeed;
+
+	cSoundSampleShr clickSound;
+	cSoundSampleShr hoverSound;
 public:
 	cButton(cGame *game) : cRenderableGroup(game)
 	{
@@ -104,5 +107,11 @@ public:
 		this->defaultScale = scale;
 		this->defaultRotation = rotation;
 		setWorldMatrix(Mat3::scaleMatrix(defaultScale).rotateBy(defaultRotation).translateBy(defaultShift));
+	}
+
+	void setSounds(cSoundSampleShr clickSound, cSoundSampleShr hoverSound)
+	{
+		this->clickSound = clickSound;
+		this->hoverSound = hoverSound;
 	}
 };
