@@ -149,7 +149,7 @@ function MonsterMeleeHelper.onTick(monster)
 		if data.willHit and data.lastHitTime + data.hitWaitTime < time then
 			data.willHit = false
 			player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)))
-			
+			playSound({path = "resources/sounds/melee_woosh.ogg", volume = 0.3})
             if player.slowdownOnHit then
                 player:slowdown(data.slowdownAmount, data.slowdownDuration)
 			end
