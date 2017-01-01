@@ -131,7 +131,7 @@ function MonsterMeleeHelper.init(monster)
 	monster.data.moving = true
 	monster.data.lastHitTime = -1.0
 	monster.data.hitInterval = 1.5
-	monster.data.hitWaitTime = 0.2
+	monster.data.hitWaitTime = 0.15
 	monster.data.minDamage = 5
 	monster.data.maxDamage = 11
 	monster.data.slowdownAmount = 0.4

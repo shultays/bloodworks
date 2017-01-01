@@ -291,6 +291,6 @@ void Monster::killSelf(const Vec2& blowDir)
 	if (monsterTemplate->killSounds.size())
 	{
 		cSoundSampleShr s = monsterTemplate->killSounds[randInt((int)monsterTemplate->killSounds.size())];
-		bloodworks->playSoundAtMap(position, s, 0.8f);
+		bloodworks->playSoundAtMap(position, s, 0.7f);
 	}
 }

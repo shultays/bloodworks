@@ -7,7 +7,7 @@
   "bulletSize" : [6.0, 6.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 350.0,
-  "bulletDamage" : [30, 70],
+  "bulletDamage" : [40, 70],
   
   "firingSound" : "resources/sounds/rocket.ogg",
   "bulletHitSound" : "resources/sounds/missile_explosion.ogg",
