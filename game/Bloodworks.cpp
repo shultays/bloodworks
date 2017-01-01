@@ -578,6 +578,11 @@ void Bloodworks::setSoundSpeed(float newSoundSpeed)
 	}
 }
 
+float Bloodworks::getSoundSpeed() const
+{
+	return soundSpeed;
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
