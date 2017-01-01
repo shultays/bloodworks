@@ -52,21 +52,17 @@ Player::Player(Bloodworks *bloodworks)
 	barSize *= 0.4f;
 	barSize.x = round(barSize.x);
 	barSize.y = round(barSize.y);
-	Mat3 barMat = Mat3::scaleMatrix(barSize).translateBy(Vec2(0.0f, -50.0f));
 
 	healthBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_bg.png", "resources/default");
-	healthBarBG->setWorldMatrix(barMat);
 	healthBarBG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(healthBarBG, GUI + 10);
 
 	healthBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_active.png", "resources/default");
-	healthBarActive->setWorldMatrix(barMat);
 	healthBarActive->setAlignment(RenderableAlignment::top);
 	healthBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.6f));
 	bloodworks->addRenderable(healthBarActive, GUI + 11);
 
 	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_fg.png", "resources/default");
-	healthBarFG->setWorldMatrix(barMat);
 	healthBarFG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(healthBarFG, GUI + 12);
 
@@ -76,7 +72,7 @@ Player::Player(Bloodworks *bloodworks)
 	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
 	renderable->addRenderable(shootRenderable);
 
-
+	resize();
 	DirentHelper::Folder f("resources/sounds/player_hit");
 
 	std::function<void(DirentHelper::File&)> func = [&](DirentHelper::File &file)
@@ -92,6 +88,7 @@ Player::Player(Bloodworks *bloodworks)
 	};
 
 	f.runOnEachFile(func);
+
 	reset();
 }
 
@@ -431,11 +428,11 @@ void Player::updateHitPoints()
 	std::stringstream ss;
 	ss << hitPoints;
 	healthRenderable->setText(ss.str());
-	float scale = (barSize.x - 9.0f) * (hitPoints / (float)maxHitPoints);
+	float scale = (scaledBarSize.x - 9.0f) * (hitPoints / (float)maxHitPoints);
 	if (hitPoints > 1)
 	{
 		healthBarActive->setVisible(true);
-		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, barSize.y - 5.0f).translateBy(0.0f, -50.0f));
+		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledBarSize.y - 5.0f / bloodworks->getCameraZoom()).translateBy(0.0f, -50.0f / bloodworks->getCameraZoom()));
 	}
 	else
 	{
@@ -536,6 +533,16 @@ float Player::getMonsterExperienceMultiplier() const
 float Player::getDamageMultiplier() const
 {
 	return damageMult;
+}
+
+
+void Player::resize()
+{
+	Mat3 barMat = Mat3::scaleMatrix(barSize / bloodworks->getCameraZoom()).translateBy(Vec2(0.0f, -50.0f / bloodworks->getCameraZoom()));
+	scaledBarSize = barSize / bloodworks->getCameraZoom();
+	healthBarBG->setWorldMatrix(barMat);
+	healthBarFG->setWorldMatrix(barMat);
+	updateHitPoints();
 }
 
 void Player::killSelf()

@@ -5,7 +5,7 @@
 class Bloodworks;
 class cRenderableGroup;
 class cTextRenderable;
-class cRenderable;
+class cButton;
 class Perk;
 
 
@@ -18,11 +18,10 @@ class LevelUpPopup
 	cTextRenderable *levelupGroupTitle;
 	cTextRenderable *currentPerkName;
 	cTextRenderable *currentPerkExplanation;
-	std::vector<cRenderable*> levelupPerksRenderables;
-	std::vector<Vec2> levelupPerksRenderablePosition;
+	std::vector<cButton*> levelupPerksRenderables;
 	std::vector<Perk*> levelupPerks;
 	int hoverLevelupPerkIndex;
-	int pressLevelupPerkIndex;
+	cSoundSampleShr levelUpSound;
 public:
 
 	LevelUpPopup(Bloodworks *bloodworks);

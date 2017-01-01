@@ -7,10 +7,10 @@ function QuadDamage.spawn(pos)
 		QuadDamage.shaderStartTime = time
 		data.postProcess = addPostProcess("resources/post_process/red_shift.ps")
 		data.postProcess:setShaderWeight(0.0)
-		playSound({path = "resources/sounds/metal_riff.ogg", volume = 0.5})
 	else
 		data.boost.data.time = time
 	end
+	playSound({path = "resources/sounds/metal_riff.ogg", volume = 0.5})
 end
 
 function QuadDamage.init(gameObject)

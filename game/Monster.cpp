@@ -14,6 +14,7 @@ Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	id = bloodworks->getUniqueId();
+	lastRunCheck = -1;
 	addIgnoreId(id);
 }
 

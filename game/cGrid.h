@@ -189,6 +189,6 @@ public:
 
 	const std::vector<T*>& getNodeAtIndex(const IntVec2& pos) const
 	{
-		return data[i];
+		return data[pos];
 	}
 };

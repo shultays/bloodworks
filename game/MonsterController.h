@@ -52,4 +52,5 @@ public:
 	void addMonsterTemplate(nlohmann::json &j);
 	Vec2 getRandomPos(sol::table& args);
 	void reset();
+	void runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const;
 };

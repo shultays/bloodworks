@@ -9,20 +9,25 @@ friend class Coral;
 	float currentTime;
 	float renderTime;
 	float dt;
+	float realDt;
 	float renderDt;
-
 public:
-	float getTime() 
+	float getTime()  const
 	{
 		return currentTime;
 	}
 
-	float getDt() 
+	float getDt() const
 	{
 		return dt;
 	}
 
-	float getRender_dt() 
+	float getNonSlowedDt() const
+	{
+		return realDt;
+	}
+
+	float getRender_dt()  const
 	{
 		return renderDt;
 	}
@@ -32,5 +37,4 @@ public:
 	{
 		return renderTime;
 	}
-	float realDt;
 };

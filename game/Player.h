@@ -53,7 +53,7 @@ class Player
 	bool slowdownOnHit;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
-	Vec2 barSize;
+	Vec2 barSize, scaledBarSize;
 
 	int level;
 	int experience;
@@ -69,7 +69,7 @@ class Player
 
 	std::vector<cSoundSampleShr> hitSounds;
 	std::vector<cSoundSampleShr> killSounds;
-public:
+
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -118,4 +118,5 @@ public:
 	void reset();
 	float getMonsterExperienceMultiplier() const;
 	float getDamageMultiplier() const;
+	void resize();
 };
