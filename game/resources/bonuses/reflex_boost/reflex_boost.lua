@@ -10,7 +10,7 @@ function ReflexBoost.spawn(pos)
 		data.boost.data.time = time
 	end
 	
-	playSound({path = "resources/sounds/clock.ogg", volume = "0.5"})
+	playSound({path = "resources/sounds/clock.ogg", volume = "0.9"})
 	
 	if ReflexBoost.data.isSlow ~= true then
 		ReflexBoost.data.isSlow = true
