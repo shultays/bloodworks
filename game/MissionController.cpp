@@ -20,6 +20,12 @@ MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	loadedMission = -1;
+	missionLoop.setSample(resources.getSoundSample("resources/sounds/loop2.ogg"));
+	missionLoop.setLooped(true);
+	missionLoop.setVolume(0.3f);
+	missionLoop.setSpeed(1.2f);
+	soundSpeed = 1.0f;
+	musicVolume = 1.0f;
 	reset();
 }
 
@@ -50,6 +56,37 @@ void MissionController::tick()
 	for (auto& toRemove : toBeRemoved)
 	{
 		removeGameObject(toRemove);
+	}
+
+	if (bloodworks->isPaused())
+	{
+		if (musicVolume > 0.0f)
+		{
+			musicVolume -= timer.getNonSlowedDt() * 4.0f;
+			if (musicVolume < 0.0f)
+			{
+				musicVolume = 0.0f;
+			}
+			missionLoopHandle.setVolume(musicVolume * 0.3f);
+		}
+	}
+	else
+	{
+		if (musicVolume < 1.0f)
+		{
+			musicVolume += timer.getNonSlowedDt() * 4.0f;
+			if (musicVolume > 1.0f)
+			{
+				musicVolume = 1.0f;
+			}
+			missionLoopHandle.setVolume(musicVolume * 0.3f);
+		}
+	}
+
+	if (abs(soundSpeed - bloodworks->getSoundSpeed()) > 0.05f)
+	{
+		soundSpeed = bloodworks->getSoundSpeed();
+		missionLoopHandle.setSpeed(1.2f * (soundSpeed * 0.15f + 0.85f));
 	}
 }
 
@@ -107,6 +144,7 @@ void MissionController::loadMission(const std::string& name)
 
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
+			missionLoopHandle = missionLoop.play();
 			return;
 		}
 	}
@@ -126,6 +164,13 @@ void MissionController::reset()
 		SAFE_DELETE(gameObject);
 	}
 	gameObjects.clear();
+	
+	if (missionLoopHandle.isValid())
+	{
+		missionLoopHandle.stop();
+	}
+	soundSpeed = 1.0f;
+	musicVolume = 1.0f;
 }
 
 void MissionController::onPlayerDied()

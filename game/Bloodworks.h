@@ -201,4 +201,5 @@ public:
 	float getVolumeMultiplier(const Vec2& pos) const;
 	void addGameSound(cSoundHandle& handle);
 	void setSoundSpeed(float newSoundSpeed);
+	float getSoundSpeed() const;
 };

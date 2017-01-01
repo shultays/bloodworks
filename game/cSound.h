@@ -139,4 +139,9 @@ public:
 	{
 		this->speed = speed;
 	}
+
+	void setSample(cSoundSampleShr sample)
+	{
+		this->sample = sample;
+	}
 };
