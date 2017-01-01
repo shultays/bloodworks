@@ -10,7 +10,10 @@
   "bulletSpeed" : 950.0,
   "bulletDamage" : [95, 140],
   
-  "firingSound" : "resources/sounds/rifle.ogg",
+  "firingSound" : {
+	"path" : "resources/sounds/rifle.ogg",
+	"volume" : 0.70
+  },
   
   "scriptFile" : "resources/guns/rifle/rifle.lua",
   "scriptName" : "Rifle"

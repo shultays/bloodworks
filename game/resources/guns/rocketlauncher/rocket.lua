@@ -2,7 +2,7 @@
 function RocketLauncher.init(gun)
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 350.0
-	ShootTimer.initGun(gun, 0.5)
+	ShootTimer.initGun(gun, 0.7)
 end
 
 
@@ -25,7 +25,7 @@ function RocketLauncher.onTick(gun)
 end
 
 function RocketLauncher.onBulletHit(gun, bullet, monster)
-	addExplosion(bullet.position, 60.0, 120.0, 70, 130)
+	addExplosion(bullet.position, 80.0, 180.0, 70, 130)
 end
 
 function RocketLauncher.onBulletTick(gun, bullet)

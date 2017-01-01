@@ -202,4 +202,5 @@ public:
 	void addGameSound(cSoundHandle& handle);
 	void setSoundSpeed(float newSoundSpeed);
 	float getSoundSpeed() const;
+	bool isMissionLoaded() const;
 };

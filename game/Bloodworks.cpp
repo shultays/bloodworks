@@ -231,6 +231,7 @@ void Bloodworks::init()
 	}
 	else
 	{
+		coral.setFullScreen(true);
 		mainMenu->setVisible(true);
 		showFps = false;
 	}
@@ -403,13 +404,13 @@ void Bloodworks::clearMission()
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
+	missionController->reset();
 	player->reset();
 	monsterController->reset();
 	bloodRenderable->reset();
 	dropController->reset();
 	bulletController->reset();
 	explosionController->reset();
-	missionController->reset();
 
 	std::vector<cPostProcess*> toRemove;
 
@@ -466,7 +467,6 @@ bool Bloodworks::loadMission(const std::string& mission)
 	mainMenu->setVisible(false);
 	input.hideMouse();
 
-	player->setVisible(true);
 
 	for (auto& gun : guns)
 	{
@@ -480,6 +480,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 		}
 	}
 	missionController->loadMission(mission);
+	player->setVisible(true);
 	return true;
 }
 
@@ -581,6 +582,11 @@ void Bloodworks::setSoundSpeed(float newSoundSpeed)
 float Bloodworks::getSoundSpeed() const
 {
 	return soundSpeed;
+}
+
+bool Bloodworks::isMissionLoaded() const
+{
+	return missionController->isLoaded();
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()

@@ -429,7 +429,7 @@ void Player::updateHitPoints()
 	ss << hitPoints;
 	healthRenderable->setText(ss.str());
 	float scale = (scaledBarSize.x - 9.0f) * (hitPoints / (float)maxHitPoints);
-	if (hitPoints > 1)
+	if (hitPoints > 1 && bloodworks->isMissionLoaded())
 	{
 		healthBarActive->setVisible(true);
 		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledBarSize.y - 5.0f / bloodworks->getCameraZoom()).translateBy(0.0f, -50.0f / bloodworks->getCameraZoom()));
@@ -493,6 +493,7 @@ void Player::setVisible(bool visible)
 	healthBarBG->setVisible(visible);
 	healthBarActive->setVisible(visible);
 	healthBarFG->setVisible(visible);
+	updateHitPoints();
 }
 
 void Player::reset()
