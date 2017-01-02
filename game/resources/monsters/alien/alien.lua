@@ -34,6 +34,8 @@ function Alien.init(monster)
 	StunController.init(monster)
 	MonsterGroupHelper.init(monster)
 	MonsterMeleeHelper.init(monster)
+	data.minDamage = 8
+	data.maxDamage = 12
 end
 
 

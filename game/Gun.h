@@ -106,4 +106,8 @@ public:
 	void addAmmo();
 	void consumeAmmo();
 	void reload();
+	int getMaxAmmo() const;
+	int getCurrentAmmo() const;
+	bool isReloading() const;
+	float getReloadPercentage() const;
 };

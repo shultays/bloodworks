@@ -11,6 +11,7 @@ class cTextRenderable;
 class cRenderable;
 class cRenderableGroup;
 class cAnimatedTexturedQuadRenderable;
+class cRenderableWithShader;
 
 class Player
 {
@@ -25,6 +26,7 @@ class Player
 	Bloodworks *bloodworks;
 	cRenderableGroup *renderable;
 	cRenderable *crosshair;
+	cRenderableWithShader *ammo;
 	cRenderable *spread;
 	Vec2 crosshairPos;
 	Vec2 gunPos;
@@ -70,6 +72,10 @@ class Player
 	std::vector<cSoundSampleShr> hitSounds;
 	std::vector<cSoundSampleShr> killSounds;
 
+	int currentAmmoUniformIndex;
+	int maxAmmoUniformIndex;
+	int reloadingUniformIndex;
+	float reloadAlpha;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
