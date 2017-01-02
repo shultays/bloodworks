@@ -1,6 +1,6 @@
 
 function IronSkin.init(level)
-	IronSkin.level = 1 + (level - 1) * 2
+	IronSkin.level = 2 + (level - 1) * 2
 end
 
 function IronSkin.onPlayerDamaged(damage, params)

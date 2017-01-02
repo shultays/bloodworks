@@ -1,0 +1,50 @@
+uniform sampler2D uTexture0;
+
+varying vec4 vColor;
+varying vec2 vVertexUV;
+
+#define M_PI 3.1415926535897932384626433832795
+
+uniform float uCurrentAmmo;
+uniform int uMaxAmmo;
+
+uniform float uReloading;
+
+void main(void) 
+{
+	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
+	
+	vec2 t = vVertexUV - vec2(0.5);
+	
+	float angle = atan(t.x, t.y);
+	
+	float c = (angle + M_PI) / (2.0 * M_PI);
+	
+	if (c > ((float)uCurrentAmmo) / uMaxAmmo)
+	{
+		gl_FragColor.a = 0.0;
+	}
+	
+	gl_FragColor.a *= 0.15;
+	
+	if (uMaxAmmo < 80)
+	{
+		float z = c * uMaxAmmo;
+		float z2 = round(z);
+		float z3 = abs(z-z2);
+		
+		const float start1 = 0.05;
+		const float start2 = 0.1;
+		float alphaMult = 1.0;
+		if (z3 < start1)
+		{
+			alphaMult *= 0.0;
+		}
+		else if (z3 < start2)
+		{
+			alphaMult *= (z3 - start1) / (start2 - start1);
+		}
+		gl_FragColor.a *= lerp(alphaMult, 1.0, uReloading);
+		
+	}
+}

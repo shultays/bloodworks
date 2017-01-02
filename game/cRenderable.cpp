@@ -99,6 +99,18 @@ void cUniformDataWithShader::setShaderUniforms()
 		case TypeVec4:
 			shader->setUniform(uniform.first, uniform.second.vec4);
 			break;
+		case TypeInt:
+			shader->setUniform(uniform.first, uniform.second.i);
+			break;
+		case TypeIntVec2:
+			shader->setUniform(uniform.first, uniform.second.intVec2);
+			break;
+		case TypeIntVec3:
+			shader->setUniform(uniform.first, uniform.second.intVec3);
+			break;
+		case TypeIntVec4:
+			shader->setUniform(uniform.first, uniform.second.intVec4);
+			break;
 		}
 	}
 }
@@ -160,6 +172,66 @@ void cUniformDataWithShader::setUniform(int index, const Vec4& data)
 	UniformData uniform;
 	uniform.type = TypeVec4;
 	uniform.vec4 = data;
+	uniforms[index] = uniform;
+}
+
+int cUniformDataWithShader::addUniformInt(const std::string uniform, int val)
+{
+	int index = shader->addUniform(uniform, TypeInt).index;
+	setUniform(index, val);
+	return index;
+}
+
+int cUniformDataWithShader::addUniformIntVec2(const std::string uniform, const IntVec2& data)
+{
+	int index = shader->addUniform(uniform, TypeIntVec2).index;
+	setUniform(index, data);
+	return index;
+}
+
+int cUniformDataWithShader::addUniformIntVec3(const std::string uniform, const IntVec3& data)
+{
+	int index = shader->addUniform(uniform, TypeIntVec3).index;
+	setUniform(index, data);
+	return index;
+}
+
+int cUniformDataWithShader::addUniformIntVec4(const std::string uniform, const IntVec4& data)
+{
+	int index = shader->addUniform(uniform, TypeIntVec4).index;
+	setUniform(index, data);
+	return index;
+}
+
+void cUniformDataWithShader::setUniform(int index, int data)
+{
+	UniformData uniform;
+	uniform.type = TypeInt;
+	uniform.i = data;
+	uniforms[index] = uniform;
+}
+
+void cUniformDataWithShader::setUniform(int index, const IntVec2& data)
+{
+	UniformData uniform;
+	uniform.type = TypeIntVec2;
+	uniform.intVec2 = data;
+	uniforms[index] = uniform;
+}
+
+void cUniformDataWithShader::setUniform(int index, const IntVec3& data)
+{
+	UniformData uniform;
+	uniform.type = TypeIntVec3;
+	uniform.intVec3 = data;
+	uniforms[index] = uniform;
+}
+
+void cUniformDataWithShader::setUniform(int index, const IntVec4& data)
+{
+	UniformData uniform;
+	uniform.type = TypeIntVec4;
+	uniform.intVec4 = data;
 	uniforms[index] = uniform;
 }
 
