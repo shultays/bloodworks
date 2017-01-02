@@ -8,6 +8,7 @@
 #include "Bloodworks.h"
 #include "Player.h"
 #include "BloodRenderable.h"
+#include "MonsterController.h"
 #include "cSound.h"
 
 Monster::Monster(Bloodworks *bloodworks)
@@ -191,6 +192,12 @@ void Monster::addIgnoreId(int id)
 bool Monster::hasIgnoreId(int id)
 {
 	return std::binary_search(ignoreIds.begin(), ignoreIds.end(), id);
+}
+
+void Monster::setPosition(const Vec2& pos)
+{
+	this->position = pos;
+	bloodworks->getMonsterController()->relocateMonster(this);
 }
 
 void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)

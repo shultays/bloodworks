@@ -53,4 +53,5 @@ public:
 	Vec2 getRandomPos(sol::table& args);
 	void reset();
 	void runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const;
+	void relocateMonster(Monster* monster);
 };
