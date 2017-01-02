@@ -151,6 +151,11 @@ void Gun::stop()
 	if (laser)
 	{
 		laser->setVisible(false);
+
+		if (gunShootSoundHandle.isValid())
+		{
+			gunShootSoundHandle.stop();
+		}
 	}
 }
 
@@ -163,11 +168,9 @@ void Gun::start()
 
 void Gun::tick(float dt)
 {
-	if (reloading)
+	if (currentAmmo < maxAmmo && input.isKeyPressed(key_r))
 	{
-		debugRenderer.addCircle(bloodworks->getPlayer()->getPosition() + Vec2(-50.0f, -10.0f), 10.0f);
-		debugRenderer.addCircle(bloodworks->getPlayer()->getPosition() + Vec2(50.0f, -10.0f), 10.0f);
-		debugRenderer.addLine(bloodworks->getPlayer()->getPosition() + Vec2(-50.0f, -10.0f), bloodworks->getPlayer()->getPosition() + Vec2(-50.0f + 100.0f * (timer.getTime() - reloadStartTime) / reloadTime, -10.0f));
+		reload();
 	}
 
 	if (reloading && reloadEnding == false && reloadStartTime + reloadTime - 1.0f < timer.getTime())
@@ -305,6 +308,7 @@ void Gun::reload()
 {
 	if (reloading == false)
 	{
+		currentAmmo = 0;
 		reloading = true;
 		reloadEnding = false;
 		reloadStartTime = timer.getTime();
@@ -313,6 +317,26 @@ void Gun::reload()
 			bloodworks->addGameSound(reloadBeginSound.play());
 		}
 	}
+}
+
+int Gun::getMaxAmmo() const
+{
+	return maxAmmo;
+}
+
+int Gun::getCurrentAmmo() const
+{
+	return currentAmmo;
+}
+
+bool Gun::isReloading() const
+{
+	return reloading;
+}
+
+float Gun::getReloadPercentage() const
+{
+	return (timer.getTime() - reloadStartTime) / reloadTime;
 }
 
 Gun::~Gun()

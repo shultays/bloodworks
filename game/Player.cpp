@@ -12,7 +12,7 @@
 
 int Player::calculateExperienceForLevel(int level)
 {
-	return level * 100 + level * level * 20;
+	return level * 100 + level * level * 50;
 }
 
 Player::Player(Bloodworks *bloodworks)
@@ -41,8 +41,12 @@ Player::Player(Bloodworks *bloodworks)
 	bloodworks->addRenderable(renderable, PLAYER);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
-	crosshair->setWorldMatrix(Mat3::scaleMatrix(20.0f).translateBy(0.0f, 50.0f));
+	crosshair->setWorldMatrix(Mat3::scaleMatrix(40.0f).translateBy(0.0f, 50.0f));
 	bloodworks->addRenderable(crosshair, GUI + 100);
+
+	ammo = new cTexturedQuadRenderable(bloodworks, "resources/reload_ring.png", "resources/reload");
+	ammo->setWorldMatrix(Mat3::scaleMatrix(40.0f).translateBy(0.0f, 50.0f));
+	bloodworks->addRenderable(ammo, GUI + 100);
 
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
@@ -89,12 +93,17 @@ Player::Player(Bloodworks *bloodworks)
 
 	f.runOnEachFile(func);
 
+	currentAmmoUniformIndex = ammo->addUniformFloat("uCurrentAmmo", 0.0f);
+	maxAmmoUniformIndex = ammo->addUniformInt("uMaxAmmo", 0);
+	reloadingUniformIndex = ammo->addUniformFloat("uReloading", 0.0f);
+
 	reset();
 }
 
 Player::~Player()
 {
 	SAFE_DELETE(crosshair);
+	SAFE_DELETE(ammo);
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(spread);
 	SAFE_DELETE(healthRenderable);
@@ -124,7 +133,7 @@ void Player::tick()
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
-
+		
 	bool moving = false;
 
 	if (input.isKeyDown(key_a) && input.isKeyDown(key_w))
@@ -280,6 +289,39 @@ void Player::tick()
 		aimAngle = aimDir.toAngle();
 	}
 
+	if (gun && gun->getMaxAmmo() > 0)
+	{
+		if (gun->isReloading())
+		{
+			ammo->setUniform(currentAmmoUniformIndex, gun->getMaxAmmo() * gun->getReloadPercentage());
+		}
+		else
+		{
+			ammo->setUniform(currentAmmoUniformIndex, (float)gun->getCurrentAmmo());
+		}
+		ammo->setUniform(maxAmmoUniformIndex, gun->getMaxAmmo());
+
+		if (gun->isReloading())
+		{
+			reloadAlpha = 1.0f;
+		}
+		else
+		{
+			reloadAlpha -= dt * 6.0f;
+			if (reloadAlpha < 0.0f)
+			{
+				reloadAlpha = 0.0f;
+			}
+		}
+
+		ammo->setUniform(reloadingUniformIndex, reloadAlpha);
+		ammo->setVisible(true);
+	}
+	else
+	{
+		ammo->setVisible(false);
+	}
+
 	if (gun && gun->spreadVisible())
 	{
 		float newSpreadAngle = gun->getSpreadAngle();
@@ -304,8 +346,9 @@ void Player::tick()
 		}
 		oldSpreadAngle = newSpreadAngle;
 
-		spread->setWorldMatrix(Mat3::scaleMatrix(sin(oldSpreadAngle) * length + 10.0f).translateBy(pos + crosshairPos));
-		spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4, 0.0f, 0.4f)));
+		float scale = sin(oldSpreadAngle) * length + 10.0f;
+		spread->setWorldMatrix(Mat3::scaleMatrix(scale).translateBy(pos + crosshairPos));
+		spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4.0f, 0.0f, 0.4f)));
 
 		spread->setVisible(true);
 	}
@@ -316,7 +359,10 @@ void Player::tick()
 
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(14.0f).translateBy(pos + crosshairPos));
 	crosshair->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.7f));
-	
+
+	ammo->setWorldMatrix(Mat3::scaleMatrix(22.0f).translateBy(pos + crosshairPos));
+	ammo->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.7f));
+
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
 	healthRenderable->setVisible(input.isKeyDown(key_f6));
@@ -486,6 +532,7 @@ void Player::setVisible(bool visible)
 {
 	this->visible = visible;
 
+	ammo->setVisible(visible);
 	crosshair->setVisible(visible);
 	renderable->setVisible(visible);
 	spread->setVisible(visible);
@@ -498,6 +545,7 @@ void Player::setVisible(bool visible)
 
 void Player::reset()
 {
+	reloadAlpha = 0.0f;
 	damageMult = monsterExperienceMult = moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
 	slowdownOnHit = true;
 	isDead = false;

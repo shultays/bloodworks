@@ -86,7 +86,7 @@ void MissionController::tick()
 	if (abs(soundSpeed - bloodworks->getSoundSpeed()) > 0.05f)
 	{
 		soundSpeed = bloodworks->getSoundSpeed();
-		missionLoopHandle.setSpeed(1.2f * (soundSpeed * 0.15f + 0.85f));
+		missionLoopHandle.setSpeed(1.2f * (soundSpeed * 0.10f + 0.90f));
 	}
 }
 
