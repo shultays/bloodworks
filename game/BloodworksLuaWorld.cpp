@@ -148,7 +148,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.new_usertype<Bullet>("Bullet",
 		"index", sol::readonly(&Bullet::id),
 
-		"position", &Bullet::pos,
+		"position", sol::property(&Bullet::getPosition, &Bullet::setPosition),
 		"moveSpeed", &Bullet::moveSpeed,
 		"moveAngle", &Bullet::moveAngle,
 		"meshRotation", &Bullet::meshRotation,
@@ -427,7 +427,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"name", &Monster::name,
 		"index", sol::readonly(&Monster::id),
 
-		"position", &Monster::position,
+		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,
 		"moveAngle", &Monster::moveAngle,
 
