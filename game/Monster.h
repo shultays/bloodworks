@@ -94,4 +94,6 @@ public:
 
 	void addIgnoreId(int id);
 	bool hasIgnoreId(int id);
+
+	void setPosition(const Vec2& pos);
 };

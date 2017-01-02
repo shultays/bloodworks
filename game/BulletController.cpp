@@ -11,7 +11,7 @@ BulletController::BulletController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 100.0f, bloodworks->getMapSize() + 200.0f, Vec2(50.0f));
+	grid.init(bloodworks->getMapMin() - 150.0f, bloodworks->getMapSize() + 300.0f, Vec2(50.0f));
 }
 
 BulletController::~BulletController()
@@ -86,4 +86,9 @@ void BulletController::reset()
 	}
 	bullets.clear();
 	bulletMap.clear();
+}
+
+void BulletController::relocateBullet(Bullet* bullet)
+{
+	grid.relocate(bullet);
 }

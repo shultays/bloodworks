@@ -596,7 +596,7 @@ BloodRenderable* Bloodworks::getBloodRenderable()
 
 bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
 {
-	return pos.x + radius < mapBegin.x || pos.y + radius < mapBegin.x || pos.x - radius> mapEnd.x || pos.y - radius> mapEnd.y;
+	return pos.x - radius < mapBegin.x || pos.y - radius < mapBegin.x || pos.x + radius> mapEnd.x || pos.y + radius> mapEnd.y;
 }
 
 bool Bloodworks::isCoorOutside(const Vec2& pos) const

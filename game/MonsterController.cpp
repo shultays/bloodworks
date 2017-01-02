@@ -11,7 +11,7 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 50.0f, bloodworks->getMapSize() + 100.0f, Vec2(50.0f));
+	grid.init(bloodworks->getMapMin() - 400.0f, bloodworks->getMapSize() + 800.0f, Vec2(50.0f));
 }
 
 void MonsterController::tick()
@@ -32,7 +32,7 @@ void MonsterController::tick()
 	for (auto& monster : monsters)
 	{
 		monster->tick();
-		if (bloodworks->isCoorOutside(monster->position) == false)
+		if (bloodworks->isCoorOutside(monster->position, -20.0f) == false)
 		{
 			grid.relocate(monster);
 		}
@@ -423,6 +423,11 @@ void MonsterController::runForEachMonsterInRadius(Vec2 pos, float radius, std::f
 			}
 		}
 	}
+}
+
+void MonsterController::relocateMonster(Monster* monster)
+{
+	grid.relocate(monster);
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)
