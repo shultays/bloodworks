@@ -36,7 +36,7 @@ function Survival.init()
 	end
 	
 	for i = 1, spawn do
-		local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
+		local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
         local monster = addRandomMonster()
 		monster.position = pos
 		monster.moveAngle =  math.random() * math.pi * 2.0

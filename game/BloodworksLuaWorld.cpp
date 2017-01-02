@@ -287,7 +287,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addAmmo", &Gun::addAmmo,
 		"consumeAmmo", &Gun::consumeAmmo,
 		"reload", &Gun::reload,
-		"reloading", sol::readonly(&Gun::reloading),
+		"isReloading", &Gun::isReloading,
+		"getReloadPercentage", &Gun::getReloadPercentage,
+		"getMaxAmmo", &Gun::getMaxAmmo,
+		"getCurrentAmmo", &Gun::getCurrentAmmo,
 
 		"addBullet", &Gun::addBullet,
 		"laser", &Gun::laser
