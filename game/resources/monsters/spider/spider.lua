@@ -46,8 +46,14 @@ function Spider.init(monster)
 	data.maxDamage = 16
     
     data.maxMoveSpeed = 130.0
-    data.maxRotateSpeed = 0.03
+    data.maxRotateSpeed = 0.04
     data.playerSeeRange = 150.0
+	
+	data.tickWaitTime = 0.0
+	
+	data.randomShiftAngle = 0.0
+	
+	data.tickWaitTime = 0.0
 end
 
 
@@ -59,57 +65,52 @@ end
 function Spider.onTick(monster)
     data = monster.data
 	
-
-	local posToMove = player.position
-	
-	if data.randomMove or player.isDead then
-		posToMove = data.randomPos
-		if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
-			posToMove = getRandomMapPosition()
-			data.randomPos = posToMove
-		end
-	end
+	data.tickWaitTime = data.tickWaitTime - dt
 	
 	diffToPlayer = player.position - monster.position
 	distanceToPlayer = diffToPlayer:length()
-	angleToPlayer = diffToPlayer:getAngle()
 	
-	if distanceToPlayer < data.playerSeeRange and player.isDead == false then
-		local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
-		if c < 0.0 then
-			c = 0.0
+	if data.tickWaitTime < 0.0 then
+		data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
+		local posToMove = player.position
+		
+		if data.randomMove or player.isDead then
+			posToMove = data.randomPos
+			if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
+				posToMove = getRandomMapPosition()
+				data.randomPos = posToMove
+			end
 		end
-		posToMove = posToMove * c + player.position * (1.0 - c)
+		
+		angleToPlayer = diffToPlayer:getAngle()
+		
+		if distanceToPlayer < data.playerSeeRange and player.isDead == false then
+			local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
+			if c < 0.0 then
+				c = 0.0
+			end
+			posToMove = posToMove * c + player.position * (1.0 - c)
+		end
+		
+
+		diffToMovePos = posToMove - monster.position
+		distanceToMovePos = diffToMovePos:length()
+		angleToMovePos = diffToMovePos:getAngle()
+		
+		data.targetAngleToMovePos = angleToMovePos
 	end
-	
-	
-	diffToMovePos = posToMove - monster.position
-	distanceToMovePos = diffToMovePos:length()
-	angleToMovePos = diffToMovePos:getAngle()
-	
+
 	MonsterMeleeHelper.onTick(monster)
 	
-	local cPlayer = (distanceToMovePos - 100.0) / 100.0
-	if cPlayer > 1.0 then
-		cPlayer = 1.0
-	elseif cPlayer < 0.0 then
-		cPlayer = 0.0
-	end
 	if data.moveTimer > 0.0 then
-		if cPlayer < 1.0 then
-			data.targetAngle = approachAngle(data.targetAngle, angleToMovePos, (0.08 + 1.38 * (1.0 - cPlayer)) * timeScale)
-		end
-		local cPlayer2 = cPlayer * 5
-		if cPlayer2 > 1.0 then
-			cPlayer2 = 1.0
-		end
-		monster.moveAngle = approachAngle(monster.moveAngle, data.targetAngle, 0.02 * timeScale + (1.0 - cPlayer2) * 0.1)
-		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, monster.moveAngle)
-		monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, 0.03 * timeScale)
+		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, data.targetAngleToMovePos)
+		local cPlayer = clamp((distanceToPlayer - 100.0) / 100.0)
+		monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, (data.maxRotateSpeed * (1.0 - cPlayer) + 0.01) * timeScale)
 		data.moveTimer = data.moveTimer - dt
 		if data.moveTimer <= 0.0 then
 			monster:playAnimation("stand", math.random())
 		end
+		
 		if data.moving then
 			monster.moveSpeed = data.maxMoveSpeed * StunController.getSlowAmount(monster);
 		else
@@ -121,8 +122,7 @@ function Spider.onTick(monster)
 		if data.moveTimer <= -1.0 then
 			monster:playAnimation("walk", math.random())
 			monster.data.moveTimer = 0.5 + math.random() * 2.5
-			data.targetAngle = angleToMovePos + cPlayer * (- 0.8 + math.random() * 1.6)
+			data.randomPos = getRandomMapPosition()
 		end
 	end
-	
 end
