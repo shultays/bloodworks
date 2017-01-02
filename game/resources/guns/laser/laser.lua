@@ -8,7 +8,9 @@ end
 
 
 function Laser.onTick(gun)
-	if gun.isTriggered then
+	gun.laser:setVisible(false)
+	if gun.isTriggered and gun:hasAmmo() then
+		gun.laser:setVisible(true)
 		local range = 250.0
 		local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range)
 		if result.monster ~= nil then
@@ -16,7 +18,9 @@ function Laser.onTick(gun)
 		end
 		
 		gun.laser:setLength(range)
+		
 		if ShootTimer.checkGun(gun) then
+			gun:consumeAmmo()
 			if result.monster ~= nil then
 				local args = {doNotStun = true}
 				result.monster:doDamageWithArgs(gun:getRandomDamage(), player.aimDir, args)

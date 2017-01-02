@@ -9,8 +9,9 @@ end
 
 function LaserPistol.onTick(gun)
 	SpreadHelper.onTick(gun)
-	if gun.isTriggered then
+	if gun.isTriggered and gun:hasAmmo() then
 		if ShootTimer.checkGun(gun) then
+			gun:consumeAmmo()
 			SpreadHelper.onShoot(gun)
 			gun:addBullet()
 		end

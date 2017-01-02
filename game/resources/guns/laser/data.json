@@ -12,6 +12,9 @@
   "scriptFile" : "resources/guns/laser/laser.lua",
   "scriptName" : "Laser",
   
+  "maxAmmo" : 40,
+  "reloadTime" : 3.5,
+  
   "firingSound" : {
 	"path" : "resources/sounds/laser.ogg",
 	"volume" : 0.55

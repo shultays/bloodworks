@@ -7,8 +7,9 @@ end
 
 
 function RocketLauncher.onTick(gun)
-	if gun.isTriggered then
+	if gun.isTriggered and gun:hasAmmo() then
 		if ShootTimer.checkGun(gun) then
+			gun:consumeAmmo()
 			local bullet = gun:addBullet()
 			bullet.damage = math.floor(110 + math.random() * 40)
 			bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, -8.0), 4.0, {})
