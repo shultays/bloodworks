@@ -72,3 +72,4 @@ http://opengameart.org/content/2-high-quality-explosions
 !!
 http://opengameart.org/content/time-magic
 http://opengameart.org/content/magic-sfx-sample
+http://opengameart.org/content/handling-guns

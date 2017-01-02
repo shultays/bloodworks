@@ -283,6 +283,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"getRandomDamage", &Gun::getRandomDamage,
 
+		"hasAmmo", &Gun::hasAmmo,
+		"addAmmo", &Gun::addAmmo,
+		"consumeAmmo", &Gun::consumeAmmo,
+		"reload", &Gun::reload,
+		"reloading", sol::readonly(&Gun::reloading),
+
 		"addBullet", &Gun::addBullet,
 		"laser", &Gun::laser
 		);

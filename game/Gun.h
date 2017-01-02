@@ -52,7 +52,18 @@ class Gun
 
 	cSoundSampleWithParams bulletHitSound;
 
+	cSoundSampleWithParams reloadBeginSound;
+	cSoundSampleWithParams reloadEndSound;
+
 	float lastShootSoundTime;
+
+	float lastAmmoReset;
+	int currentAmmo;
+	int maxAmmo;
+	float reloadTime;
+	float reloadStartTime;
+	bool reloading;
+	bool reloadEnding;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
@@ -86,4 +97,13 @@ public:
 	}
 	void reset();
 	void onBulletHit(Bullet *bullet, Monster* monster);
+
+	bool hasAmmo() const
+	{
+		return maxAmmo == 0 || currentAmmo > 0;
+	}
+
+	void addAmmo();
+	void consumeAmmo();
+	void reload();
 };

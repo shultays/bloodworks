@@ -10,6 +10,10 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [20, 40],
   
+  "maxAmmo" : 6,
+  "reloadTime" : 1.9,
+  
+  
   "firingSound" : {
 	"path" : "resources/sounds/shotgun.ogg",
 	"volume" : 0.85
