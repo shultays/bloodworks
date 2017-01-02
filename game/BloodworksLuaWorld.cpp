@@ -439,6 +439,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,
 		"moveAngle", &Monster::moveAngle,
+		"moveDir", sol::readonly(&Monster::moveDir),
 
 		"textureShift", &Monster::textureShift,
 		"textureSize", &Monster::textureSize,

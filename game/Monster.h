@@ -23,6 +23,7 @@ class Monster
 	Vec2 position;
 	float moveSpeed;
 	float moveAngle;
+	Vec2 moveDir;
 
 	Vec2 textureSize;
 	Vec2 textureShift;

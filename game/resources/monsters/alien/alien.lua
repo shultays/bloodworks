@@ -36,6 +36,8 @@ function Alien.init(monster)
 	MonsterMeleeHelper.init(monster)
 	data.minDamage = 8
 	data.maxDamage = 12
+	
+	data.tickWaitTime = 0.0
 end
 
 
@@ -47,37 +49,41 @@ end
 function Alien.onTick(monster)
     data = monster.data
 	
-	local posToMove = player.position
-	
-	if data.randomMove or player.isDead then
-		posToMove = data.randomPos
-		if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
-			posToMove = getRandomMapPosition()
-			data.randomPos = posToMove
-		end
-	end
-	
-	diffToPlayer = player.position - monster.position
+	diffToPlayer = player.position + - monster.position 
 	distanceToPlayer = diffToPlayer:length()
-	angleToPlayer = diffToPlayer:getAngle()
 	
-	if distanceToPlayer < data.playerSeeRange and player.isDead == false then
-		local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
-		if c < 0.0 then
-			c = 0.0
+	data.tickWaitTime = data.tickWaitTime - dt
+	if data.tickWaitTime < 0.0 then
+		data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
+		local posToMove = player.position
+		
+		if data.randomMove or player.isDead then
+			posToMove = data.randomPos
+			if posToMove == nil or posToMove:distanceSquared(monster.position) < 60 * 60 then
+				posToMove = getRandomMapPosition()
+				data.randomPos = posToMove
+			end
 		end
-		posToMove = posToMove * c + player.position * (1.0 - c)
+		
+		angleToPlayer = diffToPlayer:getAngle()
+		
+		if distanceToPlayer < data.playerSeeRange and player.isDead == false then
+			local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
+			if c < 0.0 then
+				c = 0.0
+			end
+			posToMove = posToMove * c + player.position * (1.0 - c)
+		end
+		
+		diffToMovePos = posToMove - monster.position
+		distanceToMovePos = diffToMovePos:length()
+		angleToMovePos = diffToMovePos:getAngle()
+		data.moveAngle = MonsterGroupHelper.fixAngle(monster, angleToMovePos)
+		
 	end
-	
-	diffToMovePos = posToMove - monster.position
-	distanceToMovePos = diffToMovePos:length()
-	angleToMovePos = diffToMovePos:getAngle()
-	
+
 	MonsterMeleeHelper.onTick(monster)
-	
-	newAngle = MonsterGroupHelper.fixAngle(monster, angleToMovePos)
-	
-	monster.moveAngle = approachAngle(monster.moveAngle, newAngle, data.maxRotateSpeed * timeScale)
+	monster.moveAngle = approachAngle(monster.moveAngle, data.moveAngle, data.maxRotateSpeed * timeScale)
 	
 	if data.moving then
 		monster.moveSpeed = data.maxMoveSpeed * StunController.getSlowAmount(monster);

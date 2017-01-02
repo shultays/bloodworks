@@ -43,6 +43,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
 	moveAngle = randFloat(-pi, pi);
+	moveDir = Vec2::fromAngle(moveAngle);
 	moveSpeed = 0.0f;
 
 	data = lua.create_table_with();
@@ -80,6 +81,7 @@ Monster::~Monster()
 void Monster::tick()
 {
 	scriptTable["onTick"](this);
+	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(input.isKeyDown(key_f6));
 	std::vector<int> toTrigger;
 	for (int i = (int)timers.size() - 1; i >= 0; i--)
