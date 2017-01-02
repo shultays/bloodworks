@@ -10,6 +10,9 @@
   "bulletSpeed" : 950.0,
   "bulletDamage" : [65, 105],
   
+  "maxAmmo" : 12,
+  "reloadTime" : 3.0,
+  
   "firingSound" : {
 	"path" : "resources/sounds/railgun.ogg",
 	"volume" : 0.75

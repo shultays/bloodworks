@@ -10,6 +10,9 @@
   "bulletSpeed" : 550.0,
   "bulletDamage" : [10, 25],
   
+  "maxAmmo" : 40,
+  "reloadTime" : 1.5,
+  
   "firingSound" : {
 	"path" : "resources/sounds/assault.ogg",
 	"volume" : 0.80

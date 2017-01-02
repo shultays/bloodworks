@@ -9,6 +9,9 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [55, 80],
   
+  "maxAmmo" : 12,
+  "reloadTime" : 2.0,
+  
   "firingSound" : {
 	"path" : "resources/sounds/laser_pistol.ogg",
 	"volume" : 0.85

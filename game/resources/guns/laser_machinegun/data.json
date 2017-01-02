@@ -9,6 +9,9 @@
   "bulletSpeed" : 450.0,
   "bulletDamage" : [55, 70],
   
+  "maxAmmo" : 32,
+  "reloadTime" : 2.5,
+  
   "firingSound" : {
 	"path" : "resources/sounds/laser_machinegun.ogg",
 	"volume" : 2.55

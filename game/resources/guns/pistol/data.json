@@ -10,6 +10,9 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [40, 90],
   
+  "maxAmmo" : 12,
+  "reloadTime" : 1.2,
+  
   "firingSound" : "resources/sounds/pistol.ogg",
   
   "scriptFile" : "resources/guns/pistol/pistol.lua",
