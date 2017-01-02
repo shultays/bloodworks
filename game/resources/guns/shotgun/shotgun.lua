@@ -7,8 +7,9 @@ end
 
 
 function Shotgun.onTick(gun)
-	if gun.isTriggered then
+	if gun.isTriggered and gun:hasAmmo() then
 		if ShootTimer.checkGun(gun) then
+			gun:consumeAmmo()
 			for i = 1, 6 do
 				local bullet = gun:addBullet()
 				local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})

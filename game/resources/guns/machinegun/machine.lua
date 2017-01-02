@@ -7,8 +7,9 @@ end
 
 
 function MachineGun.onTick(gun)
-	if gun.isTriggered then
+	if gun.isTriggered and gun:hasAmmo() then
 		if ShootTimer.checkGun(gun) then
+			gun:consumeAmmo()
 			local bullet = gun:addBullet()
 			bullet.onDamageArgs.customSlowdownAmount = 4.0
 			bullet.onDamageArgs.slowdownOnly = true

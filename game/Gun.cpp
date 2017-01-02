@@ -103,22 +103,107 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		bulletHitSound.loadSample(j["bulletHitSound"]);
 	}
 
+	if (j.count("reloadBeginSound"))
+	{
+		reloadBeginSound.loadSample(j["reloadBeginSound"]);
+	}
+	else
+	{
+		reloadBeginSound.setSample(resources.getSoundSample("resources/sounds/reload_begin.ogg"));
+	}
+
+	if (j.count("reloadEndSound"))
+	{
+		reloadEndSound.loadSample(j["reloadEndSound"]);
+	}
+	else
+	{
+		reloadEndSound.setSample(resources.getSoundSample("resources/sounds/reload_end.ogg"));
+	}
+
+	if (j.count("maxAmmo"))
+	{
+		maxAmmo = j["maxAmmo"].get<int>();
+	}
+	else
+	{
+		maxAmmo = 3;
+	}
+
+	if (j.count("reloadTime"))
+	{
+		reloadTime = j["reloadTime"].get<float>();
+	}
+	else
+	{
+		reloadTime = 2.0f;
+	}
+
+	currentAmmo = maxAmmo;
+	reloading = false;
+
 	scriptTable["init"](this);
 }
 
 void Gun::stop()
 {
 	setTriggered(false);
+	if (laser)
+	{
+		laser->setVisible(false);
+	}
 }
 
 void Gun::start()
 {
 	isTriggered = false;
+	currentAmmo = maxAmmo;
+	reloading = false;
 }
 
 void Gun::tick(float dt)
 {
+	if (reloading)
+	{
+		debugRenderer.addCircle(bloodworks->getPlayer()->getPosition() + Vec2(-50.0f, -10.0f), 10.0f);
+		debugRenderer.addCircle(bloodworks->getPlayer()->getPosition() + Vec2(50.0f, -10.0f), 10.0f);
+		debugRenderer.addLine(bloodworks->getPlayer()->getPosition() + Vec2(-50.0f, -10.0f), bloodworks->getPlayer()->getPosition() + Vec2(-50.0f + 100.0f * (timer.getTime() - reloadStartTime) / reloadTime, -10.0f));
+	}
+
+	if (reloading && reloadEnding == false && reloadStartTime + reloadTime - 1.0f < timer.getTime())
+	{
+		reloadEnding = true;
+
+		if (reloadEndSound.isValid())
+		{
+			bloodworks->addGameSound(reloadEndSound.play());
+		}
+	}
+
+	if (reloading && reloadStartTime + reloadTime < timer.getTime())
+	{
+		reloading = false;
+		currentAmmo = maxAmmo;
+	}
 	scriptTable["onTick"](this);
+
+	if (laser && timer.getDt() > 0.0f)
+	{
+		if (gunShootSound.isValid())
+		{
+			if (laser->isVisible() && gunShootSoundHandle.isValid() == false)
+			{
+				gunShootSoundHandle = gunShootSound.play();
+				gunShootSoundHandle.setLooped(true);
+				bloodworks->addGameSound(gunShootSoundHandle);
+			}
+			else if (!laser->isVisible() && gunShootSoundHandle.isValid())
+			{
+				gunShootSoundHandle.stop();
+				gunShootSoundHandle.clear();
+			}
+		}
+	}
 }
 
 float Gun::getMaxCrosshairDistance()
@@ -154,25 +239,6 @@ bool Gun::spreadVisible() const
 void Gun::setTriggered(bool triggered)
 {
 	this->isTriggered = triggered;
-	if (laser && timer.getDt() > 0.0f)
-	{
-		laser->setVisible(isTriggered);
-
-		if (gunShootSound.isValid())
-		{
-			if (isTriggered && gunShootSoundHandle.isValid() == false)
-			{
-				gunShootSoundHandle = gunShootSound.play();
-				gunShootSoundHandle.setLooped(true);
-				bloodworks->addGameSound(gunShootSoundHandle);
-			}
-			else if (!isTriggered && gunShootSoundHandle.isValid())
-			{
-				gunShootSoundHandle.stop();
-				gunShootSoundHandle.clear();
-			}
-		}
-	}
 }
 
 const Vec4& Gun::getShootingParticleColor() const
@@ -192,7 +258,15 @@ void Gun::reset()
 
 	spreadAngle = 0.0f;
 
+	currentAmmo = maxAmmo;
+	reloading = false;
+
 	scriptTable["init"](this);
+
+	if (laser)
+	{
+		laser->setVisible(false);
+	}
 }
 
 void Gun::onBulletHit(Bullet *bullet, Monster* monster)
@@ -205,6 +279,39 @@ void Gun::onBulletHit(Bullet *bullet, Monster* monster)
 	if (bulletHitSound.isValid())
 	{
 		bloodworks->playSoundAtMap(bullet->getPosition(), bulletHitSound);
+	}
+}
+
+void Gun::addAmmo()
+{
+	currentAmmo++;
+	if (currentAmmo > maxAmmo)
+	{
+		currentAmmo = maxAmmo;
+	}
+}
+
+void Gun::consumeAmmo()
+{
+	currentAmmo--;
+	if (currentAmmo <= 0)
+	{
+		currentAmmo = 0;
+		reload();
+	}
+}
+
+void Gun::reload()
+{
+	if (reloading == false)
+	{
+		reloading = true;
+		reloadEnding = false;
+		reloadStartTime = timer.getTime();
+		if (reloadBeginSound.isValid())
+		{
+			bloodworks->addGameSound(reloadBeginSound.play());
+		}
 	}
 }
 
@@ -240,5 +347,6 @@ Bullet* Gun::addBullet()
 		lastShootSoundTime = timer.getTime();
 		bloodworks->addGameSound(gunShootSound.play());
 	}
+
 	return bullet;
 }

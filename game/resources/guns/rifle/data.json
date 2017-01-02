@@ -10,6 +10,10 @@
   "bulletSpeed" : 950.0,
   "bulletDamage" : [95, 140],
   
+  "maxAmmo" : 8,
+  "reloadTime" : 2.0,
+  
+  
   "firingSound" : {
 	"path" : "resources/sounds/rifle.ogg",
 	"volume" : 0.70

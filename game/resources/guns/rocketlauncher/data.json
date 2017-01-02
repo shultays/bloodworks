@@ -9,6 +9,9 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [40, 70],
   
+  "maxAmmo" : 6,
+  "reloadTime" : 1.5,
+  
   "firingSound" : "resources/sounds/rocket.ogg",
   "bulletHitSound" : "resources/sounds/missile_explosion.ogg",
   
