@@ -3,9 +3,9 @@ function Spider.init(monster)
 	data = monster.data
 	monster:setScale(math.random() * 0.4 + 0.5)
 
-	local r = math.floor(255 * math.random())
-	local g = math.floor(255 * math.random())
-	local b = math.floor(255 * math.random())
+	local r = math.floor(230 + 25 * math.random())
+	local g = math.floor(230 + 25 * math.random())
+	local b = math.floor(230 + 25 * math.random())
 	local ra = math.random()
 	if ra < 0.333 then
 		r = 0xff
