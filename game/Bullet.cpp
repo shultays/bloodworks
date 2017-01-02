@@ -6,6 +6,7 @@
 #include "Gun.h"
 #include "cParticle.h"
 #include "MonsterController.h"
+#include "BulletController.h"
 #include "Player.h"
 
 Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
@@ -59,7 +60,7 @@ void Bullet::tick()
 
 	updateDrawable();
 
-	if (bloodworks->isCoorOutside(pos, radius + 40.0f))
+	if (bloodworks->isCoorOutside(pos, -20.0f))
 	{
 		removeSelf();
 	}
@@ -185,6 +186,12 @@ bool Bullet::hasParticles()
 		}
 	}
 	return false;
+}
+
+void Bullet::setPosition(const Vec2& pos)
+{
+	this->pos = pos;
+	bloodworks->getBulletController()->relocateBullet(this);
 }
 
 void Bullet::addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions)
