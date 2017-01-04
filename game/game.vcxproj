@@ -211,6 +211,7 @@
     <ClInclude Include="Bloodworks.h" />
     <ClInclude Include="BloodworksLuaWorld.h" />
     <ClInclude Include="Bonus.h" />
+    <ClInclude Include="BuffFloat.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="cAnimatedRenderable.h" />

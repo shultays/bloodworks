@@ -278,5 +278,8 @@
     <ClInclude Include="OneShotSoundManager.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="BuffFloat.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
