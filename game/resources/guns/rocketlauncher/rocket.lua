@@ -13,7 +13,7 @@ function RocketLauncher.onTick(gun)
 			local bullet = gun:addBullet()
 			bullet.damage = math.floor(110 + math.random() * 40)
 			bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, -8.0), 4.0, {})
-			bullet.moveSpeed = 50
+			bullet.moveSpeed = 100
 			bullet.radius = 6
 			bullet.data.moveAngle = bullet.moveAngle
 			bullet.data.moveSpeed = bullet.moveSpeed

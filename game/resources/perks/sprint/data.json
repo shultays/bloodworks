@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Sprint on Damage",
-  "description": "You make a short sprint when you get damaged.",
+  "description": "You make a short sprint when you get damaged on dire situations.",
   "iconFile" : "resources/perks/sprint/icon.png",
   "scriptFile" : "resources/perks/sprint/sprint.lua",
   "scriptName" : "Sprint"

@@ -32,8 +32,10 @@ function ReflexBoost.onTick(gameObject)
 	end
 	t = time - gameObject.data.time
 	
-	if t > 4.75 then
-	    a = (5.0 - t) * 2.0
+	local duration = 5.0 * player.data.bonusDurationMultiplier
+	
+	if t > duration - 0.25 then
+	    a = (duration - t) * 2.0
 		if ReflexBoost.data.isSlow then
 			ReflexBoost.data.isSlow = false
 			multiplyGameSpeed(1.0 / 0.5)
@@ -41,7 +43,7 @@ function ReflexBoost.onTick(gameObject)
 	end
 	
 	ReflexBoost.data.postProcess:setShaderWeight(a)
-	if (time - gameObject.data.time) > 5.0 then
+	if (time - gameObject.data.time) > duration then
 		ReflexBoost.data.boost = nil
 		removePostProcess(ReflexBoost.data.postProcess)
 		ReflexBoost.data.postProcess = nil

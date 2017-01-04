@@ -1,9 +1,13 @@
 
 function HomingOrb.spawn(pos)
-	local monster = getClosestMonster(pos)
+
+	if HomingOrb.homingOrbId == nil then
+		HomingOrb.homingOrbId = getUniqueId()
+	end
+	local monster = getClosestMonsterWithIgnoreId(pos, HomingOrb.homingOrbId)
 	
 	if monster ~= nil then
-		
+		monster:addIgnoreId(HomingOrb.homingOrbId)
 		local bullet = addCustomBullet()
 		bullet.damage = math.floor(math.random() * 30.0 + 30)
 		bullet.position = Vec2.new(pos.x, pos.y)
@@ -19,7 +23,7 @@ function HomingOrb.spawn(pos)
 		
 		bullet.moveAngle = (monster.position - pos):getAngle()
 		bullet.diesOnHit = false
-		bullet.data.lifeLeft = 4
+		bullet.data.lifeLeft = 6 * player.data.bonusDurationMultiplier
 		bullet.damage = math.floor(math.random() * 40 + 30)
 		bullet.onTickCallback = "onTick"
 		
@@ -51,7 +55,7 @@ end
 function HomingOrbBullet.onHit(bullet, monster)
 	playSound({path = "resources/sounds/plasma_hit.ogg", position = bullet.position})
 	bullet.data.lifeLeft = bullet.data.lifeLeft - 1
-	if bullet.data.lifeLeft == 0 then
+	if bullet.data.lifeLeft <= 0 then
 		bullet.diesOnHit = true
 		return
 	end

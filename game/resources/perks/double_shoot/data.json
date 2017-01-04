@@ -1,0 +1,8 @@
+{
+  "type" : "perk",
+  "name": "Double Shoot",
+  "description": "You sometimes shoot two bullets in succession.",
+  "iconFile" : "resources/perks/double_shoot/icon.png",
+  "scriptFile" : "resources/perks/double_shoot/double_shoot.lua",
+  "scriptName" : "DoubleShoot"
+}

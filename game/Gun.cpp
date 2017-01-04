@@ -308,6 +308,7 @@ void Gun::reload()
 {
 	if (reloading == false)
 	{
+		bloodworks->onGunReloaded(this);
 		currentAmmo = 0;
 		reloading = true;
 		reloadEnding = false;
