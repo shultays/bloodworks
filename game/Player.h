@@ -76,6 +76,7 @@ class Player
 	int maxAmmoUniformIndex;
 	int reloadingUniformIndex;
 	float reloadAlpha;
+
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

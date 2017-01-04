@@ -20,17 +20,20 @@ end
 
 function QuadDamage.onTick(gameObject)
 	local t = time - QuadDamage.shaderStartTime
+	
+	local duration = 10.0 * player.data.bonusDurationMultiplier
+	
 	local a = 1.0
 	if t < 0.3 then
 		a = t / 0.3
 	end
 	t = time - gameObject.data.time
-	if t > 9.0 then
-		a = (10.0 - t)
+	if t > duration - 1.0 then
+		a = (duration- t)
 	end
 	QuadDamage.data.postProcess:setShaderWeight(a)
 
-	if t > 10.0 then
+	if t > duration then
 		QuadDamage.data.boost = nil
 		removePostProcess(QuadDamage.data.postProcess)
 		QuadDamage.data.postProcess = nil

@@ -48,4 +48,9 @@ public:
 	void reset();
 	void onPlayerDied();
 	bool isLoaded() const;
+
+	sol::table& getMissionData()
+	{
+		return scriptTable;
+	}
 };

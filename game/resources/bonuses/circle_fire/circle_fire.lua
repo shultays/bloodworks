@@ -36,7 +36,7 @@ function CircleFire.onTick(gameObject)
 			
         end
 		
-		if gameObject.data.lastShootIndex == 40
+		if gameObject.data.lastShootIndex >= 40 * player.data.bonusDurationMultiplier - 0.1
 		then
 			gameObject.toBeRemoved = true
 		end

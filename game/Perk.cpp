@@ -35,6 +35,14 @@ void Perk::onAddGunBullet(Gun *gun, Bullet *bullet)
 	}
 }
 
+void Perk::onReload(Gun *gun)
+{
+	if (onReloadFunc)
+	{
+		onReloadFunc(gun);
+	}
+}
+
 int Perk::onPlayerDamaged(int damage, sol::table& params)
 {
 	if (onPlayerDamagedFunc)
@@ -50,6 +58,7 @@ void Perk::reset()
 	{
 		scriptTable["reset"]();
 	}
+	level = 0;
 }
 
 void Perk::onPlayerDied()

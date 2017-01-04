@@ -203,4 +203,5 @@ public:
 	void setSoundSpeed(float newSoundSpeed);
 	float getSoundSpeed() const;
 	bool isMissionLoaded() const;
+	void onGunReloaded(Gun* gun);
 };
