@@ -6,6 +6,8 @@
 #include "cButton.h"
 #include "Player.h"
 #include "Perk.h"
+#include "MissionController.h"
+#include "Bloodworks.h"
 #include <sstream>
 
 LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
@@ -77,7 +79,10 @@ void LevelUpPopup::show()
 
 	auto availablePerks = bloodworks->getAvailablePerks();
 
-	int selectCount = min(3, (int)availablePerks.size());
+	auto& missionData = bloodworks->getMissionController()->getMissionData();
+	int selectCount = missionData["perkPerLevel"] ? missionData["perkPerLevel"].get<int>() : 3;
+
+	selectCount = min(selectCount, (int)availablePerks.size());
 	levelupPerks.clear();
 	while (selectCount-- > 0)
 	{
@@ -87,10 +92,12 @@ void LevelUpPopup::show()
 		availablePerks.resize(availablePerks.size() - 1);
 	}
 	assert(levelupPerksRenderables.size() == 0);
+
+	float perkDistance = levelupPerks.size() < 5 ? 140.0f : 110.0f;
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
 		cButton *t = new cButton(bloodworks);
-		Vec2 pos = Vec2(-i * 140.0f + (levelupPerks.size() - 1) * 140.0f * 0.5f, 20.0f);
+		Vec2 pos = Vec2(-i * perkDistance + (levelupPerks.size() - 1) * perkDistance * 0.5f, 20.0f);
 		t->setDefaultMatrix(pos, 1.0f, 0.0f);
 		t->setHoverMatrix(pos, 1.25f, 0.0f);
 		t->setAlignment(RenderableAlignment::center);
@@ -140,7 +147,7 @@ void LevelUpPopup::tick()
 				hoverLevelupPerkIndex = i;
 				std::stringstream name;
 				name << levelupPerks[i]->getName();
-				if (levelupPerks[i]->getMaxLevel() > 1)
+				if (levelupPerks[i]->isLevelVisible())
 				{
 					name << " (Level : " << (levelupPerks[i]->getLevel() + 1) << ")";
 				}

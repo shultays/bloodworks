@@ -60,6 +60,8 @@ void Bloodworks::init()
 	missionController = new MissionController(this);
 	oneShotSoundManager = new OneShotSoundManager(this);
 
+	player = new Player(this);
+
 	DirentHelper::Folder folder("./resources");
 	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
 	for (auto& f : files)
@@ -205,7 +207,6 @@ void Bloodworks::init()
 
 	input.hideMouse();
 
-	player = new Player(this);
 	player->setGun(guns[0]);
 	
 	bloodRenderable = new BloodRenderable(this);
@@ -427,7 +428,7 @@ void Bloodworks::clearMission()
 	}
 	toRemove.clear();
 
-	for (auto& perk : usedPerks)
+	for (auto& perk : perks)
 	{
 		perk->reset();
 	}
@@ -587,6 +588,14 @@ float Bloodworks::getSoundSpeed() const
 bool Bloodworks::isMissionLoaded() const
 {
 	return missionController->isLoaded();
+}
+
+void Bloodworks::onGunReloaded(Gun* gun)
+{
+	for (auto& perk : usedPerks)
+	{
+		perk->onReload(gun);
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()

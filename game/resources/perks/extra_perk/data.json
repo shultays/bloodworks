@@ -1,0 +1,10 @@
+{
+  "type" : "perk",
+  "name": "Extra Perk Selection per Level",
+  "description": "You have more perk to select perk level.",
+  "iconFile" : "resources/perks/extra_perk/icon.png",
+  "scriptFile" : "resources/perks/extra_perk/extra_perk.lua",
+  "scriptName" : "ExtraPerk",
+  "maxLevel" : 2,
+  "hideLevelText" : true
+}

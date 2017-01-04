@@ -42,6 +42,8 @@ function Survival.init()
 		monster.moveAngle =  math.random() * math.pi * 2.0
 	end
     
+	Survival.perkPerLevel = 3
+	missionData = Survival
 end
 
 function Survival.onTick()
