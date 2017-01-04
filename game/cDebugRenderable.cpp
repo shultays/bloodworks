@@ -109,8 +109,10 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 		{
 			nextId = MIN_ID;
 		}
-		assert(lineData.size() < MAX_LINE);
-		lineData.push_back(data);
+		if (lineData.size() < MAX_LINE)
+		{
+			lineData.push_back(data);
+		}
 	}
 	else
 	{
@@ -123,8 +125,10 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 				return id;
 			}
 		}
-		assert(lineData.size() < MAX_LINE);
-		lineData.push_back(data);
+		if (lineData.size() < MAX_LINE)
+		{
+			lineData.push_back(data);
+		}
 	}
 	return id;
 }

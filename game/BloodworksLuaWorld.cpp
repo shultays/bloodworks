@@ -509,6 +509,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"isDead", sol::readonly(&Player::isDead),
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
+		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
 		"doDamage", &Player::doDamage,
 		"doHeal", &Player::doHeal,
 		"slowdown", &Player::slowdown,

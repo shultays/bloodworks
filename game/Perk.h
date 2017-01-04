@@ -19,10 +19,12 @@ class Perk
 
 	int level;
 	int maxLevel;
+	bool hideLevelText;
 
 	sol::function onAddGunBulletFunc;
 	sol::function onTickFunc;
 	sol::function onPlayerDamagedFunc;
+	sol::function onReloadFunc;
 public:
 	Perk(nlohmann::json& j)
 	{
@@ -40,6 +42,8 @@ public:
 			maxLevel = 1;
 		}
 
+		hideLevelText = j.count("hideLevelText") > 0;
+
 		level = 0;
 		scriptTable = lua[scriptName] = lua.create_table();
 
@@ -49,7 +53,9 @@ public:
 		onAddGunBulletFunc = scriptTable["onAddGunBullet"];
 		onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
 		onTickFunc = scriptTable["onTick"];
+		onReloadFunc = scriptTable["onReload"];
 
+		reset();
 	}
 
 	void takeLevel();
@@ -86,7 +92,13 @@ public:
 
 	void onTick();
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
+	void onReload(Gun *gun);
 	int onPlayerDamaged(int damage, sol::table& params);
 	void reset();
 	void onPlayerDied();
+
+	bool isLevelVisible() const
+	{
+		return hideLevelText == false && maxLevel > 1;
+	}
 };

@@ -1,0 +1,8 @@
+{
+  "type" : "perk",
+  "name": "Longer bonuses",
+  "description": "Your bonuses last longer.",
+  "iconFile" : "resources/perks/longer_bonuses/icon.png",
+  "scriptFile" : "resources/perks/longer_bonuses/longer_bonuses.lua",
+  "scriptName" : "LongerBonuses"
+}
