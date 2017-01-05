@@ -1,0 +1,24 @@
+{
+  "type" : "gun",
+  "name": "Bumerang Gun",
+  "artFolder" : "resources/guns/bumerang_gun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [10.0, 10.0],
+  "bulletMeshShift" : [0.0, 0.0],
+  "bulletRadius" : 10.0,
+  "bulletSpeed" : 0.0,
+  "bulletDamage" : [65, 110],
+  
+  "maxAmmo" : 8,
+  "reloadTime" : 2.0,
+  
+  
+  "firingSound" : {
+	"path" : "resources/sounds/throw.ogg",
+	"volume" : 0.70
+  },
+  
+  "scriptFile" : "resources/guns/bumerang_gun/bumerang_gun.lua",
+  "scriptName" : "BumerangGun"
+}
