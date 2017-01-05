@@ -474,7 +474,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pistol")
+		if (gun->getName() == "Bumerang Gun")
 		{
 			player->setGun(gun);
 		}
@@ -526,17 +526,17 @@ void Bloodworks::playOneShotSound(sol::table& args)
 float Bloodworks::getVolumeMultiplier(const Vec2& pos) const
 {
 	float dist = player->getPosition().distanceSquared(pos);
-	if (dist < 700.0f * 700.0f)
+	if (dist < 1000.0f * 1000.0f)
 	{
 		float t = sqrtf(dist);
-		t = t / 700.0f;
+		t = (t - 100) / 900.0f;
 		if (t < 0.0f)
 		{
 			t = 0.0f;
 		}
 		t = 1.0f - t;
 		t = t*t;
-		t = 0.1f + t * 0.9f;
+		t = 0.25f + t * 0.75f;
 		return t;
 	}
 	return 0.0f;
