@@ -17,11 +17,15 @@
 #include "cRenderable.h"
 #include "MonsterTemplate.h"
 #include "cPostProcess.h"
+#include "BuffFloat.h"
+#include "LuaBuffController.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
 	this->bloodworks = b;
 	
+	buffController = nullptr;
+
 #ifdef DEBUG
 	lua["DEBUG"] = true;
 #else
@@ -528,4 +532,61 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &Player::data
 		);
 
+	lua.new_usertype<BuffFloat::BuffInfo>("BuffInfo",
+		"buffType", sol::readonly(&BuffFloat::BuffInfo::buffType),
+
+		"buffAmount", sol::readonly(&BuffFloat::BuffInfo::buffAmount),
+		"duration", sol::readonly(&BuffFloat::BuffInfo::duration),
+		"fadeInDuration", sol::readonly(&BuffFloat::BuffInfo::fadeInDuration),
+		"fadeOutDuration", sol::readonly(&BuffFloat::BuffInfo::fadeOutDuration),
+
+		"setBuffAmount", &BuffFloat::BuffInfo::setBuffAmount,
+		"setBuffDuration", &BuffFloat::BuffInfo::setBuffDuration,
+		"setBuffFadeInFadeOut", &BuffFloat::BuffInfo::setBuffFadeInFadeOut
+
+		);
+
+	lua.new_usertype<BuffFloat>("BuffFloat",
+
+		"create", sol::initializers([&](BuffFloat& memory)
+	{
+		new (&memory) BuffFloat();
+		buffController->addBuff(&memory);
+	}),
+		sol::meta_function::garbage_collect, sol::destructor([&](BuffFloat& memory)
+	{
+		buffController->removeBuff(&memory);
+		memory.~BuffFloat();
+	}),
+
+		"addBuff", &BuffFloat::addBuff,
+		"setBaseValue", &BuffFloat::setBaseValue,
+		"setBuffAmount", &BuffFloat::setBuffAmount,
+		"setBuffDuration", &BuffFloat::setBuffDuration,
+		"setBuffFadeInFadeOut", &BuffFloat::setBuffFadeInFadeOut,
+
+		"getBuffInfo", &BuffFloat::getBuffInfo,
+
+		"getBaseValue", &BuffFloat::getBaseValue,
+		"getBuffedValue", &BuffFloat::getBuffedValue
+
+		);
+
+}
+
+
+void BloodworksLuaWorld::reset()
+{
+	clear();
+	buffController = new LuaBuffController();
+}
+
+void BloodworksLuaWorld::clear()
+{
+	SAFE_DELETE(buffController);
+}
+
+void BloodworksLuaWorld::tick()
+{
+	buffController->tick();
 }
