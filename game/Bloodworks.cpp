@@ -26,6 +26,9 @@
 
 #include <sstream>
 
+#include "BuffFloat.h"
+
+BuffFloat f;
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
@@ -46,7 +49,10 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 
 void Bloodworks::init()
 {
+	f.setBaseValue(10.0f);
+
 	luaWorld = new BloodworksLuaWorld(this);
+	luaWorld->reset();
 
 	lua.script_file("resources/helpers.lua");
 	lua.script_file("resources/guns/helpers.lua");
@@ -412,6 +418,7 @@ void Bloodworks::clearMission()
 	dropController->reset();
 	bulletController->reset();
 	explosionController->reset();
+	luaWorld->reset();
 
 	std::vector<cPostProcess*> toRemove;
 
@@ -650,9 +657,101 @@ void Bloodworks::tick()
 		}
 	}
 
+	std::stringstream ss;
+	ss << f.getBuffedValue();
+	debugRenderer.addText(0, ss.str(), 5.0f, -154.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+
+	if (input.isKeyPressed(key_num_1))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_before_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+	}
+	if (input.isKeyPressed(key_num_2))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+	}
+	if (input.isKeyPressed(key_num_3))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_after_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+	}
+	if (input.isKeyPressed(key_num_4))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_before_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, -1.0);
+	}
+	if (input.isKeyPressed(key_num_5))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, -1.0);
+	}
+	if (input.isKeyPressed(key_num_6))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_after_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, -1.0);
+	}
+
+	if (input.isKeyPressed(key_num_7))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_before_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, -1.0, 1.0);
+	}
+	if (input.isKeyPressed(key_num_8))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, -1.0, 1.0);
+	}
+	if (input.isKeyPressed(key_num_9))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_after_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, -1.0, 1.0);
+	}
+
+	if (input.isKeyPressed(key_num_divide))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_before_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, 1.0);
+	}
+	if (input.isKeyPressed(key_num_multiply))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, 1.0);
+	}
+	if (input.isKeyPressed(key_num_minus))
+	{
+		int id = getUniqueId();
+		f.addBuff(id, 10.0f, BuffFloat::add_after_multiply_buff);
+		f.setBuffDuration(id, 4.0f);
+		f.setBuffFadeInFadeOut(id, 1.0, 1.0);
+	}
+
+	f.tick();
+
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
+
+	luaWorld->tick();
 
 	mainMenu->tick();
 	oneShotSoundManager->tick();
