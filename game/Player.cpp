@@ -281,14 +281,13 @@ void Player::tick()
 		crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
 	}
 
-	float length = 0.0f;
+	crosshairDistance = 0.0f;
 	if (crosshairPos.lengthSquared() > 0.01f)
 	{
 		aimDir = crosshairPos;
-		length = aimDir.normalize();
+		crosshairDistance = aimDir.normalize();
 		aimAngle = aimDir.toAngle();
 	}
-
 	if (gun && gun->getMaxAmmo() > 0)
 	{
 		if (gun->isReloading())
@@ -346,7 +345,7 @@ void Player::tick()
 		}
 		oldSpreadAngle = newSpreadAngle;
 
-		float scale = sin(oldSpreadAngle) * length + 10.0f;
+		float scale = sin(oldSpreadAngle) * crosshairDistance + 10.0f;
 		spread->setWorldMatrix(Mat3::scaleMatrix(scale).translateBy(pos + crosshairPos));
 		spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4.0f, 0.0f, 0.4f)));
 
@@ -558,7 +557,7 @@ void Player::reset()
 	slowdownAmount = 0.0f;
 
 	crosshairPos = Vec2(0.0f, 50.0f);
-
+	crosshairDistance = 0.0f;
 	moveSpeed = 0.0f;
 	moveAngle = 0.0f;
 	maxHitPoints = hitPoints = 100;

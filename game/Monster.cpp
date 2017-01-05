@@ -167,7 +167,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 		{
 			lastHitSoundPlayTime = timer.getTime();
 			cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
-			bloodworks->playSoundAtMap(position, s, 0.7f);
+			bloodworks->playSoundAtMap(position, s, 0.9f);
 		}
 	}
 }

@@ -29,6 +29,7 @@ class Player
 	cRenderableWithShader *ammo;
 	cRenderable *spread;
 	Vec2 crosshairPos;
+	float crosshairDistance;
 	Vec2 gunPos;
 	Gun *gun;
 	Gun *secondaryGun;
