@@ -61,6 +61,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); },
 
 		"sideVec", &Vec2::sideVec,
+		"copy",  [](const Vec2& a) { return Vec2(a.x, a.y); },
+
+		"rotateBy", [](Vec2& a, float angle) { a = a * Mat2::rotation(angle); },
 
 		"dot", [](const Vec2& a, const Vec2& b) { return a.dot(b); }
 	);
@@ -165,8 +168,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
 
-		"diesOnHit", &Bullet::diesOnHit,
-		"updateDrawable", &Bullet::updateDrawable,
+		"penetrateCount", &Bullet::penetrateCount,
+		"penetrateUsed", sol::readonly(&Bullet::penetrateUsed),
 
 		"script", &Bullet::script,
 
@@ -178,6 +181,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"data", &Bullet::data,
 		"onDamageArgs", &Bullet::onDamageArgs,
+
+		"setPosition", &Bullet::setPosition,
 
 		"addRenderableTexture", &Bullet::addRenderableTexture,
 		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
@@ -254,6 +259,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](const Vec2& pos0, const Vec2& pos1)
 	{
 		debugRenderer.addLine(pos0, pos1);
+	});
+
+	lua.set_function("addCircle",
+		[&](const Vec2& pos0, float r)
+	{
+		debugRenderer.addCircle(pos0, r);
 	});
 
 	lua.set_function("addExplosion",
@@ -506,8 +517,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveSpeed", &Player::moveSpeed,
 		"moveAngle", &Player::moveAngle,
 		"crosshairPos", sol::readonly(&Player::crosshairPos),
+		"crosshairDistance", sol::readonly(&Player::crosshairDistance),
 		"gunPos", sol::readonly(&Player::gunPos),
 		"aimDir", sol::readonly(&Player::aimDir),
+		"aimAngle", sol::readonly(&Player::aimAngle),
 		"moveDir", sol::readonly(&Player::moveDir),
 		"visible", sol::readonly(&Player::visible),
 		"isDead", sol::readonly(&Player::isDead),

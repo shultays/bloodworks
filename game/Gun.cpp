@@ -187,6 +187,11 @@ void Gun::tick(float dt)
 	{
 		reloading = false;
 		currentAmmo = maxAmmo;
+
+		if (scriptTable["onReloadEnded"])
+		{
+			scriptTable["onReloadEnded"](this);
+		}
 	}
 	scriptTable["onTick"](this);
 
@@ -316,6 +321,11 @@ void Gun::reload()
 		if (reloadBeginSound.isValid())
 		{
 			bloodworks->addGameSound(reloadBeginSound.play());
+		}
+
+		if (scriptTable["onReloadStarted"])
+		{
+			scriptTable["onReloadStarted"](this);
 		}
 	}
 }

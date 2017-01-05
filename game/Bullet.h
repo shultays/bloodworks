@@ -44,7 +44,8 @@ class Bullet
 	sol::table data;
 	sol::table onDamageArgs;
 
-	bool diesOnHit;
+	int penetrateCount;
+	int penetrateUsed;
 
 	struct Particledata
 	{

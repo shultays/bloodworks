@@ -18,7 +18,7 @@ function Railgun.onTick(gun)
 			gun:consumeAmmo()
 			SpreadHelper.onShoot(gun)
 			local bullet = gun:addBullet()
-			bullet.diesOnHit = false
+			bullet.penetrateCount = 2
 			
 			local particle = bullet:addTrailParticle("RailGunParticle", Vec2.new(0.0, 0.0), 7.0, {})
 			
