@@ -23,6 +23,8 @@ end
 
 function Survival.init()
 
+	Survival.b = BuffFloat.create();
+	
     Survival.extraMin = 0.0
     Survival.lastSpawnTime = 0.0
 	
@@ -56,9 +58,20 @@ function Survival.onTick()
 		
 		return
 	end
-	
+
+	if Survival.b ~= nil then
+		
+		if isKeyPressed(keys.x) then
+			Survival.b:addBuff(13, 10.0, 0):setBuffDuration(10.0)
+		end
+		print(Survival.b:getBuffedValue())
+		
+		if isKeyPressed(keys.c) then
+			Survival.b = nil
+		end
+	end
+
 	if isPaused() == false then
-	
 		if isKeyPressed(keys.escape) then
 			if gotoMainMenu() then
 				return
