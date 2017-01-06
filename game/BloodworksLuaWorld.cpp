@@ -189,6 +189,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
 		"addTrailParticle", &Bullet::addTrailParticle,
 
+		"updateDrawable", &Bullet::updateDrawable,
 		"removeSelf", &Bullet::removeSelf
 		);
 

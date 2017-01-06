@@ -2,7 +2,7 @@
   "type" : "gun",
   "name": "Bumerang Gun",
   "artFolder" : "resources/guns/bumerang_gun/",
-  "icon" : "icon.png",
+  "icon" : "bullet.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],
   "bulletMeshShift" : [0.0, 0.0],
