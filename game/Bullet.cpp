@@ -106,6 +106,15 @@ void Bullet::tick()
 
 			penetrateUsed++;
 
+			if (penetrateUsed > penetrateCount)
+			{
+				removeSelf();
+			}
+			else
+			{
+				monster->addIgnoreId(id);
+			}
+
 			if (gun)
 			{
 				gun->onBulletHit(this, monster);
@@ -117,14 +126,6 @@ void Bullet::tick()
 			}
 
 			monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
-			if (penetrateUsed > penetrateCount)
-			{
-				removeSelf();
-			}
-			else
-			{
-				monster->addIgnoreId(id);
-			}
 			return false;
 		}
 		return true;
