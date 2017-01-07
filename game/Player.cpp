@@ -129,7 +129,7 @@ void Player::tick()
 	{
 		return;
 	}
-
+	reloadSpeedMultiplier.tick();
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -179,12 +179,13 @@ void Player::tick()
 
 	const float acceleration = 800.0f;
 	const float decceleration = 1000.0f;
-	float maxSpeed = 150.0f;
+
 	float dt = timer.getDt();
+	float currentMaxSpeed = maxSpeed;
 
 	if (slowdownAmount > 0.0f && input.isMouseVisible() == false)
 	{
-		maxSpeed *= 1.0f - slowdownAmount;
+		currentMaxSpeed *= 1.0f - slowdownAmount;
 		slowdownDuration -= dt;
 		if (slowdownDuration < 0.0f)
 		{
@@ -200,7 +201,7 @@ void Player::tick()
 		if (wantedAngle != moveAngle)
 		{
 			float diff = angleDiff(moveAngle, wantedAngle);
-			float rotation = lerp(maxRotation, minRotation, moveSpeed / maxSpeed) * dt;
+			float rotation = lerp(maxRotation, minRotation, moveSpeed / currentMaxSpeed) * dt;
 			if (diff > pi * 0.99f || diff < -pi * 0.99f)
 			{
 				if (moveSpeed > decceleration * dt)
@@ -232,7 +233,7 @@ void Player::tick()
 	if (moving)
 	{
 		moveSpeed += acceleration * dt;
-		moveSpeed = min(moveSpeed, maxSpeed);
+		moveSpeed = min(moveSpeed, currentMaxSpeed);
 	}
 	else
 	{
@@ -280,7 +281,7 @@ void Player::tick()
 	{
 		crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
 	}
-
+	
 	crosshairDistance = 0.0f;
 	if (crosshairPos.lengthSquared() > 0.01f)
 	{
@@ -545,7 +546,9 @@ void Player::setVisible(bool visible)
 void Player::reset()
 {
 	reloadAlpha = 0.0f;
+	maxSpeed = 150.0f;
 	damageMult = monsterExperienceMult = moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
+	reloadSpeedMultiplier.clear();
 	slowdownOnHit = true;
 	isDead = false;
 
@@ -591,6 +594,11 @@ void Player::resize()
 	healthBarBG->setWorldMatrix(barMat);
 	healthBarFG->setWorldMatrix(barMat);
 	updateHitPoints();
+}
+
+float Player::getReloadSpeedMultiplier()
+{
+	return reloadSpeedMultiplier.getBuffedValue();
 }
 
 void Player::killSelf()
