@@ -307,6 +307,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getReloadPercentage", &Gun::getReloadPercentage,
 		"getMaxAmmo", &Gun::getMaxAmmo,
 		"getCurrentAmmo", &Gun::getCurrentAmmo,
+		"reloadSpeedMultiplier", &Gun::reloadSpeedMultiplier,
 
 		"addBullet", &Gun::addBullet,
 		"laser", &Gun::laser
@@ -528,6 +529,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
+		"maxSpeed", sol::readonly(&Player::maxSpeed),
 		"doDamage", &Player::doDamage,
 		"doHeal", &Player::doHeal,
 		"slowdown", &Player::slowdown,
@@ -538,6 +540,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"slowdownOnHit", &Player::slowdownOnHit,
 		"monsterExperienceMult", &Player::monsterExperienceMult,
 		"damageMult", &Player::damageMult,
+		"reloadSpeedMultiplier", &Player::reloadSpeedMultiplier,
 		"setGun", &Player::setGun,
 		"level", sol::readonly(&Player::level),
 		"gun", sol::readonly(&Player::gun),
@@ -573,7 +576,19 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		memory.~BuffFloat();
 	}),
 
-		"addBuff", &BuffFloat::addBuff,
+		"addBuffWithType", &BuffFloat::addBuffWithType,
+		"addBuff", [&](BuffFloat& buff, float amount)
+	{
+		int id = bloodworks->getUniqueId();
+		buff.addBuff(id, amount, BuffFloat::multiply_buff);
+		return id;
+	},
+
+		"addBuffWithId", [&](BuffFloat& buff, int id, float amount)
+	{
+		buff.addBuff(id, amount, BuffFloat::multiply_buff);
+		return id;
+	},
 		"setBaseValue", &BuffFloat::setBaseValue,
 		"setBuffAmount", &BuffFloat::setBuffAmount,
 		"setBuffDuration", &BuffFloat::setBuffDuration,

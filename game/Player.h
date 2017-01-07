@@ -4,6 +4,7 @@
 #include "cVec.h"
 #include "sol.h"
 #include "cResources.h"
+#include "BuffFloat.h"
 
 class Bloodworks;
 class Gun;
@@ -52,6 +53,9 @@ class Player
 	float moveSpeedMult;
 	float monsterExperienceMult;
 	float damageMult;
+	float maxSpeed;
+
+	BuffFloat reloadSpeedMultiplier;
 
 	bool slowdownOnHit;
 
@@ -127,4 +131,5 @@ public:
 	float getMonsterExperienceMultiplier() const;
 	float getDamageMultiplier() const;
 	void resize();
+	float getReloadSpeedMultiplier();
 };

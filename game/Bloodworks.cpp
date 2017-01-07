@@ -242,7 +242,7 @@ void Bloodworks::init()
 
 Bloodworks::Bloodworks()
 {
-	nextUniqueId = 1;
+	nextUniqueId = 1000;
 
 	mapSize = 2000.0f;
 	mapBegin = -mapSize*0.5f;
@@ -672,10 +672,16 @@ void Bloodworks::tick()
 		}
 	}
 
-	if (input.isKeyPressed(key_2) && perks[0]->isTakenFully() == false)
+	if (input.isKeyPressed(key_2))
 	{
-		perks[8]->takeLevel();
-		usedPerks.push_back(perks[8]);
+		for (int i = 0; i < perks.size(); i++)
+		{
+			if (perks[i]->isTakenFully() == false && perks[i]->getName() == "Stationary Reload")
+			{
+				perks[i]->takeLevel();
+				onPerkUsed(perks[i]);
+			}
+		}
 	}
 
 	if (input.isKeyPressed(key_3))

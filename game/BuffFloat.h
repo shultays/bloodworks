@@ -91,13 +91,13 @@ public:
 		isDirty = true;
 	}
 
-	BuffInfo& addBuff(int id, float amount, BuffType buffType)
+	void addBuff(int id, float amount, BuffType buffType)
 	{
 		auto& buff = buffs[id];
 		buff.buffAmount = amount;
 		buff.buffType = buffType;
 		buff.startTime = timer.getTime();
-		buff.duration = 1.0f;
+		buff.duration = 1000000.0f;
 		buff.fadeInDuration = -1.0f;
 		buff.fadeOutDuration = -1.0f;
 		buff.fadeInEndTime = buff.startTime + buff.fadeInDuration;
@@ -105,7 +105,11 @@ public:
 		buff.fadeOutStartTime = buff.buffEndTime - buff.fadeOutDuration;
 		buff.parent = this;
 		isDirty = true;
-		return buff;
+	}
+
+	void addBuffWithType(int id, float amount)
+	{
+		addBuff(id, amount, multiply_buff);
 	}
 
 	void setBuffAmount(int id, float amount)
@@ -150,6 +154,12 @@ public:
 	BuffInfo& getBuffInfo(int id)
 	{
 		return buffs.at(id);
+	}
+
+	void clear()
+	{
+		reset();
+		buffs.clear();
 	}
 private:
 
