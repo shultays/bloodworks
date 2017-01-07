@@ -82,6 +82,8 @@ class Player
 	int reloadingUniformIndex;
 	float reloadAlpha;
 
+	float joystickCheckTimer;
+
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -132,4 +134,6 @@ public:
 	float getDamageMultiplier() const;
 	void resize();
 	float getReloadSpeedMultiplier();
+private:
+	void checkInput(bool& moving, float& wantedAngle);
 };

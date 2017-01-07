@@ -47,22 +47,18 @@ function Survival.init()
 end
 
 function Survival.onTick()
+	if isKeyPressed(keys.escape) or isKeyPressed(keys.joystick_0_button_back) then
+		if gotoMainMenu() then
+			return
+		end
+	end
+
 	if player.isDead then
-		if isKeyPressed(keys.escape) then
-			gotoMainMenu()
-		elseif isKeyPressed(keys.space) then
+		if isKeyPressed(keys.space) then
 			loadMission("Survival")
 		end
 		
 		return
-	end
-
-	if isPaused() == false then
-		if isKeyPressed(keys.escape) then
-			if gotoMainMenu() then
-				return
-			end
-		end
 	end
 
 	if isKeyReleased(keys.home) then

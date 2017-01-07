@@ -62,6 +62,7 @@ bool LevelUpPopup::isVisible() const
 
 void LevelUpPopup::show()
 {
+	lastMouseMoveTimer = 0.01f;
 	input.showMouse();
 	input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2 + 70);
 	bloodworks->doPause();
@@ -135,6 +136,72 @@ void LevelUpPopup::tick()
 		}
 	}
 
+	if (input.hasJoyStick() == false)
+	{
+		lastMouseMoveTimer = 1.0f;
+	}
+	else
+	{
+		if (input.getDeltaMousePos().lengthSquared() > 0.0f)
+		{
+			lastMouseMoveTimer = 1.0f;
+			for (int i = 0; i < levelupPerks.size(); i++)
+			{
+				levelupPerksRenderables[i]->setEnforcedHovering(cButton::no_enforce);
+			}
+		}
+
+		lastMouseMoveTimer -= timer.getNonSlowedDt();
+
+		if (lastMouseMoveTimer < 0.0f && hoverLevelupPerkIndex == -1)
+		{
+			joyPadFree = false;
+			for (int i = 0; i < levelupPerks.size(); i++)
+			{
+				levelupPerksRenderables[i]->setEnforcedHovering(1 == i ? cButton::enforce_hovering : cButton::enforce_not_hovering);
+			}
+		}
+
+
+		if (joyPadFree)
+		{
+			int indexToSet = hoverLevelupPerkIndex;
+			if (input.getJoystickAxisPos().x > 0.5f)
+			{
+				indexToSet--;
+				if (indexToSet < 0)
+				{
+					indexToSet += (int)levelupPerks.size();
+				}
+				joyPadFree = false;
+			}
+			else if (input.getJoystickAxisPos().x < -0.5f)
+			{
+				indexToSet++;
+				if (indexToSet >= levelupPerks.size())
+				{
+					indexToSet -= (int)levelupPerks.size();
+				}
+				joyPadFree = false;
+			}
+			
+			if (joyPadFree == false)
+			{
+				for (int i = 0; i < levelupPerks.size(); i++)
+				{
+					levelupPerksRenderables[i]->setEnforcedHovering(i == indexToSet ? cButton::enforce_hovering : cButton::enforce_not_hovering);
+				}
+			}
+		}
+		else
+		{
+			if (fabs(input.getJoystickAxisPos().x) < 0.4f)
+			{
+				joyPadFree = true;
+			}
+		}
+	}
+	
 	Vec2 mouseScreenPos = input.getMousePos() - bloodworks->getScreenDimensions().toVec() * 0.5f;
 	//debugRenderer.addText("O", mouseScreenPos.x, mouseScreenPos.y, 0.0f, Vec4(1.0f), 12.0f, TextAlignment::center, RenderableAlignment::center);
 	for (int i = 0; i < levelupPerks.size(); i++)
@@ -165,7 +232,8 @@ void LevelUpPopup::tick()
 				currentPerkExplanation->setText("");
 			}
 		}
-		if (levelupPerksRenderables[i]->isClicked())
+
+		if (levelupPerksRenderables[i]->isClicked() || input.isKeyPressed(joystick_0_button_a))
 		{
 			levelupPerks[i]->takeLevel();
 			bloodworks->onPerkUsed(levelupPerks[i]);

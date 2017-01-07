@@ -168,7 +168,7 @@ void Gun::start()
 
 void Gun::tick(float dt)
 {
-	if (currentAmmo < maxAmmo && input.isKeyPressed(key_r))
+	if (currentAmmo < maxAmmo && (input.isKeyPressed(key_r) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_leftshoulder))))
 	{
 		reload();
 	}
@@ -308,11 +308,14 @@ void Gun::addAmmo()
 
 void Gun::consumeAmmo()
 {
-	currentAmmo--;
-	if (currentAmmo <= 0)
+	if (currentAmmo > 0)
 	{
-		currentAmmo = 0;
-		reload();
+		currentAmmo--;
+		if (currentAmmo <= 0)
+		{
+			currentAmmo = 0;
+			reload();
+		}
 	}
 }
 
