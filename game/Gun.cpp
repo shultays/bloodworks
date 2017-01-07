@@ -172,27 +172,34 @@ void Gun::tick(float dt)
 	{
 		reload();
 	}
-
-	if (reloading && reloadEnding == false && reloadStartTime + reloadTime - 1.0f < timer.getTime())
+	reloadSpeedMultiplier.tick();
+	if (reloading)
 	{
-		reloadEnding = true;
+		float playerReloadSpeedMult = bloodworks->getPlayer()->getReloadSpeedMultiplier();
+		remainingReload -= timer.getDt() * reloadSpeedMultiplier.getBuffedValue() * playerReloadSpeedMult;
 
-		if (reloadEndSound.isValid())
+		if (reloadEnding == false && remainingReload < 1.0f)
 		{
-			bloodworks->addGameSound(reloadEndSound.play());
+			reloadEnding = true;
+
+			if (reloadEndSound.isValid())
+			{
+				bloodworks->addGameSound(reloadEndSound.play());
+			}
+		}
+
+		if (remainingReload < 0.0)
+		{
+			reloading = false;
+			currentAmmo = maxAmmo;
+
+			if (scriptTable["onReloadEnded"])
+			{
+				scriptTable["onReloadEnded"](this);
+			}
 		}
 	}
 
-	if (reloading && reloadStartTime + reloadTime < timer.getTime())
-	{
-		reloading = false;
-		currentAmmo = maxAmmo;
-
-		if (scriptTable["onReloadEnded"])
-		{
-			scriptTable["onReloadEnded"](this);
-		}
-	}
 	scriptTable["onTick"](this);
 
 	if (laser && timer.getDt() > 0.0f)
@@ -317,7 +324,7 @@ void Gun::reload()
 		currentAmmo = 0;
 		reloading = true;
 		reloadEnding = false;
-		reloadStartTime = timer.getTime();
+		remainingReload = reloadTime;
 		if (reloadBeginSound.isValid())
 		{
 			bloodworks->addGameSound(reloadBeginSound.play());
@@ -347,7 +354,7 @@ bool Gun::isReloading() const
 
 float Gun::getReloadPercentage() const
 {
-	return (timer.getTime() - reloadStartTime) / reloadTime;
+	return remainingReload / reloadTime;
 }
 
 Gun::~Gun()
