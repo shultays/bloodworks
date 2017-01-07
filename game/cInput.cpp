@@ -14,7 +14,8 @@ void cInput::init()
 	ignoreNextMove = true;
 	hideMouse();
 	prevMousePos = mousePos = Vec2::zero();
-
+	joyAxisPos = Vec2::zero();
+	joyAxisPos2 = Vec2::zero();
 
 	setLuaKeys();
 }
@@ -31,9 +32,41 @@ void cInput::tick()
 	prevMousePos = mousePos;
 }
 
+bool cInput::hasJoyStick() const
+{
+	return SDL_NumJoysticks() > 0;
+}
+
 void cInput::setMousePosition(int x, int y)
 {
 	SDL_WarpMouseInWindow(mainWindow, x, y);
+}
+
+void cInput::setJoystickAxis(int joystick, int axis, int value)
+{
+	if (axis < 6)
+	{
+		float val = fabs(value / 32767.0f);
+		val *= 1.2f;
+		val -= 0.1f;
+		clamp(val, 0.0f, 1.0f);
+		if (value < 0)
+		{
+			val = -val;
+		}
+		if (axis%3 == 1)
+		{
+			val = -val;
+		}
+		if (axis < 2)
+		{
+			joyAxisPos[axis] = val;
+		}
+		else if (axis >= 3 && axis <=4)
+		{
+			joyAxisPos2[axis - 3] = val;
+		}
+	}
 }
 
 void cInput::releaseKey(int key)
@@ -306,6 +339,15 @@ void cInput::setLuaKeys()
 	nameMap["mouse_button_right"] = mouse_button_right;
 	nameMap["mouse_button_4"] = mouse_button_4;
 	nameMap["mouse_button_5"] = mouse_button_5;
+
+	nameMap["joystick_0_button_a"] = joystick_0_button_a;
+	nameMap["joystick_0_button_b"] = joystick_0_button_b;
+	nameMap["joystick_0_button_x"] = joystick_0_button_x;
+	nameMap["joystick_0_button_y"] = joystick_0_button_y;
+	nameMap["joystick_0_button_leftshoulder"] = joystick_0_button_leftshoulder;
+	nameMap["joystick_0_button_rightshoulder"] = joystick_0_button_rightshoulder;
+	nameMap["joystick_0_button_back"] = joystick_0_button_back;
+	nameMap["joystick_0_button_start"] = joystick_0_button_start;
 
 	auto keys = lua["keys"] = lua.create_table();
 	for (auto& key : nameMap)

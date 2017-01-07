@@ -133,50 +133,9 @@ void Player::tick()
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
-		
+
 	bool moving = false;
-
-	if (input.isKeyDown(key_a) && input.isKeyDown(key_w))
-	{
-		wantedAngle = (pi + pi_d2) * 0.5f;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_a) && input.isKeyDown(key_s))
-	{
-		wantedAngle = -(pi + pi_d2) * 0.5f;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_d) && input.isKeyDown(key_w))
-	{
-		wantedAngle = pi_d2 * 0.5f;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_d) && input.isKeyDown(key_s))
-	{
-		wantedAngle = -pi_d2 * 0.5f;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_a))
-	{
-		wantedAngle = -pi;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_d))
-	{
-		wantedAngle = 0.0f;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_w))
-	{
-		wantedAngle = pi_d2;
-		moving = true;
-	}
-	else if (input.isKeyDown(key_s))
-	{
-		wantedAngle = -pi_d2;
-		moving = true;
-	}
-
+	checkInput(moving, wantedAngle);
 	const float acceleration = 800.0f;
 	const float decceleration = 1000.0f;
 
@@ -270,19 +229,51 @@ void Player::tick()
 	}
 
 	pos = pos + moveAmount;
-	if (bloodworks->isPaused() == false)
+	bool joystickUsed = false;
+	if (input.hasJoyStick())
 	{
-		crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
+		Vec2 joystick = input.getJoystickAxisPos2();
+		float length = joystick.safeNormalize();
+
+		if (joystickCheckTimer >= 0.0f)
+		{
+			joystickCheckTimer -= dt;
+		}
+		if (length > 0.0001f || joystickCheckTimer > 0.0f)
+		{
+			if (length < 0.0001f)
+			{
+				joystick = aimDir;
+			}
+			else
+			{
+				joystickCheckTimer = 0.5f;
+				joystickUsed = true;
+			}
+			length = 0.2f + length * 0.8f;
+			clamp(length, 0.0f, 1.0f);
+			crosshairPos = lerp(crosshairPos, joystick * min(300.0f, gun->getMaxCrosshairDistance()) * length, timer.getDt() * 10);
+		}
+
 	}
 
-	float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
-	float lengthSquared = crosshairPos.lengthSquared();
-	if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
+	if (joystickUsed == false)
 	{
-		crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
+		if (bloodworks->isPaused() == false)
+		{
+			crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
+		}
+
+		float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
+		float lengthSquared = crosshairPos.lengthSquared();
+		if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
+		{
+			crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
+		}
 	}
 	
 	crosshairDistance = 0.0f;
+
 	if (crosshairPos.lengthSquared() > 0.01f)
 	{
 		aimDir = crosshairPos;
@@ -375,7 +366,7 @@ void Player::tick()
 
 	if (gun)
 	{
-		bool trigerred = input.isKeyDown(mouse_button_left);
+		bool trigerred = dt > 0.0f && (input.isKeyDown(mouse_button_left) || (input.hasJoyStick() && input.isKeyDown(joystick_0_button_rightshoulder)));
 		gun->setTriggered(trigerred);
 		if (trigerred && gun->isLaser())
 		{
@@ -573,6 +564,9 @@ void Player::reset()
 	level = 1;
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	shootRenderable->playAnimation(0);
+
+	joystickCheckTimer = 0.0f;
+
 	setVisible(false);
 }
 
@@ -599,6 +593,105 @@ void Player::resize()
 float Player::getReloadSpeedMultiplier()
 {
 	return reloadSpeedMultiplier.getBuffedValue();
+}
+
+void Player::checkInput(bool& moving, float& wantedAngle)
+{
+	wantedAngle = moveAngle;
+
+	if (input.hasJoyStick())
+	{
+		const Vec2& axis = input.getJoystickAxisPos();
+		if (axis.lengthSquared() > 0.001f)
+		{
+			wantedAngle = axis.toAngle();
+			moving = true;
+		}
+
+		/*if (input.isKeyDown(joystick_0_button_dpad_left) && input.isKeyDown(joystick_0_button_dpad_up))
+		{
+			wantedAngle = (pi + pi_d2) * 0.5f;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_left) && input.isKeyDown(joystick_0_button_dpad_down))
+		{
+			wantedAngle = -(pi + pi_d2) * 0.5f;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_right) && input.isKeyDown(joystick_0_button_dpad_up))
+		{
+			wantedAngle = pi_d2 * 0.5f;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_right) && input.isKeyDown(joystick_0_button_dpad_down))
+		{
+			wantedAngle = -pi_d2 * 0.5f;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_left))
+		{
+			wantedAngle = -pi;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_right))
+		{
+			wantedAngle = 0.0f;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_up))
+		{
+			wantedAngle = pi_d2;
+			moving = true;
+		}
+		else if (input.isKeyDown(joystick_0_button_dpad_down))
+		{
+			wantedAngle = -pi_d2;
+			moving = true;
+		}
+		*/
+	}
+
+	if (input.isKeyDown(key_a) && input.isKeyDown(key_w))
+	{
+		wantedAngle = (pi + pi_d2) * 0.5f;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_a) && input.isKeyDown(key_s))
+	{
+		wantedAngle = -(pi + pi_d2) * 0.5f;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_d) && input.isKeyDown(key_w))
+	{
+		wantedAngle = pi_d2 * 0.5f;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_d) && input.isKeyDown(key_s))
+	{
+		wantedAngle = -pi_d2 * 0.5f;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_a))
+	{
+		wantedAngle = -pi;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_d))
+	{
+		wantedAngle = 0.0f;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_w))
+	{
+		wantedAngle = pi_d2;
+		moving = true;
+	}
+	else if (input.isKeyDown(key_s))
+	{
+		wantedAngle = -pi_d2;
+		moving = true;
+	}
+
 }
 
 void Player::killSelf()

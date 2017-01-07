@@ -247,12 +247,27 @@ enum Key
 	key_sleep = SDL_SCANCODE_SLEEP,
 	key_app1 = SDL_SCANCODE_APP1,
 	key_app2 = SDL_SCANCODE_APP2,
+
 	mouse_start = SDL_NUM_SCANCODES,
 	mouse_button_left,
 	mouse_button_middle,
 	mouse_button_right,
 	mouse_button_4,
 	mouse_button_5,
+	mouse_end = mouse_button_5,
+
+	joystick_0_button_a,
+	joystick_0_button_b,
+	joystick_0_button_x,
+	joystick_0_button_y,
+	joystick_0_button_leftshoulder,
+	joystick_0_button_rightshoulder,
+	joystick_0_button_back,
+	joystick_0_button_start,
+
+	joystick_0_start = joystick_0_button_a,
+	joystick_0_end = joystick_0_button_start,
+
 	key_count,
 };
 
@@ -279,6 +294,9 @@ private:
 
 	std::unordered_map<std::string, int> nameMap;
 	void setLuaKeys();
+
+	Vec2 joyAxisPos;
+	Vec2 joyAxisPos2;
 public:
 	void tick();
 
@@ -330,6 +348,17 @@ public:
 		return mousePos;
 	}
 
+	const Vec2& getJoystickAxisPos() const
+	{
+		return joyAxisPos;
+	}
+
+	const Vec2& getJoystickAxisPos2() const
+	{
+		return joyAxisPos2;
+	}
+	bool hasJoyStick() const;
+
 	Vec2 getDeltaMousePos() const
 	{
 		return mousePos - prevMousePos;
@@ -350,4 +379,5 @@ public:
 		prevKeyStates[key] = false;
 	}
 	void setMousePosition(int x, int y);
+	void setJoystickAxis(int joystick, int axis, int value);
 };
