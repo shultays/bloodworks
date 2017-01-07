@@ -147,9 +147,9 @@ public:
 
 	int getUniqueId()
 	{
-		if (nextUniqueId < 1)
+		if (nextUniqueId < 1000)
 		{
-			nextUniqueId = 1;
+			nextUniqueId = 1000;
 		}
 		return nextUniqueId++;
 	}

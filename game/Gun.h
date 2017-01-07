@@ -7,6 +7,7 @@
 #include "sol.h"
 #include "json.h"	
 #include "cSound.h"	
+#include "BuffFloat.h"	
 
 class Bloodworks;
 class Bullet;
@@ -61,9 +62,11 @@ class Gun
 	int currentAmmo;
 	int maxAmmo;
 	float reloadTime;
-	float reloadStartTime;
+	float remainingReload;
 	bool reloading;
 	bool reloadEnding;
+
+	BuffFloat reloadSpeedMultiplier;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
