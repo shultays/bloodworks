@@ -28,7 +28,16 @@ class cButton : public cRenderableGroup
 
 	cSoundSampleShr clickSound;
 	cSoundSampleShr hoverSound;
+
+	int enforceHovering;
 public:
+
+	enum
+	{
+		no_enforce,
+		enforce_hovering,
+		enforce_not_hovering
+	};
 	cButton(cGame *game) : cRenderableGroup(game)
 	{
 		down = prevDown = false;
@@ -44,6 +53,12 @@ public:
 		hoverRotation = 0.0f;
 		hoverTime = 0.0f;
 		hoverSpeed = 1.0f;
+		enforceHovering = no_enforce;
+	}
+
+	void setEnforcedHovering(int enforceHovering)
+	{
+		this->enforceHovering = enforceHovering;
 	}
 	
 	void setHitArea(const Vec2& beginRange, const Vec2& endRange)

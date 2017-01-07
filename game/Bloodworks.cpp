@@ -474,7 +474,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Bumerang Gun")
+		if (gun->getName() == "Pistol")
 		{
 			player->setGun(gun);
 		}
@@ -799,7 +799,7 @@ void Bloodworks::tickCamera()
 
 void Bloodworks::tickGameSlowdown()
 {
-	if (levelUpPopup->isVisible() == false && input.isKeyPressed(key_p))
+	if (levelUpPopup->isVisible() == false && missionController->isLoaded() && (input.isKeyPressed(key_p) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_start))))
 	{
 		paused = !paused;
 		if (paused)

@@ -13,6 +13,9 @@ std::string programName = "Bloodworks";
 SDL_Window *mainWindow;
 SDL_GLContext mainContext;
 
+SDL_GameController *controller0 = nullptr;
+SDL_Joystick *joystick0 = nullptr;
+
 bool SetOpenGLAttributes();
 void CheckSDLError(int line);
 void RunGame();
@@ -20,9 +23,25 @@ void Cleanup();
 
 Coral coral;
 
+
+void addController(int id)
+{
+	if (controller0)
+	{
+		SDL_GameControllerClose(controller0);
+	}
+
+	controller0 = SDL_GameControllerOpen(0);
+	if (controller0 == nullptr)
+	{
+		joystick0 = SDL_JoystickOpen(0);
+	}
+}
+
 bool Init()
 {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0)
+	SDL_SetHint("SDL_XINPUT_ENABLED", "0");
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		std::cout << "Failed to init SDL\n";
 		return false;
@@ -36,6 +55,12 @@ bool Init()
 		std::cout << "Unable to create window\n";
 		CheckSDLError(__LINE__);
 		return false;
+	}
+
+	SDL_JoystickEventState(true);
+	if (SDL_NumJoysticks() > 0)
+	{
+		addController(0);
 	}
 
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::jit);
@@ -91,6 +116,7 @@ void RunGame()
 {
 	while (coral.gameRunning)
 	{
+
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
@@ -126,6 +152,41 @@ void RunGame()
 					break;
 				}
 			}
+			
+
+			else if (event.type == SDL_CONTROLLERDEVICEADDED)
+			{
+				addController(0);
+			}
+
+
+			else if (event.type == SDL_JOYAXISMOTION)
+			{
+				input.setJoystickAxis(event.jaxis.which, event.jaxis.axis, event.jaxis.value);
+			}
+			else if (event.type == SDL_JOYBUTTONDOWN)
+			{
+				input.pressKey(event.jbutton.button + joystick_0_start);
+			}
+			else if (event.type == SDL_JOYBUTTONUP)
+			{
+				input.releaseKey(event.jbutton.button + joystick_0_start);
+			}
+
+			
+			else if (event.type == SDL_CONTROLLERAXISMOTION)
+			{
+				input.setJoystickAxis(event.caxis.which, event.caxis.axis, event.caxis.value);
+			}
+			else if (event.type == SDL_CONTROLLERBUTTONDOWN)
+			{
+				input.pressKey(event.cbutton.button + joystick_0_start);
+			}
+			else if (event.type == SDL_CONTROLLERBUTTONUP)
+			{
+				input.releaseKey(event.cbutton.button + joystick_0_start);
+			}
+
 			else if(event.type == SDL_QUIT)
 			{
 				coral.quitGame();
@@ -138,6 +199,13 @@ void RunGame()
 void Cleanup()
 {
 	SAFE_DELETE(game);
+
+	//SDL_JoystickEventState(SDL_DISABLE);
+	//if (joystick)
+	//{
+	//	SDL_JoystickClose(joystick);
+	//}
+	//
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow);
 	SDL_Quit();

@@ -22,6 +22,9 @@ class LevelUpPopup
 	std::vector<Perk*> levelupPerks;
 	int hoverLevelupPerkIndex;
 	cSoundSampleShr levelUpSound;
+
+	float lastMouseMoveTimer;
+	bool joyPadFree;
 public:
 
 	LevelUpPopup(Bloodworks *bloodworks);
