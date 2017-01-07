@@ -20,6 +20,7 @@ class MainMenu
 
 	cSoundSampleShr music;
 	cSoundHandle handle;
+
 public:
 	MainMenu(Bloodworks *b);
 	~MainMenu();

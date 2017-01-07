@@ -30,7 +30,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	mods = new cButton(bloodworks);
 	mods->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	mods->addRenderable(text);
@@ -40,7 +40,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	options = new cButton(bloodworks);
 	options->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Options", 32.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Options", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	options->addRenderable(text);
@@ -50,7 +50,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	credits = new cButton(bloodworks);
 	credits->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Credits", 32.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Credits", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	credits->addRenderable(text);
@@ -145,17 +145,20 @@ void MainMenu::tick()
 		return;
 	}
 
+
 	newGame->check(input.getMousePos());
 	mods->check(input.getMousePos());
 	options->check(input.getMousePos());
 	credits->check(input.getMousePos());
 	quit->check(input.getMousePos());
 
-	if (newGame->isClicked())
+	if (newGame->isClicked() || input.isKeyPressed(joystick_0_button_a) || input.isKeyPressed(joystick_0_button_start))
 	{
+		input.clearKeyPress(joystick_0_button_a);
+		input.clearKeyPress(joystick_0_button_start);
 		bloodworks->loadMission("Survival");
 	}
-	else if (quit->isClicked() || input.isKeyPressed(key_escape))
+	else if (quit->isClicked() || input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
 	{
 		coral.quitGame();
 	}
