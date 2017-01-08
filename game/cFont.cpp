@@ -159,10 +159,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 		}
 
 		Vec2 shift = Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
-		if (isIdentity == false)
-		{
-			shift = (Vec3(shift.x, shift.y, 0.0f) * mat).vec2;
-		}
+		shift = (Vec3(shift.x, shift.y, 0.0f) * mat).vec2;
 		temp.translateBy(shift);
 	}
 
