@@ -565,6 +565,7 @@ void Player::setVisible(bool visible)
 	experienceBarActive->setVisible(visible);
 	experienceBarFG->setVisible(visible);
 	updateHitPoints();
+	updateExperience();
 }
 
 void Player::reset()
