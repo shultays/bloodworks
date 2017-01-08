@@ -227,7 +227,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("addPostProcess",
 		[&](const std::string& postProcessShader) -> cPostProcess*
 	{
-		printf("addPostProcess %s\n", postProcessShader.c_str());
 		cPostProcess *postProcess = new cPostProcess();
 		postProcess->init(bloodworks, resources.getShader("resources/post_process/default.vs", postProcessShader), 100);
 		return postProcess;
@@ -236,7 +235,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("removePostProcess",
 		[&](cPostProcess *postProcess) 
 	{
-		printf("removePostProcess\n");
 		bloodworks->removePostProcess(postProcess);
 		SAFE_DELETE(postProcess);
 	});
@@ -499,6 +497,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &Monster::data,
 		"experience", &Monster::experience,
 
+		"scale", sol::readonly(&Monster::scale),
+
 		"moveSpeedMultiplier", &Monster::moveSpeedMultiplier,
 		"colorMultiplier", &Monster::colorMultiplier,
 
@@ -516,8 +516,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
-
-
 
 	lua.new_usertype<GameObject>("GameObject",
 		"index", sol::readonly(&GameObject::id),
@@ -546,7 +544,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"textAlignment", &GameObject::RenderableData::textAlignment
 		);
 
-
 	lua.new_usertype<Player>("Player",
 		"position", &Player::pos,
 		"moveSpeed", &Player::moveSpeed,
@@ -574,6 +571,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"monsterExperienceMult", &Player::monsterExperienceMult,
 		"damageMult", &Player::damageMult,
 		"reloadSpeedMultiplier", &Player::reloadSpeedMultiplier,
+		"globalMonsterSpeedMultiplier", &Player::globalMonsterSpeedMultiplier,
 		"setGun", &Player::setGun,
 		"level", sol::readonly(&Player::level),
 		"gun", sol::readonly(&Player::gun),
@@ -591,6 +589,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"fadeOutDuration", sol::readonly(&BuffFloat::BuffInfo::fadeOutDuration),
 
 		"restart", &BuffFloat::BuffInfo::restart,
+
+		"removeAfterEnds", &BuffFloat::BuffInfo::removeAfterEnds,
 
 		"setBuffAmount", &BuffFloat::BuffInfo::setBuffAmount,
 		"setBuffDuration", &BuffFloat::BuffInfo::setBuffDuration,
@@ -639,9 +639,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 
-
-
-
 	lua.new_usertype<BuffVec4::BuffInfo>("BuffVec4Info",
 		"buffType", sol::readonly(&BuffVec4::BuffInfo::buffType),
 
@@ -652,6 +649,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"restart", &BuffVec4::BuffInfo::restart,
 
+		"removeAfterEnds", &BuffVec4::BuffInfo::removeAfterEnds,
+
 		"setBuffAmount", &BuffVec4::BuffInfo::setBuffAmount,
 		"setBuffDuration", &BuffVec4::BuffInfo::setBuffDuration,
 		"getCurrentBuffAmount", &BuffVec4::BuffInfo::getCurrentBuffAmount,
@@ -661,7 +660,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 	lua.new_usertype<BuffVec4>("BuffVec4",
 		"addBuffWithType", &BuffVec4::addBuffWithType,
-		"addBuff", [&](BuffVec4& buff, float amount)
+		"addBuff", [&](BuffVec4& buff, Vec4 amount)
 	{
 		int id = bloodworks->getUniqueId();
 		buff.addBuff(id, amount, BuffVec4::multiply_buff);
@@ -685,19 +684,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getBuffedValue", &BuffVec4::getBuffedValue
 
 		);
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

@@ -23,7 +23,7 @@ MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	loadedMission = -1;
-	missionLoop.setSample(resources.getSoundSample("resources/sounds/Platformer2.ogg"));
+	missionLoop.setSample(resources.getSoundSample("resources/sounds/game_music.ogg"));
 	missionLoop.setLooped(true);
 	missionLoop.setVolume(MUSIC_VOLUME);
 	missionLoop.setSpeed(1.0f);
@@ -95,7 +95,7 @@ void MissionController::tick()
 		}
 		else
 		{
-			missionLoopHandle.setSpeed(1.0f * (soundSpeed * 0.04f + 0.96f));
+			missionLoopHandle.setSpeed(1.0f * (soundSpeed * 0.08f + 0.92f));
 		}
 	}
 }

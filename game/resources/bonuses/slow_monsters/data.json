@@ -1,0 +1,7 @@
+{
+  "type" : "bonus",
+  "name": "Slowdown Monsters",
+  "iconFile" : "resources/bonuses/slow_monsters/icon.png",
+  "scriptFile" : "resources/bonuses/slow_monsters/slow_monsters.lua",
+  "scriptName" : "SlowMonsters"
+}

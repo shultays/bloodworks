@@ -120,7 +120,7 @@ void DropController::tick()
 			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
-		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 40.0f * 40.0f);
+		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f || input.isKeyDown(key_space));
 
 		if (drop.pos.distanceSquared(playerPos) < 20.0f * 20.0f)
 		{
@@ -161,6 +161,11 @@ void DropController::tick()
 
 void DropController::addDrop(const Vec2& position)
 {
+	if (timer.getTime() - lastDropSpawn < 5.0f)
+	{
+		return;
+	}
+	lastDropSpawn = timer.getTime();
 	if (randBool() && input.isKeyDown(key_1) == false)
 	{
 		createBonus(position);
@@ -178,5 +183,6 @@ void DropController::reset()
 		SAFE_DELETE(drop.renderable);
 	}
 	drops.clear();
+	lastDropSpawn = 0.0f;
 }
 
