@@ -50,6 +50,8 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
+	float globalVolume;
+
 	MissionController *missionController;
 	MonsterController *monsterController;
 	BulletController *bulletController;

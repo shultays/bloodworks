@@ -11,11 +11,12 @@ function addRandomMonster()
     monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
 	
-	
 	monster.data.hitWaitTime = monster.data.hitWaitTime  * (1.0 - clamp(min * 0.1) * 0.8)
 	monster.data.hitInterval = monster.data.hitInterval  * (1.0 - clamp(min * 0.1) * 0.4)
 	monster.data.minDamage = math.floor(monster.data.minDamage * (1.0 + min * 0.2))
 	monster.data.maxDamage = math.floor(monster.data.maxDamage * (1.0 + min * 0.2))
+	
+	monster.experienceMultiplier = math.random() * 0.4 + 0.8
 	
 	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
 	
@@ -35,6 +36,8 @@ function makeBoss(monster)
 	monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.05
 	monster.data.randomMove = false
 	monster.data.playerSeeRange = monster.data.playerSeeRange * 1.5
+	
+	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
 	local t = math.random() * 4
 
@@ -119,7 +122,7 @@ function Survival.onTick()
 		
 		for i = 0, count - 1 do
 			local monster = getMonsterAtIndex(i)
-			monster.experience = 0
+			monster.experienceMultiplier = 0.0
 			monster:doDamage(10000, Vec2.new(1.0, 0.0))
 		end
 	end

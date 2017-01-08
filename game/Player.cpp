@@ -9,16 +9,18 @@
 
 #include <sstream>
 
+const float healthPos = -50.0f;
+const float expPos = -62.0f;
+const float expPosX = -0.5f;
 
 int Player::calculateExperienceForLevel(int level)
 {
-	return level * 100 + level * level * 50;
+	return (level - 1) * 150 + (level - 1)  * (level - 1) * 20 + 10;
 }
 
 Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(15.7f, 22.9f);
 	mat.translateBy(0.0f, 5.0f);
@@ -68,7 +70,24 @@ Player::Player(Bloodworks *bloodworks)
 
 	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_fg.png", "resources/default");
 	healthBarFG->setAlignment(RenderableAlignment::top);
-	bloodworks->addRenderable(healthBarFG, GUI + 12);
+	bloodworks->addRenderable(healthBarFG, GUI + 17);
+
+	experienceBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_bg.png", "resources/default");
+	experienceBarBG->setAlignment(RenderableAlignment::top);
+	bloodworks->addRenderable(experienceBarBG, GUI + 12);
+	experienceBarBG->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+	experienceBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_active.png", "resources/default");
+	experienceBarActive->setAlignment(RenderableAlignment::top);
+	experienceBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.6f));
+	bloodworks->addRenderable(experienceBarActive, GUI + 13);
+	experienceBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+	experienceBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_fg.png", "resources/default");
+	experienceBarFG->setAlignment(RenderableAlignment::top);
+	bloodworks->addRenderable(experienceBarFG, GUI + 18);
+	experienceBarFG->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
+
 
 	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
@@ -107,9 +126,14 @@ Player::~Player()
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(spread);
 	SAFE_DELETE(healthRenderable);
+
 	SAFE_DELETE(healthBarBG);
 	SAFE_DELETE(healthBarActive);
 	SAFE_DELETE(healthBarFG);
+
+	SAFE_DELETE(experienceBarBG);
+	SAFE_DELETE(experienceBarActive);
+	SAFE_DELETE(experienceBarFG);
 
 	for (auto& s : hitSounds)
 	{
@@ -129,6 +153,7 @@ void Player::tick()
 	{
 		return;
 	}
+
 	reloadSpeedMultiplier.tick();
 	globalMonsterSpeedMultiplier.tick();
 	oldPos = pos;
@@ -470,7 +495,7 @@ void Player::updateHitPoints()
 	if (hitPoints > 1 && bloodworks->isMissionLoaded())
 	{
 		healthBarActive->setVisible(true);
-		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledBarSize.y - 5.0f / bloodworks->getCameraZoom()).translateBy(0.0f, -50.0f / bloodworks->getCameraZoom()));
+		healthBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledBarSize.y - 5.0f / bloodworks->getCameraZoom()).translateBy(0.0f, healthPos / bloodworks->getCameraZoom()));
 	}
 	else
 	{
@@ -486,6 +511,7 @@ void Player::gainExperience(int e)
 		experience -= experienceForNextLevel;
 		doLevelup();
 	}
+	updateExperience();
 }
 
 void Player::doLevelup()
@@ -493,6 +519,7 @@ void Player::doLevelup()
 	level++;
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	bloodworks->openLevelupPopup();
+	updateExperience();
 }
 
 void Player::doHeal(int hp)
@@ -529,9 +556,14 @@ void Player::setVisible(bool visible)
 	renderable->setVisible(visible);
 	spread->setVisible(visible);
 	healthRenderable->setVisible(visible);
+
 	healthBarBG->setVisible(visible);
 	healthBarActive->setVisible(visible);
 	healthBarFG->setVisible(visible);
+
+	experienceBarBG->setVisible(visible);
+	experienceBarActive->setVisible(visible);
+	experienceBarFG->setVisible(visible);
 	updateHitPoints();
 }
 
@@ -563,6 +595,7 @@ void Player::reset()
 
 	experience = 0;
 	level = 1;
+	updateExperience();
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
 	shootRenderable->playAnimation(0);
 
@@ -584,11 +617,19 @@ float Player::getDamageMultiplier() const
 
 void Player::resize()
 {
-	Mat3 barMat = Mat3::scaleMatrix(barSize / bloodworks->getCameraZoom()).translateBy(Vec2(0.0f, -50.0f / bloodworks->getCameraZoom()));
+	Mat3 barMat = Mat3::scaleMatrix(barSize / bloodworks->getCameraZoom()).translateBy(Vec2(0.0f, healthPos / bloodworks->getCameraZoom()));
 	scaledBarSize = barSize / bloodworks->getCameraZoom();
 	healthBarBG->setWorldMatrix(barMat);
 	healthBarFG->setWorldMatrix(barMat);
+
+	Vec2 expBarSize = Vec2(238, 11) * 0.3f;
+	barMat = Mat3::scaleMatrix(expBarSize / bloodworks->getCameraZoom()).translateBy(Vec2(expPosX / bloodworks->getCameraZoom(), expPos / bloodworks->getCameraZoom()));
+	scaledExpBarSize = expBarSize / bloodworks->getCameraZoom();
+	experienceBarBG->setWorldMatrix(barMat);
+	experienceBarFG->setWorldMatrix(barMat);
+
 	updateHitPoints();
+	updateExperience();
 }
 
 float Player::getReloadSpeedMultiplier()
@@ -698,6 +739,20 @@ void Player::checkInput(bool& moving, float& wantedAngle)
 		moving = true;
 	}
 
+}
+
+void Player::updateExperience()
+{
+	float scale = scaledExpBarSize.x * (experience / (float)experienceForNextLevel) - 2.0f / bloodworks->getCameraZoom();
+	if (scale > 0.01f && bloodworks->isMissionLoaded())
+	{
+		experienceBarActive->setVisible(true);
+		experienceBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledExpBarSize.y - 2.0f / bloodworks->getCameraZoom()).translateBy(expPosX / bloodworks->getCameraZoom(), expPos / bloodworks->getCameraZoom()));
+	}
+	else
+	{
+		experienceBarActive->setVisible(false);
+	}
 }
 
 void Player::killSelf()

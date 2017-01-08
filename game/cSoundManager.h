@@ -20,4 +20,5 @@ public:
 		return soloud;
 	}
 	void clearAllSounds();
+	void setGlobalVolume(float globalVolume);
 };
