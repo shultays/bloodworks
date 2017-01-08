@@ -32,12 +32,12 @@ function FrostLaser.onTick(gun)
 				if result.monster.moveSpeedMultiplier:hasBuffInfo(gun.data.buffId) == false then
 					result.monster.moveSpeedMultiplier:addBuffWithId(gun.data.buffId, 1.0)
 					buff = result.monster.moveSpeedMultiplier:getBuffInfo(gun.data.buffId)
-					buff:setBuffDuration(0.5)
+					buff:setBuffDuration(0.8)
 					buff:setBuffFadeInFadeOut(-1.0, 0.3)
 					
 					result.monster.colorMultiplier:addBuffWithId(gun.data.buffId, Vec4:new(1.0, 1.0, 1.0, 1.0))
 					colorbuff = result.monster.colorMultiplier:getBuffInfo(gun.data.buffId)
-					colorbuff:setBuffDuration(0.5)
+					colorbuff:setBuffDuration(0.8)
 					colorbuff:setBuffFadeInFadeOut(-1.0, 0.3)
 					
 				else

@@ -40,7 +40,7 @@ void addController(int id)
 
 bool Init()
 {
-	SDL_SetHint("SDL_XINPUT_ENABLED", "0");
+	srand((int)time((time_t)0));
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		std::cout << "Failed to init SDL\n";

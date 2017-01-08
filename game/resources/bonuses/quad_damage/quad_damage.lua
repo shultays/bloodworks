@@ -21,7 +21,7 @@ end
 function QuadDamage.onTick(gameObject)
 	local t = time - QuadDamage.shaderStartTime
 	
-	local duration = 10.0 * player.data.bonusDurationMultiplier
+	local duration = 8.0 * player.data.bonusDurationMultiplier
 	
 	local a = 1.0
 	if t < 0.3 then

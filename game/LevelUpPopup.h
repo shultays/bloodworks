@@ -16,6 +16,7 @@ class LevelUpPopup
 	cRenderableGroup *levelupGroup;
 
 	cTextRenderable *levelupGroupTitle;
+	cTextRenderable *levelupGroupSubTitle;
 	cTextRenderable *currentPerkName;
 	cTextRenderable *currentPerkExplanation;
 	std::vector<cButton*> levelupPerksRenderables;
@@ -25,11 +26,23 @@ class LevelUpPopup
 
 	float lastMouseMoveTimer;
 	bool joyPadFree;
-public:
+	int waitingLevels;
 
+	cTextRenderable *levelUpText;
+	float levelUpShowTime;
+public:
 	LevelUpPopup(Bloodworks *bloodworks);
 	~LevelUpPopup();
 	bool isVisible() const;
-	void show();
+	void show(bool levelAdded = true);
 	void tick();
+
+	int getWaitingLevels() const
+	{
+		return waitingLevels;
+	}
+
+	void reset();
+private:
+	void clearPerks();
 };
