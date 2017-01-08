@@ -80,6 +80,16 @@ Monster::~Monster()
 
 void Monster::tick()
 {
+	moveSpeedMultiplier.tick();
+	bool colorChanged = colorMultiplier.tick();
+	if (colorMultiplier.getBuffedValue().r < 1.0f && input.isKeyPressed(key_space))
+	{
+		int a = 5;
+	}
+	if (colorChanged && renderable)
+	{
+		renderable->setColor(colorMultiplier.getBuffedValue());
+	}
 	scriptTable["onTick"](this);
 	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(input.isKeyDown(key_f6));
@@ -102,7 +112,7 @@ void Monster::tick()
 
 	if (moveSpeed > 0.0f)
 	{
-		position += Vec2::fromAngle(moveAngle) * moveSpeed * timer.getDt();
+		position += Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * timer.getDt();
 	}
 
 	std::stringstream ss;
