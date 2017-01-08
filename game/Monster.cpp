@@ -23,7 +23,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 {
 	this->monsterTemplate = monsterTemplate;
 	name = monsterTemplate->name;
-	experience = -1;
+	experienceMultiplier = 1.0f;
 	isDead = false;
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
@@ -173,7 +173,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 		{
 			lastHitSoundPlayTime = timer.getTime();
 			cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
-			bloodworks->playSoundAtMap(position, s, 0.9f);
+			bloodworks->playSoundAtMap(position, s, 0.7f);
 		}
 	}
 }
@@ -300,7 +300,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	}
 	if (bloodworks->getPlayer())
 	{
-		bloodworks->getPlayer()->gainExperience((int)((experience == -1 ? monsterTemplate->experience : experience) * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
+		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 
 	if (monsterTemplate->killSounds.size())

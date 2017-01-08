@@ -259,6 +259,8 @@ Bloodworks::Bloodworks()
 	showFps = true;
 	soundPaused = false;
 	cameraCenterPos.setZero();
+
+	globalVolume = 1.0f;
 }
 
 Bloodworks::~Bloodworks()
@@ -475,7 +477,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Freeze Laser")
+		if (gun->getName() == "Pistol")
 		{
 			player->setGun(gun);
 		}
@@ -657,6 +659,25 @@ void Bloodworks::tick()
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
+
+
+	bool changeGlobalVolume = false;
+	if (input.isKeyDown(key_num_minus))
+	{
+		globalVolume -= timer.getNonSlowedDt();
+		changeGlobalVolume = true;
+	}	
+	if (input.isKeyDown(key_num_plus))
+	{
+		globalVolume += timer.getNonSlowedDt();
+		changeGlobalVolume = true;
+	}
+
+	if (changeGlobalVolume)
+	{
+		clamp(globalVolume, 0.0f, 1.0f);
+		coral.getSoundManager()->setGlobalVolume(globalVolume);
+	}
 
 	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && (input.isKeyPressed(key_tab) || input.isKeyPressed(joystick_0_button_y)))
 	{

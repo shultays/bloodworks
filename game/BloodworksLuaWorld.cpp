@@ -495,7 +495,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"bulletRadius", &Monster::bulletRadius,
 
 		"data", &Monster::data,
-		"experience", &Monster::experience,
+		"experienceMultiplier", &Monster::experienceMultiplier,
 
 		"scale", sol::readonly(&Monster::scale),
 

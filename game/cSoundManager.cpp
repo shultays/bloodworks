@@ -26,6 +26,11 @@ void cSoundManager::clearAllSounds()
 	soloud->stopAll();
 }
 
+void cSoundManager::setGlobalVolume(float globalVolume)
+{
+	soloud->setGlobalVolume(globalVolume);
+}
+
 cSoundSample::cSoundSample(cSoundManager* soundManager)
 {
 	this->soundManager = soundManager;
