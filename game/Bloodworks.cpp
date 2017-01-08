@@ -414,6 +414,7 @@ void Bloodworks::clearMission()
 	dropController->reset();
 	bulletController->reset();
 	explosionController->reset();
+	levelUpPopup->reset();
 	luaWorld->reset();
 
 	std::vector<cPostProcess*> toRemove;
@@ -656,6 +657,11 @@ void Bloodworks::tick()
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
+
+	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && (input.isKeyPressed(key_tab) || input.isKeyPressed(joystick_0_button_y)))
+	{
+		levelUpPopup->show(false);
+	}
 
 	luaWorld->tick();
 
