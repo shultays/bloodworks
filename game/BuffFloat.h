@@ -35,6 +35,7 @@ public:
 		float fadeOutStartTime;
 
 		BuffTemplate *parent;
+		bool removeAfterEnds;
 	public:
 
 		void restart()
@@ -145,6 +146,7 @@ public:
 		buff.buffEndTime = buff.startTime + buff.duration;
 		buff.fadeOutStartTime = buff.buffEndTime - buff.fadeOutDuration;
 		buff.parent = this;
+		buff.removeAfterEnds = true;
 		isChangedBeforeTick = isDirty = true;
 	}
 
@@ -241,7 +243,10 @@ private:
 			auto& buff = b.second;
 			if (time > buff.buffEndTime)
 			{
-				toRemove.push_back(b.first);
+				if (buff.removeAfterEnds)
+				{
+					toRemove.push_back(b.first);
+				}
 				continue;
 			}
 

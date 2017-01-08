@@ -130,6 +130,7 @@ void Player::tick()
 		return;
 	}
 	reloadSpeedMultiplier.tick();
+	globalMonsterSpeedMultiplier.tick();
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -593,6 +594,11 @@ void Player::resize()
 float Player::getReloadSpeedMultiplier()
 {
 	return reloadSpeedMultiplier.getBuffedValue();
+}
+
+float Player::getGlobalMonsterSpeedMultiplier()
+{
+	return globalMonsterSpeedMultiplier.getBuffedValue();
 }
 
 void Player::checkInput(bool& moving, float& wantedAngle)
