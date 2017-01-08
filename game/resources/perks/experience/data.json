@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Experience",
-  "description": "You gain experience depending on your level.",
+  "description": "You gain a big percentage of experience for your next level.",
   "iconFile" : "resources/perks/experience/icon.png",
   "scriptFile" : "resources/perks/experience/experience.lua",
   "scriptName" : "ExperiencePerk",

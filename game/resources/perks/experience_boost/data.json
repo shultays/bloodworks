@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Experience Boost",
-  "description": "You gain more experience from monsters.",
+  "description": "Monsters give you more experience.",
   "iconFile" : "resources/perks/experience_boost/icon.png",
   "scriptFile" : "resources/perks/experience_boost/experience_boost.lua",
   "scriptName" : "ExperienceBoostPerk"
