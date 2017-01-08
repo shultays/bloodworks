@@ -3,12 +3,13 @@
 #include "cGlobals.h"
 #include <unordered_map>
 
-class BuffFloat
+template <typename T>
+class BuffTemplate
 {
 	friend class LuaBuffController;
 	friend class BuffInfo;
-	float baseValue;
-	float finalValue;
+	T baseValue;
+	T finalValue;
 
 public:
 	enum BuffType
@@ -20,9 +21,9 @@ public:
 	class BuffInfo 
 	{
 		friend class BloodworksLuaWorld;
-		friend class BuffFloat;
+		friend class BuffTemplate;
 		int buffType;
-		float buffAmount;
+		T buffAmount;
 		float startTime;
 
 		float duration;
@@ -33,65 +34,105 @@ public:
 		float fadeInEndTime;
 		float fadeOutStartTime;
 
-		BuffFloat *parent;
+		BuffTemplate *parent;
 	public:
 
+		void restart()
+		{
+			startTime = timer.getTime();
+			setBuffDuration(duration);
+			setBuffFadeInFadeOut(fadeInDuration, fadeOutDuration);
+		}
 
-		void setBuffAmount(float amount)
+		void setBuffAmount(T amount)
 		{
 			buffAmount = amount;
-			parent->isDirty = true;
+			parent->isDirty = parent->isChangedBeforeTick = true;
 		}
 
 		void setBuffDuration(float duration)
 		{
-			duration = duration;
+			this->duration = duration;
 			buffEndTime = startTime + duration;
 			fadeOutStartTime = buffEndTime - fadeOutDuration;
-			parent->isDirty = true;
+			parent->isDirty = parent->isChangedBeforeTick = true;
 		}
 
 		void setBuffFadeInFadeOut(float fadeIn, float fadeOut)
 		{
-			fadeInDuration = fadeIn;
-			fadeOutDuration = fadeOut;
+			this->fadeInDuration = fadeIn;
+			this->fadeOutDuration = fadeOut;
 
 			fadeInEndTime = startTime + fadeInDuration;
 			fadeOutStartTime = buffEndTime - fadeOutDuration;
 
-			parent->isDirty = true;
+			parent->isDirty = parent->isChangedBeforeTick = true;
 		}
+
+		T getCurrentBuffAmount()
+		{
+			T buffValue = buffAmount;
+			float buffMultiplier = 1.0f;
+			float time = timer.getTime();
+			if (time < fadeInEndTime)
+			{
+				buffMultiplier = (time - startTime) / fadeInDuration;
+			}
+			else if (time > fadeOutStartTime)
+			{
+				buffMultiplier = (buffEndTime - time) / fadeOutDuration;
+			}
+
+			if (buffType == multiply_buff)
+			{
+				return lerp(T(1.0f), buffAmount, buffMultiplier);
+			}
+			else if (buffType == add_after_multiply_buff)
+			{
+				return buffAmount * buffMultiplier;
+			}
+			else if (buffType == add_before_multiply_buff)
+			{
+				return buffAmount * buffMultiplier;
+			}
+			return T(1.0);
+		}
+
 	};
 
 private:
 	std::unordered_map<int, BuffInfo> buffs;
 	bool isDirty;
 	bool isDirtyNextTick;
+	bool isChangedBeforeTick;
+
 	float dirtyTickTimeStart;
 	float dirtyTickTimeEnd;
 	int buffControllerId;
 public:
-	BuffFloat()
+	BuffTemplate()
 	{
 		buffControllerId = -1;
-		baseValue = finalValue = 1.0f;
+		baseValue = finalValue = T(1.0f);
+		isChangedBeforeTick = true;
 		reset();
 	}
 
-	BuffFloat(float baseValue)
+	BuffTemplate(T baseValue)
 	{
 		buffControllerId = -1;
 		this->baseValue = finalValue = baseValue;
+		isChangedBeforeTick = true;
 		reset();
 	}
 
-	void setBaseValue(float baseValue)
+	void setBaseValue(T baseValue)
 	{
 		this->baseValue = baseValue;
-		isDirty = true;
+		isChangedBeforeTick = isDirty = true;
 	}
 
-	void addBuff(int id, float amount, BuffType buffType)
+	void addBuff(int id, T amount, BuffType buffType)
 	{
 		auto& buff = buffs[id];
 		buff.buffAmount = amount;
@@ -104,15 +145,15 @@ public:
 		buff.buffEndTime = buff.startTime + buff.duration;
 		buff.fadeOutStartTime = buff.buffEndTime - buff.fadeOutDuration;
 		buff.parent = this;
-		isDirty = true;
+		isChangedBeforeTick = isDirty = true;
 	}
 
-	void addBuffWithType(int id, float amount)
+	void addBuffWithType(int id, T amount)
 	{
 		addBuff(id, amount, multiply_buff);
 	}
 
-	void setBuffAmount(int id, float amount)
+	void setBuffAmount(int id, T amount)
 	{
 		buffs.at(id).setBuffAmount(amount);
 	}
@@ -127,7 +168,7 @@ public:
 		buffs.at(id).setBuffFadeInFadeOut(fadeIn, fadeOut);
 	}
 
-	float getBuffedValue()
+	T getBuffedValue()
 	{
 		if (isDirty)
 		{
@@ -136,19 +177,27 @@ public:
 		return finalValue;
 	}
 
-	float getBaseValue()
+	T getBaseValue()
 	{
 		return baseValue;
 	}
 
-	void tick()
+	bool tick()
 	{
 		float time = timer.getTime();
 
 		if (isDirty || isDirtyNextTick || time < dirtyTickTimeEnd || time > dirtyTickTimeStart)
 		{
-			build();
+			return build();
 		}
+		bool r = isChangedBeforeTick;
+		isChangedBeforeTick = false;
+		return r;
+	}
+
+	bool hasBuffInfo(int id)
+	{
+		return buffs.count(id) > 0;
 	}
 
 	BuffInfo& getBuffInfo(int id)
@@ -172,17 +221,17 @@ private:
 		isDirtyNextTick = false;
 	}
 
-	void build()
+	bool build()
 	{
 		reset();
 		if (buffs.size() == 0)
 		{
-			return;
+			return false;
 		}
 
-		float totalAddAfterMultiplyBuff = 0.0f;
-		float totalMultiplyBuff = 1.0f;
-		float totalAddBeforeMultiplyBuff = 0.0f;
+		T totalAddAfterMultiplyBuff = T(0.0f);
+		T totalMultiplyBuff = T(1.0f);
+		T totalAddBeforeMultiplyBuff = T(0.0f);
 
 		std::vector<int> toRemove;
 		toRemove.reserve(10);
@@ -200,33 +249,26 @@ private:
 			dirtyTickTimeStart = min(dirtyTickTimeStart, buff.fadeOutStartTime);
 			dirtyTickTimeEnd = max(dirtyTickTimeEnd, buff.fadeInEndTime);
 
-			float buffValue = buff.buffAmount;
-			float buffMultiplier = 1.0f;
-			if (time < buff.fadeInEndTime)
+			T buffAmount = buff.getCurrentBuffAmount();
+
+			if (time < buff.fadeInEndTime || time > buff.fadeOutStartTime)
 			{
-				buffMultiplier = (time - buff.startTime) / buff.fadeInDuration;
-				isDirtyNextTick = true;
-			}
-			else if (time > buff.fadeOutStartTime)
-			{
-				buffMultiplier = (buff.buffEndTime - time) / buff.fadeOutDuration;
 				isDirtyNextTick = true;
 			}
 
 			if (buff.buffType == multiply_buff)
 			{
-				totalMultiplyBuff *= lerp(1.0f, buff.buffAmount, buffMultiplier);
+				totalMultiplyBuff *= buffAmount;
 			}
 			else if (buff.buffType == add_after_multiply_buff)
 			{
-				totalAddAfterMultiplyBuff += buff.buffAmount * buffMultiplier;
+				totalAddAfterMultiplyBuff += buffAmount;
 			}
 			else if (buff.buffType == add_before_multiply_buff)
 			{
-				totalAddBeforeMultiplyBuff += buff.buffAmount * buffMultiplier;
+				totalAddBeforeMultiplyBuff += buffAmount;
 			}
 		}
-
 
 		for (auto i : toRemove)
 		{
@@ -235,5 +277,12 @@ private:
 
 		finalValue = (baseValue + totalAddBeforeMultiplyBuff) * totalMultiplyBuff + totalAddAfterMultiplyBuff;
 		isDirty = false;
+		return true;
 	}
 };
+
+
+using BuffFloat = BuffTemplate<float>;
+using BuffVec2 = BuffTemplate<Vec2>;
+using BuffVec3 = BuffTemplate<Vec3>;
+using BuffVec4 = BuffTemplate<Vec4>;
