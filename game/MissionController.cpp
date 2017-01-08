@@ -11,6 +11,9 @@
 #include "BulletController.h"
 #include "Bullet.h"
 
+
+#define MUSIC_VOLUME 0.5f
+
 MissionController::~MissionController()
 {
 	reset();
@@ -20,10 +23,10 @@ MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	loadedMission = -1;
-	missionLoop.setSample(resources.getSoundSample("resources/sounds/loop2.ogg"));
+	missionLoop.setSample(resources.getSoundSample("resources/sounds/Platformer2.ogg"));
 	missionLoop.setLooped(true);
-	missionLoop.setVolume(0.3f);
-	missionLoop.setSpeed(1.2f);
+	missionLoop.setVolume(MUSIC_VOLUME);
+	missionLoop.setSpeed(1.0f);
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
 	reset();
@@ -67,7 +70,7 @@ void MissionController::tick()
 			{
 				musicVolume = 0.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * 0.3f);
+			missionLoopHandle.setVolume(musicVolume * MUSIC_VOLUME);
 		}
 	}
 	else
@@ -79,14 +82,21 @@ void MissionController::tick()
 			{
 				musicVolume = 1.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * 0.3f);
+			missionLoopHandle.setVolume(musicVolume * MUSIC_VOLUME);
 		}
 	}
 
 	if (abs(soundSpeed - bloodworks->getSoundSpeed()) > 0.05f)
 	{
 		soundSpeed = bloodworks->getSoundSpeed();
-		missionLoopHandle.setSpeed(1.2f * (soundSpeed * 0.10f + 0.90f));
+		if (soundSpeed > 0.99f)
+		{
+			missionLoopHandle.setSpeed(1.0f);
+		}
+		else
+		{
+			missionLoopHandle.setSpeed(1.0f * (soundSpeed * 0.04f + 0.96f));
+		}
 	}
 }
 
