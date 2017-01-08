@@ -64,6 +64,9 @@ class Player
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
 	Vec2 barSize, scaledBarSize;
 
+	cRenderable *experienceBarActive, *experienceBarBG, *experienceBarFG;
+	Vec2 scaledExpBarSize;
+
 	int level;
 	int experience;
 	int experienceForNextLevel;
@@ -139,4 +142,5 @@ public:
 	float getGlobalMonsterSpeedMultiplier();
 private:
 	void checkInput(bool& moving, float& wantedAngle);
+	void updateExperience();
 };
