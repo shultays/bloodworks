@@ -9,7 +9,7 @@
   "bulletSpeed" : 450.0,
   "bulletDamage" : [55, 70],
   
-  "maxAmmo" : 32,
+  "maxAmmo" : 28,
   "reloadTime" : 2.5,
   
   "firingSound" : {

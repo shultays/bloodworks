@@ -24,10 +24,12 @@ class DropController
 
 	std::vector<Drop> drops;
 
+	float lastDropSpawn;
 public:
 	DropController(Bloodworks *bloodworks)
 	{
 		this->bloodworks = bloodworks;
+		lastDropSpawn = 0.0f;
 	}
 	~DropController();
 
