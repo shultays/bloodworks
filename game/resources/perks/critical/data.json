@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Critical Bullets",
-  "description": "Some of your bullets become critical and do more damage.",
+  "description": "You can shoot critical bullets, which deal more damage.",
   "iconFile" : "resources/perks/critical/icon.png",
   "scriptFile" : "resources/perks/critical/critical.lua",
   "scriptName" : "CriticalBullets"
