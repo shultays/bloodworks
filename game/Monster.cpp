@@ -82,10 +82,6 @@ void Monster::tick()
 {
 	moveSpeedMultiplier.tick();
 	bool colorChanged = colorMultiplier.tick();
-	if (colorMultiplier.getBuffedValue().r < 1.0f && input.isKeyPressed(key_space))
-	{
-		int a = 5;
-	}
 	if (colorChanged && renderable)
 	{
 		renderable->setColor(colorMultiplier.getBuffedValue());
@@ -112,7 +108,7 @@ void Monster::tick()
 
 	if (moveSpeed > 0.0f)
 	{
-		position += Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * timer.getDt();
+		position += Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier() * timer.getDt();
 	}
 
 	std::stringstream ss;

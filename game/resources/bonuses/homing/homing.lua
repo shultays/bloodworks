@@ -42,7 +42,9 @@ HomingOrbBullet = {}
 function HomingOrbBullet.onTick(bullet)
 
 	if bullet.data.monster ~= nil then
-		bullet.moveAngle = approachAngle(bullet.moveAngle, (bullet.data.monster.position - bullet.position):getAngle(), 10 * dt)
+		local toMonster = (bullet.data.monster.position - bullet.position)
+		local m = 1.0 - clamp(toMonster:length() / 50)
+		bullet.moveAngle = approachAngle(bullet.moveAngle, toMonster:getAngle(), (10 + 50 * m) * dt)
 		if bullet.data.monster.isDead then
 			bullet.onTickCallback = ""
 			bullet.data.monster = nil

@@ -18,14 +18,51 @@ function addRandomMonster()
 	monster.data.maxDamage = math.floor(monster.data.maxDamage * (1.0 + min * 0.2))
 	
 	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
+	
+	if Survival.lastBossSpawn + 35.0 - clamp(min/7) * 15 < missionTime then
+		Survival.lastBossSpawn = missionTime
+		makeBoss(monster)
+	end
     return monster
 end
+
+function makeBoss(monster)
+	monster.hitPoint = math.floor(monster.hitPoint * 1.5)
+	
+	monster.data.minDamage = math.floor(monster.data.minDamage * 1.1)
+	monster.data.maxDamage = math.floor(monster.data.maxDamage * 1.1)
+	
+	monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.05
+	monster.data.randomMove = false
+	monster.data.playerSeeRange = monster.data.playerSeeRange * 1.5
+	
+	local t = math.random() * 4
+
+	if t < 1 then
+		monster.hitPoint = monster.hitPoint * 7
+		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
+		monster:setScale(monster.scale * 1.25)
+	elseif t < 2 then
+		monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
+		monster:setScale(monster.scale * 0.85)
+	elseif t < 3 then
+		monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
+		monster.data.minDamage = math.floor(monster.data.minDamage * 2.0)
+		monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
+	else 
+		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
+		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.55
+		monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
+		monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
+	end
+end
+
 
 function Survival.init()
 
     Survival.extraMin = 0.0
     Survival.lastSpawnTime = 0.0
-	
+	Survival.lastBossSpawn = -500
 	local spawn
 	if DEBUG then
 		Survival.maxMonster = 10

@@ -57,6 +57,8 @@ class Player
 
 	BuffFloat reloadSpeedMultiplier;
 
+	BuffFloat globalMonsterSpeedMultiplier;
+
 	bool slowdownOnHit;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
@@ -134,6 +136,7 @@ public:
 	float getDamageMultiplier() const;
 	void resize();
 	float getReloadSpeedMultiplier();
+	float getGlobalMonsterSpeedMultiplier();
 private:
 	void checkInput(bool& moving, float& wantedAngle);
 };
