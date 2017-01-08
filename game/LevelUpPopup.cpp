@@ -25,6 +25,10 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 	levelupGroupTitle->setTextAllignment(TextAlignment::center);
 	levelupGroup->addRenderable(levelupGroupTitle);
 
+	levelupGroupSubTitle = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "asd", 18.0f);
+	levelupGroupSubTitle->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 83.0f)));
+	levelupGroupSubTitle->setTextAllignment(TextAlignment::center);
+	levelupGroup->addRenderable(levelupGroupSubTitle);
 
 	currentPerkName = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 18.0f);
 	currentPerkName->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -80.0f)));
@@ -36,17 +40,26 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 	currentPerkExplanation->setTextAllignment(TextAlignment::center);
 	levelupGroup->addRenderable(currentPerkExplanation);
 
+	levelUpText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Tab to Level Up!", 24.0f);
+	levelUpText->setWorldMatrix(Mat3::translationMatrix(Vec2(145.0f, 40.0f)));
+	levelUpText->setTextAllignment(TextAlignment::center);
+	levelUpText->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	levelUpText->setAlignment(RenderableAlignment::bottomLeft);
+	bloodworks->addRenderable(levelUpText, GUI + 151);
+	levelUpText->setVisible(false);
 	levelupGroup->setVisible(false);
 
 	bloodworks->addRenderable(levelupGroup, GUI + 150);
 
 	levelUpSound = resources.getSoundSample("resources/sounds/level_up.ogg");
+	waitingLevels = 0;
+	levelUpShowTime = -1.0f;
 }
 
 LevelUpPopup::~LevelUpPopup()
 {
 	SAFE_DELETE(levelupGroup);
-
+	SAFE_DELETE(levelUpText);
 	for (auto& t : levelupPerksRenderables)
 	{
 		SAFE_DELETE(t);
@@ -60,8 +73,19 @@ bool LevelUpPopup::isVisible() const
 	return levelupGroup->isVisible();
 }
 
-void LevelUpPopup::show()
+void LevelUpPopup::show(bool levelAdded)
 {
+	levelUpSound->play();
+	if (levelAdded)
+	{
+		waitingLevels++;
+	}
+	if (waitingLevels >= 2 && levelAdded)
+	{
+		levelUpShowTime = 1.0f;
+		return;
+	}
+
 	lastMouseMoveTimer = 0.01f;
 	input.showMouse();
 	input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2 + 70);
@@ -69,14 +93,31 @@ void LevelUpPopup::show()
 	levelupGroup->setVisible(true);
 	std::stringstream ss;
 
-	ss << "You are now level " << bloodworks->getPlayer()->getLevel() << "!";
-
+	ss << "You are level " << bloodworks->getPlayer()->getLevel() << "!";
 	levelupGroupTitle->setText(ss.str());
+
+	std::stringstream ss2;
+
+	if (waitingLevels >= 2)
+	{
+		ss2 << "You have " << waitingLevels << " perks to select.";
+	}
+	levelupGroupSubTitle->setText(ss2.str());
+
 	currentPerkName->setText("");
 	currentPerkExplanation->setText("");
 	hoverLevelupPerkIndex = -1;
 
 	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+	levelUpText->setVisible(false);
+	if (levelupPerksRenderables.size())
+	{
+		for (auto& t : levelupPerksRenderables)
+		{
+			t->setVisible(true);
+		}
+		return;
+	}
 
 	auto availablePerks = bloodworks->getAvailablePerks();
 
@@ -113,12 +154,22 @@ void LevelUpPopup::show()
 		bloodworks->addRenderable(t, GUI + 151);
 		levelupPerksRenderables.push_back(t);
 	}
-
-	levelUpSound->play();
 }
 
 void LevelUpPopup::tick()
 {
+	if (levelUpShowTime > 0.0f)
+	{
+		levelUpShowTime -= timer.getNonSlowedDt() * 3.9f;
+		if (levelUpShowTime < 0.0f)
+		{
+			levelUpShowTime = 0.0f;
+		}
+		float t = 0.6f - levelUpShowTime;
+		t = min(t, 0.0f);
+		levelUpText->setTextSize(levelUpShowTime * 5.0f + t * 3.0f + 24.0f);
+	}
+	
 	if (!isVisible())
 	{
 		return;
@@ -240,13 +291,47 @@ void LevelUpPopup::tick()
 			input.hideMouse();
 			bloodworks->doUnpause();
 			levelupGroup->setVisible(false);
-			levelupPerks.clear();
-			for (auto& t : levelupPerksRenderables)
+			clearPerks();
+			waitingLevels--;
+			if (waitingLevels > 0)
 			{
-				SAFE_DELETE(t);
+				levelUpText->setVisible(true);
 			}
-			levelupPerksRenderables.clear();
 			return;
 		}
 	}
+
+	if (input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_a))
+	{
+		input.clearKeyPress(key_escape);
+		input.clearKeyPress(joystick_0_button_a);
+
+		input.hideMouse();
+		bloodworks->doUnpause();
+		levelupGroup->setVisible(false);
+		levelUpText->setVisible(true);
+		levelUpShowTime = 0.0f;
+		for (auto& t : levelupPerksRenderables)
+		{
+			t->setVisible(false);
+		}
+	}
+}
+
+void LevelUpPopup::reset()
+{
+	waitingLevels = 0;
+	levelupGroup->setVisible(false);
+	levelUpText->setVisible(false);
+	clearPerks();
+}
+
+void LevelUpPopup::clearPerks()
+{
+	levelupPerks.clear();
+	for (auto& t : levelupPerksRenderables)
+	{
+		SAFE_DELETE(t);
+	}
+	levelupPerksRenderables.clear();
 }
