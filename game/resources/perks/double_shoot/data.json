@@ -1,6 +1,6 @@
 {
   "type" : "perk",
-  "name": "Double Shoot",
+  "name": "Double Tap",
   "description": "You sometimes shoot two bullets in succession.",
   "iconFile" : "resources/perks/double_shoot/icon.png",
   "scriptFile" : "resources/perks/double_shoot/double_shoot.lua",

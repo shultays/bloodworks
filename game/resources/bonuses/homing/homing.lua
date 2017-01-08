@@ -37,6 +37,10 @@ function HomingOrb.spawn(pos)
 	end
 end
 
+function HomingOrb.clear()
+	HomingOrb.homingOrbId = nil
+end
+
 HomingOrbBullet = {}
 
 function HomingOrbBullet.onTick(bullet)
@@ -46,8 +50,7 @@ function HomingOrbBullet.onTick(bullet)
 		local m = 1.0 - clamp(toMonster:length() / 50)
 		bullet.moveAngle = approachAngle(bullet.moveAngle, toMonster:getAngle(), (10 + 50 * m) * dt)
 		if bullet.data.monster.isDead then
-			bullet.onTickCallback = ""
-			bullet.data.monster = nil
+			bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, HomingOrb.homingOrbId)
 		end
 	end
 end

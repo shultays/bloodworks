@@ -392,7 +392,7 @@ void Player::tick()
 
 	if (gun)
 	{
-		bool trigerred = dt > 0.0f && (input.isKeyDown(mouse_button_left) || (input.hasJoyStick() && input.isKeyDown(joystick_0_button_rightshoulder)));
+		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && (input.isKeyDown(mouse_button_left) || (input.hasJoyStick() && input.isKeyDown(joystick_0_button_rightshoulder)));
 		gun->setTriggered(trigerred);
 		if (trigerred && gun->isLaser())
 		{

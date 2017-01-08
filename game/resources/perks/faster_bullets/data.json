@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Faster Bullets",
-  "description": "The bullets you shoot move faster.",
+  "description": "Your bullets move faster.",
   "iconFile" : "resources/perks/faster_bullets/icon.png",
   "scriptFile" : "resources/perks/faster_bullets/faster_bullets.lua",
   "scriptName" : "FasterBullets"
