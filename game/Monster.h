@@ -7,6 +7,7 @@ class Bloodworks;
 #include "cLuaWorld.h"
 #include "cAnimatedRenderable.h"
 #include "MonsterTemplate.h"
+#include "BuffFloat.h"
 
 class Monster
 {
@@ -63,6 +64,9 @@ class Monster
 	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
 
 	int lastRunCheck;
+
+	BuffFloat moveSpeedMultiplier;
+	BuffVec4 colorMultiplier;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

@@ -13,7 +13,7 @@
   "scriptName" : "Laser",
   
   "maxAmmo" : 40,
-  "reloadTime" : 3.5,
+  "reloadTime" : 1.5,
   
   "firingSound" : {
 	"path" : "resources/sounds/laser.ogg",

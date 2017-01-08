@@ -96,6 +96,36 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"dot", [](const Vec3& a, const Vec3& b) { return a.dot(b); }
 	);
 
+
+
+	lua.new_usertype<Vec4>("Vec4",
+		sol::constructors<sol::types<>, sol::types<float, float, float, float>>(),
+		"x", &Vec4::x,
+		"y", &Vec4::y,
+		"z", &Vec4::z,
+		"o", &Vec4::o,
+
+		sol::meta_function::addition, [](const Vec4& a, const Vec4& b) { return a + b; },
+		sol::meta_function::subtraction, [](const Vec4& a, const Vec4& b) { return a - b; },
+		sol::meta_function::multiplication, [](const Vec4& a, const Vec4& b) { return a * b; },
+		sol::meta_function::multiplication, [](const Vec4& a, float b) { return a * b; },
+		sol::meta_function::division, [](const Vec4& a, const Vec4& b) { return a / b; },
+		sol::meta_function::division, [](const Vec4& a, float b) { return a / b; },
+		sol::meta_function::unary_minus, [](const Vec4& a) { return -a; },
+
+
+		"normalize", [](Vec4& a) { a.normalize(); },
+		"normalized", [](const Vec4& a) { return a.normalized(); },
+
+		"distance", [](const Vec4& a, const Vec4& b) { return a.distance(b); },
+		"distanceSquared", [](const Vec4& a, const Vec4& b) { return a.distanceSquared(b); },
+
+		"length", [](const Vec4& a) { return a.length(); },
+		"lengthSquared", [](const Vec4& a) { return a.lengthSquared(); },
+
+		"dot", [](const Vec4& a, const Vec4& b) { return a.dot(b); }
+	);
+
 	lua.new_usertype<Mat3>("Mat3",
 		"fromPosition", [](const Vec2& pos) { return Mat3::translationMatrix(pos); },
 		"fromPositionAndScale", [](const Vec2& pos, const Vec2& scale) { return Mat3::scaleMatrix(scale).translateBy(pos); },
@@ -469,6 +499,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &Monster::data,
 		"experience", &Monster::experience,
 
+		"moveSpeedMultiplier", &Monster::moveSpeedMultiplier,
+		"colorMultiplier", &Monster::colorMultiplier,
+
 		"isDead", sol::readonly(&Monster::isDead),
 
 		"playAnimation", &Monster::playAnimation,
@@ -549,7 +582,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &Player::data
 		);
 
-	lua.new_usertype<BuffFloat::BuffInfo>("BuffInfo",
+	lua.new_usertype<BuffFloat::BuffInfo>("BuffFloatInfo",
 		"buffType", sol::readonly(&BuffFloat::BuffInfo::buffType),
 
 		"buffAmount", sol::readonly(&BuffFloat::BuffInfo::buffAmount),
@@ -557,8 +590,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"fadeInDuration", sol::readonly(&BuffFloat::BuffInfo::fadeInDuration),
 		"fadeOutDuration", sol::readonly(&BuffFloat::BuffInfo::fadeOutDuration),
 
+		"restart", &BuffFloat::BuffInfo::restart,
+
 		"setBuffAmount", &BuffFloat::BuffInfo::setBuffAmount,
 		"setBuffDuration", &BuffFloat::BuffInfo::setBuffDuration,
+		"getCurrentBuffAmount", &BuffFloat::BuffInfo::getCurrentBuffAmount,
 		"setBuffFadeInFadeOut", &BuffFloat::BuffInfo::setBuffFadeInFadeOut
 
 		);
@@ -595,11 +631,72 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setBuffFadeInFadeOut", &BuffFloat::setBuffFadeInFadeOut,
 
 		"getBuffInfo", &BuffFloat::getBuffInfo,
+		"hasBuffInfo", &BuffFloat::hasBuffInfo,
 
 		"getBaseValue", &BuffFloat::getBaseValue,
 		"getBuffedValue", &BuffFloat::getBuffedValue
 
 		);
+
+
+
+
+
+	lua.new_usertype<BuffVec4::BuffInfo>("BuffVec4Info",
+		"buffType", sol::readonly(&BuffVec4::BuffInfo::buffType),
+
+		"buffAmount", sol::readonly(&BuffVec4::BuffInfo::buffAmount),
+		"duration", sol::readonly(&BuffVec4::BuffInfo::duration),
+		"fadeInDuration", sol::readonly(&BuffVec4::BuffInfo::fadeInDuration),
+		"fadeOutDuration", sol::readonly(&BuffVec4::BuffInfo::fadeOutDuration),
+
+		"restart", &BuffVec4::BuffInfo::restart,
+
+		"setBuffAmount", &BuffVec4::BuffInfo::setBuffAmount,
+		"setBuffDuration", &BuffVec4::BuffInfo::setBuffDuration,
+		"getCurrentBuffAmount", &BuffVec4::BuffInfo::getCurrentBuffAmount,
+		"setBuffFadeInFadeOut", &BuffVec4::BuffInfo::setBuffFadeInFadeOut
+
+		);
+
+	lua.new_usertype<BuffVec4>("BuffVec4",
+		"addBuffWithType", &BuffVec4::addBuffWithType,
+		"addBuff", [&](BuffVec4& buff, float amount)
+	{
+		int id = bloodworks->getUniqueId();
+		buff.addBuff(id, amount, BuffVec4::multiply_buff);
+		return id;
+	},
+
+		"addBuffWithId", [&](BuffVec4& buff, int id, Vec4 amount)
+	{
+		buff.addBuff(id, amount, BuffVec4::multiply_buff);
+		return id;
+	},
+		"setBaseValue", &BuffVec4::setBaseValue,
+		"setBuffAmount", &BuffVec4::setBuffAmount,
+		"setBuffDuration", &BuffVec4::setBuffDuration,
+		"setBuffFadeInFadeOut", &BuffVec4::setBuffFadeInFadeOut,
+
+		"getBuffInfo", &BuffVec4::getBuffInfo,
+		"hasBuffInfo", &BuffVec4::hasBuffInfo,
+
+		"getBaseValue", &BuffVec4::getBaseValue,
+		"getBuffedValue", &BuffVec4::getBuffedValue
+
+		);
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
