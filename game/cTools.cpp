@@ -11,6 +11,38 @@
 #include "windows.h"
 #endif
 
+#ifdef _WIN32
+#include "StackWalker.h"
+
+class StackWalkerToConsole : public StackWalker
+{
+protected:
+	virtual void OnOutput(LPCSTR szText)
+	{
+		printf("%s", szText);
+	}
+public:
+	StackWalkerToConsole() : StackWalker(RetrieveNone)
+	{
+
+	}
+	void print()
+	{
+		printf("\n\nStack Trace Begin\n--------------------\n");
+		StackWalker::ShowCallstack();
+		printf("\n--------------------\nStack Trace End\n");
+	}
+
+	void printExceptionStack(EXCEPTION_POINTERS* pExp)
+	{
+		printf("\n\nException Stack Trace Begin\n--------------------\n");
+		ShowCallstack(GetCurrentThread(), pExp->ContextRecord);
+		printf("\n--------------------\nException Stack Trace End\n");
+	}
+} stack;
+
+#endif
+
 float angleDiff(float a, float b)
 {
 	float diff = a - b;
@@ -122,4 +154,18 @@ float randFloat(float limit)
 float randFloat(float begin, float end)
 {
 	return randFloat() * (end - begin) + begin;
+}
+
+void printStack()
+{
+#ifdef _WIN32
+	stack.print();
+#endif
+}
+
+void printExceptionStack(void* pExp)
+{
+#ifdef _WIN32
+	stack.printExceptionStack((EXCEPTION_POINTERS*)pExp);
+#endif
 }

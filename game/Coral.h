@@ -8,6 +8,7 @@ const float draw_interval = 1.0f / 60.0f;
 extern GLuint postProcessQuad;
 
 class cSoundManager;
+class StackWalkerToConsole;
 
 class Coral 
 {
@@ -27,6 +28,7 @@ class Coral
 	int windowWidth, windowHeight;
 	bool gameRunning;
 	cSoundManager *soundManager;
+
 public:
 	Coral();
 	void init();

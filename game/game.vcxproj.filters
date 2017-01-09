@@ -19,6 +19,9 @@
     <Filter Include="Coral\dirent">
       <UniqueIdentifier>{e09093c5-13a3-457b-a2f1-b0dd5a26c8c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Coral\StackWalker">
+      <UniqueIdentifier>{2c8966e1-e8ec-40f3-b672-e654df732611}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cMat.cpp">
@@ -122,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="cSoundManager.cpp">
       <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Coral\StackWalker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="LuaBuffController.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>Coral\StackWalker</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

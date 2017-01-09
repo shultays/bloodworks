@@ -20,7 +20,6 @@ Coral::Coral()
 	lastUpdateTime = 0.0f;
 
 	tempFrameBuffer[0] = -1;
-
 }
 
 void Coral::tick()
