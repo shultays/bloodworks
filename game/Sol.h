@@ -12440,6 +12440,7 @@ namespace sol {
 		const char* message = lua_tostring(L, -1);
 		if (message) {
 			std::string err = message;
+			printf("\n-----\nlua error\n%s\n-----\n", err.c_str());
 			lua_pop(L, 1);
  			throw error(err);
 		}
