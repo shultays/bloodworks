@@ -89,26 +89,60 @@ void InitGame()
 	game->initInternal();
 }
 
+
+#ifdef _WIN32
+#include "StackWalker.h"
+
+LONG WINAPI ExpFilter(EXCEPTION_POINTERS* pExp, DWORD dwExpCode)
+{
+	printExceptionStack(pExp);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif
+
 int main(int argc, char *argv[])
 {
-	if (!Init())
-		return -1;
+	printStack();
+	bool hasException = false;
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_TEXTURE_2D);
+#ifdef _WIN32
+	__try
+	{
+#endif
+		if (!Init())
+			return -1;
 
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_TEXTURE_2D);
 
-	SDL_GL_SwapWindow(mainWindow);
-	SDL_GL_SetSwapInterval(0);
-	debugRenderer.init();
-	InitGame();
-	RunGame();
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	Cleanup();
+		SDL_GL_SwapWindow(mainWindow);
+		SDL_GL_SetSwapInterval(0);
+		debugRenderer.init();
+		InitGame();
 
+		RunGame();
+
+		Cleanup();
+#ifdef _WIN32
+	}
+	__except (ExpFilter(GetExceptionInformation(), GetExceptionCode()))
+	{
+		hasException = true;
+	}
+	if (hasException)
+	{
+		if (mainWindow)
+		{
+			SDL_HideWindow(mainWindow);
+		}
+		char c;
+		scanf_s("%c\n", &c, 1);
+	}
+#endif
 	return 0;
 }
 
@@ -208,6 +242,7 @@ void Cleanup()
 	//
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow);
+	mainWindow = nullptr;
 	SDL_Quit();
 	coral.clear();
 	debugRenderer.freeAll();

@@ -79,6 +79,7 @@
     <IncludePath>C:\libs\soloud\include;C:\libs\lua53\x86\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\libs\soloud\lib;C:\libs\lua53\x64;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CustomBuildBeforeTargets>PostBuildEvent</CustomBuildBeforeTargets>
+    <TargetName>bloodworks_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -90,6 +91,7 @@
     <IncludePath>C:\libs\soloud\include;C:\libs\lua53\x86\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\libs\soloud\lib;C:\libs\lua53\x64;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CustomBuildBeforeTargets>PostBuildEvent</CustomBuildBeforeTargets>
+    <TargetName>bloodworks</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -204,6 +206,7 @@
     <ClCompile Include="MonsterController.cpp" />
     <ClCompile Include="Perk.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array2d.h" />
@@ -259,6 +262,7 @@
     <ClInclude Include="Perk.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sol.h" />
+    <ClInclude Include="StackWalker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
