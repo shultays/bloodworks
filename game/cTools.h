@@ -107,3 +107,6 @@ float randFloat(float begin, float end);
 
 void fixFolderPath(std::string& path);
 void fixFilePath(std::string& path);
+
+void printStack();
+void printExceptionStack(void* pExp);
