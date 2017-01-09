@@ -154,6 +154,18 @@ void Player::tick()
 		return;
 	}
 
+	if (input.isKeyPressed(key_g))
+	{
+		if (maxHitPoints == 100)
+		{
+			maxHitPoints = hitPoints = 100000000;
+		}
+		else
+		{
+			maxHitPoints = hitPoints = 100;
+		}
+		updateHitPoints();
+	}
 	reloadSpeedMultiplier.tick();
 	globalMonsterSpeedMultiplier.tick();
 	oldPos = pos;
