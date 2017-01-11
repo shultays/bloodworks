@@ -126,6 +126,7 @@ function MonsterGroupHelper.fixAngle(monster, angle)
 end
 
 MonsterMeleeHelper = {}
+MonsterMeleeHelper.slowBuffId = getGlobalUniqueId()
 
 function MonsterMeleeHelper.init(monster) 
 	monster.data.moving = true
@@ -150,10 +151,13 @@ function MonsterMeleeHelper.onTick(monster)
 			data.willHit = false
 			player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)))
 			playSound({path = "resources/sounds/melee_woosh.ogg", volume = 0.3})
-            if player.slowdownOnHit then
-                player:slowdown(data.slowdownAmount, data.slowdownDuration)
+            if player.data.noSlowdownOnHit == nil then
+				player.maxSpeed:addBuffWithId(MonsterMeleeHelper.slowBuffId, data.slowdownAmount)
+				player.maxSpeed:setBuffDuration(MonsterMeleeHelper.slowBuffId, data.slowdownDuration)
+				player.maxSpeed:setBuffFadeInFadeOut(MonsterMeleeHelper.slowBuffId, data.slowdownDuration/4, data.slowdownDuration/4)
 			end
-            
+			
+			
 			MeleeHitImage.build(monster)
 		end
 	else

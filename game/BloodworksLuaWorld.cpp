@@ -284,6 +284,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getUniqueId();
 	});
 
+	lua.set_function("getGlobalUniqueId", [&]()
+	{
+		return bloodworks->getGlobalUniqueId();
+	});
+
 	lua.set_function("addLine",
 		[&](const Vec2& pos0, const Vec2& pos1)
 	{
@@ -559,17 +564,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
-		"maxSpeed", sol::readonly(&Player::maxSpeed),
+		"maxSpeed", &Player::maxSpeed,
 		"doDamage", &Player::doDamage,
 		"doHeal", &Player::doHeal,
-		"slowdown", &Player::slowdown,
 		"gainExperience", &Player::gainExperience,
-		"bulletSpeedMult", &Player::bulletSpeedMult,
-		"shootSpeedMult", &Player::shootSpeedMult,
-		"moveSpeedMult", &Player::moveSpeedMult,
-		"slowdownOnHit", &Player::slowdownOnHit,
-		"monsterExperienceMult", &Player::monsterExperienceMult,
-		"damageMult", &Player::damageMult,
+		"bulletSpeedMultiplier", &Player::bulletSpeedMultiplier,
+		"shootSpeedMultiplier", &Player::shootSpeedMultiplier,
+		"monsterExperienceMultiplier", &Player::monsterExperienceMultiplier,
+		"damageMultiplier", &Player::damageMultiplier,
 		"reloadSpeedMultiplier", &Player::reloadSpeedMultiplier,
 		"globalMonsterSpeedMultiplier", &Player::globalMonsterSpeedMultiplier,
 		"setGun", &Player::setGun,
@@ -612,6 +614,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		memory.~BuffFloat();
 	}),
 
+		"removeBuff", &BuffFloat::removeBuff,
 		"addBuffWithType", &BuffFloat::addBuffWithType,
 		"addBuff", [&](BuffFloat& buff, float amount)
 	{
@@ -659,6 +662,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 	lua.new_usertype<BuffVec4>("BuffVec4",
+		"removeBuff", &BuffVec4::removeBuff,
 		"addBuffWithType", &BuffVec4::addBuffWithType,
 		"addBuff", [&](BuffVec4& buff, Vec4 amount)
 	{

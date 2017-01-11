@@ -1,9 +1,8 @@
 
+HomingOrb.homingOrbId = getGlobalUniqueId()
+
 function HomingOrb.spawn(pos)
 
-	if HomingOrb.homingOrbId == nil then
-		HomingOrb.homingOrbId = getUniqueId()
-	end
 	local monster = getClosestMonsterWithIgnoreId(pos, HomingOrb.homingOrbId)
 	
 	if monster ~= nil then
@@ -35,10 +34,6 @@ function HomingOrb.spawn(pos)
 		
 		playSound({path = "resources/sounds/plasma.ogg"})
 	end
-end
-
-function HomingOrb.clear()
-	HomingOrb.homingOrbId = nil
 end
 
 HomingOrbBullet = {}
