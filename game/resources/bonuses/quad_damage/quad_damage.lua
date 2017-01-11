@@ -1,9 +1,11 @@
+QuadDamage.buffId = getGlobalUniqueId()
 
 function QuadDamage.spawn(pos)
 	local data = QuadDamage.data
+
+	player.damageMultiplier:addBuffWithId(QuadDamage.buffId, 4.0)
 	if data.boost == nil then
 		data.boost = addGameObject("QuadDamage")
-		player.damageMult = player.damageMult * 4.0
 		QuadDamage.shaderStartTime = time
 		data.postProcess = addPostProcess("resources/post_process/red_shift.ps")
 		data.postProcess:setShaderWeight(0.0)
@@ -37,7 +39,7 @@ function QuadDamage.onTick(gameObject)
 		QuadDamage.data.boost = nil
 		removePostProcess(QuadDamage.data.postProcess)
 		QuadDamage.data.postProcess = nil
-		player.damageMult = player.damageMult / 4.0
+		player.damageMultiplier:removeBuff(QuadDamage.buffId)
 		gameObject.toBeRemoved = true
 	end
 end

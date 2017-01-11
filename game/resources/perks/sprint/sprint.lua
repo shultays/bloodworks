@@ -7,16 +7,9 @@ end
 
 function Sprint.onTick()
 	if player.data.sprintOldHp > player.hitPoints and player.hitPoints < 40 then
-		if player.data.sprinting == false then
-			player.data.sprinting = true
-		player.moveSpeedMult = player.moveSpeedMult * 1.5
-		end
-		player.data.sprintStartTime = time
+		local id = player.maxSpeed:addBuff(1.5)
+		player.maxSpeed:getBuffInfo(id):setBuffDuration(0.8)
 	end
 
 	player.data.sprintOldHp = player.hitPoints
-	if player.data.sprinting and player.data.sprintStartTime + 1.0 < time then
-		player.data.sprinting = false
-		player.moveSpeedMult = player.moveSpeedMult / 1.5
-	end
 end

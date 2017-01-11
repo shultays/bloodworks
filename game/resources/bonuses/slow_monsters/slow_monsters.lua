@@ -17,9 +17,6 @@ function SlowMonsters.spawn(pos)
 	playSound({path = "resources/sounds/slow.ogg", volume = 0.6})
 end
 
-
-
 function SlowMonsters.clear()
 	SlowMonsters.buffId = nil
 end
-

@@ -150,6 +150,16 @@ public:
 		isChangedBeforeTick = isDirty = true;
 	}
 
+	void removeBuff(int id)
+	{
+		auto& buff = buffs.find(id);
+		if (buff != buffs.end())
+		{
+			buffs.erase(buff);
+			isChangedBeforeTick = isDirty = true;
+		}
+	}
+
 	void addBuffWithType(int id, T amount)
 	{
 		addBuff(id, amount, multiply_buff);
