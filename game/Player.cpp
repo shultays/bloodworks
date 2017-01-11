@@ -166,6 +166,11 @@ void Player::tick()
 		}
 		updateHitPoints();
 	}
+
+	maxSpeed.tick();
+	damageMultiplier.tick();
+	shootSpeedMultiplier.tick();
+	bulletSpeedMultiplier.tick();
 	reloadSpeedMultiplier.tick();
 	globalMonsterSpeedMultiplier.tick();
 	oldPos = pos;
@@ -178,17 +183,8 @@ void Player::tick()
 	const float decceleration = 1000.0f;
 
 	float dt = timer.getDt();
-	float currentMaxSpeed = maxSpeed;
-
-	if (slowdownAmount > 0.0f && input.isMouseVisible() == false)
-	{
-		currentMaxSpeed *= 1.0f - slowdownAmount;
-		slowdownDuration -= dt;
-		if (slowdownDuration < 0.0f)
-		{
-			slowdownAmount -= dt * 3;
-		}
-	}
+	maxSpeed.setBaseValue(150.0f);
+	float currentMaxSpeed = maxSpeed.getBuffedValue();
 
 	float minRotation = pi * 2.0f;
 	float maxRotation = pi * 10.0f;
@@ -239,7 +235,7 @@ void Player::tick()
 	}
 
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveSpeedDir = moveDir * moveSpeed * moveSpeedMult;
+	moveSpeedDir = moveDir * moveSpeed;
 
 	Vec2 moveAmount = moveSpeedDir * dt;
 	Vec2 newPos = pos + moveAmount;
@@ -492,12 +488,6 @@ int Player::doDamageWithParams(int damage, sol::table& params)
 	return damage;
 }
 
-void Player::slowdown(float slowdownAmount, float slowdownDuration)
-{
-	this->slowdownAmount = slowdownAmount;
-	this->slowdownDuration = slowdownDuration;
-}
-
 void Player::updateHitPoints()
 {
 	std::stringstream ss;
@@ -583,18 +573,21 @@ void Player::setVisible(bool visible)
 void Player::reset()
 {
 	reloadAlpha = 0.0f;
-	maxSpeed = 150.0f;
-	damageMult = monsterExperienceMult = moveSpeedMult = shootSpeedMult = bulletSpeedMult = 1.0f;
+
+	maxSpeed.clear();
+	monsterExperienceMultiplier.clear();
+	damageMultiplier.clear();
+	shootSpeedMultiplier.clear();
 	reloadSpeedMultiplier.clear();
-	slowdownOnHit = true;
+	bulletSpeedMultiplier.clear();
+	globalMonsterSpeedMultiplier.clear();
+
 	isDead = false;
 
 	oldSpreadAngle = 0.0f;
 	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
 	aimAngle = 0.0f;
 	aimDir = Vec2::fromAngle(aimAngle);
-
-	slowdownAmount = 0.0f;
 
 	crosshairPos = Vec2(0.0f, 50.0f);
 	crosshairDistance = 0.0f;
@@ -617,14 +610,14 @@ void Player::reset()
 	setVisible(false);
 }
 
-float Player::getMonsterExperienceMultiplier() const
+float Player::getMonsterExperienceMultiplier()
 {
-	return monsterExperienceMult;
+	return monsterExperienceMultiplier.getBuffedValue();
 }
 
-float Player::getDamageMultiplier() const
+float Player::getDamageMultiplier() 
 {
-	return damageMult;
+	return damageMultiplier.getBuffedValue();
 }
 
 

@@ -1,13 +1,12 @@
+FrostLaser.buffId = getGlobalUniqueId()
 
 function FrostLaser.init(gun)
 	gun.spreadAngle = 0.0
 	gun.crosshairDistance = 550.0
 	gun.data.maxRangeUniform = gun.laser:addUniformFloat("maxRange", 350.0)
 	gun.data.timeUniform = gun.laser:addUniformFloat("time", 0.0)
-	gun.data.buffId = getUniqueId()
 	ShootTimer.initGun(gun, 0.1)
 end
-
 
 function FrostLaser.onTick(gun)
 	gun.laser:setVisible(false)
@@ -29,20 +28,20 @@ function FrostLaser.onTick(gun)
 				
 				local buff
 				local colorbuff
-				if result.monster.moveSpeedMultiplier:hasBuffInfo(gun.data.buffId) == false then
-					result.monster.moveSpeedMultiplier:addBuffWithId(gun.data.buffId, 1.0)
-					buff = result.monster.moveSpeedMultiplier:getBuffInfo(gun.data.buffId)
+				if result.monster.moveSpeedMultiplier:hasBuffInfo(FrostLaser.buffId) == false then
+					result.monster.moveSpeedMultiplier:addBuffWithId(FrostLaser.buffId, 1.0)
+					buff = result.monster.moveSpeedMultiplier:getBuffInfo(FrostLaser.buffId)
 					buff:setBuffDuration(0.8)
 					buff:setBuffFadeInFadeOut(-1.0, 0.3)
 					
-					result.monster.colorMultiplier:addBuffWithId(gun.data.buffId, Vec4:new(1.0, 1.0, 1.0, 1.0))
-					colorbuff = result.monster.colorMultiplier:getBuffInfo(gun.data.buffId)
+					result.monster.colorMultiplier:addBuffWithId(FrostLaser.buffId, Vec4:new(1.0, 1.0, 1.0, 1.0))
+					colorbuff = result.monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
 					colorbuff:setBuffDuration(0.8)
 					colorbuff:setBuffFadeInFadeOut(-1.0, 0.3)
 					
 				else
-					buff = result.monster.moveSpeedMultiplier:getBuffInfo(gun.data.buffId)
-					colorbuff = result.monster.colorMultiplier:getBuffInfo(gun.data.buffId)
+					buff = result.monster.moveSpeedMultiplier:getBuffInfo(FrostLaser.buffId)
+					colorbuff = result.monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
 				end
 				local amount = buff:getCurrentBuffAmount()
 				amount = amount * 0.80
