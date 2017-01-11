@@ -45,21 +45,13 @@ class Player
 
 	cAnimatedTexturedQuadRenderable *shootRenderable;
 
-	float slowdownAmount;
-	float slowdownDuration;
-
-	float bulletSpeedMult;
-	float shootSpeedMult;
-	float moveSpeedMult;
-	float monsterExperienceMult;
-	float damageMult;
-	float maxSpeed;
-
+	BuffFloat maxSpeed;
+	BuffFloat monsterExperienceMultiplier;
+	BuffFloat damageMultiplier;
+	BuffFloat shootSpeedMultiplier;
+	BuffFloat bulletSpeedMultiplier;
 	BuffFloat reloadSpeedMultiplier;
-
 	BuffFloat globalMonsterSpeedMultiplier;
-
-	bool slowdownOnHit;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
 	Vec2 barSize, scaledBarSize;
@@ -112,7 +104,6 @@ public:
 
 	int doDamage(int damage);
 	int doDamageWithParams(int damage, sol::table& params);
-	void slowdown(float slowdownAmount, float slowdownDuration);
 	const Vec2& getCrosshairPos() const 
 	{
 		return crosshairPos;
@@ -120,7 +111,7 @@ public:
 
 	float getBulletSpeedMultiplier()
 	{
-		return bulletSpeedMult;
+		return bulletSpeedMultiplier.getBuffedValue();
 	}
 
 	void gainExperience(int experience);
@@ -135,8 +126,8 @@ public:
 	}
 	void setVisible(bool visible);
 	void reset();
-	float getMonsterExperienceMultiplier() const;
-	float getDamageMultiplier() const;
+	float getMonsterExperienceMultiplier();
+	float getDamageMultiplier();
 	void resize();
 	float getReloadSpeedMultiplier();
 	float getGlobalMonsterSpeedMultiplier();

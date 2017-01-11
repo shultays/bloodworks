@@ -1,6 +1,7 @@
 
+FasterReloadStationary.id = getGlobalUniqueId()
+
 function FasterReloadStationary.init()
-	FasterReloadStationary.id = getUniqueId()
 	FasterReloadStationary.isFast = false
 end
 

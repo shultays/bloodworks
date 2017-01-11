@@ -76,6 +76,7 @@ class Bloodworks : public cGame
 	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
 
 	int nextUniqueId;
+	int nextGlobalUniqueId;
 
 	Vec2 mapSize;
 	Vec2 mapBegin;
@@ -154,7 +155,14 @@ public:
 			nextUniqueId = 1000;
 		}
 		return nextUniqueId++;
+	}	
+	
+	int getGlobalUniqueId()
+	{
+		assert(nextGlobalUniqueId < 1000);
+		return nextGlobalUniqueId++;
 	}
+
 	const Vec2& getMapSize() const
 	{
 		return mapSize;
