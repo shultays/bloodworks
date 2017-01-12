@@ -139,7 +139,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		reloadTime = 2.0f;
 	}
 
-	currentAmmo = maxAmmo;
+	buffedMaxAmmo = currentAmmo = getMaxAmmo();
 	reloading = false;
 
 	scriptTable["init"](this);
@@ -162,13 +162,24 @@ void Gun::stop()
 void Gun::start()
 {
 	isTriggered = false;
-	currentAmmo = maxAmmo;
+	currentAmmo = getMaxAmmo();
+	buffedMaxAmmo = currentAmmo;
 	reloading = false;
 }
 
 void Gun::tick(float dt)
 {
-	if (currentAmmo < maxAmmo && (input.isKeyPressed(key_r) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_leftshoulder))))
+	int newMaxAmmo = getMaxAmmo();
+	if (buffedMaxAmmo < newMaxAmmo)
+	{
+		currentAmmo += (newMaxAmmo - buffedMaxAmmo);
+	}
+	if (currentAmmo > newMaxAmmo)
+	{
+		currentAmmo = newMaxAmmo;
+	}
+	buffedMaxAmmo = newMaxAmmo;
+	if (currentAmmo < buffedMaxAmmo && (input.isKeyPressed(key_r) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_leftshoulder))))
 	{
 		reload();
 	}
@@ -191,7 +202,7 @@ void Gun::tick(float dt)
 		if (remainingReload < 0.0)
 		{
 			reloading = false;
-			currentAmmo = maxAmmo;
+			currentAmmo = buffedMaxAmmo;
 
 			if (scriptTable["onReloadEnded"])
 			{
@@ -340,9 +351,9 @@ void Gun::reload()
 	}
 }
 
-int Gun::getMaxAmmo() const
+int Gun::getMaxAmmo()
 {
-	return maxAmmo;
+	return bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
 }
 
 int Gun::getCurrentAmmo() const

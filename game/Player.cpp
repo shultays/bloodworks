@@ -173,6 +173,14 @@ void Player::tick()
 	bulletSpeedMultiplier.tick();
 	reloadSpeedMultiplier.tick();
 	globalMonsterSpeedMultiplier.tick();
+	clipCountMultiplier.tick();
+	monsterExperienceMultiplier.tick();
+	gunSpreadMultiplier.tick();
+
+	if (input.isKeyPressed(key_space))
+	{
+		clipCountMultiplier.addBuff(1, 1.5f, BuffTemplate<float>::multiply_buff).setBuffDuration(5.0f);
+	}
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -349,7 +357,7 @@ void Player::tick()
 
 	if (gun && gun->spreadVisible())
 	{
-		float newSpreadAngle = gun->getSpreadAngle();
+		float newSpreadAngle = gunSpreadMultiplier.getBuffedValueFor(gun->getSpreadAngle());
 		const float maxAngleChange = 1.0f * dt;
 		if (newSpreadAngle > oldSpreadAngle)
 		{
@@ -581,6 +589,8 @@ void Player::reset()
 	reloadSpeedMultiplier.clear();
 	bulletSpeedMultiplier.clear();
 	globalMonsterSpeedMultiplier.clear();
+	clipCountMultiplier.clear();
+	gunSpreadMultiplier.clear();
 
 	isDead = false;
 
@@ -646,6 +656,16 @@ float Player::getReloadSpeedMultiplier()
 float Player::getGlobalMonsterSpeedMultiplier()
 {
 	return globalMonsterSpeedMultiplier.getBuffedValue();
+}
+
+float Player::getClipCountMultiplier()
+{
+	return clipCountMultiplier.getBuffedValue();
+}
+
+int Player::getBuffedClipSize(int clipSize)
+{
+	return (int)ceil(clipCountMultiplier.getBuffedValueFor((float)clipSize) - 0.01f);
 }
 
 void Player::checkInput(bool& moving, float& wantedAngle)
