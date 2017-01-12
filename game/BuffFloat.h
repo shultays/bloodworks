@@ -110,6 +110,12 @@ private:
 	float dirtyTickTimeStart;
 	float dirtyTickTimeEnd;
 	int buffControllerId;
+
+
+	T totalAddAfterMultiplyBuff;
+	T totalMultiplyBuff;
+	T totalAddBeforeMultiplyBuff;
+
 public:
 	BuffTemplate()
 	{
@@ -133,7 +139,7 @@ public:
 		isChangedBeforeTick = isDirty = true;
 	}
 
-	void addBuff(int id, T amount, BuffType buffType)
+	BuffInfo& addBuff(int id, T amount, BuffType buffType)
 	{
 		auto& buff = buffs[id];
 		buff.buffAmount = amount;
@@ -148,6 +154,7 @@ public:
 		buff.parent = this;
 		buff.removeAfterEnds = true;
 		isChangedBeforeTick = isDirty = true;
+		return buff;
 	}
 
 	void removeBuff(int id)
@@ -180,7 +187,17 @@ public:
 		buffs.at(id).setBuffFadeInFadeOut(fadeIn, fadeOut);
 	}
 
-	T getBuffedValue()
+	T getBuffedValueFor(T baseValue)
+	{
+		if (isDirty)
+		{
+			build();
+		}
+
+		return (baseValue + totalAddBeforeMultiplyBuff) * totalMultiplyBuff + totalAddAfterMultiplyBuff;
+	}
+
+	const T& getBuffedValue()
 	{
 		if (isDirty)
 		{
@@ -189,7 +206,7 @@ public:
 		return finalValue;
 	}
 
-	T getBaseValue()
+	const T& getBaseValue()
 	{
 		return baseValue;
 	}
@@ -231,6 +248,10 @@ private:
 		finalValue = baseValue;
 		isDirty = false;
 		isDirtyNextTick = false;
+
+		totalAddAfterMultiplyBuff = T(0.0f);
+		totalMultiplyBuff = T(1.0f);
+		totalAddBeforeMultiplyBuff = T(0.0f);
 	}
 
 	bool build()
@@ -240,10 +261,6 @@ private:
 		{
 			return false;
 		}
-
-		T totalAddAfterMultiplyBuff = T(0.0f);
-		T totalMultiplyBuff = T(1.0f);
-		T totalAddBeforeMultiplyBuff = T(0.0f);
 
 		std::vector<int> toRemove;
 		toRemove.reserve(10);

@@ -52,6 +52,8 @@ class Player
 	BuffFloat bulletSpeedMultiplier;
 	BuffFloat reloadSpeedMultiplier;
 	BuffFloat globalMonsterSpeedMultiplier;
+	BuffFloat clipCountMultiplier;
+	BuffFloat gunSpreadMultiplier;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
 	Vec2 barSize, scaledBarSize;
@@ -131,6 +133,8 @@ public:
 	void resize();
 	float getReloadSpeedMultiplier();
 	float getGlobalMonsterSpeedMultiplier();
+	float getClipCountMultiplier();
+	int getBuffedClipSize(int clipSize);
 private:
 	void checkInput(bool& moving, float& wantedAngle);
 	void updateExperience();
