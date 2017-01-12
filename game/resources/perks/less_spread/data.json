@@ -1,0 +1,8 @@
+{
+  "type" : "perk",
+  "name": "Less Spread",
+  "description": "Your guns do less spread.",
+  "iconFile" : "resources/perks/less_spread/icon.png",
+  "scriptFile" : "resources/perks/less_spread/less_spread.lua",
+  "scriptName" : "LessSpread"
+}

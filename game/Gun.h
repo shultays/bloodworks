@@ -66,6 +66,8 @@ class Gun
 	bool reloading;
 	bool reloadEnding;
 
+	int buffedMaxAmmo;
+
 	BuffFloat reloadSpeedMultiplier;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
@@ -109,8 +111,9 @@ public:
 	void addAmmo();
 	void consumeAmmo();
 	void reload();
-	int getMaxAmmo() const;
 	int getCurrentAmmo() const;
 	bool isReloading() const;
 	float getReloadPercentage() const;
+
+	int getMaxAmmo();
 };
