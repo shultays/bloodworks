@@ -260,7 +260,7 @@ Bloodworks::Bloodworks()
 	soundPaused = false;
 	cameraCenterPos.setZero();
 
-	globalVolume = 0.7f;
+	globalVolume = 0.0f;
 	coral.getSoundManager()->setGlobalVolume(globalVolume);
 }
 

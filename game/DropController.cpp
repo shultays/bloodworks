@@ -39,13 +39,13 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.gun->getIconPath(), "resources/default");
 	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec();
-	if (textureSize.w > 30.0f)
+	if (textureSize.w > 32.0f)
 	{
-		textureSize *= 30.0f / textureSize.w;
+		textureSize *= 32.0f / textureSize.w;
 	}
-	if (textureSize.h > 15.0f)
+	if (textureSize.h > 17.0f)
 	{
-		textureSize *= 15.0f / textureSize.h;
+		textureSize *= 17.0f / textureSize.h;
 	}
 	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
 	group->addRenderable(renderable);
@@ -83,7 +83,7 @@ void DropController::createBonus(const Vec2& position, int forceIndex)
 	cRenderableGroup *group = new cRenderableGroup(bloodworks);
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.bonus->getIconPath(), "resources/default");
-	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.10f;
+	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.12f;
 
 	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize));
 	group->addRenderable(renderable);
