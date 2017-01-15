@@ -122,7 +122,7 @@ void DropController::tick()
 
 		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f || input.isKeyDown(key_space));
 
-		if (drop.pos.distanceSquared(playerPos) < 20.0f * 20.0f)
+		if (drop.pos.distanceSquared(playerPos) < 30.0f * 30.0f)
 		{
 			if (drop.gun)
 			{
