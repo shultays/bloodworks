@@ -253,11 +253,10 @@ void LevelUpPopup::tick()
 		}
 	}
 	
-	Vec2 mouseScreenPos = input.getMousePos() - bloodworks->getScreenDimensions().toVec() * 0.5f;
 	//debugRenderer.addText("O", mouseScreenPos.x, mouseScreenPos.y, 0.0f, Vec4(1.0f), 12.0f, TextAlignment::center, RenderableAlignment::center);
 	for (int i = 0; i < levelupPerks.size(); i++)
 	{
-		levelupPerksRenderables[i]->check(mouseScreenPos);
+		levelupPerksRenderables[i]->check(input.getMousePos());
 		if (hoverLevelupPerkIndex != i)
 		{
 			if (levelupPerksRenderables[i]->isHovering())
