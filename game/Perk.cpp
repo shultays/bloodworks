@@ -1,5 +1,6 @@
 #include "Perk.h"
 #include "Gun.h"
+#include "Monster.h"
 #include "Bullet.h"
 
 
@@ -66,5 +67,13 @@ void Perk::onPlayerDied()
 	if (scriptTable["onPlayerDied"])
 	{
 		scriptTable["onPlayerDied"]();
+	}
+}
+
+void Perk::onMonsterDied(Monster* monster)
+{
+	if (scriptTable["onMonsterDied"])
+	{
+		scriptTable["onMonsterDied"](monster);
 	}
 }

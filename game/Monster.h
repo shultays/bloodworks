@@ -67,6 +67,7 @@ class Monster
 
 	BuffFloat moveSpeedMultiplier;
 	BuffVec4 colorMultiplier;
+	float dropChance;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

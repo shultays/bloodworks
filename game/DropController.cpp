@@ -5,6 +5,7 @@
 #include "cTexture.h"
 #include "Player.h"
 #include "Bonus.h"
+#include "Monster.h"
 #include "Gun.h"
 
 DropController::~DropController()
@@ -12,8 +13,9 @@ DropController::~DropController()
 	reset();
 }
 
-void DropController::createGun(const Vec2& position, int forceIndex)
+void DropController::spawnGun(const Vec2& position, int forceIndex)
 {
+	lastDropSpawn = timer.getTime();
 	Drop drop;
 	drop.bonus = nullptr;
 	drop.time = timer.getTime();
@@ -63,8 +65,9 @@ void DropController::createGun(const Vec2& position, int forceIndex)
 	drops.push_back(drop);
 }
 
-void DropController::createBonus(const Vec2& position, int forceIndex)
+void DropController::spawnBonus(const Vec2& position, int forceIndex)
 {
+	lastDropSpawn = timer.getTime();
 	Drop drop;
 	drop.canFadeout = false;
 	drop.time = timer.getTime();
@@ -159,20 +162,15 @@ void DropController::tick()
 	}
 }
 
-void DropController::addDrop(const Vec2& position)
+void DropController::spawnDrop(const Vec2& position)
 {
-	if (timer.getTime() - lastDropSpawn < 5.0f)
+	if (randBool())
 	{
-		return;
-	}
-	lastDropSpawn = timer.getTime();
-	if (randBool() && input.isKeyDown(key_1) == false)
-	{
-		createBonus(position);
+		spawnBonus(position);
 	}
 	else
 	{
-		createGun(position);
+		spawnGun(position);
 	}
 }
 
@@ -183,6 +181,25 @@ void DropController::reset()
 		SAFE_DELETE(drop.renderable);
 	}
 	drops.clear();
-	lastDropSpawn = 0.0f;
+	lastDropSpawn = timer.getTime();
+}
+
+void DropController::onMonsterDied(Monster* monster, float dropChance)
+{
+	Vec2 screenMin = bloodworks->getCameraPos() - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 50;
+	Vec2 screenMax = bloodworks->getCameraPos() + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 50;
+
+	const Vec2& pos = monster->getPosition();
+
+	if (pos.x > screenMin.x && pos.y > screenMin.y && pos.x < screenMax.x && pos.y < screenMax.y)
+	{
+		float timeSinceLastDrop = timer.getTime() - lastDropSpawn;
+		float extraDropChance = (timeSinceLastDrop - 30.0f) / 200.0f;
+
+		if (randFloat() < dropChance + extraDropChance)
+		{
+			spawnDrop(pos);
+		}
+	}
 }
 

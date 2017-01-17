@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "BulletController.h"
 #include "Bullet.h"
+#include "Monster.h"
 
 
 #define MUSIC_VOLUME 0.5f
@@ -194,5 +195,13 @@ void MissionController::onPlayerDied()
 bool MissionController::isLoaded() const
 {
 	return loadedMission >= 0;
+}
+
+void MissionController::onMonsterDied(Monster* monster)
+{
+	if (scriptTable["onMonsterDied"])
+	{
+		scriptTable["onMonsterDied"](monster);
+	}
 }
 
