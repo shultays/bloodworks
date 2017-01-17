@@ -83,6 +83,7 @@ function Survival.init()
 	end
     
 	Survival.perkPerLevel = 3
+	Survival.firstKill = true
 	missionData = Survival
 end
 
@@ -187,4 +188,12 @@ function Survival.onPlayerDied()
 	gameObject.data.renderable:update()
 	gameObject:setPosition(Vec2.new(0, -80))
 	
+end
+
+
+function Survival.onMonsterDied(monster)
+	if Survival.firstKill then
+		Survival.firstKill = false
+		spawnRandomGun(monster.position)
+	end
 end

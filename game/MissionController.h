@@ -11,6 +11,7 @@ class Bloodworks;
 class cRenderable;
 class Bullet;
 class GameObject;
+class Monster;
 
 #include "json.h"
 
@@ -53,4 +54,5 @@ public:
 	{
 		return scriptTable;
 	}
+	void onMonsterDied(Monster* monster);
 };

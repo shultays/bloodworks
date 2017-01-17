@@ -19,6 +19,8 @@
 #include "cPostProcess.h"
 #include "BuffFloat.h"
 #include "LuaBuffController.h"
+#include "Bonus.h"
+#include "DropController.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -467,6 +469,67 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId);
 	});
 
+	lua.set_function("spawnRandomBonus",
+		[&](const Vec2& pos)
+	{
+		return bloodworks->getDropController()->spawnDrop(pos);
+	});
+
+	lua.set_function("spawnRandomDrop",
+		[&](const Vec2& pos)
+	{
+		return bloodworks->getDropController()->spawnDrop(pos);
+	});
+
+	lua.set_function("spawnRandomGun",
+		[&](const Vec2& pos)
+	{
+		return bloodworks->getDropController()->spawnGun(pos);
+	});
+
+	lua.set_function("spawnRandomBonus",
+		[&](const Vec2& pos)
+	{
+		return bloodworks->getDropController()->spawnBonus(pos);
+	});
+
+
+	lua.set_function("spawnRandomGun",
+		[&](const Vec2& pos)
+	{
+		return bloodworks->getDropController()->spawnGun(pos);
+	});
+
+	lua.set_function("spawnGun",
+		[&](const Vec2& pos, const std::string& name)
+	{
+		int index = 0;
+		for (auto& gun : bloodworks->getGuns())
+		{
+			if (name == gun->getName())
+			{
+				bloodworks->getDropController()->spawnGun(pos, index);
+				return;
+			}
+			index++;
+		}
+	});
+
+	lua.set_function("spawnBonus",
+		[&](const Vec2& pos, const std::string& name)
+	{
+		int index = 0;
+		for (auto& bonus : bloodworks->getBonuses())
+		{
+			if (name == bonus->getName())
+			{
+				bloodworks->getDropController()->spawnBonus(pos, index);
+				return;
+			}
+			index++;
+		}
+	});
+
 	lua.new_usertype<MonsterTemplate>("MonsterTemplate",
 		"name", sol::readonly(&MonsterTemplate::name),
 		"experience", sol::readonly(&MonsterTemplate::experience),
@@ -513,6 +576,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addTimer", &Monster::addTimer,
 		"setScale", &Monster::setScale,
 		"setColor", &Monster::setColor,
+
+		"dropChance", &Monster::dropChance,
 
 		"doDamage", &Monster::doDamage,
 		"doDamageWithArgs", &Monster::doDamageWithArgs,
