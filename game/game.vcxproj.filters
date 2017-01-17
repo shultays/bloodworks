@@ -129,6 +129,9 @@
     <ClCompile Include="StackWalker.cpp">
       <Filter>Coral\StackWalker</Filter>
     </ClCompile>
+    <ClCompile Include="cTickBox.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="StackWalker.h">
       <Filter>Coral\StackWalker</Filter>
+    </ClInclude>
+    <ClInclude Include="cTickBox.h">
+      <Filter>Coral\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

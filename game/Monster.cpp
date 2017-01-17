@@ -56,7 +56,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
 
-	dropChance = 0.05;
+	dropChance = 0.05f;
 	scriptTable["init"](this);
 }
 
