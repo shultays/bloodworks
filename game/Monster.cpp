@@ -55,6 +55,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	position = 100.0f;
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
+
+	dropChance = 0.05;
 	scriptTable["init"](this);
 }
 
@@ -254,10 +256,8 @@ void Monster::killSelf(const Vec2& blowDir)
 	}
 	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
 
-	if (randFloat() < 0.1f || input.isKeyDown(key_1))
-	{
-		bloodworks->addDrop(position);
-	}
+
+	bloodworks->onMonsterDied(this, dropChance);
 
 	std::vector<int> parts;
 	int maxCount = (int)monsterTemplate->bodyParts.size();

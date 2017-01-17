@@ -6,6 +6,7 @@ class Gun;
 class Bonus;
 class cRenderableGroup;
 class Bloodworks;
+class Monster;
 
 class DropController
 {
@@ -33,9 +34,10 @@ public:
 	}
 	~DropController();
 
-	void createGun(const Vec2& position, int forceIndex = -1);
-	void createBonus(const Vec2& position, int forceIndex = -1);
+	void spawnGun(const Vec2& position, int forceIndex = -1);
+	void spawnBonus(const Vec2& position, int forceIndex = -1);
 	void tick();
-	void addDrop(const Vec2& position);
+	void spawnDrop(const Vec2& position);
 	void reset();
+	void onMonsterDied(Monster* monster, float dropChance);
 };
