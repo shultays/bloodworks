@@ -10,9 +10,16 @@ void cButton::check(const Vec2& mousePos)
 
 	Vec2 diff = mousePos - defaultShift;
 
-	if (getAlignment() == RenderableAlignment::topLeft)
+	// todo
+	// add rest
+	// better cache in cgame
+	if (alignment == RenderableAlignment::topLeft)
 	{
 		diff -= Vec2(0.0f, (float)game->getScreenDimensions().h);
+	}
+	else if (alignment == RenderableAlignment::center)
+	{
+		diff -= Vec2(game->getScreenDimensions().w * 0.5f, game->getScreenDimensions().h * 0.5f);
 	}
 
 	if (enforceHovering == enforce_hovering || (enforceHovering == enforce_not_hovering != diff.x > beginRange.x && diff.x < endRange.x && diff.y > beginRange.y && diff.y < endRange.y))
