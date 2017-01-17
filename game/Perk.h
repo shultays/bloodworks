@@ -8,6 +8,7 @@
 
 class Gun;
 class Bullet;
+class Monster;
 
 class Perk
 {
@@ -101,4 +102,5 @@ public:
 	{
 		return hideLevelText == false && maxLevel > 1;
 	}
+	void onMonsterDied(Monster* monster);
 };

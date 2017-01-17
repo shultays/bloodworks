@@ -113,6 +113,11 @@ public:
 		return monsterController;
 	}
 
+	DropController* getDropController() const
+	{
+		return dropController;
+	}
+
 	BulletController* getBulletController() const
 	{
 		return bulletController;
@@ -214,4 +219,5 @@ public:
 	float getSoundSpeed() const;
 	bool isMissionLoaded() const;
 	void onGunReloaded(Gun* gun);
+	void onMonsterDied(Monster* monster, float dropChance);
 };

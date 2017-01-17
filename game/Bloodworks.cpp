@@ -605,6 +605,17 @@ void Bloodworks::onGunReloaded(Gun* gun)
 	}
 }
 
+void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
+{
+	for (auto& perk : usedPerks)
+	{
+		perk->onMonsterDied(monster);
+	}
+
+	missionController->onMonsterDied(monster);
+	dropController->onMonsterDied(monster, dropChance);
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -628,7 +639,7 @@ void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed,
 
 void Bloodworks::addDrop(const Vec2& position)	
 {
-	dropController->addDrop(position);
+	dropController->spawnDrop(position);
 }
 
 void Bloodworks::tick()
@@ -721,12 +732,12 @@ void Bloodworks::tick()
 	{
 		for (int i = 0; i < guns.size(); i++)
 		{
-			dropController->createGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+			dropController->spawnGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
 		}
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
-			dropController->createBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
+			dropController->spawnBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
 		}
 	}
 
