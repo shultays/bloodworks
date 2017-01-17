@@ -193,6 +193,7 @@
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
     <ClCompile Include="cSoundManager.cpp" />
+    <ClCompile Include="cTickBox.cpp" />
     <ClCompile Include="DropController.cpp" />
     <ClCompile Include="ExplosionController.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="cSound.h" />
     <ClInclude Include="cSoundManager.h" />
     <ClInclude Include="cTexture.h" />
+    <ClInclude Include="cTickBox.h" />
     <ClInclude Include="cTime.h" />
     <ClInclude Include="cGlobals.h" />
     <ClInclude Include="cTools.h" />

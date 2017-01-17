@@ -99,6 +99,14 @@ public:
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 	void addRenderable(cRenderable *child);
+	void setAlignment(RenderableAlignment alignment)
+	{
+		cRenderable::setAlignment(alignment);
+		for (auto& childData : renderables)
+		{
+			childData.child->setAlignment(alignment);
+		}
+	}
 
 	void setColor(const Vec4& color)
 	{
