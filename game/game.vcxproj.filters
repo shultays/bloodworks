@@ -132,6 +132,9 @@
     <ClCompile Include="cTickBox.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="cSlider.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -297,6 +300,9 @@
       <Filter>Coral\StackWalker</Filter>
     </ClInclude>
     <ClInclude Include="cTickBox.h">
+      <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cSlider.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
