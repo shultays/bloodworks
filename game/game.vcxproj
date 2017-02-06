@@ -192,6 +192,7 @@
     <ClCompile Include="cMat.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
+    <ClCompile Include="cSlider.cpp" />
     <ClCompile Include="cSoundManager.cpp" />
     <ClCompile Include="cTickBox.cpp" />
     <ClCompile Include="DropController.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="cResources.h" />
     <ClInclude Include="cShader.h" />
     <ClInclude Include="cSharedPtr.h" />
+    <ClInclude Include="cSlider.h" />
     <ClInclude Include="cSound.h" />
     <ClInclude Include="cSoundManager.h" />
     <ClInclude Include="cTexture.h" />
