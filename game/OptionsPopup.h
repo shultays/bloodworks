@@ -4,6 +4,7 @@ class Bloodworks;
 class cRenderableGroup;
 class cTextRenderable;
 class cButton;
+class cTickBox;
 
 class OptionsPopup
 {
@@ -14,6 +15,10 @@ class OptionsPopup
 	// gameplay options
 	cButton *gameplayTitle;
 	cRenderableGroup *gameplayGroup;
+
+	cTickBox *gore;
+	cTickBox *screenShake;
+	cTickBox *lockCrosshair;
 
 	// audio video options
 	cButton *audioVideoTitle;
