@@ -10,7 +10,7 @@ void cButton::check(const Vec2& mousePos)
 
 	Vec2 diff = game->getRelativeMousePos(mousePos, getAlignment()) - defaultShift;
 
-	if (enforceHovering == enforce_hovering || (enforceHovering == enforce_not_hovering != diff.x > beginRange.x && diff.x < endRange.x && diff.y > beginRange.y && diff.y < endRange.y))
+	if (enforceHovering == enforce_hovering || (enforceHovering != enforce_not_hovering && diff.x > beginRange.x && diff.x < endRange.x && diff.y > beginRange.y && diff.y < endRange.y))
 	{
 		hovering = true;
 		down = hovering && input.isKeyDown(mouse_button_left);
