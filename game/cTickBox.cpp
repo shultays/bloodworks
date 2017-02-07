@@ -1,7 +1,7 @@
 #include "cTickBox.h"
 #include "cTexture.h"
 
-cTickbox::cTickbox(cGame *game, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)
+cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)
 {
 	checkedRenderable = new cTexturedQuadRenderable(game, checked, "resources/default");
 	checkedRenderable->setWorldMatrix(Mat3::identity());
@@ -16,7 +16,7 @@ cTickbox::cTickbox(cGame *game, const std::string &checked, const std::string &u
 	setChecked(isChecked);
 }
 
-void cTickbox::setChecked(bool isChecked)
+void cTickBox::setChecked(bool isChecked)
 {
 	this->checked = isChecked;
 
@@ -24,7 +24,7 @@ void cTickbox::setChecked(bool isChecked)
 	uncheckedRenderable->setVisible(!isChecked);
 }
 
-void cTickbox::check(const Vec2& mousePos)
+void cTickBox::check(const Vec2& mousePos)
 {
 	cButton::check(mousePos);
 	if (isClicked())
