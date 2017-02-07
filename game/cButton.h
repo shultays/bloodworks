@@ -104,6 +104,16 @@ public:
 		return pressedInside && !down && prevDown;
 	}
 
+	void setHoverShift(const Vec2& shift)
+	{
+		this->hoverShift = shift;
+	}
+
+	void setHoverScale(const Vec2& scale)
+	{
+		this->hoverScale = scale;
+	}
+
 	void setHoverMatrix(const Vec2& shift, const Vec2& scale, float rotation)
 	{
 		this->hoverShift = shift;
@@ -114,6 +124,16 @@ public:
 	void setHoverSpeed(float hoverSpeed)
 	{
 		this->hoverSpeed = hoverSpeed;
+	}
+
+	void setDefaultShift(const Vec2& shift)
+	{
+		this->defaultShift = shift;
+	}
+
+	void setDefaultScale(const Vec2& scale)
+	{
+		this->defaultScale = scale;
 	}
 
 	void setDefaultMatrix(const Vec2& shift, const Vec2& scale, float rotation)
@@ -128,5 +148,10 @@ public:
 	{
 		this->clickSound = clickSound;
 		this->hoverSound = hoverSound;
+	}
+
+	void setHoverWeight(float hoverWeight)
+	{
+		this->hoverTime = hoverWeight;
 	}
 };

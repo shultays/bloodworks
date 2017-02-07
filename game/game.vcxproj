@@ -208,6 +208,7 @@
     <ClCompile Include="MissionController.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterController.cpp" />
+    <ClCompile Include="OptionsPopup.cpp" />
     <ClCompile Include="Perk.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="StackWalker.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="MonsterTemplate.h" />
     <ClInclude Include="OneShotSoundManager.h" />
+    <ClInclude Include="OptionsPopup.h" />
     <ClInclude Include="Perk.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sol.h" />
