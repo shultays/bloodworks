@@ -23,11 +23,12 @@
 #include "MainMenu.h"
 #include "cSoundManager.h"
 #include "OneShotSoundManager.h"
+#include "BuffFloat.h"
+#include "cSlider.h"
 
 #include <sstream>
 
-#include "BuffFloat.h"
-
+cSlider *slider;
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
 	std::string jsonFile2;
@@ -210,7 +211,7 @@ void Bloodworks::init()
 	input.hideMouse();
 
 	player->setGun(guns[0]);
-	
+
 	bloodRenderable = new BloodRenderable(this);
 	bloodRenderable->init();
 	addRenderable(bloodRenderable, BACKGROUND + 1);
@@ -228,16 +229,21 @@ void Bloodworks::init()
 
 	mainMenu = new MainMenu(this);
 
-	if (coral.isDebuggerPresent())
+	//if (coral.isDebuggerPresent())
+	//{
+	//	loadMission("Survival");
+	//}
+	//else
 	{
-		loadMission("Survival");
-	}
-	else
-	{
-		coral.setFullScreen(true);
+		coral.setFullScreen(false);
 		mainMenu->setVisible(true);
 		showFps = false;
 	}
+
+	slider = new cSlider(this);
+	slider->setWorldMatrix(Mat3::identity());
+	slider->setAlignment(RenderableAlignment::world);
+	addRenderable(slider, GUI + 5);
 }
 
 Bloodworks::Bloodworks()
@@ -316,6 +322,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(oneShotSoundManager);
+	SAFE_DELETE(slider);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -422,7 +429,7 @@ void Bloodworks::clearMission()
 
 	std::vector<cPostProcess*> toRemove;
 
-	for (int i=0; i<postProcesses.size(); i++)
+	for (int i = 0; i<postProcesses.size(); i++)
 	{
 		if (postProcesses[i] != pausePostProcess)
 		{
@@ -484,7 +491,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 		}
 		/*if (gun->getName() == "Laser Machine Gun")
 		{
-			player->setSecondaryGun(gun);
+		player->setSecondaryGun(gun);
 		}*/
 	}
 	missionController->loadMission(mission);
@@ -637,13 +644,14 @@ void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed,
 	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage);
 }
 
-void Bloodworks::addDrop(const Vec2& position)	
+void Bloodworks::addDrop(const Vec2& position)
 {
 	dropController->spawnDrop(position);
 }
 
 void Bloodworks::tick()
 {
+	slider->check(input.getMousePos());
 	if (input.isKeyPressed(key_n))
 	{
 		showFps = !showFps;
@@ -678,7 +686,7 @@ void Bloodworks::tick()
 	{
 		globalVolume -= timer.getNonSlowedDt();
 		changeGlobalVolume = true;
-	}	
+	}
 	if (input.isKeyDown(key_num_plus))
 	{
 		globalVolume += timer.getNonSlowedDt();
