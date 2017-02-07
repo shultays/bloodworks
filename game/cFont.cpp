@@ -91,23 +91,6 @@ cFont::~cFont()
 
 void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 {
-	if (lengthDirty)
-	{
-		lengthDirty = false;
-		length = 0.0f;
-
-		for (int i = 0; i < text.size(); i++)
-		{
-			float charSize = font->defaultSize;
-			if (font->charInfos[text[i]].x >= 0)
-			{
-				charSize = (float)font->charInfos[text[i]].w;
-			}
-			float t = charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding;
-			length += t;
-		}
-	}
-
 	cRenderableWithShader::render(isIdentity, mat);
 	font->texture->bindTexture();
 	Mat3 temp2 = worldMatrix;
@@ -121,6 +104,23 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 	else if (verticalTextAlignment == VerticalTextAlignment::mid)
 	{
 		temp2.translateBy(0.0f, -textSize * 0.5f);
+	}
+
+	//if (lengthDirty) // todo fix this
+	{
+		lengthDirty = false;
+		length = 0.0f;
+
+		for (int i = 0; i < text.size(); i++)
+		{
+			float charSize = font->defaultSize;
+			if (font->charInfos[text[i]].x >= 0)
+			{
+				charSize = (float)font->charInfos[text[i]].w;
+			}
+			float t = charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding;
+			length += t * mat._00;
+		}
 	}
 
 

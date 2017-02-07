@@ -40,6 +40,7 @@ class BloodworksLuaWorld;
 class LaserTemplate;
 class MainMenu;
 class OneShotSoundManager;
+class OptionsPopup;
 
 class Bloodworks : public cGame
 {
@@ -63,6 +64,7 @@ class Bloodworks : public cGame
 	BloodRenderable *bloodRenderable;
 	cPostProcess *pausePostProcess;
 	LevelUpPopup *levelUpPopup;
+	OptionsPopup *optionsPopup;
 
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;

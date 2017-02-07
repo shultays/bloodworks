@@ -24,11 +24,10 @@
 #include "cSoundManager.h"
 #include "OneShotSoundManager.h"
 #include "BuffFloat.h"
-#include "cSlider.h"
+#include "OptionsPopup.h"
 
 #include <sstream>
 
-cSlider *slider;
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
 	std::string jsonFile2;
@@ -224,6 +223,7 @@ void Bloodworks::init()
 	pausePostProcess->setEnabled(false);
 
 	levelUpPopup = new LevelUpPopup(this);
+	optionsPopup = new OptionsPopup(this);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -234,16 +234,13 @@ void Bloodworks::init()
 	//	loadMission("Survival");
 	//}
 	//else
-	{
-		coral.setFullScreen(false);
-		mainMenu->setVisible(true);
-		showFps = false;
-	}
+	//{
+	//	coral.setFullScreen(false);
+	//	mainMenu->setVisible(true);
+	//	showFps = false;
+	//}
 
-	slider = new cSlider(this);
-	slider->setWorldMatrix(Mat3::identity());
-	slider->setAlignment(RenderableAlignment::world);
-	addRenderable(slider, GUI + 5);
+	input.showMouse();
 }
 
 Bloodworks::Bloodworks()
@@ -314,6 +311,7 @@ Bloodworks::~Bloodworks()
 	}
 	perks.clear();
 
+	SAFE_DELETE(optionsPopup);
 	SAFE_DELETE(levelUpPopup);
 	SAFE_DELETE(mainMenu);
 	SAFE_DELETE(dropController);
@@ -322,7 +320,6 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(oneShotSoundManager);
-	SAFE_DELETE(slider);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -651,7 +648,6 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
-	slider->check(input.getMousePos());
 	if (input.isKeyPressed(key_n))
 	{
 		showFps = !showFps;
@@ -705,7 +701,7 @@ void Bloodworks::tick()
 	}
 
 	luaWorld->tick();
-
+	optionsPopup->tick();
 	mainMenu->tick();
 	oneShotSoundManager->tick();
 

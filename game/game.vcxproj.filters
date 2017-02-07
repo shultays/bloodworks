@@ -135,6 +135,9 @@
     <ClCompile Include="cSlider.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="OptionsPopup.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="cSlider.h">
       <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsPopup.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
