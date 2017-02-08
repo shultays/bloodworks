@@ -23,11 +23,20 @@ function addRandomMonster()
 	if Survival.lastBossSpawn + 35.0 - clamp(min/7) * 15 < missionTime then
 		Survival.lastBossSpawn = missionTime
 		makeBoss(monster)
+	elseif monster.data.shootsBullets == false and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
+		monster.data.shootsBullets = true
+		monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.3))
+		monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.4))
+		monster.data.bulletRate = monster.data.bulletRate - clamp(min * 0.1) * 2.0
+		monster.data.bulletRandom = monster.data.bulletRandom - clamp(min * 0.15) * 0.2
+		monster.colorMultiplier:addBuff(Vec4.new(0.8, 0.95, 0.8, 1.0))
 	end
+	
     return monster
 end
 
 function makeBoss(monster)
+    local min = missionTime / 60.0 +  math.random() * 1.5 + Survival.extraMin
 	monster.hitPoint = math.floor(monster.hitPoint * 1.5)
 	
 	monster.data.minDamage = math.floor(monster.data.minDamage * 1.1)
@@ -39,24 +48,30 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
-	local t = math.random() * 4
-
-	if t < 1 then
+	local t = math.random(5)
+	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
 		monster:setScale(monster.scale * 1.25)
-	elseif t < 2 then
+	elseif t == 2 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
 		monster:setScale(monster.scale * 0.85)
-	elseif t < 3 then
+	elseif t == 3 then
 		monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
 		monster.data.minDamage = math.floor(monster.data.minDamage * 2.0)
 		monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
-	else 
+	elseif t == 4 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
 		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.55
 		monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
 		monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
+	elseif t == 5 then
+		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
+		monster.data.shootsBullets = true
+		monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (2.0 + min * 1.5))
+		monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (2.0 + min * 1.5))
+		monster.data.bulletRate = 1.5 - clamp(min * 0.1) * 0.8
+		monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
 	end
 end
 

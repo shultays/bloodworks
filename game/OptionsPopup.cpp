@@ -44,12 +44,12 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gameplayGroup->setVisible(false);
 
 	float tickSize = 25.0f;
-	float fontSize = 27.0f;
-	float tickShift = 280.0f;
+	float fontSize = 23.0f;
+	float tickShift = 380.0f;
 	float rowShift = 45.0f;
 	float sliderShift = 290.0f;
 
-	x = -160.0f;
+	x = -200.0f;
 	y = 40.0f;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize);
@@ -95,8 +95,23 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	lockCrosshair->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
 	gameplayGroup->addRenderable(lockCrosshair);
 
-	optionsGroup->addRenderable(gameplayGroup);
+	y -= rowShift;
 
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Auto Open Perk PopUp", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	gameplayGroup->addRenderable(text);
+
+	autoLevelUp = new cTickBox(bloodworks);
+	autoLevelUp->setWorldMatrix(Mat3::translationMatrix(x, y));
+	autoLevelUp->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	autoLevelUp->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	autoLevelUp->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	gameplayGroup->addRenderable(autoLevelUp);
+
+
+	optionsGroup->addRenderable(gameplayGroup);
 	// input
 
 	inputTitle = new cButton(bloodworks);
