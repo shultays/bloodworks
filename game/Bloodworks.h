@@ -222,4 +222,5 @@ public:
 	bool isMissionLoaded() const;
 	void onGunReloaded(Gun* gun);
 	void onMonsterDied(Monster* monster, float dropChance);
+	void showOptions();
 };

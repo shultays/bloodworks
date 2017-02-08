@@ -222,25 +222,32 @@ void Bloodworks::init()
 	pausePostProcess->setShaderWeight(0.0f);
 	pausePostProcess->setEnabled(false);
 
-	levelUpPopup = new LevelUpPopup(this);
-	optionsPopup = new OptionsPopup(this);
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	mainMenu = new MainMenu(this);
 
-	//if (coral.isDebuggerPresent())
-	//{
-	//	loadMission("Survival");
-	//}
-	//else
-	//{
-	//	coral.setFullScreen(false);
-	//	mainMenu->setVisible(true);
-	//	showFps = false;
-	//}
+	levelUpPopup = new LevelUpPopup(this);
+	optionsPopup = new OptionsPopup(this);
 
-	input.showMouse();
+
+	if (true)
+	{
+		mainMenu->setVisible(true);
+		showFps = false;
+		input.showMouse();
+	}
+	else
+	if (coral.isDebuggerPresent())
+	{
+		loadMission("Survival");
+	}
+	else
+	{
+		coral.setFullScreen(true);
+		mainMenu->setVisible(true);
+		showFps = false;
+	}
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Bloodworks::Bloodworks()
@@ -620,6 +627,11 @@ void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
 	dropController->onMonsterDied(monster, dropChance);
 }
 
+void Bloodworks::showOptions()
+{
+	optionsPopup->show();
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -701,8 +713,8 @@ void Bloodworks::tick()
 	}
 
 	luaWorld->tick();
+	mainMenu->tick(optionsPopup->isVisible());
 	optionsPopup->tick();
-	mainMenu->tick();
 	oneShotSoundManager->tick();
 
 	for (int i = 0; i < gameSounds.size(); i++)
