@@ -40,7 +40,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	options = new cButton(bloodworks);
 	options->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Options", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Options", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	options->addRenderable(text);
@@ -138,13 +138,19 @@ void MainMenu::resize()
 	quit->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
 }
 
-void MainMenu::tick()
+void MainMenu::tick(bool hasPopup)
 {
 	if (bloodworksText->isVisible() == false)
 	{
 		return;
 	}
 
+	int enforceState = hasPopup ? cButton::enforce_not_hovering : cButton::no_enforce;
+	newGame->setEnforcedHovering(enforceState);
+	mods->setEnforcedHovering(enforceState);
+	options->setEnforcedHovering(enforceState);
+	credits->setEnforcedHovering(enforceState);
+	quit->setEnforcedHovering(enforceState);
 
 	newGame->check(input.getMousePos());
 	mods->check(input.getMousePos());
@@ -152,15 +158,22 @@ void MainMenu::tick()
 	credits->check(input.getMousePos());
 	quit->check(input.getMousePos());
 
-	if (newGame->isClicked() || input.isKeyPressed(joystick_0_button_a) || input.isKeyPressed(joystick_0_button_start))
+	if (hasPopup == false)
 	{
-		input.clearKeyPress(joystick_0_button_a);
-		input.clearKeyPress(joystick_0_button_start);
-		bloodworks->loadMission("Survival");
-	}
-	else if (quit->isClicked() || input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
-	{
-		coral.quitGame();
+		if (newGame->isClicked() || input.isKeyPressed(joystick_0_button_a) || input.isKeyPressed(joystick_0_button_start))
+		{
+			input.clearKeyPress(joystick_0_button_a);
+			input.clearKeyPress(joystick_0_button_start);
+			bloodworks->loadMission("Survival");
+		}
+		else if (options->isClicked())
+		{
+			bloodworks->showOptions();
+		}
+		else if (quit->isClicked() || input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
+		{
+			coral.quitGame();
+		}
 	}
 }
 
