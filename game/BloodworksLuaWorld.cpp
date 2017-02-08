@@ -200,6 +200,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
 
+		"monsterBullet", &Bullet::monsterBullet,
+
 		"penetrateCount", &Bullet::penetrateCount,
 		"penetrateUsed", sol::readonly(&Bullet::penetrateUsed),
 

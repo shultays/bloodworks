@@ -26,6 +26,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	onDamageArgs["bullet"] = this;
 	onDamageArgs["gun"] = gun;
 	meshRotation = -1500;
+	monsterBullet = false;
 }
 
 Bullet::~Bullet()
@@ -90,47 +91,63 @@ void Bullet::tick()
 		}
 	}
 	
-	std::function<bool(Monster *monster)> func = [&](Monster *monster) -> bool
+	if (monsterBullet)
 	{
-		Vec2 monsterPos = monster->getPosition();
-		float radiusToCheck = monster->getRadius() + radius;
-		if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (penetrateCount == 0 || monster->hasIgnoreId(id) == false))
+		float checkRadius = radius + 10.0f;
+		if (bloodworks->getPlayer()->getPosition().distanceSquared(pos) < checkRadius * checkRadius)
 		{
-			if (script && shouldHitMonsterTest.size())
-			{
-				if (((bool)script[shouldHitMonsterTest](this, monster)) == false)
-				{
-					return true;
-				}
-			}
-
-			penetrateUsed++;
-
-			if (penetrateUsed > penetrateCount)
-			{
-				removeSelf();
-			}
-			else
-			{
-				monster->addIgnoreId(id);
-			}
-
-			if (gun)
-			{
-				gun->onBulletHit(this, monster);
-			}
-
+			bloodworks->getPlayer()->doDamageWithParams(damage, onDamageArgs);
 			if (script && onHitCallback.length())
 			{
-				script[onHitCallback](this, monster);
+				script[onHitCallback](this, bloodworks->getPlayer());
 			}
-
-			monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
-			return false;
+			removeSelf();
 		}
-		return true;
-	};
-	bloodworks->getMonsterController()->runForEachMonsterInRadius(pos, radius, func);
+	}
+	else
+	{
+		std::function<bool(Monster *monster)> func = [&](Monster *monster) -> bool
+		{
+			Vec2 monsterPos = monster->getPosition();
+			float radiusToCheck = monster->getRadius() + radius;
+			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (penetrateCount == 0 || monster->hasIgnoreId(id) == false))
+			{
+				if (script && shouldHitMonsterTest.size())
+				{
+					if (((bool)script[shouldHitMonsterTest](this, monster)) == false)
+					{
+						return true;
+					}
+				}
+
+				penetrateUsed++;
+
+				if (penetrateUsed > penetrateCount)
+				{
+					removeSelf();
+				}
+				else
+				{
+					monster->addIgnoreId(id);
+				}
+
+				if (gun)
+				{
+					gun->onBulletHit(this, monster);
+				}
+
+				if (script && onHitCallback.length())
+				{
+					script[onHitCallback](this, monster);
+				}
+
+				monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
+				return false;
+			}
+			return true;
+		};
+		bloodworks->getMonsterController()->runForEachMonsterInRadius(pos, radius, func);
+	}
 }
 
 void Bullet::addRenderable(cRenderable *renderable)
