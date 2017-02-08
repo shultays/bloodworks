@@ -54,6 +54,8 @@ function Spider.init(monster)
 	data.randomShiftAngle = 0.0
 	
 	data.tickWaitTime = 0.0
+	
+	BulletShooter.init(monster)
 end
 
 
@@ -69,6 +71,7 @@ function Spider.onTick(monster)
 	
 	diffToPlayer = player.position - monster.position
 	distanceToPlayer = diffToPlayer:length()
+	angleToPlayer = diffToPlayer:getAngle()
 	
 	if data.tickWaitTime < 0.0 then
 		data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
@@ -82,7 +85,6 @@ function Spider.onTick(monster)
 			end
 		end
 		
-		angleToPlayer = diffToPlayer:getAngle()
 		
 		if distanceToPlayer < data.playerSeeRange and player.isDead == false then
 			local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
@@ -101,6 +103,7 @@ function Spider.onTick(monster)
 	end
 
 	MonsterMeleeHelper.onTick(monster)
+	BulletShooter.onTick(monster)
 	
 	if data.moveTimer > 0.0 then
 		local moveNewAngle = MonsterGroupHelper.fixAngle(monster, data.targetAngleToMovePos)

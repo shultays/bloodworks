@@ -20,6 +20,7 @@ class OptionsPopup
 	cTickBox *gore;
 	cTickBox *screenShake;
 	cTickBox *lockCrosshair;
+	cTickBox *autoLevelUp;
 
 	// audio video options
 	cButton *audioVideoTitle;
