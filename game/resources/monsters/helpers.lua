@@ -168,3 +168,44 @@ function MonsterMeleeHelper.onTick(monster)
 		end
 	end
 end
+
+
+
+BulletShooter = {}
+
+function BulletShooter.init(monster)
+	data.bulletMinDamage = 2
+	data.bulletMaxDamage = 6
+	data.bulletSpeed = 300
+	data.bulletRate = 4.0
+	data.bulletRandom = 0.3
+	data.shootsBullets = false
+end
+
+function BulletShooter.onTick(monster)
+	if data.shootsBullets then
+		if data.bulletTimer == nil then
+			data.bulletTimer = data.bulletRate + math.random() * 2.0
+		end
+		data.bulletTimer = data.bulletTimer - dt
+		if data.bulletTimer < 0.0 then
+			data.bulletTimer = data.bulletRate + math.random() * 2.0
+			
+			local bullet = addCustomBullet()
+			bullet.damage = math.floor(math.random(data.bulletMinDamage, data.bulletMaxDamage))
+			bullet.position = monster.position
+			bullet.moveSpeed = data.bulletSpeed
+			bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
+			bullet.monsterBullet = true
+			bullet:addRenderableTextureWithSize("resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
+		end
+	end
+end
+
+
+
+
+
+
+
+

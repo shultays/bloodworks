@@ -34,6 +34,7 @@ class Bullet
 	int damage;
 	cRenderableGroup *renderable;
 	int id;
+	bool monsterBullet;
 
 	sol::table script;
 

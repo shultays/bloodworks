@@ -38,6 +38,8 @@ function Alien.init(monster)
 	data.maxDamage = 12
 	
 	data.tickWaitTime = 0.0
+	
+	BulletShooter.init(monster)
 end
 
 
@@ -49,9 +51,10 @@ end
 function Alien.onTick(monster)
     data = monster.data
 	
-	diffToPlayer = player.position + - monster.position 
+	diffToPlayer = player.position - monster.position 
 	distanceToPlayer = diffToPlayer:length()
-	
+	angleToPlayer = diffToPlayer:getAngle()
+
 	data.tickWaitTime = data.tickWaitTime - dt
 	if data.tickWaitTime < 0.0 then
 		data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
@@ -65,7 +68,6 @@ function Alien.onTick(monster)
 			end
 		end
 		
-		angleToPlayer = diffToPlayer:getAngle()
 		
 		if distanceToPlayer < data.playerSeeRange and player.isDead == false then
 			local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
@@ -82,6 +84,7 @@ function Alien.onTick(monster)
 		
 	end
 
+	BulletShooter.onTick(monster)
 	MonsterMeleeHelper.onTick(monster)
 	monster.moveAngle = approachAngle(monster.moveAngle, data.moveAngle, data.maxRotateSpeed * timeScale)
 	
