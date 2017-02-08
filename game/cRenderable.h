@@ -48,7 +48,7 @@ public:
 		this->visible = visible;
 	}
 
-	void setAlignment(RenderableAlignment alignment)
+	virtual void setAlignment(RenderableAlignment alignment)
 	{
 		this->alignment = alignment;
 	}
@@ -66,7 +66,7 @@ public:
 	}
 	void setWorldMatrix(const Mat3& worldMatrix);
 
-	void setColor(const Vec4& color)
+	virtual void setColor(const Vec4& color)
 	{
 		this->color = color;
 	}
@@ -99,7 +99,7 @@ public:
 
 	virtual void render(bool isIdentity, const Mat3& mat) override;
 	void addRenderable(cRenderable *child);
-	void setAlignment(RenderableAlignment alignment)
+	virtual void setAlignment(RenderableAlignment alignment) override
 	{
 		cRenderable::setAlignment(alignment);
 		for (auto& childData : renderables)
@@ -108,7 +108,7 @@ public:
 		}
 	}
 
-	void setColor(const Vec4& color)
+	virtual void setColor(const Vec4& color) override
 	{
 		cRenderable::setColor(color);
 

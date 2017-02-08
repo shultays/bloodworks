@@ -29,7 +29,8 @@ cSlider::cSlider(cGame *game) : cRenderableGroup(game)
 
 void cSlider::check(const Vec2& mousePos)
 {
-	Vec2 relativeMouse = game->getRelativeMousePos(mousePos, getAlignment());
+	Vec2 shiftedPos = mousePos - getPosition();
+	Vec2 relativeMouse = game->getRelativeMousePos(shiftedPos, getAlignment());
 
 	float maxShift = bgSize.x - sliderSize.x - edgeShift;
 
@@ -40,8 +41,8 @@ void cSlider::check(const Vec2& mousePos)
 		setSliderPos(pos);
 	}
 
-	bgButton->check(mousePos);
-	sliderButton->check(mousePos);
+	bgButton->check(shiftedPos);
+	sliderButton->check(shiftedPos);
 
 	if (sliderButton->isPressed())
 	{

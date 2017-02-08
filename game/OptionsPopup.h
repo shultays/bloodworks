@@ -5,6 +5,7 @@ class cRenderableGroup;
 class cTextRenderable;
 class cButton;
 class cTickBox;
+class cSlider;
 
 class OptionsPopup
 {
@@ -24,9 +25,18 @@ class OptionsPopup
 	cButton *audioVideoTitle;
 	cRenderableGroup *audioVideoGroup;
 
+	cTickBox *fullScreen;
+	cTickBox *vsync;
+
+	cSlider *volume;
+	cSlider *musicVolume;
+
+
 	// input settings
 	cButton *inputTitle;
 	cRenderableGroup *inputGroup;
+
+	cSlider *sensitivity;
 
 	//
 	cButton *lastClickedTitle;
