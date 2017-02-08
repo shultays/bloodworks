@@ -207,7 +207,7 @@ public:
 		defaultAnimation = index;
 	}
 
-	void setColor(const Vec4& color)
+	virtual void setColor(const Vec4& color) override
 	{
 		this->color = color;
 	}
