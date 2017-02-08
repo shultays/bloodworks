@@ -22,9 +22,11 @@ enum {
 	TypeIntVec4,
 };
 
-class cShader {
+class cShader 
+{
 public:
-	class Uniform {
+	class Uniform 
+	{
 	public:
 		int index;
 
