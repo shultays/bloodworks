@@ -295,6 +295,7 @@ void OptionsPopup::tick()
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
 	}
+
 	if (lastClickedTitle == inputTitle)
 	{
 		sensitivity->check(input.getMousePos());
