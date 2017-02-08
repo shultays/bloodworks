@@ -25,6 +25,6 @@ public:
 	MainMenu(Bloodworks *b);
 	~MainMenu();
 	void resize();
-	void tick();
+	void tick(bool hasPopup);
 	void setVisible(bool visible);
 };
