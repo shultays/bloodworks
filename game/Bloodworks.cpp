@@ -222,22 +222,17 @@ void Bloodworks::init()
 	pausePostProcess->setShaderWeight(0.0f);
 	pausePostProcess->setEnabled(false);
 
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	mainMenu = new MainMenu(this);
 
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-
-	if (true)
-	{
-		mainMenu->setVisible(true);
-		showFps = false;
-		input.showMouse();
-	}
-	else
 	if (coral.isDebuggerPresent())
 	{
+		globalVolume = 0.0f;
+		coral.getSoundManager()->setGlobalVolume(globalVolume);
 		loadMission("Survival");
 	}
 	else
@@ -246,8 +241,6 @@ void Bloodworks::init()
 		mainMenu->setVisible(true);
 		showFps = false;
 	}
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Bloodworks::Bloodworks()
@@ -270,7 +263,7 @@ Bloodworks::Bloodworks()
 	soundPaused = false;
 	cameraCenterPos.setZero();
 
-	globalVolume = 0.0f;
+	globalVolume = 0.7f;
 	coral.getSoundManager()->setGlobalVolume(globalVolume);
 }
 

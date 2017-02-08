@@ -10,5 +10,5 @@ void main(void)
 	float greenAmount = color.g * 0.8;
 	float blueAmount = color.b * 0.8;
 	
-    gl_FragColor = vec4(lerp(color, vec3(redAmount, greenAmount, blueAmount), uShaderAmount), 1.0);
+    gl_FragColor = vec4(mix(color, vec3(redAmount, greenAmount, blueAmount), uShaderAmount), 1.0);
 }

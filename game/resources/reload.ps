@@ -44,7 +44,7 @@ void main(void)
 		{
 			alphaMult *= (z3 - start1) / (start2 - start1);
 		}
-		gl_FragColor.a *= lerp(alphaMult, 1.0, uReloading);
+		gl_FragColor.a *= mix(alphaMult, 1.0, uReloading);
 		
 	}
 }
