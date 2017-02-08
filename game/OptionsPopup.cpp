@@ -216,14 +216,15 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(audioVideoGroup);
 
 	//
-	bloodworks->addRenderable(optionsGroup, GUI);
+	bloodworks->addRenderable(optionsGroup, GUI + 22);
 
 	lastClickedTitle = nullptr;
 	prevClickedGroup = nullptr;
 
-	changeTab(audioVideoTitle, audioVideoGroup);
+	changeTab(gameplayTitle, gameplayGroup);
 	lastClickTime = -10.0f;
 	tick();
+	optionsGroup->setVisible(false);
 }
 
 OptionsPopup::~OptionsPopup()
@@ -231,8 +232,22 @@ OptionsPopup::~OptionsPopup()
 	SAFE_DELETE(optionsGroup);
 }
 
+bool OptionsPopup::isVisible() const
+{
+	return optionsGroup->isVisible();
+}
+
+void OptionsPopup::show()
+{
+	optionsGroup->setVisible(true);
+}
+
 void OptionsPopup::tick()
 {
+	if (isVisible() == false)
+	{
+		return;
+	}
 	gameplayTitle->check(input.getMousePos());
 	inputTitle->check(input.getMousePos());
 	audioVideoTitle->check(input.getMousePos());
@@ -280,7 +295,7 @@ void OptionsPopup::tick()
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
 	}
-	if (lastClickedTitle == audioVideoTitle)
+	if (lastClickedTitle == inputTitle)
 	{
 		sensitivity->check(input.getMousePos());
 	}
@@ -291,6 +306,11 @@ void OptionsPopup::tick()
 		vsync->check(input.getMousePos());
 		volume->check(input.getMousePos());
 		musicVolume->check(input.getMousePos());
+	}
+
+	if (input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
+	{
+		optionsGroup->setVisible(false);
 	}
 }
 
