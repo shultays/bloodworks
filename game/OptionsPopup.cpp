@@ -5,6 +5,7 @@
 #include "cFont.h"
 #include "cButton.h"
 #include "cTickBox.h"
+#include "cSlider.h"
 
 OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 {
@@ -22,8 +23,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	const float titleX = 200.0f;
 
 	cTextRenderable* text;
-	const float titleButtonSize = 80.0f;
-
+	const float titleButtonSize = 75.0f;
 
 	float x, y;
 
@@ -43,13 +43,14 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gameplayGroup = new cRenderableGroup(bloodworks);
 	gameplayGroup->setVisible(false);
 
-	const float tickSize = 25.0f;
-	const float fontSize = 27.0f;
-	const float tickShift = 280.0f;
-	const float rowShift = 45.0f;
+	float tickSize = 25.0f;
+	float fontSize = 27.0f;
+	float tickShift = 280.0f;
+	float rowShift = 45.0f;
+	float sliderShift = 290.0f;
 
 	x = -160.0f;
-	y = 40;
+	y = 40.0f;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
@@ -79,7 +80,6 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	screenShake->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
 	gameplayGroup->addRenderable(screenShake);
 
-
 	y -= rowShift;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Lock Crosshair", fontSize);
@@ -98,6 +98,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(gameplayGroup);
 
 	// input
+
 	inputTitle = new cButton(bloodworks);
 	inputTitle->setAlignment(RenderableAlignment::center);
 	inputTitle->setDefaultMatrix(Vec2(0.0f, titleY), Vec2(1.0f), 0.0f);
@@ -113,9 +114,20 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	inputGroup = new cRenderableGroup(bloodworks);
 	inputGroup->setVisible(false);
 
-	t = new cTexturedQuadRenderable(bloodworks, "resources/reload_ring.png", "resources/default");
-	t->setWorldMatrix(Mat3::scaleMatrix(t->getTexture()->getDimensions().toVec() * 0.65f));
-	inputGroup->addRenderable(t);
+	x = -240.0f;
+	y = 0.0f;
+	tickShift = 0.0f;
+	sliderShift = 390.0f;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Sensitivity", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	inputGroup->addRenderable(text);
+
+	sensitivity = new cSlider(bloodworks);
+	sensitivity->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	inputGroup->addRenderable(sensitivity);
 
 	optionsGroup->addRenderable(inputGroup);
 
@@ -135,9 +147,71 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	audioVideoGroup = new cRenderableGroup(bloodworks);
 	audioVideoGroup->setVisible(false);
 
-	t = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
-	t->setWorldMatrix(Mat3::scaleMatrix(t->getTexture()->getDimensions().toVec() * 0.65f));
-	audioVideoGroup->addRenderable(t);
+	x = -200.0f;
+	y = 40.0f;
+	sliderShift = 290.0f;
+	tickShift = 380.0f;
+
+	//text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Resolution", fontSize);
+	//text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	//text->setTextAllignment(TextAlignment::left);
+	//text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	//audioVideoGroup->addRenderable(text);
+	//
+	//y -= rowShift;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Full Screen", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	audioVideoGroup->addRenderable(text);
+
+	fullScreen = new cTickBox(bloodworks);
+	fullScreen->setWorldMatrix(Mat3::translationMatrix(x, y));
+	fullScreen->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	fullScreen->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	fullScreen->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	audioVideoGroup->addRenderable(fullScreen);
+
+	y -= rowShift;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "V-Sync", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	audioVideoGroup->addRenderable(text);
+
+	vsync = new cTickBox(bloodworks);
+	vsync->setWorldMatrix(Mat3::translationMatrix(x, y));
+	vsync->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	vsync->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	vsync->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	audioVideoGroup->addRenderable(vsync);
+
+	y -= rowShift * 1.5f;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Volume", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	audioVideoGroup->addRenderable(text);
+
+	volume = new cSlider(bloodworks);
+	volume->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	audioVideoGroup->addRenderable(volume);
+
+	y -= rowShift;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Music", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAllignment(TextAlignment::left);
+	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	audioVideoGroup->addRenderable(text);
+
+	musicVolume = new cSlider(bloodworks);
+	musicVolume->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	audioVideoGroup->addRenderable(musicVolume);
+
 
 	optionsGroup->addRenderable(audioVideoGroup);
 
@@ -147,7 +221,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	lastClickedTitle = nullptr;
 	prevClickedGroup = nullptr;
 
-	changeTab(gameplayTitle, gameplayGroup);
+	changeTab(audioVideoTitle, audioVideoGroup);
 	lastClickTime = -10.0f;
 	tick();
 }
@@ -187,7 +261,7 @@ void OptionsPopup::tick()
 			clickT = 1.0f;
 			changingTabs = false;
 		}
-		lastClickedTitle->setDefaultScale(1.3f + clickT * 0.3f);
+		lastClickedTitle->setDefaultScale(1.3f + clickT * 0.2f);
 		lastClickedGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, clickT));
 		if (prevClickedTitle != nullptr)
 		{
@@ -195,7 +269,7 @@ void OptionsPopup::tick()
 			{
 				prevClickedGroup->setVisible(false);
 			}
-			prevClickedTitle->setHoverScale(1.3f + (1.0f - clickT) * 0.3f);
+			prevClickedTitle->setHoverScale(1.3f + (1.0f - clickT) * 0.2f);
 			prevClickedGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f - clickT));
 		}
 	}
@@ -205,6 +279,18 @@ void OptionsPopup::tick()
 		gore->check(input.getMousePos());
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
+	}
+	if (lastClickedTitle == audioVideoTitle)
+	{
+		sensitivity->check(input.getMousePos());
+	}
+
+	if (lastClickedTitle == audioVideoTitle)
+	{
+		fullScreen->check(input.getMousePos());
+		vsync->check(input.getMousePos());
+		volume->check(input.getMousePos());
+		musicVolume->check(input.getMousePos());
 	}
 }
 
