@@ -197,7 +197,7 @@ function BulletShooter.onTick(monster)
 			
 			local bullet = addCustomBullet()
 			bullet.damage = math.floor(math.random(data.bulletMinDamage, data.bulletMaxDamage))
-			bullet.position = monster.position
+			bullet.position = monster.position + monster.moveDir * 6.0
 			bullet.moveSpeed = data.bulletSpeed
 			bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
 			bullet.monsterBullet = true

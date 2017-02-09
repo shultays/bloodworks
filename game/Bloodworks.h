@@ -99,6 +99,8 @@ class Bloodworks : public cGame
 	bool soundPaused;
 
 	std::vector<cSoundHandle> gameSounds;
+
+	std::vector<cParticle*> orphanParticles;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -223,4 +225,14 @@ public:
 	void onGunReloaded(Gun* gun);
 	void onMonsterDied(Monster* monster, float dropChance);
 	void showOptions();
+
+	void addOrphanParticle(const std::vector<cParticle*> particles)
+	{
+		orphanParticles.insert(orphanParticles.end(), particles.begin(), particles.end());
+	}	
+
+	void addOrphanParticle(cParticle* particle)
+	{
+		orphanParticles.push_back(particle);
+	}
 };

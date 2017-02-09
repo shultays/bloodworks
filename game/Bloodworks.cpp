@@ -439,6 +439,12 @@ void Bloodworks::clearMission()
 	}
 	toRemove.clear();
 
+	for (auto& particle : orphanParticles)
+	{
+		SAFE_DELETE(particle);
+	}
+	orphanParticles.clear();
+
 	for (auto& perk : perks)
 	{
 		perk->reset();
@@ -758,6 +764,16 @@ void Bloodworks::tick()
 	missionController->tick();
 
 	player->tick();
+
+	for (int i = 0; i < orphanParticles.size(); i++)
+	{
+		if (orphanParticles[i]->hasParticle() == false)
+		{
+			SAFE_DELETE(orphanParticles[i]);
+			orphanParticles[i] = orphanParticles[orphanParticles.size() - 1];
+			orphanParticles.resize(orphanParticles.size() - 1);
+		}
+	}
 
 	for (auto& perk : usedPerks)
 	{
