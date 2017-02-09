@@ -30,6 +30,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	hitPoint = monsterTemplate->hitPoint;
 	hasBlood = monsterTemplate->hasBlood;
 
+	animationSpeed = 1.0f;
+
 	lastHitSoundPlayTime = timer.getTime();
 
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
@@ -89,6 +91,11 @@ void Monster::tick()
 		renderable->setColor(colorMultiplier.getBuffedValue());
 	}
 	scriptTable["onTick"](this);
+	if (this->animationSpeed < 1.0f)
+	{
+		int a = 5;
+	}
+	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(input.isKeyDown(key_f6));
 	std::vector<int> toTrigger;

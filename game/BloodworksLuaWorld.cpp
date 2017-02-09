@@ -551,6 +551,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"name", &Monster::name,
 		"index", sol::readonly(&Monster::id),
 
+		"scriptTable", &Monster::scriptTable,
+
+		"animationSpeed", &Monster::animationSpeed,
+
 		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,
 		"moveAngle", &Monster::moveAngle,

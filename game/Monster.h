@@ -36,6 +36,8 @@ class Monster
 	bool isDead;
 	bool hasBlood;
 
+	float animationSpeed;
+
 	const MonsterTemplate* monsterTemplate;
 
 	//lua
