@@ -10,6 +10,7 @@ class Bloodworks;
 #include "BuffFloat.h"
 
 class Bullet;
+class cParticle;
 
 class Monster
 {
@@ -72,6 +73,8 @@ class Monster
 	BuffFloat moveSpeedMultiplier;
 	BuffVec4 colorMultiplier;
 	float dropChance;
+
+	std::vector<cParticle*> particles;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
@@ -108,4 +111,6 @@ public:
 	void copyIgnoreId(Monster *other);
 	void setPosition(const Vec2& pos);
 	bool shouldHit(Bullet *bullet);
+	cParticle* addParticleSpawner(const std::string& name, sol::table& args);
+	void spawnParticle(cParticle *particle, sol::table& params);
 };

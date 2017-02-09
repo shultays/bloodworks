@@ -48,7 +48,7 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
-	local t = math.random(9)
+	local t = math.random(10)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
@@ -75,7 +75,8 @@ function makeBoss(monster)
 	elseif t == 6 then
 		monster.data.remainingLife = 3
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-		monster.data.onKilled = function (monster)
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster.scriptTable.onKilled = function (monster)
 			if monster.data.remainingLife > 0 then
 				monster.data.remainingLife = monster.data.remainingLife - 1
 				for i = 1,2 do
@@ -84,7 +85,7 @@ function makeBoss(monster)
 					newMonster.position = monster.position
 					newMonster:setScale(monster.scale * 0.85)
 					newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-					newMonster.data.onKilled = monster.data.onKilled
+					newMonster.scriptTable = monster.scriptTable
 					newMonster:copyIgnoreId(monster)
 					
 					newMonster.data.playerSeeRange = monster.data.playerSeeRange
@@ -106,7 +107,8 @@ function makeBoss(monster)
 		end
 	elseif t == 7 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
-		monster.data.onKilled = function (monster)
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster.scriptTable.onKilled = function (monster)
 			for i = 1,8 do
 				local newMonster = addMonster(monster.monsterTemplate.name)
 				newMonster.position = monster.position
@@ -157,7 +159,6 @@ function makeBoss(monster)
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
 		monster.data.oldTick = monster.scriptTable.onTick
 		monster.scriptTable = shallowcopy(monster.scriptTable)
-		
 		monster.scriptTable.onHit = function(monster, damage, args)
 			local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
 			monster.colorMultiplier:setBuffDuration(buffId, 1.0)
@@ -166,6 +167,27 @@ function makeBoss(monster)
 		
 		monster.scriptTable.shouldHit = function(monster, bullet)
 			return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
+		end
+	elseif t == 10 then
+		monster:addParticleSpawner("CriticalParticle", {});
+		monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 1.7, 1.0))
+		monster.hitPoint = math.floor(monster.hitPoint * 1.5)
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster.scriptTable.onHit = function(monster, damage, args)
+			if monster.hitPoint > 0 then
+				local t = math.random() * math.pi * 2.0
+				local r = math.random() * 100.0 + 100.0
+				local v = Vec2:new()
+				v:setAngle(t)
+				v = v * r
+				for i=1,8 do
+					monster:spawnParticle(nil, {})
+				end
+				monster.position = monster.position + v
+				for i=1,8 do
+					monster:spawnParticle(nil, {})
+				end
+			end
 		end
 	end
 end

@@ -31,7 +31,11 @@ function CriticalParticle.addParticle(params, pos)
 	
 	params.moveSpeed = Vec2.new(0.0, 0.0)
 	params.moveSpeed:setAngle(math.random() * math.pi * 2.0)
-	params.moveSpeed = params.moveSpeed * (100.0 + math.random() * 50.0) + params.bullet.moveSpeedDir
+	params.moveSpeed = params.moveSpeed * (100.0 + math.random() * 50.0)
+	
+	if params.bullet ~= nil then
+		params.moveSpeed = params.bullet.moveSpeedDir
+	end
 	
 	params.initialScale = 10.0 + math.random() * 10.0
 	
