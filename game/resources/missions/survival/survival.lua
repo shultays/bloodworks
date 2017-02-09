@@ -48,7 +48,7 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
-	local t = math.random(7)
+	local t = math.random(8)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
@@ -128,6 +128,29 @@ function makeBoss(monster)
 				newMonster.hitPoint = math.floor(monster.hitPoint * 0.3)
 				newMonster.data.randomMove = true
 				newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
+			end
+		end
+	elseif t == 8 then
+		monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
+		monster.data.oldTick = monster.scriptTable.onTick
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 3.5
+		monster.data.originalSpeed = monster.data.maxMoveSpeed
+		monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
+		monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
+		monster.scriptTable.onTick = function (monster)
+			local diffToPlayer = player.position - monster.position 
+			local distanceToPlayer = diffToPlayer:length()
+			local angleToPlayer = diffToPlayer:getAngle()
+			local a = fixAngle(angleToPlayer - player.aimAngle)
+			if math.abs(a) > math.pi - 0.2 then
+				monster.data.maxMoveSpeed = 0.0
+				monster.animationSpeed = 0.0
+				monster.moveSpeed = 0.0
+			else
+				monster.data.maxMoveSpeed = monster.data.originalSpeed
+				monster.animationSpeed = 1.0
+				monster.data.oldTick(monster)
 			end
 		end
 	end
