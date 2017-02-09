@@ -213,6 +213,11 @@ void Bullet::setPosition(const Vec2& pos)
 {
 	this->pos = pos;
 	bloodworks->getBulletController()->relocateBullet(this);
+
+	for (auto& particle : particles)
+	{
+		particle.lastSpawnPos = pos;
+	}
 }
 
 void Bullet::addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions)
