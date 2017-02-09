@@ -29,8 +29,9 @@ void MonsterController::tick()
 		}
 	}
 
-	for (auto& monster : monsters)
+	for (int i=0; i<monsters.size(); i++)
 	{
+		Monster* monster = monsters[i];
 		monster->tick();
 		if (bloodworks->isCoorOutside(monster->position, -20.0f) == false)
 		{
