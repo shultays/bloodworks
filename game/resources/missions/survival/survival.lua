@@ -48,7 +48,7 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
-	local t = math.random(8)
+	local t = math.random(9)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
@@ -152,6 +152,20 @@ function makeBoss(monster)
 				monster.animationSpeed = 1.0
 				monster.data.oldTick(monster)
 			end
+		end
+	elseif t == 9 then
+		monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
+		monster.data.oldTick = monster.scriptTable.onTick
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		
+		monster.scriptTable.onHit = function(monster, damage, args)
+			local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
+			monster.colorMultiplier:setBuffDuration(buffId, 1.0)
+			monster.data.lastHitTime = time
+		end
+		
+		monster.scriptTable.shouldHit = function(monster, bullet)
+			return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
 		end
 	end
 end
