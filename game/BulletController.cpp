@@ -37,16 +37,13 @@ void BulletController::tick()
 
 		if (bullets[i]->isDead)
 		{
-			if (bullets[i]->hasParticles() == false)
-			{
-				grid.removeFromGrid(bullets[i]);
-				int id = bullets[i]->getId();
-				SAFE_DELETE(bullets[i]);
-				bulletMap.erase(id);
-				bullets[i] = bullets[bullets.size() - 1];
-				bullets.resize(bullets.size() - 1);
-				i--;
-			}
+			grid.removeFromGrid(bullets[i]);
+			int id = bullets[i]->getId();
+			SAFE_DELETE(bullets[i]);
+			bulletMap.erase(id);
+			bullets[i] = bullets[bullets.size() - 1];
+			bullets.resize(bullets.size() - 1);
+			i--;
 		}
 		else
 		{

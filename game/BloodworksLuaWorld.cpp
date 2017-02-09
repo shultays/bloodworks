@@ -85,7 +85,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::division, [](const Vec3& a, float b) { return a / b; },
 		sol::meta_function::unary_minus, [](const Vec3& a) { return -a; },
 
-
 		"normalize", [](Vec3& a) { a.normalize(); },
 		"normalized", [](const Vec3& a) { return a.normalized(); },
 
@@ -590,6 +589,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addIgnoreId", &Monster::addIgnoreId,
 		"hasIgnoreId", &Monster::hasIgnoreId,
 		"copyIgnoreId", &Monster::copyIgnoreId,
+
+		"addParticleSpawner", &Monster::addParticleSpawner,
+		"spawnParticle", &Monster::spawnParticle,
 
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);

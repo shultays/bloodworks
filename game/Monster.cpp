@@ -11,6 +11,7 @@
 #include "MonsterController.h"
 #include "Bullet.h"
 #include "cSound.h"
+#include "cParticle.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -79,6 +80,8 @@ void Monster::setColor(int color)
 
 Monster::~Monster()
 {
+	bloodworks->addOrphanParticle(particles);
+	particles.clear();
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(healthRenderable);
 }
@@ -165,6 +168,10 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	}
 	damage = (int)(damage * bloodworks->getPlayer()->getDamageMultiplier());
 	hitPoint -= damage;
+	if (scriptTable["onHit"])
+	{
+		scriptTable["onHit"](this, damage, args);
+	}
 	if (hitPoint <= 0)
 	{
 		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
@@ -173,12 +180,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	else
 	{
 		bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
-		if (scriptTable["onHit"])
-		{
-			scriptTable["onHit"](this, damage, args);
-		}
 		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
-
 		if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
 		{
 			lastHitSoundPlayTime = timer.getTime();
@@ -235,6 +237,25 @@ bool Monster::shouldHit(Bullet *bullet)
 	return true;
 }
 
+cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args)
+{
+	cParticle *particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
+	particles.push_back(particle);
+	bloodworks->addRenderable(particle, MONSTERS + 1);
+	return particle;
+}
+
+void Monster::spawnParticle(cParticle *particleToSpawn, sol::table& params)
+{
+	for (auto& particle : particles)
+	{
+		if (particleToSpawn == nullptr || particle == particleToSpawn)
+		{
+			particle->addParticle(position, params);
+		}
+	}
+}
+
 void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)
 {
 	if (monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
@@ -275,9 +296,9 @@ void Monster::killSelf(const Vec2& blowDir)
 {
 	assert(isDead == false);
 	isDead = true;
-	if (data["onKilled"])
+	if (scriptTable["onKilled"])
 	{
-		data["onKilled"](this);
+		scriptTable["onKilled"](this);
 	}
 	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
 
