@@ -21,6 +21,8 @@ class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 	float currentAnimationTime;
 	int defaultAnimation;
 
+	float speedMultiplier;
+
 	void checkAnimationTime()
 	{
 		while (animations[currentAnimation].frames.size() > 0 && animations[currentAnimation].animationDuration > 0.0f && currentAnimationTime > animations[currentAnimation].frames[currentAnimationFrame].endTime)
@@ -121,6 +123,12 @@ public:
 		currentAnimation = 0;
 		currentAnimationFrame = 0;
 		currentAnimationTime = 0.0f;
+		speedMultiplier = 1.0f;
+	}
+
+	void setSpeedMultiplier(float speedMultiplier)
+	{
+		this->speedMultiplier = speedMultiplier;
 	}
 
 	virtual ~cAnimatedTexturedQuadRenderable()

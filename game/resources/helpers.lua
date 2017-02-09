@@ -71,7 +71,31 @@ end
 function lerp (a, b, t)
 	return a + (b-a) * t
 end
- 
+
+function fixAngle(a)
+	while a > math.pi do
+		a = a - 2.0 * math.pi
+	end
+	while a < -math.pi do
+		a = a + 2.0 * math.pi
+	end
+	return a
+end
+
+function shallowcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else 
+        copy = orig
+    end
+    return copy
+end
+
 FadeOutImage = {}
 
 function FadeOutImage.init(gameObject)
