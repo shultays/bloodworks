@@ -585,6 +585,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"doDamageWithArgs", &Monster::doDamageWithArgs,
 		"addIgnoreId", &Monster::addIgnoreId,
 		"hasIgnoreId", &Monster::hasIgnoreId,
+		"copyIgnoreId", &Monster::copyIgnoreId,
 
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
