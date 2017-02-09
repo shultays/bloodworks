@@ -110,8 +110,13 @@ void Bullet::tick()
 		{
 			Vec2 monsterPos = monster->getPosition();
 			float radiusToCheck = monster->getRadius() + radius;
+
 			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (penetrateCount == 0 || monster->hasIgnoreId(id) == false))
 			{
+				if (monster->shouldHit(this) == false)
+				{
+					return false;
+				}
 				if (script && shouldHitMonsterTest.size())
 				{
 					if (((bool)script[shouldHitMonsterTest](this, monster)) == false)

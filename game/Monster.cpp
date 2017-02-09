@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "BloodRenderable.h"
 #include "MonsterController.h"
+#include "Bullet.h"
 #include "cSound.h"
 
 Monster::Monster(Bloodworks *bloodworks)
@@ -223,6 +224,15 @@ void Monster::setPosition(const Vec2& pos)
 {
 	this->position = pos;
 	bloodworks->getMonsterController()->relocateMonster(this);
+}
+
+bool Monster::shouldHit(Bullet *bullet)
+{
+	if (scriptTable["shouldHit"])
+	{
+		return scriptTable["shouldHit"](this, bullet);
+	}
+	return true;
 }
 
 void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)

@@ -162,7 +162,6 @@ function MonsterMeleeHelper.onTick(monster)
 				player.maxSpeed:setBuffFadeInFadeOut(MonsterMeleeHelper.slowBuffId, data.slowdownDuration/4, data.slowdownDuration/4)
 			end
 			
-			
 			MeleeHitImage.build(monster)
 		end
 	else
