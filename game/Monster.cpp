@@ -204,6 +204,14 @@ bool Monster::hasIgnoreId(int id)
 	return std::binary_search(ignoreIds.begin(), ignoreIds.end(), id);
 }
 
+void Monster::copyIgnoreId(Monster *other)
+{
+	for (auto id : other->ignoreIds)
+	{
+		addIgnoreId(id);
+	}
+}
+
 void Monster::setPosition(const Vec2& pos)
 {
 	this->position = pos;
@@ -250,9 +258,9 @@ void Monster::killSelf(const Vec2& blowDir)
 {
 	assert(isDead == false);
 	isDead = true;
-	if (scriptTable["onKilled"])
+	if (data["onKilled"])
 	{
-		scriptTable["onKilled"](this);
+		data["onKilled"](this);
 	}
 	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
 
