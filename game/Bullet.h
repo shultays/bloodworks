@@ -84,7 +84,6 @@ public:
 	void addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions);
 	void addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions);
 	cParticle* addTrailParticle(const std::string& name, const Vec2& shift, float spawnDistance, const sol::table& args);
-	bool hasParticles();
 	void setPosition(const Vec2& pos);
 	void updateDrawable();
 	void removeSelf();

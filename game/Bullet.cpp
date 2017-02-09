@@ -34,7 +34,7 @@ Bullet::~Bullet()
 	SAFE_DELETE(renderable);
 	for (int i = 0; i < particles.size(); i++)
 	{
-		SAFE_DELETE(particles[i].particle);
+		bloodworks->addOrphanParticle(particles[i].particle);
 	}
 	particles.clear();
 }
@@ -200,18 +200,6 @@ cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, 
 	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
 	particles.push_back(particleData);
 	return particleData.particle;
-}
-
-bool Bullet::hasParticles()
-{
-	for (auto& particleData : particles)
-	{
-		if (particleData.particle->hasParticle())
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 void Bullet::setPosition(const Vec2& pos)
