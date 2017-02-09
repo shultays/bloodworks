@@ -101,5 +101,6 @@ public:
 	void addIgnoreId(int id);
 	bool hasIgnoreId(int id);
 
+	void copyIgnoreId(Monster *other);
 	void setPosition(const Vec2& pos);
 };
