@@ -7,8 +7,7 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
 	if (animations[currentAnimation].frames.size() > 0)
 	{
 		cRenderableWithShader::render(isIdentity, mat);
-
-		currentAnimationTime += timer.getRender_dt();
+		currentAnimationTime += timer.getRender_dt() * speedMultiplier;
 		checkAnimationTime();
 
 		if (animations[currentAnimation].frames.size() > 0)
