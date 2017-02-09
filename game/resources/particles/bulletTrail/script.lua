@@ -7,6 +7,7 @@ function BulletTrailParticle.initSystem()
 	addAttribute("scaleSpeed", "float")
 	addAttribute("initialAlpha", "float")
 	addAttribute("fadeOutSpeed", "float")
+	addAttribute("startFadeinSpeed", "float")
 	
 	addUniform("lastBulletTime", "float")
 end
@@ -25,6 +26,9 @@ function BulletTrailParticle.setDefaultArgs(args)
 	if args.fadeOutSpeed == nil then
 		args.fadeOutSpeed = 2.0
 	end
+	if args.startFadeinSpeed == nil then
+		args.startFadeinSpeed = 30.0
+	end
 end
 
 function BulletTrailParticle.addParticle(params, pos, args)
@@ -39,6 +43,8 @@ function BulletTrailParticle.addParticle(params, pos, args)
 	params.initialAlpha = args.initialAlpha
 	
 	params.fadeOutSpeed = args.fadeOutSpeed
+	
+	params.startFadeinSpeed = args.startFadeinSpeed
 	
 	params.rotation = params.bullet.moveAngle
 	

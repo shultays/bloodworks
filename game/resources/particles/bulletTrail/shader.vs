@@ -1,6 +1,7 @@
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
+attribute float startFadeinSpeed;
 
 attribute vec3 color;
 attribute float initialScale;
@@ -30,7 +31,7 @@ void main(void)
 	vec3 viewPos = uViewMatrix * worldPos;
 	gl_Position = vec4(viewPos.x, viewPos.y, 0.0, 1.0);
 	
-	initialAlpha *= min(time * 30.0, 1.0);
+	initialAlpha *= min(time * startFadeinSpeed, 1.0);
 	initialAlpha *= min((lastBulletTime - time) * 120.0, 1.0);
 	vColor = vec4(lerp(vec3(0.6), color,  min((lastBulletTime - time) * 10.0, 1.0)), initialAlpha - fadeOutSpeed * dt);
 	vVertexUV = uv;
