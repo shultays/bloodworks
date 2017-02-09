@@ -9,6 +9,8 @@ class Bloodworks;
 #include "MonsterTemplate.h"
 #include "BuffFloat.h"
 
+class Bullet;
+
 class Monster
 {
 	friend class MonsterController;
@@ -105,4 +107,5 @@ public:
 
 	void copyIgnoreId(Monster *other);
 	void setPosition(const Vec2& pos);
+	bool shouldHit(Bullet *bullet);
 };
