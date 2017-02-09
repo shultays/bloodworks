@@ -48,7 +48,7 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	
-	local t = math.random(10)
+	local t = math.random(11)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
@@ -76,6 +76,7 @@ function makeBoss(monster)
 		monster.data.remainingLife = 3
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
 		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster:setScale(monster.scale * 1.15)
 		monster.scriptTable.onKilled = function (monster)
 			if monster.data.remainingLife > 0 then
 				monster.data.remainingLife = monster.data.remainingLife - 1
@@ -108,6 +109,7 @@ function makeBoss(monster)
 	elseif t == 7 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
 		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster:setScale(monster.scale * 1.15)
 		monster.scriptTable.onKilled = function (monster)
 			for i = 1,8 do
 				local newMonster = addMonster(monster.monsterTemplate.name)
@@ -189,12 +191,56 @@ function makeBoss(monster)
 				end
 			end
 		end
+	elseif t == 11 then
+		monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+		monster.data.oldTick = monster.scriptTable.onTick
+		monster.scriptTable = shallowcopy(monster.scriptTable)
+		monster.moveSpeed = monster.moveSpeed * 0.5
+		monster:setScale(monster.scale * 1.15)
+		monster.scriptTable.onTick = function (monster)
+			monster.data.oldTick(monster)
+			if monster.data.spawnTimer == nil then
+				monster.data.spawnTimer = 3.0
+			end
+			monster.data.spawnTimer = monster.data.spawnTimer - dt
+			
+			if monster.data.spawnTimer < 0.0 then
+				monster.data.spawnTimer = 3.0
+				
+				local newMonster = addMonster(monster.monsterTemplate.name)
+				newMonster.position = monster.position
+				newMonster:setScale(monster.scale * 0.60)
+				newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+				
+				newMonster.data.playerSeeRange = monster.data.playerSeeRange
+				newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
+				newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+
+				newMonster.data.hitWaitTime = monster.data.hitWaitTime
+				newMonster.data.hitInterval = monster.data.hitInterval
+				newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
+				newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
+
+				newMonster.experienceMultiplier = 0.0
+
+				newMonster.hitPoint = math.floor(monster.hitPoint * 0.2)
+				newMonster.data.randomMove = true
+				newMonster.moveAngle = -monster.moveAngle
+				
+				monster.scriptTable = shallowcopy(monster.scriptTable)
+				monster.scriptTable.onKilled = function (monster)
+					Survival.ignoreMonsterCount = Survival.ignoreMonsterCount - 1
+				end
+				Survival.ignoreMonsterCount = Survival.ignoreMonsterCount + 1
+			end
+		end
+	
 	end
 end
 
 
 function Survival.init()
-
+	Survival.ignoreMonsterCount = 0
     Survival.extraMin = 0.0
     Survival.lastSpawnTime = 0.0
 	Survival.lastBossSpawn = -500
@@ -273,7 +319,7 @@ function Survival.onTick()
     local min = missionTime / 60.0
 	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.15)))
 	
-    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() < curMaxMonster and player.isDead == false then
+    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - Survival.ignoreMonsterCount < curMaxMonster and getMonsterCount() < Survival.maxMonster and player.isDead == false then
         Survival.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
