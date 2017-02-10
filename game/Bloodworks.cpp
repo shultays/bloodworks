@@ -47,6 +47,8 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 
 void Bloodworks::init()
 {
+	nextGlobalUniqueId = 0;
+
 	luaWorld = new BloodworksLuaWorld(this);
 	luaWorld->reset();
 
@@ -246,6 +248,7 @@ void Bloodworks::init()
 Bloodworks::Bloodworks()
 {
 	nextUniqueId = 1000;
+	nextGlobalUniqueId = 1;
 
 	mapSize = 2000.0f;
 	mapBegin = -mapSize*0.5f;
