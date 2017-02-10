@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "BloodRenderable.h"
 #include "MonsterController.h"
+#include "Gun.h"
 #include "Bullet.h"
 #include "cSound.h"
 #include "cParticle.h"
@@ -232,7 +233,16 @@ bool Monster::shouldHit(Bullet *bullet)
 {
 	if (scriptTable["shouldHit"])
 	{
-		return scriptTable["shouldHit"](this, bullet);
+		return scriptTable["shouldHit"](this, bullet->getGun(), bullet);
+	}
+	return true;
+}
+
+bool Monster::shouldHit(Gun *gun)
+{
+	if (scriptTable["shouldHit"])
+	{
+		return scriptTable["shouldHit"](this, gun, nullptr);
 	}
 	return true;
 }

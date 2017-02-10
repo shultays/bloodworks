@@ -3,8 +3,8 @@
 #include "Monster.h"
 #include "sol.h"
 #include "cMath.h"
-
 #include "Player.h"
+#include "Bullet.h"
 
 
 MonsterController::MonsterController(Bloodworks *bloodworks)
@@ -66,32 +66,42 @@ const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  c
 	return grid.getNodeAtPos(pos);
 }
 
-MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId)
+MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId, sol::table& args)
 {
 	MonsterHitResult result;
 	result.distance = FLT_MAX;
 	result.monster = nullptr;
 
-	if (input.isKeyDown(key_f3))
+	Gun *gun = nullptr;
+	Bullet *bullet = nullptr;
+	if (args)
 	{
-		debugRenderer.addLine(begin, begin + ray);
-		for (auto& monster : monsters)
+		if (args["gun"])
 		{
-			float t;
-			if ((t = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius())) >= 0.0f)
-			{
-				debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-				debugRenderer.addCircle(begin + ray.normalized() * t, 5, 0.0f, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-			}
-			else
-			{
-				debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-			}
+			gun = args["gun"];
+		}
+		if (args["bullet"])
+		{
+			bullet = args["bullet"];
 		}
 	}
 
 	for (auto & monster : monsters)
 	{
+		if (bullet)
+		{
+			if (monster->hasIgnoreId(bullet->getId()) || monster->shouldHit(bullet) == false)
+			{
+				continue;
+			}
+		}
+		if (gun)
+		{
+			if (monster->shouldHit(gun) == false)
+			{
+				continue;
+			}
+		}
 		float distance = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius());
 		if (distance >= 0.0f && distance < result.distance)
 		{
