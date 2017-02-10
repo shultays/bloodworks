@@ -465,9 +465,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 	lua.set_function("getClosestMonsterOnLine",
-		[&](const Vec2& pos, const Vec2& ray, int ignoreId)
+		[&](const Vec2& pos, const Vec2& ray, int ignoreId, sol::table args)
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId);
+		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId, args);
 	});
 
 	lua.set_function("spawnRandomBonus",

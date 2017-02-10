@@ -9,6 +9,7 @@ class Bloodworks;
 #include "MonsterTemplate.h"
 #include "BuffFloat.h"
 
+class Gun;
 class Bullet;
 class cParticle;
 
@@ -111,6 +112,7 @@ public:
 	void copyIgnoreId(Monster *other);
 	void setPosition(const Vec2& pos);
 	bool shouldHit(Bullet *bullet);
+	bool shouldHit(Gun *gun);
 	cParticle* addParticleSpawner(const std::string& name, sol::table& args);
 	void spawnParticle(cParticle *particle, sol::table& params);
 };

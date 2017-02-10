@@ -88,4 +88,5 @@ public:
 	void updateDrawable();
 	void removeSelf();
 	float getMeshRotation();
+	Gun* getGun();
 };
