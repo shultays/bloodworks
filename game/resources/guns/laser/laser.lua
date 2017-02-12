@@ -12,7 +12,7 @@ function Laser.onTick(gun)
 	if gun.isTriggered and gun:hasAmmo() then
 		gun.laser:setVisible(true)
 		local range = 250.0
-		local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range)
+		local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range, -1, {gun = gun})
 		if result.monster ~= nil then
 			range = result.distance
 		end
