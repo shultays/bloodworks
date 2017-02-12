@@ -709,7 +709,7 @@ void Bloodworks::tick()
 		coral.getSoundManager()->setGlobalVolume(globalVolume);
 	}
 
-	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && (input.isKeyPressed(key_tab) || input.isKeyPressed(joystick_0_button_y)))
+	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && (input.isKeyPressed(key_tab) || input.isKeyPressed(joystick_0_button_y)))
 	{
 		levelUpPopup->show(false);
 	}

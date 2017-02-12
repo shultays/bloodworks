@@ -299,9 +299,9 @@ function Survival.onTick()
 	end
 
 	if isKeyReleased(keys.home) then
-		dumpTable(_G)
+			HomingOrb.spawn(player.position)
 	end
-	
+	NukeOnDeath.onTick()
 	if isKeyReleased(keys.pageup) then
 		Survival.extraMin = Survival.extraMin + 0.5
 		print("Extra Min " .. Survival.extraMin)
