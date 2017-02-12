@@ -17,7 +17,7 @@ function HomingOrb.spawn(pos)
 		bullet:addRenderableTextureWithSize("resources/bonuses/homing/bullet.png", Vec2.new(14.0, 14.0))
 		
 		bullet.data.lastHitIndex = -1
-		bullet.radius = 9.0
+		bullet.radius = 12.0
 		
 		bullet.moveAngle = (monster.position - pos):getAngle()
 		bullet.penetrateCount = math.floor(6 * player.data.bonusDurationMultiplier)
@@ -42,9 +42,9 @@ function HomingOrbBullet.onTick(bullet)
 
 	if bullet.data.monster ~= nil then
 		local toMonster = (bullet.data.monster.position - bullet.position)
-		local m = 1.0 - clamp(toMonster:length() / 50)
-		bullet.moveAngle = approachAngle(bullet.moveAngle, toMonster:getAngle(), (10 + 50 * m) * dt)
-		if bullet.data.monster.isDead then
+		local m = 1.0 - clamp(toMonster:length() / 60)
+		bullet.moveAngle = approachAngle(bullet.moveAngle, toMonster:getAngle(), (10 + 90 * m) * dt)
+		if bullet.data.monster.isDead or bullet.data.monster:hasIgnoreId(HomingOrb.homingOrbId) then
 			bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, HomingOrb.homingOrbId)
 		end
 	end
@@ -52,7 +52,8 @@ end
 
 function HomingOrbBullet.onHit(bullet, monster)
 	playSound({path = "resources/sounds/plasma_hit.ogg", position = bullet.position})
-	bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, bullet.index)
+	monster:addIgnoreId(HomingOrb.homingOrbId)
+	bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, HomingOrb.homingOrbId)
 	bullet.damage = math.floor(math.random() * 40 + 30)
 end
 

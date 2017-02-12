@@ -120,7 +120,10 @@ int main(int argc, char *argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		SDL_GL_SwapWindow(mainWindow);
-		SDL_GL_SetSwapInterval(0);
+		if (SDL_GL_SetSwapInterval(-1) != 0)
+		{
+			SDL_GL_SetSwapInterval(0);
+		}
 		debugRenderer.init();
 		InitGame();
 
