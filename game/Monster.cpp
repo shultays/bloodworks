@@ -61,6 +61,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	lastBitTime = timer.getTime();
 
 	dropChance = 0.05f;
+	firstTick = true;
 	scriptTable["init"](this);
 }
 
@@ -71,11 +72,6 @@ void Monster::setScale(float scale)
 	textureShift = monsterTemplate->textureShift * scale;
 	bulletRadius = monsterTemplate->bulletRadius * scale;
 	collisionRadius = monsterTemplate->collisionRadius * scale;
-}
-
-void Monster::setColor(int color)
-{
-	renderable->setColor(Vec4::fromColor(color));
 }
 
 Monster::~Monster()
@@ -136,6 +132,7 @@ void Monster::tick()
 	mat.translateBy(position);
 	renderable->setWorldMatrix(mat);
 
+	firstTick = false;
 	//debugRenderer.addLine(position, position + Vec2::fromAngle(moveAngle) * 50);
 }
 
@@ -174,18 +171,24 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	}
 	if (hitPoint <= 0)
 	{
-		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
-		killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+		if (damage > 0)
+		{
+			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
+			killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+		}
 	}
 	else
 	{
-		bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
-		spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
-		if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
+		if (damage > 0)
 		{
-			lastHitSoundPlayTime = timer.getTime();
-			cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
-			bloodworks->playSoundAtMap(position, s, 0.7f);
+			bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
+			{
+				lastHitSoundPlayTime = timer.getTime();
+				cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
+				bloodworks->playSoundAtMap(position, s, 0.7f);
+			}
 		}
 	}
 }
@@ -230,6 +233,10 @@ void Monster::setPosition(const Vec2& pos)
 
 bool Monster::shouldHit(Bullet *bullet)
 {
+	if (firstTick)
+	{
+		return false;
+	}
 	if (scriptTable["shouldHit"])
 	{
 		return scriptTable["shouldHit"](this, bullet);
@@ -300,7 +307,6 @@ void Monster::killSelf(const Vec2& blowDir)
 	{
 		scriptTable["onKilled"](this);
 	}
-	bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
 
 
 	bloodworks->onMonsterDied(this, dropChance);
@@ -329,21 +335,26 @@ void Monster::killSelf(const Vec2& blowDir)
 			parts.push_back(t);
 		}
 	}
-
-	for (int i : parts)
+	
+	if (blowDir.isNonZero())
 	{
-		cTextureShr s = monsterTemplate->bodyParts[i].texture;
-		cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
-		partRenderable->setColor(renderable->getColor());
-		Mat3 mat = renderable->getWorldMatrix();
-		partRenderable->setWorldMatrix(mat);
-		bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
-			position - (monsterTemplate->bodyParts[i].shift * scale) * Mat2::rotation(moveAngle - pi_d2),
-			textureSize,
-			moveAngle - pi_d2, 
-			textureShift + monsterTemplate->bodyParts[i].shift * scale, 
-			blowDir * 2.0f);
+		bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
+		for (int i : parts)
+		{
+			cTextureShr s = monsterTemplate->bodyParts[i].texture;
+			cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
+			partRenderable->setColor(renderable->getColor());
+			Mat3 mat = renderable->getWorldMatrix();
+			partRenderable->setWorldMatrix(mat);
+			bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
+				position - (monsterTemplate->bodyParts[i].shift * scale) * Mat2::rotation(moveAngle - pi_d2),
+				textureSize,
+				moveAngle - pi_d2,
+				textureShift + monsterTemplate->bodyParts[i].shift * scale,
+				blowDir * 2.0f);
+		}
 	}
+
 	if (bloodworks->getPlayer())
 	{
 		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));

@@ -1,0 +1,23 @@
+{
+  "type" : "gun",
+  "name": "Shrink Gun",
+  "artFolder" : "resources/guns/shrinkgun/",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [8.0, 8.0],
+  "bulletMeshShift" : [0.0, 0.0],
+  "bulletRadius" : 8.0,
+  "bulletSpeed" : 450.0,
+  "bulletDamage" : [0, 0],
+  
+  "maxAmmo" : 16,
+  "reloadTime" : 1.8,
+  
+  "firingSound" : {
+	"path" : "resources/sounds/shrink_shoot.ogg",
+	"volume" : 1.0
+  },
+  
+  "scriptFile" : "resources/guns/shrinkgun/shrinkgun.lua",
+  "scriptName" : "ShrinkGun"
+}
