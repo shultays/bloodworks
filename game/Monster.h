@@ -38,7 +38,7 @@ class Monster
 
 	bool isDead;
 	bool hasBlood;
-
+	bool firstTick;
 	float animationSpeed;
 
 	const MonsterTemplate* monsterTemplate;
@@ -81,7 +81,6 @@ public:
 	void init(const MonsterTemplate* monsterTemplate);
 	int getId();
 	void setScale(float scale);
-	void setColor(int color);
 	void tick();
 	void addTimer(float timeToTrigger, const std::string& func, sol::table args, bool looped = false);
 	void playAnimation(std::string anim, float startPercentage);
