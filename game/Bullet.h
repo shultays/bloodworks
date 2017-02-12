@@ -88,4 +88,5 @@ public:
 	void updateDrawable();
 	void removeSelf();
 	float getMeshRotation();
+	void setColor(const Vec4& color);
 };

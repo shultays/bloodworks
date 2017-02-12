@@ -220,6 +220,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addRenderableTexture", &Bullet::addRenderableTexture,
 		"addRenderableTextureWithSize", &Bullet::addRenderableTextureWithSize,
 		"addRenderableTextureWithPosAndSize", &Bullet::addRenderableTextureWithPosAndSize,
+
+		"setColor", &Bullet::setColor,
+
 		"addTrailParticle", &Bullet::addTrailParticle,
 
 		"updateDrawable", &Bullet::updateDrawable,
@@ -580,9 +583,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"playAnimation", &Monster::playAnimation,
 		"addTimer", &Monster::addTimer,
 		"setScale", &Monster::setScale,
-		"setColor", &Monster::setColor,
 
 		"dropChance", &Monster::dropChance,
+
+		"killSelf", [&](Monster* monster)
+	{
+		monster->killSelf(Vec2::zero());
+	},
+		"killSelfWithDir", &Monster::killSelf,
 
 		"doDamage", &Monster::doDamage,
 		"doDamageWithArgs", &Monster::doDamageWithArgs,

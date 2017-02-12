@@ -3,21 +3,6 @@ function Spider.init(monster)
 	data = monster.data
 	monster:setScale(math.random() * 0.4 + 0.5)
 
-	local r = math.floor(230 + 25 * math.random())
-	local g = math.floor(230 + 25 * math.random())
-	local b = math.floor(230 + 25 * math.random())
-	local ra = math.random()
-	if ra < 0.333 then
-		r = 0xff
-	elseif ra < 0.666 then
-		g = 0xff
-	else
-		b = 0xff
-	end
-    
-	monster:setColor(0xFF000000 + (r * 2 ^ 16) + (g  * 2 ^ 8) + b)
-    
-	
 	local diff = player.position - monster.position
 	
 	monster.moveSpeed = 0
