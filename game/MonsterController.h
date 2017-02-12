@@ -33,7 +33,7 @@ public:
 	void tick();
 	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;
 
-	MonsterHitResult getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId);
+	MonsterHitResult getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId, sol::table& args);
 
 	Monster* getClosestMonster(const Vec2& pos);
 	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
