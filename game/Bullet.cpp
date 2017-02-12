@@ -186,6 +186,11 @@ void Bullet::setColor(const Vec4& color)
 	renderable->setColor(color);
 }
 
+Gun* Bullet::getGun() const
+{
+	return gun;
+}
+
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)
 {
 	cTexturedQuadRenderable* quad = new cTexturedQuadRenderable(bloodworks, texture, "resources/default");

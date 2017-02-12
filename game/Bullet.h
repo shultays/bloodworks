@@ -89,4 +89,5 @@ public:
 	void removeSelf();
 	float getMeshRotation();
 	void setColor(const Vec4& color);
+	Gun* getGun() const;
 };
