@@ -516,7 +516,7 @@ void Player::updateHitPoints()
 void Player::gainExperience(int e)
 {
 	this->experience += e;
-	if (experience >= experienceForNextLevel && bloodworks->isLevelUpPopupVisible() == false)
+	if (experience >= experienceForNextLevel && bloodworks->isLevelUpPopupVisible() == false && isDead == false)
 	{
 		experience -= experienceForNextLevel;
 		doLevelup();
@@ -770,6 +770,7 @@ void Player::checkInput(bool& moving, float& wantedAngle)
 void Player::updateExperience()
 {
 	float scale = scaledExpBarSize.x * (experience / (float)experienceForNextLevel) - 2.0f / bloodworks->getCameraZoom();
+	scale = min(scale, 1.0f);
 	if (scale > 0.01f && bloodworks->isMissionLoaded())
 	{
 		experienceBarActive->setVisible(true);
