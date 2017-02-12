@@ -199,7 +199,6 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 	updateDrawable();
 }
 
-
 cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, float spawnDistance, const sol::table& args)
 {
 	Particledata particleData;

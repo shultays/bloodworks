@@ -104,6 +104,10 @@ public:
 	void setSecondaryGun(Gun* gun);
 	Gun* getSecondaryGun();
 
+	bool isActive() const 
+	{
+		return isDead == false;
+	}
 	int doDamage(int damage);
 	int doDamageWithParams(int damage, sol::table& params);
 	const Vec2& getCrosshairPos() const 
