@@ -690,7 +690,6 @@ void Bloodworks::tick()
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
 
-
 	bool changeGlobalVolume = false;
 	if (input.isKeyDown(key_num_minus))
 	{
