@@ -311,5 +311,8 @@
     <ClInclude Include="OptionsPopup.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="cPersistent.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

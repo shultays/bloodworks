@@ -232,6 +232,7 @@
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />
     <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cPersistent.h" />
     <ClInclude Include="cPostProcess.h" />
     <ClInclude Include="cPriorityVector.h" />
     <ClInclude Include="cRenderable.h" />
