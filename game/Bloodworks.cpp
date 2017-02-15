@@ -25,6 +25,7 @@
 #include "OneShotSoundManager.h"
 #include "BuffFloat.h"
 #include "OptionsPopup.h"
+#include "cPersistent.h"
 
 #include <sstream>
 
@@ -48,6 +49,9 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 void Bloodworks::init()
 {
 	nextGlobalUniqueId = 0;
+
+	config = new cPersistent();
+	config->setFileBackup("config.txt");
 
 	luaWorld = new BloodworksLuaWorld(this);
 	luaWorld->reset();
@@ -323,6 +327,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(oneShotSoundManager);
+	SAFE_DELETE(config);
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -802,6 +807,8 @@ void Bloodworks::tick()
 			cameraZoom = 1.0f;
 		}
 	}
+
+	config->check();
 }
 
 void Bloodworks::tickCamera()

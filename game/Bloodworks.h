@@ -41,6 +41,7 @@ class LaserTemplate;
 class MainMenu;
 class OneShotSoundManager;
 class OptionsPopup;
+class cPersistent;
 
 class Bloodworks : public cGame
 {
@@ -76,6 +77,8 @@ class Bloodworks : public cGame
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
+
+	cPersistent* config;
 
 	int nextUniqueId;
 	int nextGlobalUniqueId;
@@ -207,6 +210,11 @@ public:
 	bool isPaused() const
 	{
 		return paused;
+	}
+
+	cPersistent* getConfig()
+	{
+		return config;
 	}
 
 	virtual void windowResized(int width, int height);

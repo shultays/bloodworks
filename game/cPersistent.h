@@ -14,9 +14,10 @@ class cPersistent
 		std::string strValue;
 		int intValue;
 		float floatValue;
-		Vec2 vec2Data;
-		IntVec2 intVec2Data;
+		Vec2 vec2Value;
+		IntVec2 intVec2Value;
 		int type;
+		std::vector<std::string> strList;
 
 		std::string betweenString;
 		std::string beforeString;
@@ -25,88 +26,47 @@ class cPersistent
 	std::unordered_map<std::string, int> dataIndices;
 	std::vector<Data> persistentData;
 
-	int getDataIndex(const std::string& name)
-	{
-		auto index = dataIndices.find(name);
-		if (index == dataIndices.end())
-		{
-			return -1;
-		}
-		return index->second;
-	}
+	std::string endString;
+	std::string filePath;
 
-	Data& addData(const std::string& name)
-	{
-		dataIndices[name] = (int)persistentData.size();
-		persistentData.resize(persistentData.size() + 1);
-		int index = (int)persistentData.size() - 1;
-		persistentData[index].name = name;
-		return persistentData[index];
-	}
+	bool isDirty;
 
-	Data& getValidData(const std::string& name)
-	{
-		int index = getDataIndex(name);
-		if (index == -1)
-		{
-			Data& data = addData(name);
-			clearData(data);
-			return data;
-		}
-		return persistentData[index];
-	}
-
-	Data& getData(const std::string& name)
-	{
-		int index = getDataIndex(name);
-		if (index == -1)
-		{
-			return addData(name);
-		}
-		return persistentData[index];
-	}
-
-	Data& clearData(Data& data)
-	{
-		data.type = TypeInt;
-		data.intValue = 0;
-		data.floatValue = 0.0f;
-		data.vec2Data.setZero();
-		data.intVec2Data.setZero();
-		return data;
-	}
-
-	Data& getEmptyData(const std::string& name)
-	{
-		Data& data = getData(name);
-		clearData(data);
-		return data;
-	}
+	int getDataIndex(const std::string& name);
+	Data& addData(const std::string& name);
+	Data& getValidData(const std::string& name);
+	Data& getData(const std::string& name);
+	Data& clearData(Data& data);
+	Data& getEmptyData(const std::string& name);
 
 	void setValue(Data& data, int value)
 	{
 		data.intValue = value;
 		data.type = TypeInt;
+		isDirty = true;
 	}
 	void setValue(Data& data, float value)
 	{
 		data.floatValue = value;
 		data.type = TypeFloat;
+		isDirty = true;
 	}
 	void setValue(Data& data, const Vec2& value)
 	{
-		data.vec2Data = value;
+		data.vec2Value = value;
 		data.type = TypeVec2;
+		isDirty = true;
 	}
 	void setValue(Data& data, const IntVec2& value)
 	{
-		data.intVec2Data = value;
+		data.intVec2Value = value;
 		data.type = TypeIntVec2;
+		isDirty = true;
 	}
 	void setValue(Data& data, const std::string& value)
 	{
 		data.strValue = value;
 		data.type = TypeString;
+		isDirty = true;
 	}
 
 	template <class T>
@@ -116,6 +76,13 @@ class cPersistent
 		if (index == -1)
 		{
 			Data& data = addData(name);
+			int space = 16 - (int)name.length();
+			space = max(1, space);
+			for (int i = 0; i < space; i++)
+			{
+				data.betweenString += " ";
+			}
+			data.beforeString = "\n";
 			clearData(data);
 			setValue(data, value);
 			return (int)persistentData.size() - 1;
@@ -130,279 +97,32 @@ class cPersistent
 		if (hasFile)
 		{
 			loadFromString(content);
+			isDirty = false;
 		}
 	}
 
-	void loadFromString(const std::string& content)
-	{
-		// this is mess :(
-		// works though
-		bool err = false;
-		const char* c = content.c_str();
-		while (*c != '\0')
-		{
-			const char* begin = c;
-			while (*c)
-			{
-				if (*c == '\t' || *c == ' ' || *c == '\n' || *c == '\r')
-				{
-					c++;
-				}
-				else if (*c == '#')
-				{
-					c++;
-					while (*c && *c != '\n')
-					{
-						c++;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-			if (*c == '\0')
-			{
-				endString = begin;
-				break;
-			}
-			const char* nameBegin = c;
-			while (*c)
-			{
-				if (*c == '\n' || *c == '\r')
-				{
-					printf("ERROR\n");
-					err = true;
-					break;
-				}
-				else if (*c == ' ' || *c == '\t')
-				{
-					break;
-				}
-				c++;
-			}
-
-			if (*c == '\0' || err)
-			{
-				break;
-			}
-
-			const char* betweenBegin = c;
-
-			while (*c)
-			{
-				if (*c == '\n' || *c == '\r')
-				{
-					printf("ERROR\n");
-					err = true;
-					break;
-				}
-				else if (*c == ' ' || *c == '\t')
-				{
-					c++;
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			
-			if (*c == '\0' || err)
-			{
-				break;
-			}
-
-			const char* valueBegin = c;
-			const char* valueBetweenBegin = c;
-			int type;
-			if (*c == '\"')
-			{
-				c++;
-				type = TypeString;
-				while (*c)
-				{
-					if (*c == '\n' || *c == '\r')
-					{
-						printf("ERROR\n");
-						err = true;
-						break;
-					}
-					else if (*c == '\"')
-					{
-						break;
-					}
-					c++;
-				}
-
-				if (*c == '\0' || err)
-				{
-					break;
-				}
-				c++;
-			}
-			else if (*c == '(')
-			{
-				type = TypeIntVec2;
-				while (*c)
-				{
-					if (*c == '\n' || *c == '\r')
-					{
-						printf("ERROR\n");
-						err = true;
-						break;
-					}
-					else if (*c == ')')
-					{
-						break;
-					}
-
-					if (*c == ',')
-					{
-						valueBetweenBegin = c + 1;
-					}
-					if (*c == '.')
-					{
-						type = TypeVec2;
-					}
-					c++;
-				}
-
-				if (*c == '\0' || err)
-				{
-					break;
-				}
-				c++;
-			}
-			else
-			{
-				type = TypeInt;
-				while (*c)
-				{
-					if (*c == '\n' || *c == '\r' || *c == ' ' || *c == '\t')
-					{
-						break;
-					}
-					if (*c == '.')
-					{
-						type = TypeFloat;
-					}
-					c++;
-				}
-			}
-			std::string name(nameBegin, betweenBegin - nameBegin);
-			if (dataIndices.find(name) != dataIndices.end())
-			{
-				printf("Warning: %s already defined\n", name.c_str());
-			}
-			Data& data = getEmptyData(name);
-			if (type == TypeString)
-			{
-				std::string value(valueBegin + 1, c - valueBegin - 2);
-				setValue(data, value);
-			}
-			else if (type == TypeInt)
-			{
-				int value = atoi(valueBegin);
-				setValue(data, value);
-			}
-			else if (type == TypeFloat)
-			{
-				float value = (float)atof(valueBegin);
-				setValue(data, value);
-			}
-			else if (type == TypeVec2)
-			{
-				Vec2 value;
-				value[0] = (float)atof(valueBegin + 1);
-				value[1] = (float)atof(valueBetweenBegin);
-				setValue(data, value);
-			}
-			else if (type == TypeIntVec2)
-			{
-				IntVec2 value;
-				value[0] = atoi(valueBegin + 1);
-				value[1] = atoi(valueBetweenBegin);
-				setValue(data, value);
-			}
-
-			data.beforeString = std::string(begin, nameBegin - begin);
-			data.betweenString = std::string(betweenBegin, valueBegin - betweenBegin);
-
-			/*
-			char buffBefore[128];
-			strncpy_s(buffBefore, begin, nameBegin - begin);
-			char buffName[128];
-			strncpy_s(buffName, nameBegin, betweenBegin - nameBegin);
-			char buffBetween[128];
-			strncpy_s(buffBetween, betweenBegin, valueBegin - betweenBegin);
-			char buffValue[128];
-			strncpy_s(buffValue, valueBegin, c - valueBegin);
-
-			for (int i = 0; i < 128; i++)
-			{
-				if (buffBefore[i] == '\n') buffBefore[i] = 'n';
-				if (buffBefore[i] == '\r') buffBefore[i] = 'r';
-
-				if (buffName[i] == '\n') buffName[i] = 'n';
-				if (buffName[i] == '\r') buffName[i] = 'r';
-
-				if (buffBetween[i] == '\n') buffBetween[i] = 'n';
-				if (buffBetween[i] == '\r') buffBetween[i] = 'r';
-
-				if (buffValue[i] == '\n') buffValue[i] = 'n';
-				if (buffValue[i] == '\r') buffValue[i] = 'r';
-			}
-
-			printf("b: [%s], n:[%s], t:[%s], v[%s] %d\n", buffBefore, buffName, buffBetween, buffValue, type);
-			*/
-		}
-
-		FILE *f = fopen("out.txt", "w");
-		for (auto& data : persistentData)
-		{
-			fprintf(f, "%s%s%s", data.beforeString.c_str(), data.name.c_str(), data.betweenString.c_str());
-			if (data.type == TypeString)
-			{
-				fprintf(f, "\"%s\"", data.strValue.c_str());
-			}
-			else if (data.type == TypeInt)
-			{
-				fprintf(f, "%d", data.intValue);
-			}
-			else if (data.type == TypeFloat)
-			{
-				fprintf(f, "%.1f", data.floatValue);
-			}
-			else if (data.type == TypeVec2)
-			{
-				fprintf(f, "(%.1f, %.1f)", data.vec2Data[0], data.vec2Data[1]);
-			}
-			else if (data.type == TypeIntVec2)
-			{
-				fprintf(f, "(%d, %d)", data.intVec2Data[0], data.intVec2Data[1]);
-			}
-		}
-		fprintf(f, "%s", endString.c_str());
-		fclose(f);
-	}
-
-	std::string endString;
+	void loadFromString(const std::string& content);
+	void saveToFile();
 public:
 	enum {
 		TypeFloat,
 		TypeInt,
 		TypeString,
 		TypeVec2,
-		TypeIntVec2
+		TypeIntVec2,
+		TypeStringList
 	};
 
 	cPersistent()
 	{
+		isDirty = false;
 		persistentData.reserve(256);
-		loadFromFile("test.txt");
 	}
 
+	~cPersistent()
+	{
+		check();
+	}
 	template <class T>
 	Data& setDataIfNotExist(const std::string& name, const T& value)
 	{
@@ -411,14 +131,14 @@ public:
 	}
 
 	template <class T>
-	void setData(int index, const T& value)
+	void set(int index, const T& value)
 	{
 		Data& data = persistentData[index];
 		setValue(data, value);
 	}
 
 	template <class T>
-	int setData(const std::string& name, const T& value)
+	int set(const std::string& name, const T& value)
 	{
 		int index = getDataIndex(name);
 		Data& data = index == -1 ? getEmptyData(name) : persistentData[index];
@@ -426,80 +146,127 @@ public:
 		return index == -1 ? (int)persistentData.size() - 1 : index;
 	}
 
-	int getIntData(const std::string& name, int defaultValue = 0)
+	int getInt(const std::string& name, int defaultValue = 0)
 	{
-		return setDataIfNotExist(name, defaultValue).intValue;
+		int index = setDataIfNotExistIndex(name, defaultValue);
+		return getInt(index);
 	}
 
-	float getFloatData(const std::string& name, float defaultValue = 0.0f)
+	float getFloat(const std::string& name, float defaultValue = 0.0f)
 	{
-		return setDataIfNotExist(name, defaultValue).floatValue;
+		int index = setDataIfNotExistIndex(name, defaultValue);
+		return getFloat(index);
 	}
 
-	const Vec2& getVec2Data(const std::string& name, const Vec2& defaultValue = Vec2::zero())
+	Vec2 getVec2(const std::string& name, const Vec2& defaultValue = Vec2::zero())
 	{
-		return setDataIfNotExist(name, defaultValue).vec2Data;
+		int index = setDataIfNotExistIndex(name, defaultValue);
+		return getVec2(index);
 	}
 
-	const IntVec2& getIntVec2Data(const std::string& name, const IntVec2& defaultValue = IntVec2::zero())
+	IntVec2 getIntVec2(const std::string& name, const IntVec2& defaultValue = IntVec2::zero())
 	{
-		return setDataIfNotExist(name, defaultValue).intVec2Data;
+		int index = setDataIfNotExistIndex(name, defaultValue);
+		return getIntVec2(index);
 	}
 
-	const std::string& getStringData(const std::string& name, const std::string& defaultValue = "")
+	const std::string& getString(const std::string& name, const std::string& defaultValue = "")
 	{
 		return setDataIfNotExist(name, defaultValue).strValue;
 	}
 
+	int getIndex(const std::string& name)
+	{
+		return setDataIfNotExistIndex(name, 0);
+	}
 
-	int getIntDataIndex(const std::string& name, int defaultValue = 0)
+	int getIndex(const std::string& name, int defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
 	}
 
-	int getStringDataIndex(const std::string& name, float defaultValue = 0.0f)
+	int getIndex(const std::string& name, float defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
 	}
 
-	int getStringDataIndex(const std::string& name, const Vec2& defaultValue = Vec2::zero())
+	int getIndex(const std::string& name, const Vec2& defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
 	}
 
-	int getStringDataIndex(const std::string& name, const IntVec2& defaultValue = IntVec2::zero())
+	int getIndex(const std::string& name, const IntVec2& defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
 	}
 
-	int getStringDataIndex(const std::string& name, const std::string& defaultValue = "")
+	int getIndex(const std::string& name, const std::string& defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
 	}
 
-
-	int getIntData(int index)
+	int getInt(int index)
 	{
-		return persistentData[index].intValue;
+		Data& data = persistentData[index];
+		if (data.type == TypeFloat)
+		{
+			return (int)data.floatValue;
+		}
+		return data.intValue;
 	}
 
-	float getFloatData(int index)
+	float getFloat(int index)
 	{
-		return persistentData[index].floatValue;
+		Data& data = persistentData[index];
+		if (data.type == TypeInt)
+		{
+			return (float)data.intValue;
+		}
+		return data.floatValue;
 	}
 
-	const Vec2& getVec2Data(int index)
+	Vec2 getVec2(int index)
 	{
-		return persistentData[index].vec2Data;
+		Data& data = persistentData[index];
+		if (data.type == TypeIntVec2)
+		{
+			return data.intVec2Value.toVec();
+		}
+		return data.vec2Value;
 	}
 
-	const IntVec2& getIntVec2Data(int index)
+	IntVec2 getIntVec2(int index)
 	{
-		return persistentData[index].intVec2Data;
+		Data& data = persistentData[index];
+		if (data.type == TypeVec2)
+		{
+			return IntVec2((int)data.vec2Value[0], (int)data.vec2Value[1]);
+		}
+		return data.intVec2Value;
 	}
 
-	const std::string& getStringData(int index)
+	const std::string& getString(int index)
 	{
 		return persistentData[index].strValue;
+	}
+
+	std::vector<std::string>& getStringList(int index)
+	{
+		return persistentData[index].strList;
+	}
+
+	void setFileBackup(const std::string& file)
+	{
+		loadFromFile(file);
+		this->filePath = file;
+	}
+
+	void check()
+	{
+		if (isDirty)
+		{
+			isDirty = false;
+			saveToFile();
+		}
 	}
 };
