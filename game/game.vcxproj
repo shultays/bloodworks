@@ -190,6 +190,7 @@
     <ClCompile Include="Coral.cpp" />
     <ClCompile Include="cGame.cpp" />
     <ClCompile Include="cMat.cpp" />
+    <ClCompile Include="cPersistent.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
     <ClCompile Include="cSlider.cpp" />

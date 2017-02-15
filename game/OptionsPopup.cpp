@@ -6,10 +6,13 @@
 #include "cButton.h"
 #include "cTickBox.h"
 #include "cSlider.h"
+#include "cPersistent.h"
 
 OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
+
+	cPersistent* config = bloodworks->getConfig();
 
 	optionsGroup = new cRenderableGroup(bloodworks);
 	optionsGroup->setWorldMatrix(Mat3::identity());
@@ -65,6 +68,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gore->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
 	gameplayGroup->addRenderable(gore);
 
+	gore->setChecked(config->getInt("gore", 1) != 0);
 	y -= rowShift;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize);
@@ -78,6 +82,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	screenShake->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	screenShake->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	screenShake->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	screenShake->setChecked(config->getInt("screen_shake", 1) != 0);
 	gameplayGroup->addRenderable(screenShake);
 
 	y -= rowShift;
@@ -93,6 +98,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	lockCrosshair->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	lockCrosshair->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	lockCrosshair->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	lockCrosshair->setChecked(config->getInt("lock_crosshair", 1) != 0);
 	gameplayGroup->addRenderable(lockCrosshair);
 
 	y -= rowShift;
@@ -108,6 +114,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	autoLevelUp->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	autoLevelUp->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	autoLevelUp->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	autoLevelUp->setChecked(config->getInt("auto_open_perk_popup", 1) != 0);
 	gameplayGroup->addRenderable(autoLevelUp);
 
 
@@ -142,6 +149,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	sensitivity = new cSlider(bloodworks);
 	sensitivity->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	sensitivity->setMinMax(0, 100);
+	sensitivity->setValue(config->getInt("sensitivity", 50));
 	inputGroup->addRenderable(sensitivity);
 
 	optionsGroup->addRenderable(inputGroup);
@@ -186,6 +195,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	fullScreen->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	fullScreen->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	fullScreen->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	fullScreen->setChecked(config->getInt("full_screen", 0) != 0);
 	audioVideoGroup->addRenderable(fullScreen);
 
 	y -= rowShift;
@@ -201,6 +211,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	vsync->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	vsync->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	vsync->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	vsync->setChecked(config->getInt("vsync", 0) != 0);
 	audioVideoGroup->addRenderable(vsync);
 
 	y -= rowShift * 1.5f;
@@ -213,6 +224,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	volume = new cSlider(bloodworks);
 	volume->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	volume->setMinMax(0, 100);
+	volume->setValue(config->getInt("volume", 50));
 	audioVideoGroup->addRenderable(volume);
 
 	y -= rowShift;
@@ -225,6 +238,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	musicVolume = new cSlider(bloodworks);
 	musicVolume->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+	musicVolume->setMinMax(0, 100);
+	musicVolume->setValue(config->getInt("music_volume", 50));
 	audioVideoGroup->addRenderable(musicVolume);
 
 
@@ -304,16 +319,36 @@ void OptionsPopup::tick()
 		}
 	}
 
+	cPersistent* config = bloodworks->getConfig();
+
 	if (lastClickedTitle == gameplayTitle)
 	{
 		gore->check(input.getMousePos());
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
+
+		if (gore->isChanged())
+		{
+			config->set("gore", gore->isChecked() ? 1 : 0);
+		}
+		if (screenShake->isChanged())
+		{
+			config->set("screen_shake", screenShake->isChecked() ? 1 : 0);
+		}
+		if (lockCrosshair->isChanged())
+		{
+			config->set("lock_crosshair", lockCrosshair->isChecked() ? 1 : 0);
+		}
 	}
 
 	if (lastClickedTitle == inputTitle)
 	{
 		sensitivity->check(input.getMousePos());
+
+		if (sensitivity->isChanged())
+		{
+			config->set("sensitivity", sensitivity->getIntValue());
+		}
 	}
 
 	if (lastClickedTitle == audioVideoTitle)
@@ -322,6 +357,25 @@ void OptionsPopup::tick()
 		vsync->check(input.getMousePos());
 		volume->check(input.getMousePos());
 		musicVolume->check(input.getMousePos());
+
+		if (fullScreen->isChanged())
+		{
+			config->set("full_screen", fullScreen->isChecked() ? 1 : 0);
+		}
+
+		if (vsync->isChanged())
+		{
+			config->set("vsync", vsync->isChecked() ? 1 : 0);
+		}
+
+		if (volume->isChanged())
+		{
+			config->set("volume", volume->getIntValue());
+		}
+		if (musicVolume->isChanged())
+		{
+			config->set("music_volume", musicVolume->getIntValue());
+		}
 	}
 
 	if (input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
