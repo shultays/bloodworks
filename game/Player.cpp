@@ -770,7 +770,7 @@ void Player::checkInput(bool& moving, float& wantedAngle)
 void Player::updateExperience()
 {
 	float scale = scaledExpBarSize.x * (experience / (float)experienceForNextLevel) - 2.0f / bloodworks->getCameraZoom();
-	scale = min(scale, 1.0f);
+	scale = min(scale, scaledExpBarSize.x);
 	if (scale > 0.01f && bloodworks->isMissionLoaded())
 	{
 		experienceBarActive->setVisible(true);
