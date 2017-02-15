@@ -18,7 +18,43 @@ class cSlider : public cRenderableGroup
 	float edgeShift;
 
 	void setSliderPos(float pos);
+
+	int minValue;
+	int maxValue;
+	int curValue;
+
+	float minValueF;
+	float maxValueF;
+	float curValueF;
+
+	bool isFloat;
+	bool valueChanged;
 public:
 	cSlider(cGame *game);
 	void check(const Vec2& mousePos);
+	void setMinMax(float min, float max);
+	void setMinMax(int min, int max);
+
+	float getValue() const
+	{
+		return isFloat ? curValueF : (float)curValue;
+	}
+
+	int getIntValue() const
+	{
+		return isFloat ? (int)curValueF : curValue;
+	}
+
+	float getFloatValue() const
+	{
+		return getValue();
+	}
+
+	void setValue(int value);
+	void setValue(float value);
+
+	bool isChanged() const
+	{
+		return valueChanged;
+	}
 };
