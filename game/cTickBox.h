@@ -15,4 +15,8 @@ public:
 	{
 		return checked;
 	}
+	bool isChanged() const
+	{
+		return isClicked();
+	}
 };

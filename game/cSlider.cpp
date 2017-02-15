@@ -25,6 +25,17 @@ cSlider::cSlider(cGame *game) : cRenderableGroup(game)
 
 	pressed = false;
 	edgeShift = 0.0f;
+
+	isFloat = true;
+	minValue = 0;
+	maxValue = 10;
+	curValue = 5;
+
+	minValueF = 0.0f;
+	maxValueF = 1.0f;
+	curValueF = 0.5f;
+	setValue(0.5f);
+	valueChanged = false;
 }
 
 void cSlider::check(const Vec2& mousePos)
@@ -65,8 +76,73 @@ void cSlider::check(const Vec2& mousePos)
 	}
 }
 
+void cSlider::setMinMax(float min, float max)
+{
+	isFloat = true;
+	this->minValueF = min;
+	this->maxValueF = max;
+
+	clamp(curValueF, min, max);
+}
+
+
+void cSlider::setMinMax(int min, int max)
+{
+	isFloat = false;
+	this->minValue = min;
+	this->maxValue = max;
+
+	clamp(curValue, min, max);
+}
+
+void cSlider::setValue(int value)
+{
+	if (isFloat)
+	{
+		setValue((float)value);
+		return;
+	}
+	curValue = value;
+	clamp(curValue, minValue, maxValue);
+	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float t = ((float)value - minValue) / (maxValue - minValue);
+	float pos = -maxShift + maxShift * 2.0f * t;
+	setSliderPos(pos);
+}
+
+void cSlider::setValue(float value)
+{
+	if (isFloat == false)
+	{
+		setValue((int)round(value));
+		return;
+	}
+
+	curValueF = value;
+	clamp(curValueF, minValueF, maxValueF);
+	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float t = (value - minValueF) / (maxValueF - minValueF);
+	float pos = -maxShift + maxShift * 2.0f * t;
+	setSliderPos(pos);
+
+	valueChanged = false;
+}
+
 void cSlider::setSliderPos(float pos)
 {
+	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float t = (pos + maxShift) / (2 * maxShift);
+	if (isFloat == false)
+	{
+		int count = maxValue - minValue;
+		int r = (int)round(t * count);
+		curValue = r - minValue;
+		t = ((float)r) / count;
+		pos = -maxShift + maxShift * 2.0f * t;
+	}
+
 	sliderButton->setDefaultMatrix(Vec2(pos, 0.0f), sliderSize, 0.0f);
 	sliderButton->setHoverMatrix(Vec2(pos, 0.0f), sliderSize, 0.0f);
+
+	valueChanged = true;
 }

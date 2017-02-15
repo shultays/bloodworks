@@ -6,7 +6,6 @@
 #include "Gun.h"
 #include "Bloodworks.h"
 #include "Player.h"
-
 BulletController::BulletController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
