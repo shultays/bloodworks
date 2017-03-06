@@ -27,6 +27,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	this->monsterTemplate = monsterTemplate;
 	name = monsterTemplate->name;
 	experienceMultiplier = 1.0f;
+	scoreMultiplier = 1.0f;
 	isDead = false;
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
@@ -367,6 +368,7 @@ void Monster::killSelf(const Vec2& blowDir)
 
 	if (bloodworks->getPlayer())
 	{
+		bloodworks->getPlayer()->addScore((int)round(monsterTemplate->score * scoreMultiplier));
 		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 
