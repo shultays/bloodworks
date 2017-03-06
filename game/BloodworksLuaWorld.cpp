@@ -257,6 +257,24 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return input.isKeyReleased(key);
 	});
 
+	lua.set_function("getScore",
+		[&]() -> int
+	{
+		return bloodworks->getPlayer()->getScore();
+	});
+
+	lua.set_function("addScore",
+		[&](int score)
+	{
+		bloodworks->getPlayer()->addScore(score);
+	});
+
+	lua.set_function("setScore",
+		[&](int score)
+	{
+		bloodworks->getPlayer()->setScore(score);
+	});
+
 	lua.set_function("isKeyPressed",
 		[&](int key) -> bool
 	{
@@ -572,6 +590,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"data", &Monster::data,
 		"experienceMultiplier", &Monster::experienceMultiplier,
+		"scoreMultiplier", &Monster::scoreMultiplier,
 
 		"scale", sol::readonly(&Monster::scale),
 
