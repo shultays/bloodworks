@@ -20,6 +20,9 @@ function addRandomMonster()
 	
 	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
 	
+	monster.experienceMultiplier = 0.9 + math.random() * 0.2
+	monster.scoreMultiplier = 0.9 + math.random() * 0.2
+	
 	if Survival.lastBossSpawn + 35.0 - clamp(min/7) * 15 < missionTime then
 		Survival.lastBossSpawn = missionTime
 		makeBoss(monster)
@@ -61,6 +64,7 @@ function makeBoss(monster)
 	monster.data.playerSeeRange = monster.data.playerSeeRange * 1.5
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
+	monster.scoreMultiplier = 5.0 + math.random() * 2.0
 	
 	local t = math.random(11)
 	if t == 1 then
@@ -91,6 +95,8 @@ function makeBoss(monster)
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
 		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster:setScale(0.8 + math.random() * 0.3)
+		monster.experienceMultiplier = monster.experienceMultiplier * 0.3
+		monster.scoreMultiplier = monster.scoreMultiplier * 0.3
 		monster.scriptTable.onKilled = function (monster)
 			if monster.data.remainingLife > 0 then
 				monster.data.remainingLife = monster.data.remainingLife - 1
@@ -113,6 +119,7 @@ function makeBoss(monster)
 					newMonster.data.maxDamage = monster.data.maxDamage
 
 					newMonster.experienceMultiplier = monster.experienceMultiplier * 0.5
+					newMonster.scoreMultiplier = monster.scoreMultiplier * 0.5
 
 					newMonster.hitPoint = math.floor(monster.hitPoint * 0.5)
 					
@@ -124,6 +131,8 @@ function makeBoss(monster)
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
 		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster:setScale(0.8 + math.random() * 0.3)
+		monster.experienceMultiplier = monster.experienceMultiplier * 0.5
+		monster.scoreMultiplier = monster.scoreMultiplier * 0.5
 		monster.scriptTable.onKilled = function (monster)
 			for i = 1,8 do
 				local newMonster = addMonster(monster.monsterTemplate.name)
@@ -142,6 +151,7 @@ function makeBoss(monster)
 				newMonster.data.maxDamage = monster.data.maxDamage
 
 				newMonster.experienceMultiplier = monster.experienceMultiplier * 0.1
+				newMonster.scoreMultiplier = monster.scoreMultiplier * 0.1
 
 				newMonster.hitPoint = math.floor(monster.hitPoint * 0.3)
 				newMonster.data.randomMove = true
@@ -239,6 +249,7 @@ function makeBoss(monster)
 					newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
 
 					newMonster.experienceMultiplier = 0.0
+					newMonster.scoreMultiplier = 0.0
 
 					newMonster.hitPoint = math.floor(monster.hitPoint * 0.2)
 					newMonster.data.randomMove = true

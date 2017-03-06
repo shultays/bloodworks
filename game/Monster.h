@@ -63,6 +63,7 @@ class Monster
 	std::vector<int> ignoreIds;
 
 	float experienceMultiplier;
+	float scoreMultiplier;
 
 	float lastHitSoundPlayTime;
 

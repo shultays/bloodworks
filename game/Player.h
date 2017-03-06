@@ -61,6 +61,9 @@ class Player
 	cRenderable *experienceBarActive, *experienceBarBG, *experienceBarFG;
 	Vec2 scaledExpBarSize;
 
+	cTextRenderable *scoreText;
+
+	int score;
 	int level;
 	int experience;
 	int experienceForNextLevel;
@@ -104,6 +107,12 @@ public:
 	void setSecondaryGun(Gun* gun);
 	Gun* getSecondaryGun();
 
+	void addScore(int score);
+	int getScore() const
+	{
+		return score;
+	}
+
 	bool isActive() const 
 	{
 		return isDead == false;
@@ -139,6 +148,7 @@ public:
 	float getGlobalMonsterSpeedMultiplier();
 	float getClipCountMultiplier();
 	int getBuffedClipSize(int clipSize);
+	void setScore(int score);
 private:
 	void checkInput(bool& moving, float& wantedAngle);
 	void updateExperience();
