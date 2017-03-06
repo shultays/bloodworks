@@ -17,6 +17,7 @@ class MonsterTemplate
 	std::string name;
 	int hitPoint;
 	int experience;
+	int score;
 	float collisionRadius;
 	float bulletRadius;
 	bool hasBlood;
@@ -45,6 +46,7 @@ public:
 		textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
 		hitPoint = j["hitPoint"].get<int>();
 		experience = j["experience"].get<int>();
+		score = j["score"].get<int>();
 		bulletRadius = j["bulletRadius"].get<float>();
 		collisionRadius = j["collisionRadius"].get<float>();
 

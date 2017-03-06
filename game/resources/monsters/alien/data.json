@@ -9,6 +9,7 @@
   "hasBlood" : true,
   
   "experience" : 20,
+  "score" : 100,
   
   "animations" : 
   {
@@ -99,4 +100,5 @@
 	"resources/sounds/monster_hit/hit_1.ogg", 
 	"resources/sounds/monster_hit/hit_2.ogg"
   ]
+  
 }

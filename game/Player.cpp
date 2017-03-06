@@ -88,6 +88,11 @@ Player::Player(Bloodworks *bloodworks)
 	bloodworks->addRenderable(experienceBarFG, GUI + 18);
 	experienceBarFG->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
 
+	scoreText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Score : 0", 22.0f);
+	scoreText->setAlignment(RenderableAlignment::topRight);
+	scoreText->setTextAllignment(TextAlignment::right);
+	scoreText->setWorldMatrix(Mat3::translationMatrix(-20, -50));
+	bloodworks->addRenderable(scoreText, GUI + 13);
 
 	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
@@ -134,6 +139,8 @@ Player::~Player()
 	SAFE_DELETE(experienceBarBG);
 	SAFE_DELETE(experienceBarActive);
 	SAFE_DELETE(experienceBarFG);
+
+	SAFE_DELETE(scoreText);
 
 	for (auto& s : hitSounds)
 	{
@@ -470,6 +477,19 @@ Gun* Player::getSecondaryGun()
 	return secondaryGun;
 }
 
+void Player::addScore(int score)
+{
+	setScore(this->score + score);
+}
+
+void Player::setScore(int score)
+{
+	this->score = score;
+	std::stringstream ss;
+	ss << "Score : " << this->score;
+	scoreText->setText(ss.str());
+}
+
 int Player::doDamage(int damage)
 {
 	return doDamageWithParams(damage, lua.create_table());
@@ -566,6 +586,7 @@ void Player::setVisible(bool visible)
 	renderable->setVisible(visible);
 	spread->setVisible(visible);
 	healthRenderable->setVisible(visible);
+	scoreText->setVisible(visible);
 
 	healthBarBG->setVisible(visible);
 	healthBarActive->setVisible(visible);
@@ -616,7 +637,7 @@ void Player::reset()
 	shootRenderable->playAnimation(0);
 
 	joystickCheckTimer = 0.0f;
-
+	setScore(0);
 	setVisible(false);
 }
 
