@@ -1,0 +1,7 @@
+{
+  "type" : "bonus",
+  "name": "5000 Points",
+  "iconFile" : "resources/bonuses/extra_5000/icon.png",
+  "scriptFile" : "resources/bonuses/extra_5000/extra_5000.lua",
+  "scriptName" : "Extra5000"
+}
