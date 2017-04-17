@@ -23,6 +23,15 @@ class cPersistent
 		std::string beforeString;
 	};
 
+	enum 
+	{
+		TypeFloat,
+		TypeInt,
+		TypeString,
+		TypeVec2,
+		TypeIntVec2,
+		TypeStringList
+	};
 	std::unordered_map<std::string, int> dataIndices;
 	std::vector<Data> persistentData;
 
@@ -104,14 +113,6 @@ class cPersistent
 	void loadFromString(const std::string& content);
 	void saveToFile();
 public:
-	enum {
-		TypeFloat,
-		TypeInt,
-		TypeString,
-		TypeVec2,
-		TypeIntVec2,
-		TypeStringList
-	};
 
 	cPersistent()
 	{
@@ -123,6 +124,7 @@ public:
 	{
 		check();
 	}
+
 	template <class T>
 	Data& setDataIfNotExist(const std::string& name, const T& value)
 	{
@@ -268,5 +270,15 @@ public:
 			isDirty = false;
 			saveToFile();
 		}
+	}
+
+	int size() const
+	{
+		return (int)persistentData.size();
+	}
+
+	const std::string& getName(int index)
+	{
+		return persistentData[index].name;
 	}
 };
