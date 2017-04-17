@@ -45,6 +45,7 @@ void Coral::tick()
 		debugRenderer.tick(timer.getDt());
 		game->tickInternal();
 		input.tick();
+		mapper.check();
 	}
 
 	if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
@@ -118,7 +119,7 @@ bool Coral::isDebuggerPresent()
 
 void Coral::initFrameBuffers()
 {
-	if (tempFrameBuffer[0] == -1)
+	if (tempFrameBuffer[0] != -1)
 	{
 		glDeleteBuffers(2, tempFrameBuffer);
 		glDeleteTextures(2, tempFrameBufferTexture);

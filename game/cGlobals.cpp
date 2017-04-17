@@ -1,6 +1,7 @@
 #include "cGlobals.h"
 
 cInput input;
+KeyMapper mapper;
 cTime timer;
 Coral gears;
 cResources resources;

@@ -22,6 +22,7 @@ class Coral
 
 	GLuint tempFrameBuffer[2];
 	GLuint tempFrameBufferTexture[2];
+	GLuint tempFrameBufferTextureRender[2];
 
 	bool fullScreen;
 	void initFrameBuffers();

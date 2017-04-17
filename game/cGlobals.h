@@ -1,7 +1,7 @@
 #pragma once
 
-
 #include "cInput.h"
+#include "KeyMapper.h"
 #include "cTime.h"
 #include "Coral.h"
 #include "cResources.h"
@@ -17,3 +17,4 @@ extern cResources resources;
 extern cDebugRenderable debugRenderer;
 extern cGame *game;
 extern cLuaWorld lua;
+extern KeyMapper mapper;

@@ -292,7 +292,8 @@ private:
 	bool mouseShown;
 	bool ignoreNextMove;
 
-	std::unordered_map<std::string, int> nameMap;
+	std::string names[key_count];
+	std::unordered_map<std::string, Key> nameMap;
 	void setLuaKeys();
 
 	Vec2 joyAxisPos;
@@ -300,6 +301,10 @@ private:
 public:
 	void tick();
 
+	Key getKey(const std::string& name)
+	{
+		return nameMap[name];
+	}
 
 	bool isKeyDown(int key)
 	{
@@ -326,6 +331,15 @@ public:
 		return keyTime[key];
 	}
 
+	void clearKeyPress(int key)
+	{
+		keyStates[key] = false;
+	}
+
+	void clearKeyRelease(int key)
+	{
+		prevKeyStates[key] = false;
+	}
 
 	void showMouse()
 	{
@@ -369,15 +383,7 @@ public:
 		return mouseShown;
 	}
 
-	void clearKeyPress(int key)
-	{
-		keyStates[key] = false;
-	}
-
-	void clearKeyRelease(int key)
-	{
-		prevKeyStates[key] = false;
-	}
 	void setMousePosition(int x, int y);
 	void setJoystickAxis(int joystick, int axis, int value);
+	const std::string& getKeyName(Key key);
 };

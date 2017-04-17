@@ -69,6 +69,11 @@ void cInput::setJoystickAxis(int joystick, int axis, int value)
 	}
 }
 
+const std::string& cInput::getKeyName(Key key)
+{
+	return names[key];
+}
+
 void cInput::releaseKey(int key)
 {
 	keyStates[key] = 0;
@@ -352,6 +357,7 @@ void cInput::setLuaKeys()
 	auto keys = lua["keys"] = lua.create_table();
 	for (auto& key : nameMap)
 	{
+		names[key.second] = key.first;
 		keys[key.first] = key.second;
 	}
 }
