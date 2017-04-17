@@ -141,6 +141,9 @@
     <ClCompile Include="cPersistent.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
+    <ClCompile Include="KeyMapper.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -315,6 +318,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="cPersistent.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMapper.h">
       <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>

@@ -272,6 +272,10 @@ Bloodworks::Bloodworks()
 
 	globalVolume = 0.7f;
 	coral.getSoundManager()->setGlobalVolume(globalVolume);
+
+	mapper.setSavePath("keys.txt");
+	mapper.addKeyMap("hit", key_a);
+	mapper.addKeyMap("hit2", key_b);
 }
 
 Bloodworks::~Bloodworks()
