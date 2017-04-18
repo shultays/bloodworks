@@ -378,7 +378,7 @@ void OptionsPopup::tick()
 		}
 	}
 
-	if (input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
+	if (mapper.isKeyPressed(GameKey::Back))
 	{
 		optionsGroup->setVisible(false);
 	}

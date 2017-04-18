@@ -99,7 +99,7 @@ void Monster::tick()
 	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
-	healthRenderable->setVisible(input.isKeyDown(key_f6));
+	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
 	std::vector<int> toTrigger;
 	for (int i = (int)timers.size() - 1; i >= 0; i--)
 	{

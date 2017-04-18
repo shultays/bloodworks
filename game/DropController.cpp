@@ -123,7 +123,7 @@ void DropController::tick()
 			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
-		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f || input.isKeyDown(key_space));
+		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f || mapper.isKeyDown(GameKey::ShowHints));
 
 		if (drop.pos.distanceSquared(playerPos) < 30.0f * 30.0f)
 		{

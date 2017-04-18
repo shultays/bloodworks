@@ -7,6 +7,7 @@
 
 enum Key
 {
+	key_invalid,
 	key_a = SDL_SCANCODE_A,
 	key_b = SDL_SCANCODE_B,
 	key_c = SDL_SCANCODE_C,
