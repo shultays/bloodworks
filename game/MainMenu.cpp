@@ -160,17 +160,17 @@ void MainMenu::tick(bool hasPopup)
 
 	if (hasPopup == false)
 	{
-		if (newGame->isClicked() || input.isKeyPressed(joystick_0_button_a) || input.isKeyPressed(joystick_0_button_start))
+		if (newGame->isClicked() || mapper.isKeyPressed(GameKey::Select))
 		{
-			input.clearKeyPress(joystick_0_button_a);
-			input.clearKeyPress(joystick_0_button_start);
+
+			mapper.clearKeyPress(GameKey::Select);
 			bloodworks->loadMission("Survival");
 		}
 		else if (options->isClicked())
 		{
 			bloodworks->showOptions();
 		}
-		else if (quit->isClicked() || input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_back))
+		else if (quit->isClicked() || mapper.isKeyPressed(GameKey::Back))
 		{
 			coral.quitGame();
 		}
