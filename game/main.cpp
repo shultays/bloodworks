@@ -63,7 +63,7 @@ bool Init()
 		addController(0);
 	}
 
-	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::jit);
+	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::jit, sol::lib::os);
 
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
