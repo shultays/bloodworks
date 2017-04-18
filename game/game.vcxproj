@@ -176,6 +176,7 @@
   <ItemGroup>
     <ClCompile Include="BloodRenderable.cpp" />
     <ClCompile Include="Bloodworks.cpp" />
+    <ClCompile Include="BloodworksControls.cpp" />
     <ClCompile Include="BloodworksLuaWorld.cpp" />
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Array2d.h" />
     <ClInclude Include="BloodRenderable.h" />
     <ClInclude Include="Bloodworks.h" />
+    <ClInclude Include="BloodworksControls.h" />
     <ClInclude Include="BloodworksLuaWorld.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="BuffFloat.h" />

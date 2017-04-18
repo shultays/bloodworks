@@ -184,10 +184,6 @@ void Player::tick()
 	monsterExperienceMultiplier.tick();
 	gunSpreadMultiplier.tick();
 
-	if (input.isKeyPressed(key_space))
-	{
-		clipCountMultiplier.addBuff(1, 1.5f, BuffTemplate<float>::multiply_buff).setBuffDuration(5.0f);
-	}
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -405,7 +401,7 @@ void Player::tick()
 
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
-	healthRenderable->setVisible(input.isKeyDown(key_f6));
+	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
 	gunPos = pos + aimDir * 22.0f - aimDir.sideVec() * 4.0f;
 
 	Mat3 mat = Mat3::identity();
@@ -415,7 +411,7 @@ void Player::tick()
 
 	if (gun)
 	{
-		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && (input.isKeyDown(mouse_button_left) || (input.hasJoyStick() && input.isKeyDown(joystick_0_button_rightshoulder)));
+		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack);
 		gun->setTriggered(trigerred);
 		if (trigerred && gun->isLaser())
 		{
@@ -426,7 +422,7 @@ void Player::tick()
 
 	if (secondaryGun)
 	{
-		secondaryGun->setTriggered(input.isKeyDown(mouse_button_right));
+		secondaryGun->setTriggered(mapper.isKeyDown(GameKey::Attack2));
 		secondaryGun->tick(dt);
 	}
 
@@ -701,91 +697,48 @@ void Player::checkInput(bool& moving, float& wantedAngle)
 			wantedAngle = axis.toAngle();
 			moving = true;
 		}
-
-		/*if (input.isKeyDown(joystick_0_button_dpad_left) && input.isKeyDown(joystick_0_button_dpad_up))
-		{
-			wantedAngle = (pi + pi_d2) * 0.5f;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_left) && input.isKeyDown(joystick_0_button_dpad_down))
-		{
-			wantedAngle = -(pi + pi_d2) * 0.5f;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_right) && input.isKeyDown(joystick_0_button_dpad_up))
-		{
-			wantedAngle = pi_d2 * 0.5f;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_right) && input.isKeyDown(joystick_0_button_dpad_down))
-		{
-			wantedAngle = -pi_d2 * 0.5f;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_left))
-		{
-			wantedAngle = -pi;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_right))
-		{
-			wantedAngle = 0.0f;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_up))
-		{
-			wantedAngle = pi_d2;
-			moving = true;
-		}
-		else if (input.isKeyDown(joystick_0_button_dpad_down))
-		{
-			wantedAngle = -pi_d2;
-			moving = true;
-		}
-		*/
 	}
 
-	if (input.isKeyDown(key_a) && input.isKeyDown(key_w))
+	if (mapper.isKeyDown(GameKey::Left) && mapper.isKeyDown(GameKey::Up))
 	{
 		wantedAngle = (pi + pi_d2) * 0.5f;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_a) && input.isKeyDown(key_s))
+	else if (mapper.isKeyDown(GameKey::Left) && mapper.isKeyDown(GameKey::Down))
 	{
 		wantedAngle = -(pi + pi_d2) * 0.5f;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_d) && input.isKeyDown(key_w))
+	else if (mapper.isKeyDown(GameKey::Right) && mapper.isKeyDown(GameKey::Up))
 	{
 		wantedAngle = pi_d2 * 0.5f;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_d) && input.isKeyDown(key_s))
+	else if (mapper.isKeyDown(GameKey::Right) && mapper.isKeyDown(GameKey::Down))
 	{
 		wantedAngle = -pi_d2 * 0.5f;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_a))
+	else if (mapper.isKeyDown(GameKey::Left))
 	{
 		wantedAngle = -pi;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_d))
+	else if (mapper.isKeyDown(GameKey::Right))
 	{
 		wantedAngle = 0.0f;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_w))
+	else if (mapper.isKeyDown(GameKey::Up))
 	{
 		wantedAngle = pi_d2;
 		moving = true;
 	}
-	else if (input.isKeyDown(key_s))
+	else if (mapper.isKeyDown(GameKey::Down))
 	{
 		wantedAngle = -pi_d2;
 		moving = true;
 	}
-
 }
 
 void Player::updateExperience()

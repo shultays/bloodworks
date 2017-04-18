@@ -4,6 +4,7 @@
 #include "cSharedPtr.h"
 #include "cLuaWorld.h"
 #include "cSound.h"
+#include "BloodworksControls.h"
 
 enum Depths
 {
@@ -104,6 +105,7 @@ class Bloodworks : public cGame
 	std::vector<cSoundHandle> gameSounds;
 
 	std::vector<cParticle*> orphanParticles;
+
 protected:
 	virtual void render() override;
 	virtual void tick() override;
