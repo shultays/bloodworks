@@ -269,6 +269,8 @@ end
 
 
 function Survival.init()
+	local theSeed = os.time()
+	math.randomseed( theSeed )
 	Survival.ignoreMonsterCount = 0
     Survival.extraMin = 0.0
     Survival.lastSpawnTime = 0.0
