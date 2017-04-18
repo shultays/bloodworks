@@ -77,6 +77,12 @@ class cPersistent
 		data.type = TypeString;
 		isDirty = true;
 	}
+	void setValue(Data& data, const std::vector<std::string>& value)
+	{
+		data.strList = value;
+		data.type = TypeStringList;
+		isDirty = true;
+	}
 
 	template <class T>
 	int setDataIfNotExistIndex(const std::string& name, const T& value)

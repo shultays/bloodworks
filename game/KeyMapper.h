@@ -13,7 +13,8 @@ class KeyMapper
 	struct KeyInfo
 	{
 		std::string name;
-		Key key;
+		int num;
+		Key keys[4];
 	};
 
 	std::unordered_map<std::string, int> mappedIndices;
@@ -31,15 +32,54 @@ public:
 		persistent.check();
 	}
 
-	MappedKey addKeyMap(const std::string& name, Key defaultKey);
+	MappedKey addKeyMap(const std::string& name, Key defaultKey0, Key defaultKey1 = (Key)0, Key defaultKey2 = (Key)0, Key defaultKey3 = (Key)0);
 	MappedKey getKeyMap(const std::string& name);
+
 	bool isKeyDown(MappedKey key);
 	bool isKeyUp(MappedKey key);
 	bool isKeyPressed(MappedKey key);
 	bool isKeyReleased(MappedKey key);
 	float getKeyTime(MappedKey key);
 	void clearKeyPress(MappedKey key);
-	void clearKeyRelease(int key);
+	void clearKeyRelease(MappedKey key);
+
+
+	// TODO dirty, fix those!
+	template<class T>
+	bool isKeyDown(T key)
+	{
+		return isKeyDown((MappedKey)key);
+	}
+	template<class T>
+	bool isKeyUp(T key)
+	{
+		return isKeyUp((MappedKey)key);
+	}
+	template<class T>
+	bool isKeyPressed(T key)
+	{
+		return isKeyPressed((MappedKey)key);
+	}
+	template<class T>
+	bool isKeyReleased(T key)
+	{
+		return isKeyReleased((MappedKey)key);
+	}
+	template<class T>
+	float getKeyTime(T key)
+	{
+		return getKeyTime((MappedKey)key);
+	}
+	template<class T>
+	void clearKeyPress(T key)
+	{
+		clearKeyPress((MappedKey)key);
+	}
+	template<class T>
+	void clearKeyRelease(T key)
+	{
+		clearKeyRelease((MappedKey)key);
+	}
 };
 
 #endif // KeyMapper_h__

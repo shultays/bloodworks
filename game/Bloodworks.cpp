@@ -26,6 +26,7 @@
 #include "BuffFloat.h"
 #include "OptionsPopup.h"
 #include "cPersistent.h"
+#include "BloodworksControls.h"
 
 #include <sstream>
 
@@ -273,9 +274,7 @@ Bloodworks::Bloodworks()
 	globalVolume = 0.7f;
 	coral.getSoundManager()->setGlobalVolume(globalVolume);
 
-	mapper.setSavePath("keys.txt");
-	mapper.addKeyMap("hit", key_a);
-	mapper.addKeyMap("hit2", key_b);
+	BloodworksControls::init();
 }
 
 Bloodworks::~Bloodworks()
@@ -717,7 +716,7 @@ void Bloodworks::tick()
 		coral.getSoundManager()->setGlobalVolume(globalVolume);
 	}
 
-	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && (input.isKeyPressed(key_tab) || input.isKeyPressed(joystick_0_button_y)))
+	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && mapper.isKeyDown(GameKey::LevelUp))
 	{
 		levelUpPopup->show(false);
 	}
@@ -799,7 +798,7 @@ void Bloodworks::tick()
 	levelUpPopup->tick();
 	tickGameSlowdown();
 
-	if (input.isKeyPressed(key_f10))
+	if (mapper.isKeyPressed(GameKey::Fullscreen))
 	{
 		coral.setFullScreen(!coral.isFullScreen());
 		if (coral.isFullScreen())
@@ -876,7 +875,7 @@ void Bloodworks::tickCamera()
 
 void Bloodworks::tickGameSlowdown()
 {
-	if (levelUpPopup->isVisible() == false && missionController->isLoaded() && (input.isKeyPressed(key_p) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_start))))
+	if (levelUpPopup->isVisible() == false && missionController->isLoaded() && mapper.isKeyPressed(GameKey::Pause))
 	{
 		paused = !paused;
 		if (paused)

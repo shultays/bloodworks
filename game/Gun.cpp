@@ -179,7 +179,7 @@ void Gun::tick(float dt)
 		currentAmmo = newMaxAmmo;
 	}
 	buffedMaxAmmo = newMaxAmmo;
-	if (currentAmmo < buffedMaxAmmo && (input.isKeyPressed(key_r) || (input.hasJoyStick() && input.isKeyPressed(joystick_0_button_leftshoulder))))
+	if (currentAmmo < buffedMaxAmmo && mapper.isKeyPressed(GameKey::Reload))
 	{
 		reload();
 	}

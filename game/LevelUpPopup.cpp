@@ -187,69 +187,61 @@ void LevelUpPopup::tick()
 		}
 	}
 
-	if (input.hasJoyStick() == false)
+	if (input.getDeltaMousePos().lengthSquared() > 0.0f)
 	{
 		lastMouseMoveTimer = 1.0f;
+		for (int i = 0; i < levelupPerks.size(); i++)
+		{
+			levelupPerksRenderables[i]->setEnforcedHovering(cButton::no_enforce);
+		}
+	}
+
+	lastMouseMoveTimer -= timer.getNonSlowedDt();
+
+	if (lastMouseMoveTimer < 0.0f && hoverLevelupPerkIndex == -1)
+	{
+		joyPadFree = false;
+		for (int i = 0; i < levelupPerks.size(); i++)
+		{
+			levelupPerksRenderables[i]->setEnforcedHovering(1 == i ? cButton::enforce_hovering : cButton::enforce_not_hovering);
+		}
+	}
+
+	if (joyPadFree)
+	{
+		int indexToSet = hoverLevelupPerkIndex;
+		if (input.getJoystickAxisPos().x > 0.5f || mapper.isKeyPressed(GameKey::Right))
+		{
+			indexToSet--;
+			if (indexToSet < 0)
+			{
+				indexToSet += (int)levelupPerks.size();
+			}
+			joyPadFree = false;
+		}
+		else if (input.getJoystickAxisPos().x < -0.5f || mapper.isKeyPressed(GameKey::Left))
+		{
+			indexToSet++;
+			if (indexToSet >= levelupPerks.size())
+			{
+				indexToSet -= (int)levelupPerks.size();
+			}
+			joyPadFree = false;
+		}
+
+		if (joyPadFree == false)
+		{
+			for (int i = 0; i < levelupPerks.size(); i++)
+			{
+				levelupPerksRenderables[i]->setEnforcedHovering(i == indexToSet ? cButton::enforce_hovering : cButton::enforce_not_hovering);
+			}
+		}
 	}
 	else
 	{
-		if (input.getDeltaMousePos().lengthSquared() > 0.0f)
+		if (fabs(input.getJoystickAxisPos().x) < 0.4f && mapper.isKeyUp(GameKey::Right) && mapper.isKeyUp(GameKey::Left))
 		{
-			lastMouseMoveTimer = 1.0f;
-			for (int i = 0; i < levelupPerks.size(); i++)
-			{
-				levelupPerksRenderables[i]->setEnforcedHovering(cButton::no_enforce);
-			}
-		}
-
-		lastMouseMoveTimer -= timer.getNonSlowedDt();
-
-		if (lastMouseMoveTimer < 0.0f && hoverLevelupPerkIndex == -1)
-		{
-			joyPadFree = false;
-			for (int i = 0; i < levelupPerks.size(); i++)
-			{
-				levelupPerksRenderables[i]->setEnforcedHovering(1 == i ? cButton::enforce_hovering : cButton::enforce_not_hovering);
-			}
-		}
-
-
-		if (joyPadFree)
-		{
-			int indexToSet = hoverLevelupPerkIndex;
-			if (input.getJoystickAxisPos().x > 0.5f)
-			{
-				indexToSet--;
-				if (indexToSet < 0)
-				{
-					indexToSet += (int)levelupPerks.size();
-				}
-				joyPadFree = false;
-			}
-			else if (input.getJoystickAxisPos().x < -0.5f)
-			{
-				indexToSet++;
-				if (indexToSet >= levelupPerks.size())
-				{
-					indexToSet -= (int)levelupPerks.size();
-				}
-				joyPadFree = false;
-			}
-			
-			if (joyPadFree == false)
-			{
-				for (int i = 0; i < levelupPerks.size(); i++)
-				{
-					levelupPerksRenderables[i]->setEnforcedHovering(i == indexToSet ? cButton::enforce_hovering : cButton::enforce_not_hovering);
-				}
-			}
-		}
-		else
-		{
-			if (fabs(input.getJoystickAxisPos().x) < 0.4f)
-			{
-				joyPadFree = true;
-			}
+			joyPadFree = true;
 		}
 	}
 	
@@ -283,7 +275,7 @@ void LevelUpPopup::tick()
 			}
 		}
 
-		if (levelupPerksRenderables[i]->isClicked() || input.isKeyPressed(joystick_0_button_a))
+		if (levelupPerksRenderables[i]->isClicked() || mapper.isKeyPressed(GameKey::Select))
 		{
 			levelupPerks[i]->takeLevel();
 			bloodworks->onPerkUsed(levelupPerks[i]);
@@ -300,10 +292,9 @@ void LevelUpPopup::tick()
 		}
 	}
 
-	if (input.isKeyPressed(key_escape) || input.isKeyPressed(joystick_0_button_a))
+	if (mapper.isKeyPressed(GameKey::Back))
 	{
-		input.clearKeyPress(key_escape);
-		input.clearKeyPress(joystick_0_button_a);
+		mapper.clearKeyPress(GameKey::Back);
 
 		input.hideMouse();
 		bloodworks->doUnpause();
