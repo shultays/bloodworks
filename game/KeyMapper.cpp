@@ -74,6 +74,22 @@ MappedKey KeyMapper::getKeyMap(const std::string& name)
 	return item == mappedIndices.end() ? -1 : item->second;
 }
 
+void KeyMapper::setKeyMap(MappedKey key, Key defaultKey0, Key defaultKey1 /*= (Key)0*/, Key defaultKey2 /*= (Key)0*/, Key defaultKey3 /*= (Key)0*/)
+{
+	auto& keyInfo = mappedKeys[key];
+	keyInfo.keys[0] = defaultKey0;
+	keyInfo.keys[1] = defaultKey1;
+	keyInfo.keys[2] = defaultKey2;
+	keyInfo.keys[3] = defaultKey3;
+	keyInfo.num = (keyInfo.keys[0] > 0) + (keyInfo.keys[1] > 0) + (keyInfo.keys[2] > 0) + (keyInfo.keys[3] > 0);
+	std::vector<std::string> keyNames;
+	for (int i = 0; i < keyInfo.num; i++)
+	{
+		keyNames.push_back(input.getKeyName(keyInfo.keys[i]));
+	}
+	persistent.set(keyInfo.name, keyNames);
+}
+
 bool KeyMapper::isKeyDown(MappedKey key)
 {
 	for (int i = 0; i < mappedKeys[key].num; i++)
@@ -139,4 +155,9 @@ void KeyMapper::clearKeyRelease(MappedKey key)
 	{
 		input.clearKeyRelease(mappedKeys[key].keys[i]);
 	}
+}
+
+const Key* KeyMapper::getMappedKeys(MappedKey key) const
+{
+	return mappedKeys[key].keys;
 }

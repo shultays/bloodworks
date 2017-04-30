@@ -1,6 +1,8 @@
 #pragma once
 
-#include "cButton.h"
+#include "cRenderable.h"
+
+class cButton;
 
 class cSlider : public cRenderableGroup
 {

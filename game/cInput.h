@@ -299,6 +299,7 @@ private:
 
 	Vec2 joyAxisPos;
 	Vec2 joyAxisPos2;
+
 public:
 	void tick();
 

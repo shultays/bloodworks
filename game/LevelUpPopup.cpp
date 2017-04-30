@@ -40,7 +40,7 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 	currentPerkExplanation->setTextAllignment(TextAlignment::center);
 	levelupGroup->addRenderable(currentPerkExplanation);
 
-	levelUpText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Tab to Level Up!", 24.0f);
+	levelUpText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Tab to Level Up", 24.0f);
 	levelUpText->setWorldMatrix(Mat3::translationMatrix(Vec2(145.0f, 40.0f)));
 	levelUpText->setTextAllignment(TextAlignment::center);
 	levelUpText->setVerticalTextAllignment(VerticalTextAlignment::mid);
@@ -93,7 +93,7 @@ void LevelUpPopup::show(bool levelAdded)
 	levelupGroup->setVisible(true);
 	std::stringstream ss;
 
-	ss << "You are level " << bloodworks->getPlayer()->getLevel() << "!";
+	ss << "You are level " << bloodworks->getPlayer()->getLevel();
 	levelupGroupTitle->setText(ss.str());
 
 	std::stringstream ss2;

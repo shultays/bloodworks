@@ -1,4 +1,5 @@
 #include "cSlider.h"
+#include "cButton.h"
 
 cSlider::cSlider(cGame *game) : cRenderableGroup(game)
 {

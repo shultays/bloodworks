@@ -34,6 +34,8 @@ public:
 
 	MappedKey addKeyMap(const std::string& name, Key defaultKey0, Key defaultKey1 = (Key)0, Key defaultKey2 = (Key)0, Key defaultKey3 = (Key)0);
 	MappedKey getKeyMap(const std::string& name);
+	
+	void setKeyMap(MappedKey index, Key defaultKey0, Key defaultKey1 = (Key)0, Key defaultKey2 = (Key)0, Key defaultKey3 = (Key)0);
 
 	bool isKeyDown(MappedKey key);
 	bool isKeyUp(MappedKey key);
@@ -80,6 +82,7 @@ public:
 	{
 		clearKeyRelease((MappedKey)key);
 	}
+	const Key* getMappedKeys(MappedKey key) const;
 };
 
 #endif // KeyMapper_h__

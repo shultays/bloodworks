@@ -187,6 +187,7 @@
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cGlobals.cpp" />
     <ClCompile Include="cInput.cpp" />
+    <ClCompile Include="cKeyMapButton.cpp" />
     <ClCompile Include="cLuaWorld.cpp" />
     <ClCompile Include="Coral.cpp" />
     <ClCompile Include="cGame.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="cButton.h" />
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
+    <ClInclude Include="cKeyMapButton.h" />
     <ClInclude Include="cMat.h" />
     <ClInclude Include="cMath.h" />
     <ClInclude Include="Coral.h" />
