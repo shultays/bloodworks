@@ -297,29 +297,29 @@ function Survival.init()
 end
 
 function Survival.onTick()
-	if isKeyPressed(keys.escape) or isKeyPressed(keys.joystick_0_button_back) then
+	if isKeyPressed(keys.Escape) or isKeyPressed(keys.joystick_0_button_back) then
 		if gotoMainMenu() then
 			return
 		end
 	end
 
 	if player.isDead then
-		if isKeyPressed(keys.space) then
+		if isKeyPressed(keys.Space) then
 			loadMission("Survival")
 		end
 		
 		return
 	end
 
-	if isKeyReleased(keys.home) then
+	if isKeyReleased(keys.Home) then
 			HomingOrb.spawn(player.position)
 	end
 	NukeOnDeath.onTick()
-	if isKeyReleased(keys.pageup) then
+	if isKeyReleased(keys.PageUp) then
 		Survival.extraMin = Survival.extraMin + 0.5
 		print("Extra Min " .. Survival.extraMin)
 	end
-	if isKeyReleased(keys.pagedown) then
+	if isKeyReleased(keys.PageDown) then
 		Survival.extraMin = Survival.extraMin - 0.5
 		if Survival.extraMin < 0.0 then
 			Survival.extraMin = 0.0
@@ -327,7 +327,7 @@ function Survival.onTick()
 		print("Extra Min " .. Survival.extraMin)
 	end
 	
-	if isKeyReleased(keys.delete) then	
+	if isKeyReleased(keys.Delete) then	
 		local count = getMonsterCount()
 		
 		for i = 0, count - 1 do
@@ -337,7 +337,7 @@ function Survival.onTick()
 		end
 	end
 	
-	if isKeyReleased(keys.insert) then
+	if isKeyReleased(keys.Insert) then
 		local t = Survival.maxMonster - getMonsterCount()
 		for i = 1, t - 10 do
 			local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})

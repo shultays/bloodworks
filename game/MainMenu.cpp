@@ -140,7 +140,7 @@ void MainMenu::resize()
 
 void MainMenu::tick(bool hasPopup)
 {
-	if (bloodworksText->isVisible() == false)
+	if (bloodworksText->isVisible() == false || bloodworks->isOptionsVisible())
 	{
 		return;
 	}

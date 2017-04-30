@@ -1,6 +1,9 @@
 #include "BloodworksControls.h"
 #include "cGlobals.h"
 
+
+std::vector<struct BloodworksControls::KeyData> BloodworksControls::keys;
+
 void BloodworksControls::init()
 {
 	const Key GameKeyValues[][4] =
@@ -49,7 +52,22 @@ void BloodworksControls::init()
 	mapper.setSavePath("keys.txt");
 	for (int i = 0; i < (int)GameKey::EndStatic; i++)
 	{
+		BloodworksControls::KeyData keyData;
 		GameKey key = (GameKey)i;
-		mapper.addKeyMap(GameKeyNames[i], GameKeyValues[i][0], GameKeyValues[i][1], GameKeyValues[i][2], GameKeyValues[i][3]);
+		keyData.key = mapper.addKeyMap(GameKeyNames[i], GameKeyValues[i][0], GameKeyValues[i][1], GameKeyValues[i][2], GameKeyValues[i][3]);
+
+		keyData.keyName = GameKeyNames[i];
+		for (int i = 0; i < keyData.keyName.size(); i++)
+		{
+			if (keyData.keyName[i] == '_')
+			{
+				keyData.keyName[i] = ' ';
+			}
+		}
+		keyData.defaults[0] = GameKeyValues[i][0];
+		keyData.defaults[1] = GameKeyValues[i][1];
+		keyData.defaults[2] = GameKeyValues[i][2];
+		keyData.defaults[3] = GameKeyValues[i][3];
+		keys.push_back(keyData);
 	}
 }

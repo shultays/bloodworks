@@ -195,6 +195,12 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	}
 }
 
+Vec2 Monster::getPathPos(const Vec2& pos)
+{
+	// todo pathfinding
+	return pos;
+}
+
 void Monster::addIgnoreId(int id)
 {
 	if (ignoreIds.size() == 0 || ignoreIds[ignoreIds.size() - 1] < id)

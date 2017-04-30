@@ -88,6 +88,7 @@ public:
 	void playAnimation(std::string anim, float startPercentage);
 	void doDamage(int damage, const Vec2& dir);
 	void doDamageWithArgs(int damage, const Vec2& dir, sol::table& args);
+	Vec2 getPathPos(const Vec2& pos);
 	bool isRemoved()
 	{
 		return isDead;
