@@ -31,6 +31,19 @@ class BloodworksControls
 {
 public:
 	static void init();
+	struct KeyData
+	{
+		MappedKey key;
+		std::string keyName;
+		Key defaults[4];
+	};
+
+	static const std::vector<struct KeyData>& getKeyData()
+	{
+		return keys;
+	}
+private:
+	static std::vector<struct KeyData> keys;
 };
 
 #endif // BloodworksControls_h__

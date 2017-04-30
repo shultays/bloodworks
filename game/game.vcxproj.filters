@@ -147,6 +147,9 @@
     <ClCompile Include="BloodworksControls.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cKeyMapButton.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="BloodworksControls.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="cKeyMapButton.h">
+      <Filter>Coral\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

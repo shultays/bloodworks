@@ -79,7 +79,8 @@ function Spider.onTick(monster)
 			posToMove = posToMove * c + player.position * (1.0 - c)
 		end
 		
-
+		posToMove = monster:getPathPos(posToMove)
+		
 		diffToMovePos = posToMove - monster.position
 		distanceToMovePos = diffToMovePos:length()
 		angleToMovePos = diffToMovePos:getAngle()

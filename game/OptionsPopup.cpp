@@ -7,10 +7,13 @@
 #include "cTickBox.h"
 #include "cSlider.h"
 #include "cPersistent.h"
+#include "cKeyMapButton.h"
 
 OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
+
+	inUseKey = nullptr;
 
 	cPersistent* config = bloodworks->getConfig();
 
@@ -137,7 +140,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	inputGroup->setVisible(false);
 
 	x = -240.0f;
-	y = 0.0f;
+	y = 80.0f;
 	tickShift = 0.0f;
 	sliderShift = 390.0f;
 
@@ -154,6 +157,28 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	inputGroup->addRenderable(sensitivity);
 
 	optionsGroup->addRenderable(inputGroup);
+
+
+	y -= rowShift;
+
+	for (auto& key : BloodworksControls::getKeyData())
+	{
+
+		text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), key.keyName, fontSize);
+		text->setWorldMatrix(Mat3::translationMatrix(x, y));
+		text->setTextAllignment(TextAlignment::left);
+		text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+		inputGroup->addRenderable(text);
+
+		cKeyMapButton *k = new cKeyMapButton(bloodworks);
+		k->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+		inputGroup->addRenderable(k);
+		k->setKeys(mapper.getMappedKeys(key.key));
+		keyMapButtons.push_back(k);
+
+		y -= rowShift * 0.7f;
+	}
+
 
 	// audio video
 	audioVideoTitle = new cButton(bloodworks);
@@ -349,6 +374,29 @@ void OptionsPopup::tick()
 		{
 			config->set("sensitivity", sensitivity->getIntValue());
 		}
+
+		if (inUseKey && inUseKey->isInUse() == false)
+		{
+			inUseKey->cancel();
+			inUseKey = nullptr;
+		}
+		for (int i=0; i<keyMapButtons.size(); i++)
+		{
+			auto& key = keyMapButtons[i];
+			key->check(input.getMousePos());
+			if (key->isInUse())
+			{
+				if (inUseKey != nullptr && inUseKey != key)
+				{
+					inUseKey->cancel();
+				}
+				inUseKey = key;
+			}
+			if (key->isChanged())
+			{
+				key->mapKeysTo(BloodworksControls::getKeyData()[i].key);
+			}
+		}
 	}
 
 	if (lastClickedTitle == audioVideoTitle)
@@ -378,7 +426,7 @@ void OptionsPopup::tick()
 		}
 	}
 
-	if (mapper.isKeyPressed(GameKey::Back))
+	if (mapper.isKeyPressed(GameKey::Back) && inUseKey == nullptr)
 	{
 		optionsGroup->setVisible(false);
 	}
@@ -401,4 +449,9 @@ void OptionsPopup::changeTab(cButton *tab, cRenderableGroup *group)
 	lastClickedTitle->setEnforcedHovering(cButton::enforce_not_hovering);
 	lastClickTime = timer.getRealTime();
 	changingTabs = true;
+
+	if (inUseKey)
+	{
+		inUseKey->cancel();
+	}
 }

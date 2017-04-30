@@ -107,4 +107,5 @@ public:
 		this->color = color;
 	}
 	void setVerticalTextAllignment(VerticalTextAlignment param1);
+	const std::string& getText() const;
 };
