@@ -1,11 +1,14 @@
 #pragma once
 
+#include <vector>
+
 class Bloodworks;
 class cRenderableGroup;
 class cTextRenderable;
 class cButton;
 class cTickBox;
 class cSlider;
+class cKeyMapButton;
 
 class OptionsPopup
 {
@@ -38,6 +41,9 @@ class OptionsPopup
 	cRenderableGroup *inputGroup;
 
 	cSlider *sensitivity;
+
+	cKeyMapButton *inUseKey;
+	std::vector<cKeyMapButton*> keyMapButtons;
 
 	//
 	cButton *lastClickedTitle;

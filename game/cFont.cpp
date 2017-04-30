@@ -143,11 +143,12 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 	for (int i = 0; i < text.size(); i++)
 	{
 		float charSize = font->defaultSize;
-		if (font->charInfos[text[i]].x >= 0)
+		auto& info = font->charInfos[text[i]];
+		if (info.x >= 0)
 		{
 			shader->setWorldMatrix(temp);
 
-			glBindBuffer(GL_ARRAY_BUFFER, font->charInfos[text[i]].vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, info.vbo);
 
 			shader->bindPosition(sizeof(float) * 8, 0);
 			shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
@@ -155,7 +156,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-			charSize = (float)font->charInfos[text[i]].w;
+			charSize = (float)info.w;
 		}
 
 		Vec2 shift = Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
@@ -171,4 +172,9 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat)
 void cTextRenderable::setVerticalTextAllignment(VerticalTextAlignment verticalTextAlignment)
 {
 	this->verticalTextAlignment = verticalTextAlignment;
+}
+
+const std::string& cTextRenderable::getText() const
+{
+	return text;
 }

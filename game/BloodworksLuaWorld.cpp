@@ -580,6 +580,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveAngle", &Monster::moveAngle,
 		"moveDir", sol::readonly(&Monster::moveDir),
 
+		"getPathPos", &Monster::getPathPos,
+
 		"textureShift", &Monster::textureShift,
 		"textureSize", &Monster::textureSize,
 

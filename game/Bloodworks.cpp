@@ -236,7 +236,9 @@ void Bloodworks::init()
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-	if (coral.isDebuggerPresent())
+
+	const bool testMenu = false;
+	if (coral.isDebuggerPresent() && testMenu == false)
 	{
 		globalVolume = 0.0f;
 		coral.getSoundManager()->setGlobalVolume(globalVolume);
@@ -244,7 +246,10 @@ void Bloodworks::init()
 	}
 	else
 	{
-		coral.setFullScreen(true);
+		if (testMenu == false)
+		{
+			coral.setFullScreen(true);
+		}
 		mainMenu->setVisible(true);
 		showFps = false;
 	}
@@ -640,6 +645,11 @@ void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
 void Bloodworks::showOptions()
 {
 	optionsPopup->show();
+}
+
+bool Bloodworks::isOptionsVisible() const
+{
+	return optionsPopup->isVisible();
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
