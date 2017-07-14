@@ -77,6 +77,13 @@ class Monster
 	float dropChance;
 
 	std::vector<cParticle*> particles;
+
+	struct Knockback 
+	{
+		Vec2 speed;
+		float duration;
+	};
+	std::vector<Knockback> knockbacks;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
@@ -106,6 +113,7 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
+	bool hasShouldHitScript;
 
 	void addIgnoreId(int id);
 	bool hasIgnoreId(int id);
@@ -116,4 +124,5 @@ public:
 	bool shouldHit(Gun *gun);
 	cParticle* addParticleSpawner(const std::string& name, sol::table& args);
 	void spawnParticle(cParticle *particle, sol::table& params);
+	void addKnockback(const Vec2& speed, float duration);
 };
