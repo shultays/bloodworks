@@ -504,14 +504,10 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pulse Gun")
+		if (gun->getName() == "Pistol")
 		{
 			player->setGun(gun);
 		}
-		/*if (gun->getName() == "Laser Machine Gun")
-		{
-		player->setSecondaryGun(gun);
-		}*/
 	}
 	missionController->loadMission(mission);
 	player->setVisible(true);

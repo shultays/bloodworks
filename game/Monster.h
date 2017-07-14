@@ -84,6 +84,8 @@ class Monster
 		float duration;
 	};
 	std::vector<Knockback> knockbacks;
+
+	void clampPos();
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

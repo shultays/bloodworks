@@ -26,6 +26,7 @@ class BloodRenderable : public cRenderable
 		Vec2 rotatePoint;
 		float time;
 		float rotateSpeed;
+		bool addedBlood;
 	};
 
 	std::vector<BodyPartData> bodyParts;

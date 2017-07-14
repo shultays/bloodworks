@@ -64,10 +64,18 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 		}
 		float t = (timer.getRenderTime() - bodyPart.time) * 5.0f;
 		bool remove = false;
+		if (t >= 2.1)
+		{
+			remove = true;
+		}
 		if (t >= 1.0f)
 		{
 			t = 1.0;
-			remove = true;
+			if (bodyPart.addedBlood == false)
+			{
+				bodyPart.addedBlood = true;
+				addBlood(bodyPart.pos + bodyPart.moveSpeed * t + Vec2::fromAngle(randFloat(pi_2)) * randFloat(3.0f), Vec2::zero(), 3.0f + randFloat(5.0f));
+			}
 		}
 
 		Mat3 frame = Mat3::scaleMatrix(bodyPart.size).
@@ -261,6 +269,7 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	bodyPartData.time = timer.getTime();
 	bodyPartData.rotateSpeed = randFloat(1.4f, 2.2f);
 	bodyPartData.rotatePoint = rotatePoint;
+	bodyPartData.addedBlood = false;
 	if (randBool())
 	{
 		bodyPartData.rotateSpeed = -bodyPartData.rotateSpeed;

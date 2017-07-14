@@ -58,6 +58,8 @@ class Bullet
 	};
 
 	std::vector<Particledata> particles;
+
+	void clampPos();
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
