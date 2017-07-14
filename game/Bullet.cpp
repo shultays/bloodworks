@@ -20,6 +20,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	damage = 10;
 	penetrateCount = 0;
 	penetrateUsed = 0;
+	scale = 1.0f;
 	meshScale = Vec2(1.0f);
 	data = lua.create_table();
 	onDamageArgs = lua.create_table();
@@ -109,7 +110,7 @@ void Bullet::tick()
 		std::function<bool(Monster *monster)> func = [&](Monster *monster) -> bool
 		{
 			Vec2 monsterPos = monster->getPosition();
-			float radiusToCheck = monster->getRadius() + radius;
+			float radiusToCheck = monster->getRadius() + radius * scale;
 
 			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (penetrateCount == 0 || monster->hasIgnoreId(id) == false))
 			{
@@ -151,7 +152,7 @@ void Bullet::tick()
 			}
 			return true;
 		};
-		bloodworks->getMonsterController()->runForEachMonsterInRadius(pos, radius, func);
+		bloodworks->getMonsterController()->runForEachMonsterInRadius(pos, radius * scale, func);
 	}
 }
 
@@ -163,7 +164,7 @@ void Bullet::addRenderable(cRenderable *renderable)
 void Bullet::updateDrawable()
 {
 	Mat3 mat = Mat3::identity();
-	mat.scaleBy(meshScale);
+	mat.scaleBy(meshScale * scale);
 	mat.rotateBy(-getMeshRotation());
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);

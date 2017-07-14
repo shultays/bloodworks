@@ -504,7 +504,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pistol")
+		if (gun->getName() == "Pulse Gun")
 		{
 			player->setGun(gun);
 		}

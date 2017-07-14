@@ -192,6 +192,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"meshRotation", &Bullet::meshRotation,
 
 		"meshScale", &Bullet::meshScale,
+		"scale", sol::readonly(&Bullet::scale),
+		"setScale", [](Bullet& b, float scale) { b.scale = scale; b.updateDrawable(); },
 
 		"moveDir", sol::readonly(&Bullet::moveDir),
 		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
@@ -604,6 +606,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"playAnimation", &Monster::playAnimation,
 		"addTimer", &Monster::addTimer,
 		"setScale", &Monster::setScale,
+
+		"addKnockback", &Monster::addKnockback,
 
 		"dropChance", &Monster::dropChance,
 
