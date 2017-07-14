@@ -64,6 +64,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	dropChance = 0.05f;
 	firstTick = true;
+	hasShouldHitScript = scriptTable["shouldHit"];
 	scriptTable["init"](this);
 }
 
@@ -93,10 +94,6 @@ void Monster::tick()
 		renderable->setColor(colorMultiplier.getBuffedValue());
 	}
 	scriptTable["onTick"](this);
-	if (this->animationSpeed < 1.0f)
-	{
-		int a = 5;
-	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
@@ -120,6 +117,27 @@ void Monster::tick()
 	if (moveSpeed > 0.0f)
 	{
 		position += Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier() * timer.getDt();
+	}
+
+	float dt = timer.getDt();
+	for (int i = 0; i < knockbacks.size(); i++)
+	{
+		Knockback& k = knockbacks[i];
+		bool remove = false;
+		float pushAmount = dt;
+		if (k.duration < dt)
+		{
+			pushAmount = k.duration;
+		}
+		k.duration -= dt;
+		position += k.speed * pushAmount;
+
+		if (k.duration <= 0.0f)
+		{
+			knockbacks[i] = knockbacks[knockbacks.size() - 1];
+			knockbacks.resize(knockbacks.size() - 1);
+			i--;
+		}
 	}
 
 	std::stringstream ss;
@@ -254,7 +272,7 @@ bool Monster::shouldHit(Bullet *bullet)
 
 bool Monster::shouldHit(Gun *gun)
 {
-	if (scriptTable["shouldHit"])
+	if (hasShouldHitScript)
 	{
 		return scriptTable["shouldHit"](this, gun, nullptr);
 	}
@@ -278,6 +296,14 @@ void Monster::spawnParticle(cParticle *particleToSpawn, sol::table& params)
 			particle->addParticle(position, params);
 		}
 	}
+}
+
+void Monster::addKnockback(const Vec2& speed, float duration)
+{
+	Knockback k;
+	k.speed = speed;
+	k.duration = duration;
+	knockbacks.push_back(k);
 }
 
 void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)
