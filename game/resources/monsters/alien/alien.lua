@@ -22,6 +22,8 @@ function Alien.init(monster)
 	data.minDamage = 8
 	data.maxDamage = 12
 	
+	data.targetShift = Vec2.new(math.random() * 400.0 - 200.0, math.random() * 400.0 - 200.0)
+	
 	data.tickWaitTime = 0.0
 	
 	BulletShooter.init(monster)
@@ -43,7 +45,10 @@ function Alien.onTick(monster)
 	data.tickWaitTime = data.tickWaitTime - dt
 	if data.tickWaitTime < 0.0 then
 		data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
-		local posToMove = player.position
+		
+		local t = distanceToPlayer / 200.0
+		local playerPosShift = player.position + data.targetShift * t
+		local posToMove = playerPosShift
 		
 		if data.randomMove or player.isDead then
 			posToMove = data.randomPos
@@ -59,11 +64,12 @@ function Alien.onTick(monster)
 			if c < 0.0 then
 				c = 0.0
 			end
-			posToMove = posToMove * c + player.position * (1.0 - c)
+			posToMove = posToMove * c + player.position * (1.0 - c) 
 		end
 		
 		posToMove = monster:getPathPos(posToMove)
 		
+		--data.p = posToMove
 		diffToMovePos = posToMove - monster.position
 		distanceToMovePos = diffToMovePos:length()
 		angleToMovePos = diffToMovePos:getAngle()
@@ -80,4 +86,6 @@ function Alien.onTick(monster)
 	else
 		monster.moveSpeed = 0.0;
 	end
+	
+	--addLine(monster.position, data.p)
 end

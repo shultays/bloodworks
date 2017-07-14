@@ -13,7 +13,10 @@
   "maxAmmo" : 20,
   "reloadTime" : 1.2,
   
-  "firingSound" : "resources/sounds/pistol.ogg",
+  "firingSound" : {
+	"path" : "resources/sounds/pulse.ogg",
+	"volume" : 0.75
+  },
   
   "scriptFile" : "resources/guns/pulsegun/pulsegun.lua",
   "scriptName" : "PulseGun"

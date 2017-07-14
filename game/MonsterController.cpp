@@ -11,7 +11,7 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 400.0f, bloodworks->getMapSize() + 800.0f, Vec2(50.0f));
+	grid.init(bloodworks->getMapMin() - 500.0f, bloodworks->getMapSize() + 1000.0f, Vec2(50.0f));
 }
 
 void MonsterController::tick()

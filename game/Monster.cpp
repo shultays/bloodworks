@@ -130,7 +130,7 @@ void Monster::tick()
 			pushAmount = k.duration;
 		}
 		k.duration -= dt;
-		position += k.speed * pushAmount;
+		position += k.speed * pushAmount;	
 
 		if (k.duration <= 0.0f)
 		{
@@ -139,6 +139,7 @@ void Monster::tick()
 			i--;
 		}
 	}
+	clampPos();
 
 	std::stringstream ss;
 	ss << (int)hitPoint;
@@ -254,6 +255,7 @@ void Monster::copyIgnoreId(Monster *other)
 void Monster::setPosition(const Vec2& pos)
 {
 	this->position = pos;
+	clampPos();
 	bloodworks->getMonsterController()->relocateMonster(this);
 }
 
@@ -306,6 +308,15 @@ void Monster::addKnockback(const Vec2& speed, float duration)
 	knockbacks.push_back(k);
 }
 
+void Monster::clampPos()
+{
+	Vec2 old = position;
+	position.x = max(position.x, bloodworks->getMapMin().x - 300.0f);
+	position.y = max(position.y, bloodworks->getMapMin().y - 300.0f);
+	position.x = min(position.x, bloodworks->getMapMax().x + 300.0f);
+	position.y = min(position.y, bloodworks->getMapMax().y + 300.0f);
+}
+
 void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)
 {
 	if (monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
@@ -333,7 +344,7 @@ void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits
 			s->getDimensions().toVec() * scale * randFloat(0.5f, 1.0f),
 			randFloat(0.0f, pi_2),
 			Vec2::zero(),
-			blowDir * 2.0f);
+			blowDir * 4.0f);
 	}
 }
 
