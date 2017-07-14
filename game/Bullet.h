@@ -30,6 +30,7 @@ class Bullet
 
 	Vec2 meshScale;
 
+	float scale;
 	float radius;
 	int damage;
 	cRenderableGroup *renderable;
@@ -62,19 +63,19 @@ public:
 	~Bullet();
 	void tick();
 	void addRenderable(cRenderable *renderable);
-	int getId()
+	int getId() const
 	{
 		return id;
 	}
 
-	const Vec2& getPosition()
+	const Vec2& getPosition() const
 	{
 		return pos;
 	}
 
-	float getRadius()
+	float getRadius() const
 	{
-		return radius;
+		return radius * scale;
 	}
 
 	IntVec2 gridStart;
