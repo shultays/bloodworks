@@ -60,7 +60,7 @@ void Bullet::tick()
 	moveSpeedDir = moveDir * moveSpeed * bloodworks->getPlayer()->getBulletSpeedMultiplier();
 
 	pos += moveSpeedDir * dt;
-
+	clampPos();
 	updateDrawable();
 
 	if (bloodworks->isCoorOutside(pos, -20.0f))
@@ -192,6 +192,15 @@ Gun* Bullet::getGun() const
 	return gun;
 }
 
+void Bullet::clampPos()
+{
+	Vec2 old = pos;
+	pos.x = max(pos.x, bloodworks->getMapMin().x - 100.0f);
+	pos.y = max(pos.y, bloodworks->getMapMin().y - 100.0f);
+	pos.x = min(pos.x, bloodworks->getMapMax().x + 100.0f);
+	pos.y = min(pos.y, bloodworks->getMapMax().y + 100.0f);
+}
+
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)
 {
 	cTexturedQuadRenderable* quad = new cTexturedQuadRenderable(bloodworks, texture, "resources/default");
@@ -221,6 +230,7 @@ void Bullet::setPosition(const Vec2& pos)
 	{
 		particle.lastSpawnPos = pos;
 	}
+	clampPos();
 }
 
 void Bullet::addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions)
