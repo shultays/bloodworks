@@ -39,7 +39,7 @@ class MonsterTemplate
 	std::vector<cSoundSampleShr> killSounds;
 public:
 	MonsterTemplate(){}
-	MonsterTemplate(nlohmann::json &j);
+	MonsterTemplate(nlohmann::json& j);
 
 	~MonsterTemplate();
 

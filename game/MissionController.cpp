@@ -126,7 +126,7 @@ void MissionController::removeGameObject(int id)
 	gameObjects.erase(id);
 }
 
-void MissionController::addMission(nlohmann::json &j)
+void MissionController::addMission(nlohmann::json& j)
 {
 	MissionData data;
 	data.name = j["name"].get<std::string>();

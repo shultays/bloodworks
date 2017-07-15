@@ -36,7 +36,7 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, c
 	}
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json &animData)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData)
 {
 	bool looped = false;
 	if (animData.count("looped"))
@@ -84,7 +84,7 @@ cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::
 	return getAnimationData(it.key(), it.value());
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json &j)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j)
 {
 	return getAnimationData(j["name"].get<std::string>(), j);
 }

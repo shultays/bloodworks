@@ -1,6 +1,5 @@
 #pragma once
 
-#include "cGame.h"
 #include "cRenderableWithShader.h"
 
 class cPostProcess : public cUniformDataWithShader
@@ -14,22 +13,9 @@ public:
 	{
 		game = nullptr;
 	}
-	~cPostProcess()
-	{
-		if (game)
-		{
-			game->removePostProcess(this);
-		}
-	}
+	~cPostProcess();
 
-	void init(cGame* game, cShaderShr shader, int level = 10000)
-	{
-		enabled = true;
-		this->shader = shader;
-		this->game = game;
-		game->addPostProcess(this, level);
-		shaderAmountIndex = addUniformFloat("uShaderAmount", 1.0f);
-	}
+	void init(cGame* game, cShaderShr shader, int level = 10000);
 
 	void setShaderWeight(float amount)
 	{
@@ -41,12 +27,7 @@ public:
 		return shader;
 	}
 
-	void bind()
-	{
-		shader->begin();
-
-		setShaderUniforms();
-	}
+	void bind();
 
 	bool isEnabled() const
 	{

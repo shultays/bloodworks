@@ -213,7 +213,7 @@ public:
 
 
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json &animData);
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData);
 
 cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j);
 
