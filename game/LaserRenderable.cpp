@@ -2,7 +2,7 @@
 #include "cTexture.h"
 #include "cShader.h"
 #include "cGame.h"
-
+#include "cGlobals.h"
 
 GLuint laserQuad = -1;
 
@@ -88,8 +88,9 @@ void LaserTemplate::render(float laserLength)
 
 	glDrawArrays(GL_QUADS, 0, 12);
 }
-LaserTemplate::LaserTemplate(nlohmann::json& j)
+LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j)
 {
+	this->game = game;
 	if (j.count("name"))
 	{
 		name = j["name"].get<std::string>();

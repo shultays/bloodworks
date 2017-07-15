@@ -4,6 +4,9 @@
 #include "Gun.h"
 #include "cFont.h"
 #include "cRenderable.h"
+#include "cRenderableContainer.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTextRenderable.h"
 #include "cAnimatedRenderable.h"
 #include "DirentHelper.h"
 
@@ -25,7 +28,7 @@ Player::Player(Bloodworks *bloodworks)
 	mat.scaleBy(15.7f, 22.9f);
 	mat.translateBy(0.0f, 5.0f);
 
-	renderable = new cRenderableGroup(bloodworks);
+	renderable = new cRenderableContainer(bloodworks);
 	cTexturedQuadRenderable *body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
 	body->setWorldMatrix(mat);
 	renderable->addRenderable(body);

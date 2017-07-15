@@ -1,6 +1,7 @@
 #include "ExplosionController.h"
 #include "Bloodworks.h"
 #include "cParticle.h"
+#include "cTexturedQuadRenderable.h"
 #include "MonsterController.h"
 
 ExplosionController::ExplosionController(Bloodworks *bloodworks)

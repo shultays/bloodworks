@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define G_TYPE_INT 0
 #define G_TYPE_FLOAT 1
 #define G_TYPE_LONG 2

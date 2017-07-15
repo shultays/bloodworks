@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "cSharedPtr.h"
 #include <unordered_map>
 

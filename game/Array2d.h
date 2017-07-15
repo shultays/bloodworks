@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cTools.h"
 
 template <class T>
 class Array2d 

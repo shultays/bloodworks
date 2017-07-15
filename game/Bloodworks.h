@@ -1,8 +1,7 @@
 #pragma once
 
 #include "cGame.h"
-#include "cSharedPtr.h"
-#include "cLuaWorld.h"
+#include "cResources.h"
 #include "cSound.h"
 #include "BloodworksControls.h"
 

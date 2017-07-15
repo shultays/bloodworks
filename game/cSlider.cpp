@@ -1,7 +1,11 @@
 #include "cSlider.h"
 #include "cButton.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTexture.h"
+#include "cGame.h"
+#include "cGlobals.h"
 
-cSlider::cSlider(cGame *game, bool isVertical) : cRenderableGroup(game)
+cSlider::cSlider(cGame *game, bool isVertical) : cRenderableContainer(game)
 {
 	bgButton = new cButton(game);
 	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(game, isVertical ? "resources/ui/slider_bg_vertical.png":"resources/ui/slider_bg.png", "resources/default");

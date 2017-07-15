@@ -1,10 +1,10 @@
 #pragma once
 
-#include "cRenderable.h"
+#include "cRenderableContainer.h"
 
 class cButton;
 
-class cSlider : public cRenderableGroup
+class cSlider : public cRenderableContainer
 {
 	cButton *bgButton;
 	cButton *sliderButton;

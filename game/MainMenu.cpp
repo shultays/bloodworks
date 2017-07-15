@@ -5,6 +5,8 @@
 #include "cButton.h"
 #include "cFont.h"
 #include "cSound.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTextRenderable.h"
 
 MainMenu::MainMenu(Bloodworks *b)
 {

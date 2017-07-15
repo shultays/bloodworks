@@ -2,6 +2,8 @@
 #include "Bloodworks.h"
 #include "cRenderable.h"
 #include "cScrollContainer.h"
+#include "cTextRenderable.h"
+#include "cTexturedQuadRenderable.h"
 #include "cTexture.h"
 #include "cFont.h"
 #include "cButton.h"
@@ -18,7 +20,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	cPersistent* config = bloodworks->getConfig();
 
-	optionsGroup = new cRenderableGroup(bloodworks);
+	optionsGroup = new cRenderableContainer(bloodworks);
 	optionsGroup->setWorldMatrix(Mat3::identity());
 	optionsGroup->setAlignment(RenderableAlignment::center);
 
@@ -47,7 +49,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gameplayTitle->addRenderable(text);
 	optionsGroup->addRenderable(gameplayTitle);
 
-	gameplayGroup = new cRenderableGroup(bloodworks);
+	gameplayGroup = new cRenderableContainer(bloodworks);
 	gameplayGroup->setVisible(false);
 
 	float tickSize = 25.0f;
@@ -195,7 +197,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	audioVideoTitle->addRenderable(text);
 	optionsGroup->addRenderable(audioVideoTitle);
 
-	audioVideoGroup = new cRenderableGroup(bloodworks);
+	audioVideoGroup = new cRenderableContainer(bloodworks);
 	audioVideoGroup->setVisible(false);
 
 	x = -200.0f;

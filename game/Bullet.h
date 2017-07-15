@@ -4,7 +4,7 @@
 #include "cVec.h"
 #include "sol.h"
 
-class cRenderableGroup;
+class cRenderableContainer;
 class Bloodworks;
 class cRenderable;
 class cParticle;
@@ -33,7 +33,7 @@ class Bullet
 	float scale;
 	float radius;
 	int damage;
-	cRenderableGroup *renderable;
+	cRenderableContainer *renderable;
 	int id;
 	bool monsterBullet;
 

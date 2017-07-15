@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "cRenderable.h"
+#include "cRenderableWithShader.h"
 #include "cShader.h"
 #include "cTexture.h"
 #include "cGame.h"
@@ -400,7 +400,6 @@ public:
 				textures[i]->bindTexture();
 				particleTemplate->shader->setTexture(i, i);
 			}
-
 
 			particleTemplate->shader->setViewMatrix(game->getViewMatrix(alignment));
 
