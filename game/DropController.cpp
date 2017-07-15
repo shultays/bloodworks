@@ -204,7 +204,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 			return;
 		}
 
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 70.0f;
+		float extraDropChance = (timeSinceLastDrop - 20.0f) / 80.0f;
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
