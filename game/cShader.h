@@ -2,6 +2,7 @@
 
 
 #include "cTools.h"
+#include "cRect.h"
 #include <string>
 #include <unordered_map>
 #include <iostream>
@@ -43,6 +44,11 @@ public:
 
 		void setData(void * data)  const
 		{
+			if (location == -1)
+			{
+				return;
+			}
+
 			switch (uniformType) 
 			{
 			case TypeFloat:
@@ -270,6 +276,7 @@ public:
 	int uViewMatrix;
 	int uColor;
 	int uTextures[4];
+	int uCrop;
 public:
 	cShader() 
 	{
@@ -432,6 +439,7 @@ public:
 		uTextures[1] = addUniform("uTexture1", TypeInt).index;
 		uTextures[2] = addUniform("uTexture2", TypeInt).index;
 		uTextures[3] = addUniform("uTexture3", TypeInt).index;
+		uCrop = addUniform("uCrop", TypeInt).index;
 	}
 
 	Uniform addUniform(const std::string& name, int uniformType) 
@@ -446,6 +454,11 @@ public:
 		uniform.location = glGetUniformLocation(shaderProgram, name.c_str());
 		uniforms.push_back(uniform);
 		return uniforms[uniform.index];
+	}
+
+	void setCrop(const Rect& crop)
+	{
+		setUniform(uniforms[uCrop], crop.toVec());
 	}
 
 	void setViewMatrix(const Mat3& mat)
@@ -652,5 +665,7 @@ public:
 	{
 		delete this;
 	}
+
+
 };
 

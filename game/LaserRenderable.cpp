@@ -49,9 +49,9 @@ void LaserRenderable::setLength(float length)
 
 }
 
-void LaserRenderable::render(bool isIdentity, const Mat3& mat)
+void LaserRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
-	cRenderableWithShader::render(isIdentity, mat);
+	cRenderableWithShader::render(isIdentity, mat, crop);
 	shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
 	laserTemplate->render(laserLength);
 }

@@ -1,10 +1,10 @@
 #include "cSlider.h"
 #include "cButton.h"
 
-cSlider::cSlider(cGame *game) : cRenderableGroup(game)
+cSlider::cSlider(cGame *game, bool isVertical) : cRenderableGroup(game)
 {
 	bgButton = new cButton(game);
-	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(game, "resources/ui/slider_bg.png", "resources/default");
+	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(game, isVertical ? "resources/ui/slider_bg_vertical.png":"resources/ui/slider_bg.png", "resources/default");
 	bgSize = quad->getTexture()->getDimensions().toVec();
 	quad->setWorldMatrix(Mat3::identity());
 	bgButton->addRenderable(quad);
@@ -24,6 +24,8 @@ cSlider::cSlider(cGame *game) : cRenderableGroup(game)
 	sliderButton->setHoverSpeed(10.0f);
 	addRenderable(sliderButton);
 
+	this->isVertical = isVertical;
+
 	pressed = false;
 	edgeShift = 0.0f;
 
@@ -37,18 +39,20 @@ cSlider::cSlider(cGame *game) : cRenderableGroup(game)
 	curValueF = 0.5f;
 	setValue(0.5f);
 	valueChanged = false;
+
 }
 
 void cSlider::check(const Vec2& mousePos)
 {
 	Vec2 shiftedPos = mousePos - getPosition();
+	int axis = isVertical ? 1 : 0;
 	Vec2 relativeMouse = game->getRelativeMousePos(shiftedPos, getAlignment());
 
-	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
 
 	if (pressed)
 	{
-		float pos = relativeMouse.x - pressShift;
+		float pos = relativeMouse[axis] - pressShift;
 		clamp(pos, -maxShift, maxShift);
 		setSliderPos(pos);
 	}
@@ -58,7 +62,7 @@ void cSlider::check(const Vec2& mousePos)
 
 	if (sliderButton->isPressed())
 	{
-		pressShift = relativeMouse.x - sliderButton->getPosition().x;
+		pressShift = relativeMouse[axis] - sliderButton->getPosition()[axis];
 		pressed = true;
 	}
 
@@ -66,7 +70,7 @@ void cSlider::check(const Vec2& mousePos)
 	{
 		if (pressed == false)
 		{
-			float pos = relativeMouse.x;
+			float pos = relativeMouse[axis];
 			clamp(pos, -maxShift, maxShift);
 			setSliderPos(pos);
 		}
@@ -98,6 +102,7 @@ void cSlider::setMinMax(int min, int max)
 
 void cSlider::setValue(int value)
 {
+	int axis = isVertical ? 1 : 0;
 	if (isFloat)
 	{
 		setValue((float)value);
@@ -105,7 +110,7 @@ void cSlider::setValue(int value)
 	}
 	curValue = value;
 	clamp(curValue, minValue, maxValue);
-	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
 	float t = ((float)value - minValue) / (maxValue - minValue);
 	float pos = -maxShift + maxShift * 2.0f * t;
 	setSliderPos(pos);
@@ -113,6 +118,7 @@ void cSlider::setValue(int value)
 
 void cSlider::setValue(float value)
 {
+	int axis = isVertical ? 1 : 0;
 	if (isFloat == false)
 	{
 		setValue((int)round(value));
@@ -121,7 +127,7 @@ void cSlider::setValue(float value)
 
 	curValueF = value;
 	clamp(curValueF, minValueF, maxValueF);
-	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
 	float t = (value - minValueF) / (maxValueF - minValueF);
 	float pos = -maxShift + maxShift * 2.0f * t;
 	setSliderPos(pos);
@@ -131,7 +137,8 @@ void cSlider::setValue(float value)
 
 void cSlider::setSliderPos(float pos)
 {
-	float maxShift = bgSize.x - sliderSize.x - edgeShift;
+	int axis = isVertical ? 1 : 0;
+	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
 	float t = (pos + maxShift) / (2 * maxShift);
 	if (isFloat == false)
 	{
@@ -141,9 +148,9 @@ void cSlider::setSliderPos(float pos)
 		t = ((float)r) / count;
 		pos = -maxShift + maxShift * 2.0f * t;
 	}
-
-	sliderButton->setDefaultMatrix(Vec2(pos, 0.0f), sliderSize, 0.0f);
-	sliderButton->setHoverMatrix(Vec2(pos, 0.0f), sliderSize, 0.0f);
+	Vec2 coor = isVertical ? Vec2(0.0f, pos) : Vec2(pos, 0.0f);
+	sliderButton->setDefaultMatrix(coor, sliderSize, 0.0f);
+	sliderButton->setHoverMatrix(coor, sliderSize, 0.0f);
 
 	valueChanged = true;
 }

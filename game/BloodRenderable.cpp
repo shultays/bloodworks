@@ -6,7 +6,7 @@
 
 #define blood_size 2048
 
-void BloodRenderable::render(bool isIdentity, const Mat3& mat)
+void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	for(int i=0; i<bloods.size(); i++)
 	{
@@ -45,7 +45,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 			bloodworks->lastAllignment = blood.renderable->getAlignment();
 
 			glViewport(0, 0, blood_size, blood_size);
-			blood.renderable->render(true, Mat3::identity());
+			blood.renderable->render(true, Mat3::identity(), crop);
 			bloodworks->resetToBackBuffer();
 			blood.renderable->setVisible(false);
 
@@ -104,7 +104,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat)
 			bloodworks->lastAllignment = bodyPart.renderable->getAlignment();
 
 			glViewport(0, 0, blood_size, blood_size);
-			bodyPart.renderable->render(true, Mat3::identity());
+			bodyPart.renderable->render(true, Mat3::identity(), crop);
 			bloodworks->resetToBackBuffer();
 			bodyPart.renderable->setVisible(false);
 
