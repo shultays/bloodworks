@@ -66,7 +66,7 @@ private:
 	TextAlignment textAlignment;
 	VerticalTextAlignment verticalTextAlignment;
 
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 public:
 
 	cTextRenderable(cGame *game, cFontShr font, std::string text = "", float textSize = 38.0f, Vec4 textColor = Vec4(1.0f)) : cRenderableWithShader(game, "resources/default.vs", "resources/default.ps")

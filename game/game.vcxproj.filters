@@ -150,6 +150,12 @@
     <ClCompile Include="cKeyMapButton.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="cScroll.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="cMath.cpp">
+      <Filter>Coral\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -334,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="cKeyMapButton.h">
       <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cRect.h">
+      <Filter>Coral\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
