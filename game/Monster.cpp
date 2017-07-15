@@ -340,8 +340,8 @@ void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits
 
 	for (int i = 0; i < bitCount; i++)
 	{
-		Vec2 dir = Vec2::fromAngle(randFloat(0.0f, pi_2));
-		float r = randFloat();
+		Vec2 dir = Vec2::fromAngle(blowDir.toAngle() - 0.1f + 0.2f * randFloat());
+		float r = randFloat() * 0.5f + 0.5f;
 		r = sqrtf(r);
 		int t = randInt((int)monsterTemplate->bodyPartBits.size());
 		cTextureShr s = monsterTemplate->bodyPartBits[t];
@@ -402,7 +402,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	
 	if (blowDir.isNonZero())
 	{
-		bloodworks->getBloodRenderable()->addBlood(position, blowDir, 18.0f);
+		bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
 		for (int i : parts)
 		{
 			cTextureShr s = monsterTemplate->bodyParts[i].texture;
