@@ -19,7 +19,7 @@ function Egg.init(monster, min)
 	data.hitWaitTime = 0.0
 	data.hitInterval = 0.0
 	
-	data.spawnInterval = 4.0 + math.random() * 1.0
+	data.spawnInterval = 3.0 + math.random() * 0.5
 	data.spawnTime = data.spawnInterval * 1.5
 	
 	data.cannotBecomeBoss = true
