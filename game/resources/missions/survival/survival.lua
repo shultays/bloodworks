@@ -65,7 +65,6 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	monster.scoreMultiplier = 5.0 + math.random() * 2.0
-	
 	local t = math.random(11)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
@@ -166,6 +165,7 @@ function makeBoss(monster)
 		monster.data.originalSpeed = monster.data.maxMoveSpeed
 		monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
 		monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
+		monster.data.targetShift = Vec2.new(0.0, 0.0)
 		monster.scriptTable.onTick = function (monster)
 			local diffToPlayer = player.position - monster.position 
 			local distanceToPlayer = diffToPlayer:length()

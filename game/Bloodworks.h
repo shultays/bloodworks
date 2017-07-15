@@ -204,7 +204,7 @@ public:
 	void doUnpause();
 	std::vector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
-	int onPlayerDamaged(int damage, sol::table& params);
+	int onPlayerDamaged(int damage, float dir, sol::table& params);
 	void addLaserTemplate(LaserTemplate * laserTemplate);
 	bool isLevelUpPopupVisible() const;
 	bool isPaused() const

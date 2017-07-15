@@ -63,7 +63,7 @@ public:
 	void onTick();
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
 	void onReload(Gun *gun);
-	int onPlayerDamaged(int damage, sol::table& params);
+	int onPlayerDamaged(int damage, float dir, sol::table& params);
 	void reset();
 	void onPlayerDied();
 

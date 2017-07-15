@@ -10,6 +10,7 @@
 #include "cAnimatedRenderable.h"
 #include "DirentHelper.h"
 #include "BloodworksControls.h"
+#include "BloodRenderable.h"
 
 #include <sstream>
 
@@ -490,16 +491,19 @@ void Player::setScore(int score)
 	scoreText->setText(ss.str());
 }
 
-int Player::doDamage(int damage)
+int Player::doDamage(int damage, float angle)
 {
-	return doDamageWithParams(damage, lua.create_table());
+	return doDamageWithArgs(damage, angle, lua.create_table());
 }
 
-int Player::doDamageWithParams(int damage, sol::table& params)
+int Player::doDamageWithArgs(int damage, float angle, sol::table& params)
 {
-	damage = bloodworks->onPlayerDamaged(damage, params);
+	damage = bloodworks->onPlayerDamaged(damage, angle, params);
 	if (damage > 0)
 	{
+		Vec2 dir = Vec2::fromAngle(angle);
+		bloodworks->getBloodRenderable()->addBlood(pos, dir * clamped(damage * 2.7f, 0.0f, 20.0f), 10.0f + randFloat(10.0f));
+
 		hitPoints -= damage;
 		if (hitPoints <= 0)
 		{

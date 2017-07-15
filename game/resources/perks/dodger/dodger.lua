@@ -3,7 +3,7 @@ function Dodger.init()
 
 end
 
-function Dodger.onPlayerDamaged(damage, params)
+function Dodger.onPlayerDamaged(damage, dir, params)
 	if params.doNotDodge ~= true and math.random() < 0.1 then
 		return -1
 	end
