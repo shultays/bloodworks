@@ -1,4 +1,5 @@
 #include "cTickBox.h"
+#include "cTexturedQuadRenderable.h"
 #include "cTexture.h"
 
 cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)

@@ -8,6 +8,8 @@
 #include "Bloodworks.h"
 #include "Player.h"
 #include "BloodRenderable.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTextRenderable.h"
 #include "MonsterController.h"
 #include "Gun.h"
 #include "Bullet.h"

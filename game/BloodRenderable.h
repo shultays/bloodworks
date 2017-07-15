@@ -5,6 +5,8 @@ class Bloodworks;
 #include "cRenderable.h"
 #include <vector>
 
+class cTexturedQuadRenderable;
+
 class BloodRenderable : public cRenderable
 {
 	struct BloodData

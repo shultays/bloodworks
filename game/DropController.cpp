@@ -1,6 +1,9 @@
 #include "DropController.h"
 #include "Bloodworks.h"
 #include "cRenderable.h"
+#include "cRenderableContainer.h"
+#include "cTextRenderable.h"
+#include "cTexturedQuadRenderable.h"
 #include "cFont.h"
 #include "cTexture.h"
 #include "Player.h"
@@ -37,7 +40,7 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 
 	drop.pos = position;
 
-	cRenderableGroup *group = new cRenderableGroup(bloodworks);
+	cRenderableContainer *group = new cRenderableContainer(bloodworks);
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.gun->getIconPath(), "resources/default");
 	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec();
@@ -83,7 +86,7 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	drop.gun = nullptr;
 	drop.pos = position;
 
-	cRenderableGroup *group = new cRenderableGroup(bloodworks);
+	cRenderableContainer *group = new cRenderableContainer(bloodworks);
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.bonus->getIconPath(), "resources/default");
 	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.12f;

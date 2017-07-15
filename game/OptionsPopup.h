@@ -3,7 +3,7 @@
 #include <vector>
 
 class Bloodworks;
-class cRenderableGroup;
+class cRenderableContainer;
 class cTextRenderable;
 class cButton;
 class cTickBox;
@@ -16,11 +16,11 @@ class OptionsPopup
 {
 	Bloodworks *bloodworks;
 
-	cRenderableGroup *optionsGroup;
+	cRenderableContainer *optionsGroup;
 
 	// gameplay options
 	cButton *gameplayTitle;
-	cRenderableGroup *gameplayGroup;
+	cRenderableContainer *gameplayGroup;
 
 	cTickBox *gore;
 	cTickBox *screenShake;
@@ -29,7 +29,7 @@ class OptionsPopup
 
 	// audio video options
 	cButton *audioVideoTitle;
-	cRenderableGroup *audioVideoGroup;
+	cRenderableContainer *audioVideoGroup;
 
 	cTickBox *fullScreen;
 	cTickBox *vsync;

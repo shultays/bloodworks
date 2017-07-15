@@ -1,6 +1,8 @@
 #include "LevelUpPopup.h"
 #include "Bloodworks.h"
 #include "cRenderable.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTextRenderable.h"
 #include "cFont.h"
 #include "cTexture.h"
 #include "cButton.h"
@@ -13,7 +15,7 @@
 LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
-	levelupGroup = new cRenderableGroup(bloodworks);
+	levelupGroup = new cRenderableContainer(bloodworks);
 	levelupGroup->setAlignment(RenderableAlignment::center);
 
 	cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, "resources/level_up_bg.png", "resources/default");

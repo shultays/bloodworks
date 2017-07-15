@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "cRenderable.h"
+#include "cTexturedQuadRenderable.h"
 #include "LaserRenderable.h"
 #include "cSound.h"
 #include "Monster.h"
@@ -81,7 +82,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
-		LaserTemplate *laserTemplate = new LaserTemplate(j);
+		LaserTemplate *laserTemplate = new LaserTemplate(game, j);
 		bloodworks->addLaserTemplate(laserTemplate);
 		laser = new LaserRenderable(bloodworks, laserTemplate);
 		laser->setWorldMatrix(Mat3::identity());

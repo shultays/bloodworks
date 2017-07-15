@@ -3,8 +3,6 @@
 #include <string.h>
 #include <cmath>
 
-#include "cTools.h"
-
 #if G_VEC_TYPE_ID == G_TYPE_INT
 #define G_VEC_TYPE int
 #elif G_VEC_TYPE_ID == G_TYPE_FLOAT

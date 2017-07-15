@@ -2,6 +2,8 @@
 
 #include "cButton.h"
 
+class cTexturedQuadRenderable;
+
 class cTickBox : public cButton
 {
 	cTexturedQuadRenderable *checkedRenderable;

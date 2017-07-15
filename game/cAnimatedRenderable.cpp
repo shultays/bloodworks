@@ -1,6 +1,7 @@
 #include "cAnimatedRenderable.h"
 #include "cShader.h"
 #include "cTexture.h"
+#include "cGlobals.h"
 
 void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
@@ -95,4 +96,16 @@ cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::strin
 	nlohmann::json j = nlohmann::json::parse(jsonFile.c_str());
 
 	return getAnimationData(j);
+}
+
+cAnimatedTexturedQuadRenderable::AnimationData& cAnimatedTexturedQuadRenderable::AnimationData::addFrame(const std::string& texturePath, float duration)
+{
+	FrameData data;
+	data.texture = resources.getTexture(texturePath);
+	data.duration = duration;
+	data.startTime = animationDuration;
+	animationDuration += duration;
+	data.endTime = animationDuration;
+	frames.push_back(data);
+	return *this;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cRenderable.h"
+#include "cRenderableWithShader.h"
 #include "json.h"
 
 class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
@@ -79,17 +79,7 @@ public:
 			this->looping = looping;
 		}
 
-		AnimationData& addFrame(const std::string& texturePath, float duration)
-		{
-			FrameData data;
-			data.texture = resources.getTexture(texturePath);
-			data.duration = duration;
-			data.startTime = animationDuration;
-			animationDuration += duration;
-			data.endTime = animationDuration;
-			frames.push_back(data);
-			return *this;
-		}
+		AnimationData& addFrame(const std::string& texturePath, float duration);
 
 		~AnimationData()
 		{
