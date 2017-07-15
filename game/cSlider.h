@@ -31,8 +31,10 @@ class cSlider : public cRenderableGroup
 
 	bool isFloat;
 	bool valueChanged;
+
+	bool isVertical;
 public:
-	cSlider(cGame *game);
+	cSlider(cGame *game, bool isVertical = false);
 	void check(const Vec2& mousePos);
 	void setMinMax(float min, float max);
 	void setMinMax(int min, int max);

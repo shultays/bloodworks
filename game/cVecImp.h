@@ -85,9 +85,10 @@ public:
 		data[i] = 0;*/
 	}
 
-	static G_VEC_IMP_NAME zero() 
+	static const G_VEC_IMP_NAME& zero()
 	{
-		return G_VEC_IMP_NAME(0);
+		static G_VEC_IMP_NAME v(0);
+		return v;
 	}
 
 	void setZero() 

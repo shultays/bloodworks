@@ -2,11 +2,11 @@
 #include "cShader.h"
 #include "cTexture.h"
 
-void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
+void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	if (animations[currentAnimation].frames.size() > 0)
 	{
-		cRenderableWithShader::render(isIdentity, mat);
+		cRenderableWithShader::render(isIdentity, mat, crop);
 		currentAnimationTime += timer.getRender_dt() * speedMultiplier;
 		checkAnimationTime();
 

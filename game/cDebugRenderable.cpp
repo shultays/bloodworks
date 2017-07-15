@@ -168,7 +168,7 @@ void cDebugRenderable::render()
 		textRenderable->setTextAllignment(textData.textAlignment);
 		textRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(textData.pos.x, textData.pos.y)));
 		textRenderable->setAlignment((RenderableAlignment)textData.alignment);
-		textRenderable->render(true, Mat3::identity());
+		textRenderable->render(true, Mat3::identity(), Rect::invalid());
 	}
 
 	if (lineData.size() > 0)

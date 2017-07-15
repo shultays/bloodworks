@@ -10,13 +10,13 @@ cRenderableGroup::cRenderableGroup(cGame *game, int initialCapacity /*= 2*/) : c
 	renderables.reserve(initialCapacity);
 }
 
-void cRenderableGroup::render(bool isIdentity, const Mat3& mat)
+void cRenderableGroup::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	for (auto& childData : renderables)
 	{
 		if (childData.child->isVisible())
 		{
-			childData.child->render(false, isIdentity ? worldMatrix : worldMatrix * mat);
+			childData.child->render(false, isIdentity ? worldMatrix : worldMatrix * mat, crop);
 		}
 	}
 }
@@ -63,7 +63,7 @@ void cRenderable::setLevel(int level)
 }
 
 
-void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
+void cRenderableWithShader::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	if (game->lastShader != shader)
 	{
@@ -77,6 +77,8 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat)
 		shader->setViewMatrix(game->getViewMatrix(alignment));
 		game->lastAllignment = alignment;
 	}
+	
+	shader->setCrop(crop);
 
 	setShaderUniforms();
 }
@@ -235,9 +237,9 @@ void cUniformDataWithShader::setUniform(int index, const IntVec4& data)
 	uniforms[index] = uniform;
 }
 
-void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat)
+void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
-	cRenderableWithShader::render(isIdentity, mat);
+	cRenderableWithShader::render(isIdentity, mat, crop);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cGlobals.h"
+#include "cRect.h"
 #include <string>
 #include <GL/glew.h>
 
@@ -17,7 +18,7 @@ protected:
 	cGame *game;
 	virtual void render()
 	{
-		render(true, Mat3::identity());
+		render(true, Mat3::identity(), Rect::invalid());
 	}
 	Mat3 worldMatrix;
 	Vec4 color;
@@ -31,7 +32,7 @@ protected:
 public:
 	cRenderable(cGame *game);
 
-	virtual void render(bool isIdentity, const Mat3& mat) = 0;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop = Rect::invalid()) = 0;
 
 	bool isVisible() const
 	{
@@ -77,6 +78,8 @@ public:
 	}
 
 	void setLevel(int level);
+
+	virtual void setShader(const cShaderShr& shader){}
 };
 
 class cRenderableGroup : public cRenderable
@@ -97,7 +100,7 @@ public:
 		}
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 	void addRenderable(cRenderable *child);
 	virtual void setAlignment(RenderableAlignment alignment) override
 	{
@@ -115,6 +118,16 @@ public:
 		for (auto& childData : renderables)
 		{
 			childData.child->setColor(color);
+		}
+	}
+
+	virtual void setShader(const cShaderShr& shader) override
+	{
+		cRenderable::setShader(shader);
+
+		for (auto& childData : renderables)
+		{
+			childData.child->setShader(shader);
 		}
 	}
 };
@@ -151,10 +164,6 @@ protected:
 
 	std::unordered_map<int, UniformData> uniforms;
 public:
-	void setShader(cShaderShr shader)
-	{
-		this->shader = shader;
-	}
 
 	cShaderShr getShader() const
 	{
@@ -182,7 +191,6 @@ public:
 	void setUniform(int index, const Vec3& data);
 	void setUniform(int index, const Vec4& data);
 
-
 	int addUniformInt(const std::string uniform, int val);
 	int addUniformIntVec2(const std::string uniform, const IntVec2& data);
 	int addUniformIntVec3(const std::string uniform, const IntVec3& data);
@@ -196,7 +204,7 @@ public:
 class cRenderableWithShader : public cRenderable, public cUniformDataWithShader
 {
 protected:
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 
 public:
 	cRenderableWithShader(cGame *game, const std::string& shaderPath) : cRenderable(game)
@@ -217,6 +225,11 @@ public:
 	{
 	}
 
+	virtual void setShader(const cShaderShr& shader) override
+	{
+		this->shader = shader;
+	}
+
 	cRenderableWithShader(cShaderShr shader) : cRenderable(game)
 	{
 		this->shader = shader;
@@ -226,7 +239,6 @@ public:
 	{
 		shader = resources.getShader(vs, ps);
 	}
-
 };
 
 class cTexturedQuadRenderable : public cRenderableWithShader
@@ -245,7 +257,7 @@ public:
 		}
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 
 	void setTexture(const std::string& texturePath)
 	{

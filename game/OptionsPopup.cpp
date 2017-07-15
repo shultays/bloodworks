@@ -124,6 +124,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(gameplayGroup);
 	// input
 
+	cShaderShr cropShader = resources.getShader("resources/defaultWithCrop");
+
 	inputTitle = new cButton(bloodworks);
 	inputTitle->setAlignment(RenderableAlignment::center);
 	inputTitle->setDefaultMatrix(Vec2(0.0f, titleY), Vec2(1.0f), 0.0f);
@@ -134,6 +136,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	text->setWorldMatrix(Mat3::identity());
 	text->setTextAllignment(TextAlignment::center);
 	inputTitle->addRenderable(text);
+	inputTitle->setShader(cropShader);
 	optionsGroup->addRenderable(inputTitle);
 
 	inputGroup = new cRenderableGroup(bloodworks);
@@ -157,7 +160,6 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	inputGroup->addRenderable(sensitivity);
 
 	optionsGroup->addRenderable(inputGroup);
-
 
 	y -= rowShift;
 

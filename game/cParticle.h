@@ -369,7 +369,7 @@ public:
 		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat)
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	{
 		if (quadBuffers.size() > 0)
 		{
@@ -391,7 +391,7 @@ public:
 			particleTemplate->shader->begin();
 			particleTemplate->shader->setUniform(particleTemplate->uCurrentTime, timer.getTime() - time);
 
-			cRenderableWithShader::render(isIdentity, mat);
+			cRenderableWithShader::render(isIdentity, mat, crop);
 			glActiveTexture(GL_TEXTURE0);
 
 			for (int i = (int)textures.size() - 1; i >= 0; i--)

@@ -46,7 +46,7 @@ public:
 	void addBlood(const Vec2& pos, const Vec2& moveSpeed, float size = 17.5f);
 	void addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& rotatePoint, const Vec2& blowDir);
 
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 	void tick();
 	void reset();
 };
