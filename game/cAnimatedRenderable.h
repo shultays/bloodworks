@@ -53,7 +53,7 @@ class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 		}
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 
 public:
 

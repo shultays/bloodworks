@@ -89,9 +89,9 @@ cFont::~cFont()
 	}
 }
 
-void cTextRenderable::render(bool isIdentity, const Mat3& mat)
+void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
-	cRenderableWithShader::render(isIdentity, mat);
+	cRenderableWithShader::render(isIdentity, mat, crop);
 	font->texture->bindTexture();
 	Mat3 temp2 = worldMatrix;
 	temp2 = Mat3::scaleMatrix(textSize) * temp2;

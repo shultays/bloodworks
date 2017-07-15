@@ -56,19 +56,15 @@ public:
 		}
 	}
 
-	Mat4(Vec4 v0, Vec4 v1, Vec4 v2, Vec4 v3) 
+	Mat4(const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3)
 	{
 		row0 = v0;
 		row1 = v1;
 		row2 = v2;
 		row3 = v3;
 	}
-	static Mat4 identity() 
-	{
-		Mat4 mat;
-		mat.makeIdentity();
-		return mat;
-	}
+
+	static const Mat4& identity();
 
 	void makeIdentity() 
 	{
@@ -673,12 +669,8 @@ public:
 		row1 = v1;
 		row2 = v2;
 	}
-	static Mat3 identity() 
-	{
-		Mat3 mat;
-		mat.makeIdentity();
-		return mat;
-	}
+
+	static const Mat3& identity();
 
 	void makeIdentity() 
 	{

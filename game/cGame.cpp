@@ -15,7 +15,7 @@ public:
 	cRootRenderable() : cRenderable(nullptr)
 	{
 	}
-	virtual void render(bool isIdentity, const Mat3& mat) override {}
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& rect) override {}
 };
 
 void cGame::initInternal()
@@ -58,16 +58,14 @@ void cGame::renderInternal()
 	float halfHeight = windowSize.h * 0.5f;
 
 	viewMatrices[(int)RenderableAlignment::world] =
-		Mat3::identity()
-		.rotateBy(cameraAngle)
+		Mat3::rotationMatrix(cameraAngle)
 		.translateBy(-halfWidth - cameraPos.x, -halfHeight - cameraPos.y)
 		.scaleBy(1.0f / windowSize.w, 1.0f / windowSize.h)
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
 
 	Mat3 center = viewMatrices[(int)RenderableAlignment::center] =
-		Mat3::identity()
-		.translateBy(-halfWidth, -halfHeight)
+		Mat3::translationMatrix(-halfWidth, -halfHeight)
 		.scaleBy(1.0f / windowSize.w, 1.0f / windowSize.h)
 		.translateBy(0.5f)
 		.scaleBy(2.0f);
@@ -77,8 +75,7 @@ void cGame::renderInternal()
 	float viewHalfHeight = viewWindowSize.h * 0.5f;
 
 	Mat3 viewCenter = 
-		Mat3::identity()
-		.translateBy(-viewHalfWidth, -viewHalfHeight)
+		Mat3::translationMatrix(-viewHalfWidth, -viewHalfHeight)
 		.scaleBy(1.0f / viewWindowSize.w, 1.0f / viewWindowSize.h)
 		.translateBy(0.5f)
 		.scaleBy(2.0f);

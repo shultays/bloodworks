@@ -51,3 +51,15 @@ Vec2 &operator *= (Vec2 &v, const Mat2 &m)
 	v = v*m;
 	return v;
 }
+
+const Mat4& Mat4::identity()
+{
+	static Mat4 mat(Vec4(1.0f, 0.0f, 0.0f, 0.0f), Vec4(0.0f, 1.0f, 0.0f, 0.0f), Vec4(0.0f, 0.0f, 1.0f, 0.0f), Vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	return mat;
+}
+
+const Mat3& Mat3::identity()
+{
+	static Mat3 mat(Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
+	return mat;
+}

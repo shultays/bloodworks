@@ -7,8 +7,6 @@ uniform sampler2D uTexture0;
 uniform mat3 uWorldMatrix;
 uniform mat3 uViewMatrix;
 
-
-
 varying vec4 vColor;
 varying vec2 vVertexUV;
 
