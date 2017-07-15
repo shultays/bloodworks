@@ -6,6 +6,7 @@ cSlider::cSlider(cGame *game, bool isVertical) : cRenderableGroup(game)
 	bgButton = new cButton(game);
 	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(game, isVertical ? "resources/ui/slider_bg_vertical.png":"resources/ui/slider_bg.png", "resources/default");
 	bgSize = quad->getTexture()->getDimensions().toVec();
+	originalBgSize = bgSize;
 	quad->setWorldMatrix(Mat3::identity());
 	bgButton->addRenderable(quad);
 	addRenderable(bgButton);
@@ -42,8 +43,10 @@ cSlider::cSlider(cGame *game, bool isVertical) : cRenderableGroup(game)
 
 }
 
-void cSlider::check(const Vec2& mousePos)
+void cSlider::check(const Vec2& mousePos, bool ignoreClick)
 {
+	valueChanged = false;
+
 	Vec2 shiftedPos = mousePos - getPosition();
 	int axis = isVertical ? 1 : 0;
 	Vec2 relativeMouse = game->getRelativeMousePos(shiftedPos, getAlignment());
@@ -57,8 +60,8 @@ void cSlider::check(const Vec2& mousePos)
 		setSliderPos(pos);
 	}
 
-	bgButton->check(shiftedPos);
-	sliderButton->check(shiftedPos);
+	bgButton->check(shiftedPos, ignoreClick);
+	sliderButton->check(shiftedPos, ignoreClick);
 
 	if (sliderButton->isPressed())
 	{
@@ -135,6 +138,24 @@ void cSlider::setValue(float value)
 	valueChanged = false;
 }
 
+void cSlider::setLength(float length)
+{
+	int axis = isVertical ? 1 : 0;
+	bgSize[axis] = length;
+
+	bgButton->setDefaultMatrix(Vec2(0.0f), bgSize, 0.0f);
+	bgButton->setHoverMatrix(Vec2(0.0f), bgSize, 0.0f);
+	bgButton->setHitArea(-bgSize, bgSize);
+	if (isFloat)
+	{
+		setValue(curValueF);
+	}
+	else
+	{
+		setValue(curValue);
+	}
+}
+
 void cSlider::setSliderPos(float pos)
 {
 	int axis = isVertical ? 1 : 0;
@@ -147,6 +168,11 @@ void cSlider::setSliderPos(float pos)
 		curValue = r - minValue;
 		t = ((float)r) / count;
 		pos = -maxShift + maxShift * 2.0f * t;
+	}
+	else
+	{
+		curValueF = minValueF + (maxValueF - minValueF) * t;
+		clamp(curValueF, minValueF, maxValueF);
 	}
 	Vec2 coor = isVertical ? Vec2(0.0f, pos) : Vec2(pos, 0.0f);
 	sliderButton->setDefaultMatrix(coor, sliderSize, 0.0f);

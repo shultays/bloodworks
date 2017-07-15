@@ -19,7 +19,7 @@ class cKeyMapButton : public cRenderableGroup
 	Key keys[4];
 public:
 	cKeyMapButton(cGame *game);
-	void check(const Vec2& mousePos);
+	void check(const Vec2& mousePos, bool ignoreClick = false);
 	bool isChanged() const
 	{
 		return changed;

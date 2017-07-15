@@ -1,6 +1,7 @@
 #include "OptionsPopup.h"
 #include "Bloodworks.h"
 #include "cRenderable.h"
+#include "cScrollContainer.h"
 #include "cTexture.h"
 #include "cFont.h"
 #include "cButton.h"
@@ -124,8 +125,6 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(gameplayGroup);
 	// input
 
-	cShaderShr cropShader = resources.getShader("resources/defaultWithCrop");
-
 	inputTitle = new cButton(bloodworks);
 	inputTitle->setAlignment(RenderableAlignment::center);
 	inputTitle->setDefaultMatrix(Vec2(0.0f, titleY), Vec2(1.0f), 0.0f);
@@ -136,14 +135,14 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	text->setWorldMatrix(Mat3::identity());
 	text->setTextAllignment(TextAlignment::center);
 	inputTitle->addRenderable(text);
-	inputTitle->setShader(cropShader);
 	optionsGroup->addRenderable(inputTitle);
 
-	inputGroup = new cRenderableGroup(bloodworks);
+	inputGroup = new cScrollContainer(bloodworks);
 	inputGroup->setVisible(false);
 
 	x = -240.0f;
-	y = 80.0f;
+	float startY = 80.0f;
+	y = startY;
 	tickShift = 0.0f;
 	sliderShift = 390.0f;
 
@@ -180,7 +179,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 		y -= rowShift * 0.7f;
 	}
-
+	inputGroup->setRect(Rect(-300.0f, -180.0f, 300.0f, 110.0f));
+	inputGroup->setMaxScroll(startY - y + 20.0f);
 
 	// audio video
 	audioVideoTitle = new cButton(bloodworks);
@@ -370,7 +370,11 @@ void OptionsPopup::tick()
 
 	if (lastClickedTitle == inputTitle)
 	{
-		sensitivity->check(input.getMousePos());
+		inputGroup->check(input.getMousePos());
+		bool isInside = inputGroup->isMouseInside(input.getMousePos());
+		Vec2 transformedPos = input.getMousePos() - inputGroup->getScrollMatrix().row2.vec2;
+
+		sensitivity->check(transformedPos, !isInside);
 
 		if (sensitivity->isChanged())
 		{
@@ -385,7 +389,7 @@ void OptionsPopup::tick()
 		for (int i=0; i<keyMapButtons.size(); i++)
 		{
 			auto& key = keyMapButtons[i];
-			key->check(input.getMousePos());
+			key->check(transformedPos, !isInside);
 			if (key->isInUse())
 			{
 				if (inUseKey != nullptr && inUseKey != key)
@@ -400,6 +404,7 @@ void OptionsPopup::tick()
 			}
 		}
 	}
+
 
 	if (lastClickedTitle == audioVideoTitle)
 	{
@@ -434,7 +439,7 @@ void OptionsPopup::tick()
 	}
 }
 
-void OptionsPopup::changeTab(cButton *tab, cRenderableGroup *group)
+void OptionsPopup::changeTab(cButton *tab, cRenderable *group)
 {
 	if (lastClickedTitle != nullptr)
 	{

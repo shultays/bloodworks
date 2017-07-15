@@ -31,6 +31,7 @@ protected:
 	cRenderable *prev;
 public:
 	cRenderable(cGame *game);
+	virtual ~cRenderable();
 
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop = Rect::invalid()) = 0;
 
@@ -53,8 +54,6 @@ public:
 	{
 		this->alignment = alignment;
 	}
-
-	virtual ~cRenderable();
 
 	const Mat3& getWorldMatrix() const
 	{
@@ -100,8 +99,9 @@ public:
 		}
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 	void addRenderable(cRenderable *child);
+
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 	virtual void setAlignment(RenderableAlignment alignment) override
 	{
 		cRenderable::setAlignment(alignment);

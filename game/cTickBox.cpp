@@ -24,7 +24,7 @@ void cTickBox::setChecked(bool isChecked)
 	uncheckedRenderable->setVisible(!isChecked);
 }
 
-void cTickBox::check(const Vec2& mousePos)
+void cTickBox::check(const Vec2& mousePos, bool ignoreClick)
 {
 	cButton::check(mousePos);
 	if (isClicked())

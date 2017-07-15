@@ -26,10 +26,10 @@ cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableGroup(game)
 	keyCount = false;
 }
 
-void cKeyMapButton::check(const Vec2& mousePos)
+void cKeyMapButton::check(const Vec2& mousePos, bool ignoreClick)
 {
 	Vec2 shiftedPos = mousePos - getPosition();
-	bgButton->check(shiftedPos);
+	bgButton->check(shiftedPos, ignoreClick);
 
 	changed = false;
 	if (inUse)

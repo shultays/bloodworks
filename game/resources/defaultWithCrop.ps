@@ -3,10 +3,16 @@ uniform vec4 uCrop;
 
 varying vec4 vColor;
 varying vec2 vVertexUV;
+varying vec3 worldPos;
 
 
 void main(void) 
 {
+	if (worldPos.x < uCrop[0] || worldPos.y < uCrop[1]
+	 || worldPos.x > uCrop[2] || worldPos.y > uCrop[3])
+	{
+		discard;
+	}
 	vec4 v = texture2D(uTexture0, vVertexUV) * vColor;
 	gl_FragColor = v;
 }
