@@ -24,6 +24,7 @@ class Perk
 	sol::function onAddGunBulletFunc;
 	sol::function onTickFunc;
 	sol::function onPlayerDamagedFunc;
+	sol::function onMonsterDiedFunc;
 	sol::function onReloadFunc;
 public:
 	Perk(nlohmann::json& j);
