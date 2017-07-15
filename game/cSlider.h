@@ -15,6 +15,7 @@ class cSlider : public cRenderableGroup
 	float maxPos;
 
 	Vec2 bgSize;
+	Vec2 originalBgSize;
 	Vec2 sliderSize;
 
 	float edgeShift;
@@ -35,7 +36,7 @@ class cSlider : public cRenderableGroup
 	bool isVertical;
 public:
 	cSlider(cGame *game, bool isVertical = false);
-	void check(const Vec2& mousePos);
+	void check(const Vec2& mousePos, bool ignoreClick = false); // todo this shouldnt called manually and handle transforms
 	void setMinMax(float min, float max);
 	void setMinMax(int min, int max);
 
@@ -61,4 +62,6 @@ public:
 	{
 		return valueChanged;
 	}
+
+	void setLength(float length);
 };

@@ -9,6 +9,8 @@ class cButton;
 class cTickBox;
 class cSlider;
 class cKeyMapButton;
+class cScrollContainer;
+class cRenderable;
 
 class OptionsPopup
 {
@@ -38,7 +40,7 @@ class OptionsPopup
 
 	// input settings
 	cButton *inputTitle;
-	cRenderableGroup *inputGroup;
+	cScrollContainer *inputGroup;
 
 	cSlider *sensitivity;
 
@@ -50,12 +52,12 @@ class OptionsPopup
 	cButton *prevClickedTitle;
 	float lastClickTime;
 
-	cRenderableGroup *lastClickedGroup;
-	cRenderableGroup *prevClickedGroup;
+	cRenderable *lastClickedGroup;
+	cRenderable *prevClickedGroup;
 
 	bool changingTabs;
 
-	void changeTab(cButton * tab, cRenderableGroup *group);
+	void changeTab(cButton *tab, cRenderable *group);
 public:
 	OptionsPopup(Bloodworks *bloodworks);
 	~OptionsPopup();
