@@ -198,9 +198,15 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 	if (pos.x > screenMin.x && pos.y > screenMin.y && pos.x < screenMax.x && pos.y < screenMax.y)
 	{
 		float timeSinceLastDrop = timer.getTime() - lastDropSpawn;
-		float extraDropChance = (timeSinceLastDrop - 30.0f) / 100.0f;
 
-		if (randFloat() < dropChance + extraDropChance)
+		if (timeSinceLastDrop < 5.0f)
+		{
+			return;
+		}
+
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 70.0f;
+		float r = randFloat();
+		if (r < dropChance + extraDropChance)
 		{
 			spawnDrop(pos);
 		}
