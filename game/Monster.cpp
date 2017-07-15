@@ -182,6 +182,7 @@ void Monster::doDamage(int damage, const Vec2& dir)
 	sol::table t = lua.create_table();
 	doDamageWithArgs(damage, dir, t);
 }
+
 void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 {
 	if (isDead)
@@ -310,6 +311,11 @@ void Monster::addKnockback(const Vec2& speed, float duration)
 	k.speed = speed;
 	k.duration = duration;
 	knockbacks.push_back(k);
+}
+
+void Monster::modifyDrawLevel(int level)
+{
+	renderable->setLevel(renderable->getLevel() + level);
 }
 
 void Monster::clampPos()

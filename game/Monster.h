@@ -127,4 +127,5 @@ public:
 	cParticle* addParticleSpawner(const std::string& name, sol::table& args);
 	void spawnParticle(cParticle *particle, sol::table& params);
 	void addKnockback(const Vec2& speed, float duration);
+	void modifyDrawLevel(int level);
 };
