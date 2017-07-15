@@ -76,11 +76,11 @@ void Perk::onReload(Gun *gun)
 	}
 }
 
-int Perk::onPlayerDamaged(int damage, sol::table& params)
+int Perk::onPlayerDamaged(int damage, float dir, sol::table& params)
 {
 	if (onPlayerDamagedFunc)
 	{
-		return onPlayerDamagedFunc(damage, params);
+		return onPlayerDamagedFunc(damage, dir, params);
 	}
 	return damage;
 }

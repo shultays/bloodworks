@@ -673,6 +673,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
 		"maxSpeed", &Player::maxSpeed,
 		"doDamage", &Player::doDamage,
+		"doDamageWithArgs", &Player::doDamageWithArgs,
 		"doHeal", &Player::doHeal,
 		"gainExperience", &Player::gainExperience,
 		"bulletSpeedMultiplier", &Player::bulletSpeedMultiplier,
