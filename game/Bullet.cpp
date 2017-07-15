@@ -99,7 +99,7 @@ void Bullet::tick()
 		float checkRadius = radius + 10.0f;
 		if (bloodworks->getPlayer()->getPosition().distanceSquared(pos) < checkRadius * checkRadius)
 		{
-			bloodworks->getPlayer()->doDamageWithParams(damage, onDamageArgs);
+			bloodworks->getPlayer()->doDamageWithArgs(damage, moveAngle, onDamageArgs);
 			if (script && onHitCallback.length())
 			{
 				script[onHitCallback](this, bloodworks->getPlayer());
