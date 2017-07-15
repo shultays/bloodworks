@@ -196,7 +196,7 @@
     <ClCompile Include="cPersistent.cpp" />
     <ClCompile Include="cRenderable.cpp" />
     <ClCompile Include="cResources.cpp" />
-    <ClCompile Include="cScroll.cpp" />
+    <ClCompile Include="cScrollContainer.cpp" />
     <ClCompile Include="cSlider.cpp" />
     <ClCompile Include="cSoundManager.cpp" />
     <ClCompile Include="cTickBox.cpp" />
@@ -246,6 +246,7 @@
     <ClInclude Include="cRect.h" />
     <ClInclude Include="cRenderable.h" />
     <ClInclude Include="cResources.h" />
+    <ClInclude Include="cScrollContainer.h" />
     <ClInclude Include="cShader.h" />
     <ClInclude Include="cSharedPtr.h" />
     <ClInclude Include="cSlider.h" />

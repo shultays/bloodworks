@@ -67,4 +67,44 @@ public:
 	{
 		return !isOutside(pos);
 	}
+
+	bool operator==(const Rect& other) const
+	{
+		return v == other.v;
+	}
+
+	void operator=(const Rect& other)
+	{
+		v = other.v;
+	}
+
+	Rect transform(const Mat3& mat) const
+	{
+		return Rect((mat * Vec3(min, 1.0f)).vec2, (mat * Vec3(max, 1.0f)).vec2);
+	}
+
+	const Vec2& getMin() const
+	{
+		return min;
+	}
+
+	const Vec2& getMax() const
+	{
+		return max;
+	}
+
+	void setMin(const Vec2& min)
+	{
+		this->min = min;
+	}
+
+	void setMax(const Vec2& max)
+	{
+		this->max = max;
+	}
+
+	Vec2 getMid() const
+	{
+		return (min + max) * 0.5f;
+	}
 };

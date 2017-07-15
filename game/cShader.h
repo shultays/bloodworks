@@ -439,7 +439,7 @@ public:
 		uTextures[1] = addUniform("uTexture1", TypeInt).index;
 		uTextures[2] = addUniform("uTexture2", TypeInt).index;
 		uTextures[3] = addUniform("uTexture3", TypeInt).index;
-		uCrop = addUniform("uCrop", TypeInt).index;
+		uCrop = addUniform("uCrop", TypeVec4).index;
 	}
 
 	Uniform addUniform(const std::string& name, int uniformType) 
