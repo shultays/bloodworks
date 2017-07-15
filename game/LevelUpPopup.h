@@ -3,7 +3,7 @@
 #include "cGlobals.h"
 
 class Bloodworks;
-class cRenderableGroup;
+class cRenderableContainer;
 class cTextRenderable;
 class cButton;
 class Perk;
@@ -13,7 +13,7 @@ class LevelUpPopup
 {
 	Bloodworks *bloodworks;
 
-	cRenderableGroup *levelupGroup;
+	cRenderableContainer *levelupGroup;
 
 	cTextRenderable *levelupGroupTitle;
 	cTextRenderable *levelupGroupSubTitle;

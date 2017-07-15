@@ -1,10 +1,9 @@
 #pragma once
 
-#include "cRenderable.h"
-#include "cTexture.h"
-#include "cGame.h"
+#include "cRenderableContainer.h"
+#include "cResources.h"
 
-class cButton : public cRenderableGroup
+class cButton : public cRenderableContainer
 {
 	bool hovering;
 	bool prevHovering;
@@ -39,7 +38,7 @@ public:
 		enforce_hovering,
 		enforce_not_hovering
 	};
-	cButton(cGame *game) : cRenderableGroup(game)
+	cButton(cGame *game) : cRenderableContainer(game)
 	{
 		down = prevDown = false;
 		hovering = prevHovering = false;

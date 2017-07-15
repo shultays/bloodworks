@@ -2,7 +2,6 @@
 
 
 #include "cTools.h"
-#include "cRect.h"
 #include <string>
 #include <unordered_map>
 #include <iostream>

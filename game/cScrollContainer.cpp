@@ -1,6 +1,7 @@
 #include "cScrollContainer.h"
 #include "cSlider.h"
 #include "cGame.h"
+#include "cGlobals.h"
 
 cScrollContainer::cScrollContainer(cGame* game) : cRenderable(game)
 {
@@ -8,7 +9,7 @@ cScrollContainer::cScrollContainer(cGame* game) : cRenderable(game)
 	slider->setValue(1.0f);
 	crop = Rect(-100, -100, 100, 100);
 	maxScroll = 100.0f;
-	content = new cRenderableGroup(game);
+	content = new cRenderableContainer(game);
 }
 
 cScrollContainer::~cScrollContainer()

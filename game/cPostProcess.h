@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cGame.h"
+#include "cRenderableWithShader.h"
 
 class cPostProcess : public cUniformDataWithShader
 {

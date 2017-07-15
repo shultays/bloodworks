@@ -1,5 +1,7 @@
 #include "Bullet.h"
 #include "cRenderable.h"
+#include "cRenderableContainer.h"
+#include "cTexturedQuadRenderable.h"
 #include "Monster.h"
 #include "Bloodworks.h"
 #include "cTexture.h"
@@ -13,7 +15,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 {
 	this->bloodworks = bloodworks;
 	this->gun = gun;
-	renderable = new cRenderableGroup(bloodworks);
+	renderable = new cRenderableContainer(bloodworks);
 	bloodworks->addRenderable(renderable, BULLETS);
 	isDead = false;
 	id = bloodworks->getUniqueId();

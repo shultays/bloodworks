@@ -1,9 +1,11 @@
 #include "cButton.h"
 #include "cSound.h"
+#include "cGame.h"
+#include "cGlobals.h"
 
 void cButton::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
-	cRenderableGroup::render(isIdentity, mat, crop);
+	cRenderableContainer::render(isIdentity, mat, crop);
 	lastRenderCrop = crop;
 }
 

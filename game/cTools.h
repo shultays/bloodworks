@@ -2,6 +2,7 @@
 
 #include "cVec.h"
 #include "cMat.h"
+#include "cRect.h"
 #include <string>
 #include <assert.h>
 

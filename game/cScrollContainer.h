@@ -6,7 +6,7 @@ class cSlider;
 class cScrollContainer : public cRenderable
 {
 	cSlider* slider;
-	cRenderableGroup* content;
+	cRenderableContainer* content;
 	Rect crop;
 	float maxScroll;
 public:

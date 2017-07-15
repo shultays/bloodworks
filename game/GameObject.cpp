@@ -1,5 +1,8 @@
 #include "GameObject.h"
 #include "cRenderable.h"
+#include "cRenderableContainer.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTextRenderable.h"
 #include "cTexture.h"
 #include "Bloodworks.h"
 #include "cFont.h"
@@ -98,7 +101,7 @@ void GameObject::checkRenderable()
 {
 	if (renderableGroup == nullptr)
 	{
-		renderableGroup = new cRenderableGroup(bloodworks);
+		renderableGroup = new cRenderableContainer(bloodworks);
 		renderableGroup->setWorldMatrix(Mat3::translationMatrix(Vec2::zero()));
 		bloodworks->addRenderable(renderableGroup, level);
 	}
