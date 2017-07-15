@@ -116,8 +116,8 @@ public:
 	{
 		return isDead == false;
 	}
-	int doDamage(int damage);
-	int doDamageWithParams(int damage, sol::table& params);
+	int doDamage(int damage, float angle);
+	int doDamageWithArgs(int damage, float angle, sol::table& params);
 	const Vec2& getCrosshairPos() const 
 	{
 		return crosshairPos;

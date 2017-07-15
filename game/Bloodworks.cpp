@@ -394,7 +394,7 @@ void Bloodworks::onPerkUsed(Perk *levelupPerks)
 	}
 }
 
-int Bloodworks::onPlayerDamaged(int damage, sol::table& params)
+int Bloodworks::onPlayerDamaged(int damage, float dir, sol::table& params)
 {
 	for (auto& perk : usedPerks)
 	{
@@ -402,7 +402,7 @@ int Bloodworks::onPlayerDamaged(int damage, sol::table& params)
 		{
 			return damage;
 		}
-		damage = perk->onPlayerDamaged(damage, params);
+		damage = perk->onPlayerDamaged(damage, dir, params);
 	}
 	return damage;
 }
