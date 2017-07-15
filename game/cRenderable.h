@@ -78,5 +78,10 @@ public:
 
 	void setLevel(int level);
 
+	int getLevel() const
+	{
+		return level;
+	}
+
 	virtual void setShader(const cShaderShr& shader){}
 };

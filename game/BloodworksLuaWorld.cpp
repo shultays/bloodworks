@@ -626,6 +626,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addParticleSpawner", &Monster::addParticleSpawner,
 		"spawnParticle", &Monster::spawnParticle,
 
+		"modifyDrawLevel", [&](Monster* monster, int level)
+	{
+		monster->modifyDrawLevel(level);
+	},
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 

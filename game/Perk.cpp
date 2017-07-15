@@ -32,6 +32,7 @@ Perk::Perk(nlohmann::json& j)
 	onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
 	onTickFunc = scriptTable["onTick"];
 	onReloadFunc = scriptTable["onReload"];
+	onMonsterDiedFunc = scriptTable["onMonsterDied"];
 
 	reset();
 }
@@ -104,8 +105,8 @@ void Perk::onPlayerDied()
 
 void Perk::onMonsterDied(Monster* monster)
 {
-	if (scriptTable["onMonsterDied"])
+	if (onMonsterDiedFunc)
 	{
-		scriptTable["onMonsterDied"](monster);
+		onMonsterDiedFunc(monster);
 	}
 }

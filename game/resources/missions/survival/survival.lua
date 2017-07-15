@@ -1,12 +1,23 @@
 
-function addRandomMonster()
+function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, levelReduce)
     local m = "Alien"
     local min = missionTime / 60.0 +  math.random() * 1.5 + Survival.extraMin
+	
+	if levelReduce ~= nil then
+		min = min - levelReduce
+	end
+	
     if math.random() < 0.1 + clamp(min * 0.5) * 0.2 then
         m = "Spider"
+    elseif math.random() < 0.02 + clamp(min * 0.5) * 0.01 then
+        m = "Egg"
     end
+	
+	if forceType ~= nil then
+		m = forceType
+	end
     local monster = addMonster(m)
-    monster.data.randomMove = (math.random() > (0.05 + clamp(min * 0.2) * 0.5))
+    monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
     monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
@@ -18,21 +29,26 @@ function addRandomMonster()
 	
 	monster.experienceMultiplier = math.random() * 0.4 + 0.8
 	
+	if monster.data.spawnInterval ~= nil then
+		monster.data.spawnInterval = monster.data.spawnInterval - clamp(min/10)
+	end
+	
 	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
 	
 	monster.experienceMultiplier = 0.9 + math.random() * 0.2
 	monster.scoreMultiplier = 0.9 + math.random() * 0.2
 	
-	if Survival.lastBossSpawn + 35.0 - clamp(min/7) * 15 < missionTime then
+	if cannotBecomeBoss ~= true and monster.data.cannotBecomeBoss ~= true and Survival.lastBossSpawn + 30.0 - clamp(min/7) * 15 < missionTime then
 		Survival.lastBossSpawn = missionTime
 		makeBoss(monster)
-	elseif monster.data.shootsBullets == false and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
+	elseif cannotShootBullets ~= true and monster.data.cannotShootBullets ~= true and monster.data.shootsBullets == false and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
 		monster.data.shootsBullets = true
 		monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.3))
 		monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.4))
 		monster.data.bulletRate = monster.data.bulletRate - clamp(min * 0.1) * 2.0
 		monster.data.bulletRandom = monster.data.bulletRandom - clamp(min * 0.15) * 0.2
 		monster.colorMultiplier:addBuff(Vec4.new(0.8, 0.95, 0.8, 1.0))
+		monster:modifyDrawLevel(1)
 	else
 		local r = 0.9 + 0.1 * math.random()
 		local g = 0.9 + 0.1 * math.random()
@@ -65,6 +81,7 @@ function makeBoss(monster)
 	
 	monster.experienceMultiplier = 5.0 + math.random() * 2.0
 	monster.scoreMultiplier = 5.0 + math.random() * 2.0
+	monster:modifyDrawLevel(3)
 	local t = math.random(11)
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
@@ -277,10 +294,10 @@ function Survival.init()
 	Survival.lastBossSpawn = -500
 	local spawn
 	if DEBUG then
-		Survival.maxMonster = 10
+		Survival.maxMonster = 20
 		spawn = 10
 	else
-		Survival.maxMonster = 550
+		Survival.maxMonster = 650
 		spawn = 50
 	end
 	
@@ -350,7 +367,8 @@ function Survival.onTick()
     local min = missionTime / 60.0
 	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.15)))
 	
-    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - Survival.ignoreMonsterCount < curMaxMonster and getMonsterCount() < Survival.maxMonster and player.isDead == false then
+    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - Survival.ignoreMonsterCount < curMaxMonster 
+	and getMonsterCount() < Survival.maxMonster and player.isDead == false then
         Survival.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
