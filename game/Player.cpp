@@ -9,6 +9,7 @@
 #include "cTextRenderable.h"
 #include "cAnimatedRenderable.h"
 #include "DirentHelper.h"
+#include "BloodworksControls.h"
 
 #include <sstream>
 

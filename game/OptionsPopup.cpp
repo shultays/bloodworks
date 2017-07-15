@@ -11,6 +11,7 @@
 #include "cSlider.h"
 #include "cPersistent.h"
 #include "cKeyMapButton.h"
+#include "BloodworksControls.h"
 
 OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 {

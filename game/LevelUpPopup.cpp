@@ -10,6 +10,7 @@
 #include "Perk.h"
 #include "MissionController.h"
 #include "Bloodworks.h"
+#include "BloodworksControls.h"
 #include <sstream>
 
 LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)

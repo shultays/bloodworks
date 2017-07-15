@@ -5,6 +5,8 @@
 #include "cMath.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "cAnimatedRenderable.h"
+#include "MonsterTemplate.h"
 
 
 MonsterController::MonsterController(Bloodworks *bloodworks)
@@ -298,7 +300,7 @@ Monster* MonsterController::getMonster(int id) const
 	return element == monstersMap.end() ? nullptr : element->second;
 }
 
-void MonsterController::addMonsterTemplate(nlohmann::json &j)
+void MonsterController::addMonsterTemplate(nlohmann::json& j)
 {
 	MonsterTemplate *t = new MonsterTemplate(j);
 	monsterTemplates[t->getName()] = t;

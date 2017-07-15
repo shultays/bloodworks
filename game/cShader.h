@@ -1,12 +1,10 @@
 #pragma once
 
-
 #include "cTools.h"
 #include <string>
 #include <unordered_map>
 #include <iostream>
 #include <GL/glew.h>
-
 
 enum {
 	TypeFloat,

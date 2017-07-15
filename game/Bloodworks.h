@@ -3,7 +3,6 @@
 #include "cGame.h"
 #include "cResources.h"
 #include "cSound.h"
-#include "BloodworksControls.h"
 
 enum Depths
 {

@@ -190,6 +190,8 @@
     <ClCompile Include="cKeyMapButton.cpp" />
     <ClCompile Include="cLuaWorld.cpp" />
     <ClCompile Include="cMath.cpp" />
+    <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cPostProcess.cpp" />
     <ClCompile Include="MonsterTemplate.cpp" />
     <ClCompile Include="Coral.cpp" />
     <ClCompile Include="cGame.cpp" />
@@ -219,6 +221,7 @@
     <ClCompile Include="MissionController.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterController.cpp" />
+    <ClCompile Include="OneShotSoundManager.cpp" />
     <ClCompile Include="OptionsPopup.cpp" />
     <ClCompile Include="Perk.cpp" />
     <ClCompile Include="Player.cpp" />

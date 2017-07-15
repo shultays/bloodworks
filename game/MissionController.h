@@ -43,7 +43,7 @@ public:
 	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);
-	void addMission(nlohmann::json &j);
+	void addMission(nlohmann::json& j);
 
 	void loadMission(const std::string& name);
 	void reset();

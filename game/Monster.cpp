@@ -15,6 +15,8 @@
 #include "Bullet.h"
 #include "cSound.h"
 #include "cParticle.h"
+#include "BloodworksControls.h"
+#include "MonsterTemplate.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
