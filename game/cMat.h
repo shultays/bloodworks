@@ -86,7 +86,7 @@ public:
 		_33 = 1.0f;
 	}
 
-	bool isIdentity() 
+	bool isIdentity() const
 	{
 		return
 			_00 == 1.0f &&
@@ -335,7 +335,7 @@ public:
 	}
 
 
-	Mat4 transpose() 
+	Mat4 transpose() const
 	{
 		Mat4 mat;
 		for (int i = 0; i < 4; i++) 
@@ -349,7 +349,7 @@ public:
 	}
 
 
-	bool operator==(const Mat4& other) 
+	bool operator==(const Mat4& other) const
 	{
 		bool ret = true;
 		for (int i = 0; i < 4 * 4 && ret; ++i)
@@ -412,7 +412,7 @@ public:
 		_33 = other._33;
 	}
 
-	Vec4 operator*(const Vec4 &v) 
+	Vec4 operator*(const Vec4 &v) const
 	{
 		Vec4 result;
 
@@ -819,7 +819,7 @@ public:
 		return m;
 	}
 
-	bool operator==(const Mat3& other) 
+	bool operator==(const Mat3& other) const
 	{
 		bool ret = true;
 		for (int i = 0; i < 4 * 4 && ret; ++i)
@@ -849,7 +849,8 @@ public:
 	}
 
 
-	Mat3 &Mat3::operator *= (const Mat3 &other) {
+	Mat3 &Mat3::operator *= (const Mat3 &other) 
+	{
 		return *this = *this * other;
 	}
 
@@ -868,7 +869,7 @@ public:
 	}
 
 
-	Vec3 operator*(const Vec3 &v) 
+	Vec3 operator*(const Vec3 &v) const
 	{
 		Vec3 result;
 
@@ -1007,7 +1008,7 @@ public:
 	}
 
 
-	Mat2 transpose() 
+	Mat2 transpose() const
 	{
 		Mat2 mat;
 		for (int i = 0; i < 2; i++) 
@@ -1021,7 +1022,7 @@ public:
 	}
 
 
-	bool operator==(const Mat2& other) 
+	bool operator==(const Mat2& other) const
 	{
 		bool ret = true;
 		for (int i = 0; i < 4 * 4 && ret; ++i)
@@ -1060,7 +1061,7 @@ public:
 	}
 
 
-	Vec3 operator*(const Vec3 &v) 
+	Vec3 operator*(const Vec3 &v) const
 	{
 		Vec3 result;
 

@@ -237,7 +237,7 @@ void Bloodworks::init()
 	optionsPopup = new OptionsPopup(this);
 
 
-	const bool testMenu = true;
+	const bool testMenu = false;
 	if (coral.isDebuggerPresent() && testMenu == false)
 	{
 		globalVolume = 0.0f;

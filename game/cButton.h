@@ -11,7 +11,7 @@ class cButton : public cRenderableGroup
 	bool down;
 	bool prevDown;
 
-	Vec2 beginRange;
+	Vec2 beginRange; // todo change rect
 	Vec2 endRange;
 
 	Vec2 hoverShift;
@@ -30,8 +30,9 @@ class cButton : public cRenderableGroup
 	cSoundSampleShr hoverSound;
 
 	int enforceHovering;
-public:
 
+	Rect lastRenderCrop;
+public:
 	enum
 	{
 		no_enforce,
@@ -54,7 +55,10 @@ public:
 		hoverTime = 0.0f;
 		hoverSpeed = 1.0f;
 		enforceHovering = no_enforce;
+		lastRenderCrop = Rect::invalid();
 	}
+
+	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 
 	void setEnforcedHovering(int enforceHovering)
 	{
@@ -67,7 +71,7 @@ public:
 		this->endRange = endRange;
 	}
 
-	void check(const Vec2& mousePos);
+	void check(const Vec2& mousePos, bool ignoreClick = false);
 
 	bool isDown() const
 	{

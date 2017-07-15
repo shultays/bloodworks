@@ -10,10 +10,11 @@ uniform vec4 uCrop;
 
 varying vec4 vColor;
 varying vec2 vVertexUV;
+varying vec3 worldPos;
 
 void main(void) 
 {
-	vec3 worldPos = uWorldMatrix * vec3(aVertexPosition, 1.0);
+	worldPos = uWorldMatrix * vec3(aVertexPosition, 1.0);
 	vec3 viewPos = uViewMatrix * worldPos;
 	gl_Position = vec4(viewPos.x, viewPos.y, 0.0, 1.0);
 
