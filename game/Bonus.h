@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-#include "cGlobals.h"
-
+#include "cTools.h"
 #include "json.h"
 
 class Bonus

@@ -2,7 +2,7 @@
 #include "cGlobals.h"
 #include "json.h"
 
-MonsterTemplate::MonsterTemplate(nlohmann::json &j)
+MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 {
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());

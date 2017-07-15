@@ -2,9 +2,8 @@
 
 #include <vector>
 
-#include "cGlobals.h"
 #include "json.h"
-#include "cTools.h"
+#include "sol.h"
 
 class Gun;
 class Bullet;
@@ -27,37 +26,7 @@ class Perk
 	sol::function onPlayerDamagedFunc;
 	sol::function onReloadFunc;
 public:
-	Perk(nlohmann::json& j)
-	{
-		name = j["name"].get<std::string>();
-		description = j["description"].get<std::string>();
-		iconPath = j["iconFile"].get<std::string>();
-		scriptName = j["scriptName"].get<std::string>();
-
-		if (j.count("maxLevel"))
-		{
-			maxLevel = j["maxLevel"].get<int>();
-		}
-		else
-		{
-			maxLevel = 1;
-		}
-
-		hideLevelText = j.count("hideLevelText") > 0;
-
-		level = 0;
-		scriptTable = lua[scriptName] = lua.create_table();
-
-		std::string scriptPath = j["scriptFile"].get<std::string>();
-		lua.script_file(scriptPath);
-
-		onAddGunBulletFunc = scriptTable["onAddGunBullet"];
-		onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
-		onTickFunc = scriptTable["onTick"];
-		onReloadFunc = scriptTable["onReload"];
-
-		reset();
-	}
+	Perk(nlohmann::json& j);
 
 	void takeLevel();
 

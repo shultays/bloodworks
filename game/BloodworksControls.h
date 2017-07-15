@@ -3,8 +3,6 @@
 #ifndef BloodworksControls_h__
 #define BloodworksControls_h__
 
-
-#include "cInput.h"
 #include "KeyMapper.h"
 
 enum class GameKey : MappedKey

@@ -5,13 +5,13 @@ class Bloodworks;
 #include "cMat.h"
 #include "cVec.h"
 #include "cLuaWorld.h"
-#include "cAnimatedRenderable.h"
-#include "MonsterTemplate.h"
 #include "BuffFloat.h"
 
 class Gun;
 class Bullet;
 class cParticle;
+class MonsterTemplate;
+class cAnimatedTexturedQuadRenderable;
 
 class Monster
 {

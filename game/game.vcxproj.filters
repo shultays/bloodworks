@@ -171,6 +171,15 @@
     <ClCompile Include="MonsterTemplate.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="OneShotSoundManager.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
+    <ClCompile Include="cParticle.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="cPostProcess.cpp">
+      <Filter>Coral\Renderable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -278,9 +287,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cParticle.h">
-      <Filter>Coral</Filter>
-    </ClInclude>
     <ClInclude Include="Perk.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
@@ -313,9 +319,6 @@
     </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Bloodworks</Filter>
-    </ClInclude>
-    <ClInclude Include="cPostProcess.h">
-      <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="cSoundManager.h">
       <Filter>Coral</Filter>
@@ -372,6 +375,12 @@
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
     <ClInclude Include="cTextRenderable.h">
+      <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cParticle.h">
+      <Filter>Coral\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="cPostProcess.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
   </ItemGroup>
