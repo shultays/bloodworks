@@ -2,6 +2,7 @@
 
 #include "cTools.h"
 #include "cGlobals.h"
+#include "json.h"
 
 Bonus::Bonus(nlohmann::json& j)
 {

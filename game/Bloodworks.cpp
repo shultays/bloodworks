@@ -28,6 +28,7 @@
 #include "cPersistent.h"
 #include "BloodworksControls.h"
 #include "cTexturedQuadRenderable.h"
+#include "cTexturedQuadRenderable.h"
 
 #include <sstream>
 

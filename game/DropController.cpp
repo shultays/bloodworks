@@ -10,6 +10,7 @@
 #include "Bonus.h"
 #include "Monster.h"
 #include "Gun.h"
+#include "BloodworksControls.h"
 
 DropController::~DropController()
 {

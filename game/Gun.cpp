@@ -9,6 +9,7 @@
 #include "LaserRenderable.h"
 #include "cSound.h"
 #include "Monster.h"
+#include "BloodworksControls.h"
 
 Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 {

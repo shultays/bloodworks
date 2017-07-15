@@ -7,6 +7,7 @@
 #include "cSound.h"
 #include "cTexturedQuadRenderable.h"
 #include "cTextRenderable.h"
+#include "BloodworksControls.h"
 
 MainMenu::MainMenu(Bloodworks *b)
 {
