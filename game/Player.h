@@ -1,7 +1,6 @@
 #pragma once
 
-#include "cMat.h"
-#include "cVec.h"
+#include "cTools.h"
 #include "sol.h"
 #include "cResources.h"
 #include "BuffFloat.h"
@@ -10,7 +9,7 @@ class Bloodworks;
 class Gun;
 class cTextRenderable;
 class cRenderable;
-class cRenderableGroup;
+class cRenderableContainer;
 class cAnimatedTexturedQuadRenderable;
 class cRenderableWithShader;
 
@@ -25,7 +24,7 @@ class Player
 	float moveSpeed;
 
 	Bloodworks *bloodworks;
-	cRenderableGroup *renderable;
+	cRenderableContainer *renderable;
 	cRenderable *crosshair;
 	cRenderableWithShader *ammo;
 	cRenderable *spread;
@@ -41,8 +40,8 @@ class Player
 	float oldSpreadAngle;
 	int hitPoints;
 	int maxHitPoints;
-	cTextRenderable *healthRenderable;
 
+	cTextRenderable *healthRenderable;
 	cAnimatedTexturedQuadRenderable *shootRenderable;
 
 	BuffFloat maxSpeed;

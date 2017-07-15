@@ -2,6 +2,8 @@
 #include "cTexture.h"
 #include "Bloodworks.h"
 #include "cShader.h"
+#include "cTexturedQuadRenderable.h"
+#include "cGlobals.h"
 #include <sstream>
 
 #define blood_size 2048

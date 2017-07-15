@@ -6,7 +6,7 @@
 
 class Bloodworks;
 class cRenderable;
-class cRenderableGroup;
+class cRenderableContainer;
 
 class GameObject
 {
@@ -47,7 +47,7 @@ class GameObject
 	std::string script;
 	sol::table data;
 
-	cRenderableGroup *renderableGroup;
+	cRenderableContainer *renderableGroup;
 	std::vector<RenderableData> renderables;
 	int level;
 

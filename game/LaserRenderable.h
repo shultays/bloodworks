@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cShader.h"
-#include "cRenderable.h"
+#include "cRenderableWithShader.h"
 #include "json.h"
 
 class Bloodworks;
@@ -33,9 +33,10 @@ class LaserTemplate
 	cShader::Uniform width3;
 	cShader::Uniform laserWidth;
 
+	cGame *game;
 public:
 	void render(float laserLength);
-	LaserTemplate(nlohmann::json& j);
+	LaserTemplate(cGame *game, nlohmann::json& j);
 	~LaserTemplate();
 	const std::string& getName() const;
 };

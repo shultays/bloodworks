@@ -1,8 +1,11 @@
 #include "cKeyMapButton.h"
 #include "cButton.h"
 #include "cFont.h"
+#include "cTextRenderable.h"
+#include "cTexturedQuadRenderable.h"
+#include "cTexture.h"
 
-cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableGroup(game)
+cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableContainer(game)
 {
 	bgButton = new cButton(game);
 	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(game, "resources/ui/slider_bg.png", "resources/default");

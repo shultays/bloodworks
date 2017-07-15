@@ -6,13 +6,8 @@
 #include "sol.h"
 #include "cResources.h"
 
-
 class cSoundManager;
 class Wav;
-
-namespace SoLoud {
-	class Wav;
-}
 
 class cSoundHandle
 {
@@ -44,6 +39,10 @@ public:
 	}
 
 };
+namespace SoLoud {
+	class Wav;
+}
+
 /*
 class cSoundHandleGroup : public cSoundHandle
 {

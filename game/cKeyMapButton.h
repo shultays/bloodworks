@@ -1,11 +1,13 @@
 #pragma once
 
-#include "cRenderable.h"
+#include "cRenderableContainer.h"
 
 class cButton;
 class cTextRenderable;
+enum Key;
+typedef int MappedKey;
 
-class cKeyMapButton : public cRenderableGroup
+class cKeyMapButton : public cRenderableContainer
 {
 	cButton *bgButton;
 	cTextRenderable *text;
