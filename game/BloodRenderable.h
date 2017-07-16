@@ -25,10 +25,10 @@ class BloodRenderable : public cRenderable
 		Vec2 size;
 		float rotation;
 		Vec2 moveSpeed;
-		Vec2 rotatePoint;
 		float time;
 		float rotateSpeed;
 		bool addedBlood;
+		bool toBeRemove;
 	};
 
 	std::vector<BodyPartData> bodyParts;
@@ -46,7 +46,7 @@ public:
 	~BloodRenderable();
 	void init();
 	void addBlood(const Vec2& pos, const Vec2& moveSpeed, float size = 17.5f);
-	void addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& rotatePoint, const Vec2& blowDir);
+	void addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& blowDir);
 
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 	void tick();

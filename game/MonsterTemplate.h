@@ -37,6 +37,8 @@ class MonsterTemplate
 
 	std::vector<cSoundSampleShr> hitSounds;
 	std::vector<cSoundSampleShr> killSounds;
+
+	float bitSpeed;
 public:
 	MonsterTemplate(){}
 	MonsterTemplate(nlohmann::json& j);

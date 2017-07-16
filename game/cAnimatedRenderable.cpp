@@ -36,6 +36,11 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, c
 	}
 }
 
+const IntVec2& cAnimatedTexturedQuadRenderable::getTextureSize() const
+{
+	return animations[0].frames[0].texture->getDimensions();
+}
+
 cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData)
 {
 	bool looped = false;

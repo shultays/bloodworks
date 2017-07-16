@@ -13,7 +13,7 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 	bulletRadius = j["bulletRadius"].get<float>();
 	collisionRadius = j["collisionRadius"].get<float>();
 
-	if (j["hasBlood"])
+	if (j.count("hasBlood"))
 	{
 		hasBlood = j["hasBlood"].get<bool>();
 	}
@@ -34,6 +34,14 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 	scriptPath = j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 
+	if (j.count("bitSpeed"))
+	{
+		bitSpeed = j["bitSpeed"].get<float>();
+	}
+	else
+	{
+		bitSpeed = 1.0f;
+	}
 	auto& parts = j["bodyParts"];
 
 	for (nlohmann::json::iterator it = parts.begin(); it != parts.end(); ++it)
