@@ -46,6 +46,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	renderable->addAnimation(monsterTemplate->animationData);
 	bloodworks->addRenderable(renderable, MONSTERS);
 
+	setScale(1.0f);
+
 	renderable->setDefaultAnimation(renderable->getAnimationIndex("stand"));
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
@@ -79,6 +81,8 @@ void Monster::setScale(float scale)
 	textureShift = monsterTemplate->textureShift * scale;
 	bulletRadius = monsterTemplate->bulletRadius * scale;
 	collisionRadius = monsterTemplate->collisionRadius * scale;
+	Vec2 originalSize = renderable->getTextureSize().toVec();
+	partScale = (textureSize / originalSize);
 }
 
 Monster::~Monster()
@@ -340,7 +344,7 @@ void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits
 
 	for (int i = 0; i < bitCount; i++)
 	{
-		Vec2 dir = Vec2::fromAngle(blowDir.toAngle() - 0.1f + 0.2f * randFloat());
+		Vec2 dir = Vec2::fromAngle(blowDir.toAngle() - 0.2f + 0.4f * randFloat());
 		float r = randFloat() * 0.5f + 0.5f;
 		r = sqrtf(r);
 		int t = randInt((int)monsterTemplate->bodyPartBits.size());
@@ -351,10 +355,9 @@ void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits
 		partRenderable->setWorldMatrix(mat);
 		bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
 			position + dir * r * collisionRadius * 2.0f,
-			s->getDimensions().toVec() * scale * randFloat(0.5f, 1.0f),
+			s->getDimensions().toVec() * partScale * randFloat(0.7f, 1.2f),
 			randFloat(0.0f, pi_2),
-			Vec2::zero(),
-			blowDir * 4.0f);
+			blowDir * 4.0f * monsterTemplate->bitSpeed);
 	}
 }
 
@@ -377,7 +380,7 @@ void Monster::killSelf(const Vec2& blowDir)
 
 	std::vector<int> parts;
 	int maxCount = (int)monsterTemplate->bodyParts.size();
-	int partCount = randInt(2, maxCount - 2);
+	int partCount = randInt(2, maxCount - 2) + 50;
 	if (partCount > maxCount)
 	{
 		partCount = maxCount;
@@ -411,10 +414,9 @@ void Monster::killSelf(const Vec2& blowDir)
 			Mat3 mat = renderable->getWorldMatrix();
 			partRenderable->setWorldMatrix(mat);
 			bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
-				position - (monsterTemplate->bodyParts[i].shift * scale) * Mat2::rotation(moveAngle - pi_d2),
-				textureSize,
+				position + monsterTemplate->bodyParts[i].shift * partScale * Mat2::rotation(moveAngle),
+				monsterTemplate->bodyParts[i].texture->getDimensions().toVec() * partScale,
 				moveAngle - pi_d2,
-				textureShift + monsterTemplate->bodyParts[i].shift * scale,
 				blowDir * 2.0f);
 		}
 	}

@@ -12,7 +12,9 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     elseif math.random() < 0.02 + clamp(min * 0.5) * 0.01 then
         m = "Egg"
     end
-	
+
+	m = "Egg"
+		
 	if forceType ~= nil then
 		m = forceType
 	end

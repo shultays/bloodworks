@@ -30,6 +30,7 @@ class Monster
 	float moveAngle;
 	Vec2 moveDir;
 
+	Vec2 partScale;
 	Vec2 textureSize;
 	Vec2 textureShift;
 	int hitPoint;
