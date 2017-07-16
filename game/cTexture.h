@@ -44,6 +44,7 @@ public:
 
 		printf("loading %s\n", name.c_str());
 	}
+
 	~cTexture()
 	{
 
@@ -53,6 +54,7 @@ public:
 			glDeleteTextures(1, &gTexture);
 		}
 	}
+
 	void bindTexture() const
 	{
 		glBindTexture(GL_TEXTURE_2D, gTexture);
@@ -63,7 +65,7 @@ public:
 		return name;
 	}
 
-	const IntVec2 getDimensions()
+	const IntVec2& getDimensions() const
 	{
 		return dimensions;
 	}

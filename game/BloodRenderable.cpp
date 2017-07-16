@@ -60,15 +60,14 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
 		auto& bodyPart = bodyParts[i];
-		if (bodyPart.renderable->isVisible() == false)
+		if (bodyPart.toBeRemove)
 		{
 			continue;
 		}
 		float t = (timer.getRenderTime() - bodyPart.time) * 5.0f;
-		bool remove = false;
 		if (t >= 2.1)
 		{
-			remove = true;
+			bodyPart.toBeRemove = true;
 		}
 		if (t >= 1.0f)
 		{
@@ -80,12 +79,13 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 			}
 		}
 
-		Mat3 frame = Mat3::scaleMatrix(bodyPart.size).
-			translateBy(bodyPart.rotatePoint).rotateBy(bodyPart.rotation + t * bodyPart.rotateSpeed).
-			translateBy(bodyPart.pos + bodyPart.moveSpeed * t);
+		float rotateAngle = bodyPart.rotation + t * bodyPart.rotateSpeed;
+		Mat3 frame = Mat3::scaleMatrix(bodyPart.size * 1.0f)
+			.rotateBy(rotateAngle)
+			.translateBy(bodyPart.pos + bodyPart.moveSpeed * t);
 		bodyPart.renderable->setWorldMatrix(frame);
 
-		if (remove)
+		if (bodyPart.toBeRemove)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			cShaderShr shader = defaultShader;
@@ -154,12 +154,21 @@ void BloodRenderable::tick()
 	}
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
-		if (bodyParts[i].renderable->isVisible() == false)
+		if (bodyParts[i].toBeRemove)
 		{
-			SAFE_DELETE(bodyParts[i].renderable);
-			bodyParts[i] = bodyParts[bodyParts.size() - 1];
-			bodyParts.resize(bodyParts.size() - 1);
-			i--;
+			Vec4 c = bodyParts[i].renderable->getColor();
+			c.a -= timer.getDt() * 4.0f;
+			if (c.a < 0.0f)
+			{
+				SAFE_DELETE(bodyParts[i].renderable);
+				bodyParts[i] = bodyParts[bodyParts.size() - 1];
+				bodyParts.resize(bodyParts.size() - 1);
+				i--;
+			}
+			else
+			{
+				bodyParts[i].renderable->setColor(c);
+			}
 		}
 	}
 }
@@ -260,7 +269,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	bloods.push_back(data);
 }
 
-void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& rotatePoint, const Vec2& blowDir)
+void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& blowDir)
 {
 	BodyPartData bodyPartData;
 	bodyPartData.renderable = partRenderable;
@@ -270,8 +279,8 @@ void BloodRenderable::addBodyPart(cRenderable *partRenderable, const Vec2& pos, 
 	bodyPartData.moveSpeed = blowDir * Mat2::rotation(randFloat(-0.9f, 0.9f)) * randFloat(0.7f, 1.5f);
 	bodyPartData.time = timer.getTime();
 	bodyPartData.rotateSpeed = randFloat(1.4f, 2.2f);
-	bodyPartData.rotatePoint = rotatePoint;
 	bodyPartData.addedBlood = false;
+	bodyPartData.toBeRemove = false;
 	if (randBool())
 	{
 		bodyPartData.rotateSpeed = -bodyPartData.rotateSpeed;

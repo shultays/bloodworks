@@ -61,14 +61,14 @@
   "scriptName" : "Alien",
   
   "bodyParts" : [
-	"resources/monsters/alien/art/head.png", 
-	["resources/monsters/alien/art/arm1.png", 15.0, 6.0],
-	["resources/monsters/alien/art/arm2.png", -15.0, 6.0],
-	["resources/monsters/alien/art/part1.png", 13.0, -3.0],
-	["resources/monsters/alien/art/part2.png", -15.0, 6.0],
-	["resources/monsters/alien/art/part3.png", -5.0, -4.0],
-	["resources/monsters/alien/art/part4.png", 13.0, 9.0],
-	["resources/monsters/alien/art/part5.png", -14.0, 7.0]
+	"resources/monsters/alien/art/head.png",
+	["resources/monsters/alien/art/arm1.png", 8.0, -30],
+	["resources/monsters/alien/art/arm2.png", 8.0, 30],
+	["resources/monsters/alien/art/part1.png", -4, -24],
+	["resources/monsters/alien/art/part2.png", -3, 21],
+	["resources/monsters/alien/art/part3.png", -13.0, 6.0],
+	["resources/monsters/alien/art/part4.png", 23.0, -29.0],
+	["resources/monsters/alien/art/part5.png", 18.0, 26.0]
   ],
   
   "bodyPartBits" : [
