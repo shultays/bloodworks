@@ -159,6 +159,8 @@ public:
 		}
 	}
 
+	const IntVec2& getTextureSize() const;
+
 	AnimationData& addAnimation(const std::string& name, bool looping = false)
 	{
 		AnimationData animationData;

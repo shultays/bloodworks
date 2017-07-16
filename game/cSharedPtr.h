@@ -168,12 +168,12 @@ public:
 		return *this;
 	}
 
-	T* operator->() 
+	T* operator->() const
 	{
 		return object;
 	}
 
-	T* getObject() 
+	T* getObject() const
 	{
 		return object;
 	}

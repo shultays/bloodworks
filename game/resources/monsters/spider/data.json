@@ -58,12 +58,13 @@
   "scriptName" : "Spider",
   
   "bodyParts" : [
-	["resources/monsters/spider/art/part0.png", 0.0, 8.0],
-	["resources/monsters/spider/art/part1.png", -10.0, -2.0],
-	["resources/monsters/spider/art/part2.png", 9.0, 2.0],
-	["resources/monsters/spider/art/part3.png", 12.0, -7.0],
-	["resources/monsters/spider/art/part4.png", -2.0, -7.0],
-	["resources/monsters/spider/art/part5.png", 0.0, 0.0]
+	["resources/monsters/spider/art/part0.png", 17.0, 0.0],
+	["resources/monsters/spider/art/part1.png", 5.0, 19.5],
+	["resources/monsters/spider/art/part2.png", 5.0, -16.5],
+	["resources/monsters/spider/art/part3.png", -13.0, -18.0],
+	["resources/monsters/spider/art/part4.png", -12.5, 4.5],
+	["resources/monsters/spider/art/part5.png", -4.5, 0.0],
+	["resources/monsters/spider/art/part6.png", -4.0, 17.5]
   ],
   
   "bodyPartBits" : [
