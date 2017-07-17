@@ -121,8 +121,8 @@ void Coral::initFrameBuffers()
 {
 	if (tempFrameBuffer[0] != -1)
 	{
-		glDeleteBuffers(2, tempFrameBuffer);
 		glDeleteTextures(2, tempFrameBufferTexture);
+		glDeleteFramebuffers(2, tempFrameBuffer);
 	}
 
 	glGenFramebuffers(2, tempFrameBuffer);
