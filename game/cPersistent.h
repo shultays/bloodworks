@@ -47,6 +47,13 @@ class cPersistent
 	Data& clearData(Data& data);
 	Data& getEmptyData(const std::string& name);
 
+	void setValue(Data& data, bool value)
+	{
+		data.intValue = value ? 1 : 0;
+		data.type = TypeInt;
+		isDirty = true;
+	}
+
 	void setValue(Data& data, int value)
 	{
 		data.intValue = value;
@@ -160,6 +167,12 @@ public:
 		return getInt(index);
 	}
 
+	bool getBool(const std::string& name, bool defaultValue = false)
+	{
+		int index = setDataIfNotExistIndex(name, defaultValue);
+		return getBool(index);
+	}
+
 	float getFloat(const std::string& name, float defaultValue = 0.0f)
 	{
 		int index = setDataIfNotExistIndex(name, defaultValue);
@@ -211,6 +224,16 @@ public:
 	int getIndex(const std::string& name, const std::string& defaultValue)
 	{
 		return setDataIfNotExistIndex(name, defaultValue);
+	}
+
+	bool getBool(int index)
+	{
+		Data& data = persistentData[index];
+		if (data.type == TypeFloat)
+		{
+			return data.floatValue != 0.0f;
+		}
+		return data.intValue != 0;
 	}
 
 	int getInt(int index)

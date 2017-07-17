@@ -1,10 +1,10 @@
-#config
+
 gore            1
 screen_shake    1
 lock_crosshair  1
 auto_open_perk_popup 1
-sensitivity     22
-full_screen     1
-vsync           1
-volume          18
-music_volume    34
+sensitivity     48
+full_screen     0
+vsync           0
+volume          50
+music_volume    50

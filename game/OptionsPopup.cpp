@@ -75,7 +75,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gore->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
 	gameplayGroup->addRenderable(gore);
 
-	gore->setChecked(config->getInt("gore", 1) != 0);
+	gore->setChecked(config->getBool("gore", true) != 0);
 	y -= rowShift;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize);
@@ -89,7 +89,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	screenShake->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	screenShake->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	screenShake->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	screenShake->setChecked(config->getInt("screen_shake", 1) != 0);
+	screenShake->setChecked(config->getBool("screen_shake", true) != 0);
 	gameplayGroup->addRenderable(screenShake);
 
 	y -= rowShift;
@@ -105,7 +105,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	lockCrosshair->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	lockCrosshair->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	lockCrosshair->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	lockCrosshair->setChecked(config->getInt("lock_crosshair", 1) != 0);
+	lockCrosshair->setChecked(config->getBool("lock_crosshair", true) != 0);
 	gameplayGroup->addRenderable(lockCrosshair);
 
 	y -= rowShift;
@@ -121,7 +121,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	autoLevelUp->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	autoLevelUp->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	autoLevelUp->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	autoLevelUp->setChecked(config->getInt("auto_open_perk_popup", 1) != 0);
+	autoLevelUp->setChecked(config->getBool("auto_open_perk_popup", true) != 0);
 	gameplayGroup->addRenderable(autoLevelUp);
 
 
@@ -225,7 +225,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	fullScreen->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	fullScreen->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	fullScreen->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	fullScreen->setChecked(config->getInt("full_screen", 0) != 0);
+	fullScreen->setChecked(config->getBool("full_screen", false));
 	audioVideoGroup->addRenderable(fullScreen);
 
 	y -= rowShift;
@@ -241,7 +241,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	vsync->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	vsync->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	vsync->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	vsync->setChecked(config->getInt("vsync", 0) != 0);
+	vsync->setChecked(config->getBool("vsync", false));
 	audioVideoGroup->addRenderable(vsync);
 
 	y -= rowShift * 1.5f;
@@ -356,6 +356,7 @@ void OptionsPopup::tick()
 		gore->check(input.getMousePos());
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
+		autoLevelUp->check(input.getMousePos());
 
 		if (gore->isChanged())
 		{
@@ -368,6 +369,10 @@ void OptionsPopup::tick()
 		if (lockCrosshair->isChanged())
 		{
 			config->set("lock_crosshair", lockCrosshair->isChecked() ? 1 : 0);
+		}
+		if (autoLevelUp->isChanged())
+		{
+			config->set("auto_open_perk_popup", autoLevelUp->isChecked() ? 1 : 0);
 		}
 	}
 
@@ -419,6 +424,7 @@ void OptionsPopup::tick()
 		if (fullScreen->isChanged())
 		{
 			config->set("full_screen", fullScreen->isChecked() ? 1 : 0);
+			coral.setFullScreen(fullScreen->isChecked());
 		}
 
 		if (vsync->isChanged())

@@ -302,12 +302,11 @@ void LevelUpPopup::tick()
 		input.hideMouse();
 		bloodworks->doUnpause();
 		levelupGroup->setVisible(false);
-		levelUpText->setVisible(true);
-		levelUpShowTime = 0.0f;
 		for (auto& t : levelupPerksRenderables)
 		{
 			t->setVisible(false);
 		}
+		showLevelUpText();
 	}
 }
 
@@ -327,4 +326,12 @@ void LevelUpPopup::clearPerks()
 		SAFE_DELETE(t);
 	}
 	levelupPerksRenderables.clear();
+}
+
+void LevelUpPopup::showLevelUpText()
+{
+	levelUpSound->play();
+	levelUpText->setVisible(true);
+	levelUpShowTime = 1.0f;
+	waitingLevels++;
 }
