@@ -279,6 +279,10 @@ void Player::tick()
 	}
 
 	pos = pos + moveAmount;
+
+	float sensitivityMult = bloodworks->getConfig()->getInt("sensitivity", 50) / 50.0f;
+	sensitivityMult = 0.5f * sensitivityMult * sensitivityMult + 0.5f;
+
 	bool joystickUsed = false;
 	if (input.hasJoyStick())
 	{
@@ -304,21 +308,31 @@ void Player::tick()
 			clamp(length, 0.0f, 1.0f);
 			crosshairPos = lerp(crosshairPos, joystick * min(300.0f, gun->getMaxCrosshairDistance()) * length, timer.getDt() * 10);
 		}
-
 	}
 
 	if (joystickUsed == false)
 	{
 		if (bloodworks->isPaused() == false)
 		{
-			crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown();
+			crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown() * sensitivityMult;
 		}
 
-		float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
-		float lengthSquared = crosshairPos.lengthSquared();
-		if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
+		if (bloodworks->getConfig()->getBool("lock_crosshair", true))
 		{
-			crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
+			float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
+			float lengthSquared = crosshairPos.lengthSquared();
+			if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
+			{
+				crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
+			}
+		}
+		else
+		{
+			Vec2 shift = bloodworks->getCameraPos() - pos;
+			Vec2 screenMin = shift - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 40.0f;
+			Vec2 screenMax = shift + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 40.0f;
+			clamp(crosshairPos.x, screenMin.x, screenMax.x);
+			clamp(crosshairPos.y, screenMin.y, screenMax.y);
 		}
 	}
 	
@@ -552,7 +566,7 @@ void Player::doLevelup()
 {
 	level++;
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
-	bloodworks->openLevelupPopup();
+	bloodworks->onLevelUp();
 	updateExperience();
 }
 

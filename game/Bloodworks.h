@@ -244,4 +244,5 @@ public:
 		orphanParticles.push_back(particle);
 	}
 	bool isOptionsVisible() const;
+	void onLevelUp();
 };

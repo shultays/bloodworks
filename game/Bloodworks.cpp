@@ -252,6 +252,7 @@ void Bloodworks::init()
 		{
 			coral.setFullScreen(true);
 		}
+		coral.setFullScreen(config->getBool("full_screen", false) == 1);
 		mainMenu->setVisible(true);
 		showFps = false;
 	}
@@ -648,6 +649,18 @@ void Bloodworks::showOptions()
 bool Bloodworks::isOptionsVisible() const
 {
 	return optionsPopup->isVisible();
+}
+
+void Bloodworks::onLevelUp()
+{
+	if (config->getBool("auto_open_perk_popup", true))
+	{
+		openLevelupPopup();
+	}
+	else
+	{
+		levelUpPopup->showLevelUpText();
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()

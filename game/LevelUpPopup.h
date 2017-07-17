@@ -30,6 +30,7 @@ class LevelUpPopup
 
 	cTextRenderable *levelUpText;
 	float levelUpShowTime;
+	void clearPerks();
 public:
 	LevelUpPopup(Bloodworks *bloodworks);
 	~LevelUpPopup();
@@ -43,6 +44,5 @@ public:
 	}
 
 	void reset();
-private:
-	void clearPerks();
+	void showLevelUpText();
 };
