@@ -114,7 +114,10 @@ GameObject* MissionController::addGameObject(const std::string& script)
 	object->script = script;
 	gameObjects[object->id] = object;
 
-	lua[script]["init"](object);
+	if (lua[script]["init"])
+	{
+		lua[script]["init"](object);
+	}
 	return object;
 }
 
@@ -202,6 +205,18 @@ void MissionController::onMonsterDied(Monster* monster)
 	if (scriptTable["onMonsterDied"])
 	{
 		scriptTable["onMonsterDied"](monster);
+	}
+}
+
+void MissionController::repositionGUI()
+{
+	for (auto& g : gameObjects)
+	{
+		auto& gameObject = g.second;
+		if (lua[gameObject->script]["repositionGUI"])
+		{
+			lua[gameObject->script]["repositionGUI"](gameObject);
+		}
 	}
 }
 

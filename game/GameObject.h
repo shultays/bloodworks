@@ -7,6 +7,8 @@
 class Bloodworks;
 class cRenderable;
 class cRenderableContainer;
+enum class RenderableAlignment;
+enum class TextAlignment;
 
 class GameObject
 {
@@ -22,6 +24,7 @@ class GameObject
 
 	struct RenderableData
 	{
+		int id;
 		GameObject *gameObject;
 		RenderableDataType type;
 		cRenderable *renderable;
@@ -31,8 +34,8 @@ class GameObject
 		float rotation;
 
 		float textSize;
-		int textAlignment;
-		int alignment;
+		TextAlignment textAlignment;
+		RenderableAlignment alignment;
 
 		void update();
 	};
@@ -50,6 +53,7 @@ class GameObject
 	cRenderableContainer *renderableGroup;
 	std::vector<RenderableData> renderables;
 	int level;
+	RenderableAlignment alignment;
 
 	Vec2 pos;
 	Vec2 scale;
@@ -72,22 +76,17 @@ class GameObject
 	}
 
 	void setLevel(int level);
-
+	void setAlignment(RenderableAlignment alignment);
 	void updateMatrix();
-
+	void checkRenderable();
 public:
 	GameObject(Bloodworks *bloodworks);
 
 	~GameObject();
 
 	RenderableData& addTexture(const std::string& texture, const std::string& shader);
-
 	RenderableData& addText(const std::string& text, const std::string& font);
+	void removeRenderable(int id);
 
-	RenderableData& getRenderable(int i)
-	{
-		return renderables[i];
-	}
-private:
-	void checkRenderable();
+	RenderableData& getRenderable(int id);
 };

@@ -10,6 +10,8 @@ function ReflexBoost.spawn(pos)
 		data.boost.data.time = time
 	end
 	
+	addBuffIcon("ReflexBoost", "resources/bonuses/reflex_boost/icon.png")
+	
 	playSound({path = "resources/sounds/clock.ogg", volume = "0.9"})
 	
 	if ReflexBoost.data.isSlow ~= true then
@@ -48,5 +50,6 @@ function ReflexBoost.onTick(gameObject)
 		removePostProcess(ReflexBoost.data.postProcess)
 		ReflexBoost.data.postProcess = nil
 		gameObject.toBeRemoved = true
+		removeBuffIcon("ReflexBoost")
 	end
 end

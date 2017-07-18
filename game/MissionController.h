@@ -55,4 +55,5 @@ public:
 		return scriptTable;
 	}
 	void onMonsterDied(Monster* monster);
+	void repositionGUI();
 };
