@@ -43,11 +43,28 @@ function Spider.init(monster)
 	BulletShooter.init(monster)
 end
 
+function Spider.spawnChanceInMission(missionData, min)
+	return 0.1 + clamp(min * 0.3) * 0.2
+end
+ 
+function Spider.buffStats(monster, min)
+	StunController.buffStats(monster, min)
+	MonsterMeleeHelper.buffStats(monster, min)
+	BulletShooter.buffStats(monster, min)
+	
+    monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
+    monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
+    monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
+end
+
+function Spider.makeBoss(monster, min)
+	makeBossDefault(monster)
+end
 
 function Spider.onHit(monster, damage, args)
 	StunController.onHit(monster, damage, args)
 end
-
 
 function Spider.onTick(monster)
     data = monster.data
