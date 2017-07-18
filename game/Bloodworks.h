@@ -135,26 +135,26 @@ public:
 		return missionController;
 	}
 
-	std::vector<Gun*>& Bloodworks::getGuns()
+	const std::vector<Gun*>& Bloodworks::getGuns() const
 	{
 		return guns;
 	}
 
-	std::vector<Bonus*>& Bloodworks::getBonuses()
+	const std::vector<Bonus*>& Bloodworks::getBonuses() const
 	{
 		return bonuses;
 	}
 
-	Player* getPlayer()
+	Player* getPlayer() const
 	{
 		return player;
 	}
 
 	BloodRenderable* getBloodRenderable();
 
-	cParticleTemplate* getParticleTemplate(const std::string& name)
+	cParticleTemplate* getParticleTemplate(const std::string& name) const
 	{
-		return particles[name];
+		return particles.at(name);
 	}
 
 	void addDrop(const Vec2& position);
