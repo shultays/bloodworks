@@ -11,8 +11,14 @@ Bonus::Bonus(nlohmann::json& j)
 	scriptName = j["scriptName"].get<std::string>();
 	std::string scriptFile = j["scriptFile"].get<std::string>();
 
+	spawnChance = 1.0f;
+	if (j.count("spawnChance"))
+	{
+		spawnChance = j["spawnChance"].get<float>();
+	}
 	lua[scriptName] = lua.create_table();
 	lua.script_file(scriptFile);
+	dynamicSpawnChance = lua[scriptName]["variableBonusChance"];
 }
 
 void Bonus::spawnAt(const Vec2& pos)
@@ -37,4 +43,13 @@ void Bonus::reset()
 		lua[scriptName]["clear"]();
 	}
 	lua[scriptName]["data"] = lua.create_table();
+}
+
+float Bonus::getSpawnChance()
+{
+	if (dynamicSpawnChance)
+	{
+		return dynamicSpawnChance();
+	}
+	return spawnChance;
 }

@@ -30,6 +30,15 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		hideSpread = false;
 	}
 
+	if (j.count("spawnChance"))
+	{
+		spawnChance = j["spawnChance"].get<float>();
+	}
+	else
+	{
+		spawnChance = 1.0f;
+	}
+
 	if (j.count("shootParticleColor"))
 	{
 		Vec4 color(1.0);
@@ -356,6 +365,15 @@ void Gun::reload()
 int Gun::getMaxAmmo()
 {
 	return bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
+}
+
+float Gun::getSpawnChance()
+{
+	if (dynamicSpawnChance)
+	{
+		return dynamicSpawnChance();
+	}
+	return spawnChance;
 }
 
 int Gun::getCurrentAmmo() const

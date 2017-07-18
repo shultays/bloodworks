@@ -40,6 +40,7 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	}
 
 	drop.pos = position;
+	printf("%s\n", drop.gun->getName().c_str());
 
 	cRenderableContainer *group = new cRenderableContainer(bloodworks);
 
@@ -84,6 +85,7 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	{
 		drop.bonus = bonuses[randInt((int)bonuses.size())];
 	}
+	printf("%s\n", drop.bonus->getName().c_str());
 	drop.gun = nullptr;
 	drop.pos = position;
 
@@ -110,6 +112,22 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 
 void DropController::tick()
 {
+	if (input.isKeyPressed(key_6))
+	{
+		sol::table t = lua.create_table();
+		t["notNearPlayer"] = true;
+		for (int i = 0; i < 100; i++)
+		{
+			Vec2 v;
+			do 
+			{
+				v.x = bloodworks->getMapMin().x + randFloat(bloodworks->getMapSize().x);
+				v.y = bloodworks->getMapMin().y + randFloat(bloodworks->getMapSize().y);
+			} while (v.distanceSquared(bloodworks->getPlayer()->getPosition()) < 20.0f);
+			spawnDrop(v);
+		}
+	}
+
 	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
 	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (int i = 0; i < drops.size(); i++)
@@ -168,13 +186,51 @@ void DropController::tick()
 
 void DropController::spawnDrop(const Vec2& position)
 {
-	if (randBool())
+	std::vector<float> bonusChances;
+	bonusChances.resize(bloodworks->getBonuses().size());
+	std::vector<float> gunChances;
+	gunChances.resize(bloodworks->getGuns().size());
+	float totalChance = 0.0f;
+	for (int i = 0; i < bloodworks->getBonuses().size(); i++)
 	{
-		spawnBonus(position);
+		bonusChances[i] = bloodworks->getBonuses()[i]->getSpawnChance();
+		totalChance += bonusChances[i];
+	}
+	float bonusChance = totalChance;
+	for (int i = 0; i < bloodworks->getGuns().size(); i++)
+	{
+		gunChances[i] = bloodworks->getGuns()[i]->getSpawnChance();
+		totalChance += gunChances[i];
+	}
+	float r = randFloat() * totalChance;
+
+	if (r < bonusChance)
+	{
+		for (int i = 0; i < bloodworks->getBonuses().size(); i++)
+		{
+			r -= bonusChances[i];
+			if (r < 0.00001f)
+			{
+				spawnBonus(position, i);
+				return;
+			}
+		}
+		spawnBonus(position, (int)bloodworks->getBonuses().size() - 1);
 	}
 	else
 	{
-		spawnGun(position);
+		r -= bonusChance;
+
+		for (int i = 0; i < bloodworks->getGuns().size(); i++)
+		{
+			r -= gunChances[i];
+			if (r < 0.00001f)
+			{
+				spawnGun(position, i);
+				return;
+			}
+		}
+		spawnGun(position, (int)bloodworks->getGuns().size() - 1);
 	}
 }
 
@@ -195,7 +251,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 
 	const Vec2& pos = monster->getPosition();
 
-	if (pos.x > screenMin.x && pos.y > screenMin.y && pos.x < screenMax.x && pos.y < screenMax.y)
+	//if (pos.x > screenMin.x && pos.y > screenMin.y && pos.x < screenMax.x && pos.y < screenMax.y)
 	{
 		float timeSinceLastDrop = timer.getTime() - lastDropSpawn;
 
@@ -204,7 +260,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 			return;
 		}
 
-		float extraDropChance = (timeSinceLastDrop - 20.0f) / 80.0f;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 70.0f;
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{

@@ -69,6 +69,9 @@ class Gun
 	int buffedMaxAmmo;
 
 	BuffFloat reloadSpeedMultiplier;
+
+	float spawnChance;
+	sol::function dynamicSpawnChance;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
@@ -116,4 +119,6 @@ public:
 	float getReloadPercentage() const;
 
 	int getMaxAmmo();
+
+	float getSpawnChance();
 };
