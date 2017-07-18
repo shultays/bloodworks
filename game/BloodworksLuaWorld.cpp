@@ -184,7 +184,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 
 	lua.new_usertype<Bullet>("Bullet",
-		"index", sol::readonly(&Bullet::id),
+		"id", sol::readonly(&Bullet::id),
 
 		"position", sol::property(&Bullet::getPosition, &Bullet::setPosition),
 		"moveSpeed", &Bullet::moveSpeed,
@@ -341,7 +341,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 
 	lua.new_usertype<Gun>("Gun",
-		"index", sol::readonly(&Gun::id),
+		"id", sol::readonly(&Gun::id),
 		"data", &Gun::data,
 		"name", &Gun::name,
 		"bulletSpeed", &Gun::bulletSpeed,
@@ -599,7 +599,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 	lua.new_usertype<Monster>("Monster",
 		"name", &Monster::name,
-		"index", sol::readonly(&Monster::id),
+		"id", sol::readonly(&Monster::id),
 
 		"scriptTable", &Monster::scriptTable,
 
@@ -663,7 +663,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 	lua.new_usertype<GameObject>("GameObject",
-		"index", sol::readonly(&GameObject::id),
+		"id", sol::readonly(&GameObject::id),
 
 		"toBeRemoved", &GameObject::toBeRemoved,
 		"script", &GameObject::script,
@@ -683,7 +683,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 
 	lua.new_usertype<GameObject::RenderableData>("RenderableData",
-		"index", &GameObject::RenderableData::id,
+		"id", &GameObject::RenderableData::id,
 		"position", &GameObject::RenderableData::pos,
 		"rotation", &GameObject::RenderableData::rotation,
 		"textureSize", &GameObject::RenderableData::textureSize,
