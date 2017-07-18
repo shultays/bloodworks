@@ -29,6 +29,24 @@ function Alien.init(monster)
 	BulletShooter.init(monster)
 end
 
+function Alien.spawnChanceInMission(missionData, min)
+	return 1.0
+end
+
+function Alien.buffStats(monster, min)
+	StunController.buffStats(monster, min)
+	MonsterMeleeHelper.buffStats(monster, min)
+	BulletShooter.buffStats(monster, min)
+	
+    monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
+    monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
+    monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
+end
+
+function Alien.makeBoss(monster, min)
+	makeBossDefault(monster)
+end
 
 function Alien.onHit(monster, damage, args)
 	StunController.onHit(monster, damage, args)

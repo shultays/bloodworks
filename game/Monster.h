@@ -73,6 +73,7 @@ class Monster
 
 	int lastRunCheck;
 
+	BuffFloat knockbackResistance;
 	BuffFloat moveSpeedMultiplier;
 	BuffVec4 colorMultiplier;
 	float dropChance;
