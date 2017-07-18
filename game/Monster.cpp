@@ -37,7 +37,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
 	hasBlood = monsterTemplate->hasBlood;
-
+	knockbackResistance.setBaseValue(1.0f);
 	animationSpeed = 1.0f;
 
 	lastHitSoundPlayTime = timer.getTime();
@@ -96,6 +96,7 @@ Monster::~Monster()
 void Monster::tick()
 {
 	moveSpeedMultiplier.tick();
+	knockbackResistance.tick();
 	bool colorChanged = colorMultiplier.tick();
 	if (colorChanged && renderable)
 	{
@@ -138,7 +139,7 @@ void Monster::tick()
 			pushAmount = k.duration;
 		}
 		k.duration -= dt;
-		position += k.speed * pushAmount;	
+		position += k.speed * pushAmount * knockbackResistance.getBuffedValue();
 
 		if (k.duration <= 0.0f)
 		{
@@ -211,7 +212,12 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
 	{
 		if (damage > 0)
 		{
-			bloodworks->getBloodRenderable()->addBlood(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+			Vec2 spawnDir = Vec2::fromAngle(dir.toAngle() - 0.2f + 0.4f * randFloat());
+			float r = randFloat() * 0.3f + 0.4f;
+			r = sqrtf(r);
+			Vec2 shift = spawnDir * r * collisionRadius * 2.0f;
+
+			bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
 			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
 			{

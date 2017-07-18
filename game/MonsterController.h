@@ -19,7 +19,9 @@ class MonsterController
 	Bloodworks *bloodworks;
 
 	cGrid<Monster> grid;
-	std::unordered_map<std::string, MonsterTemplate*> monsterTemplates;
+
+	std::vector<MonsterTemplate*> monsterTemplates;
+	std::unordered_map<std::string, int> monsterTemplateIndices;
 
 	class MonsterHitResult
 	{
@@ -54,4 +56,9 @@ public:
 	void reset();
 	void runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const;
 	void relocateMonster(Monster* monster);
+
+	const std::vector<MonsterTemplate*>& getTemplates() const
+	{
+		return monsterTemplates;
+	}
 };

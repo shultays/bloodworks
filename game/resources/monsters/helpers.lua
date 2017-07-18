@@ -9,6 +9,10 @@ function StunController.init(monster)
 	data.slowTime = 0.0
 end
 
+function StunController.buffStats(monster, min)
+
+end
+
 function StunController.getSlowAmount(monster)
 	local mul = 1.0
 
@@ -139,6 +143,14 @@ function MonsterMeleeHelper.init(monster)
 	monster.data.slowdownDuration = 0.15
 end
 
+function MonsterMeleeHelper.buffStats(monster, min)
+	local data = monster.data
+	data.hitWaitTime = data.hitWaitTime  * (1.0 - clamp(min * 0.1) * 0.8)
+	data.hitInterval = data.hitInterval  * (1.0 - clamp(min * 0.1) * 0.4)
+	data.minDamage = math.floor(data.minDamage * (1.0 + min * 0.2))
+	data.maxDamage = math.floor(data.maxDamage * (1.0 + min * 0.2))
+end
+
 function MonsterMeleeHelper.onTick(monster)
 	local range = 20.0
 	if data.moving == false then
@@ -184,6 +196,20 @@ function BulletShooter.init(monster)
 	data.bulletRate = 4.0
 	data.bulletRandom = 0.3
 	data.shootsBullets = false
+end
+
+function BulletShooter.buffStats(monster, min)
+	local data = monster.data
+	
+	if data.isBoss ~= true and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
+		data.shootsBullets = true
+		data.bulletMinDamage = math.floor(data.bulletMinDamage * (1.0 + min * 0.3))
+		data.bulletMaxDamage = math.floor(data.bulletMaxDamage * (1.0 + min * 0.4))
+		data.bulletRate = data.bulletRate - clamp(min * 0.1) * 2.0
+		data.bulletRandom = data.bulletRandom - clamp(min * 0.15) * 0.2
+		monster.colorMultiplier:addBuff(Vec4.new(0.8, 0.95, 0.8, 1.0))
+		monster:modifyDrawLevel(1)
+	end
 end
 
 function BulletShooter.onTick(monster)

@@ -398,7 +398,6 @@ Bullet* Gun::addBullet()
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	bloodworks->onAddedGunBullet(this, bullet);
-	player->playShootAnimation();
 
 	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime())
 	{
