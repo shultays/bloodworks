@@ -20,7 +20,7 @@ const float expPosX = -0.5f;
 
 int Player::calculateExperienceForLevel(int level)
 {
-	return (level - 1) * 150 + (level - 1)  * (level - 1) * 20 + 10;
+	return (level - 1) * 150 + (level - 1)  * (level - 1) * 20 + 100;
 }
 
 Player::Player(Bloodworks *bloodworks)

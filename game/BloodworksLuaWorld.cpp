@@ -530,6 +530,22 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 
+	lua.set_function("getCameraZoom",
+		[&]()
+	{
+		return bloodworks->getCameraZoom();
+	});
+	lua.set_function("getCameraPos",
+		[&]()
+	{
+		return bloodworks->getCameraPos();
+	});
+	lua.set_function("getCameraAngle",
+		[&]()
+	{
+		return bloodworks->getCameraAngle();
+	});
+
 	lua.set_function("spawnRandomGun",
 		[&](const Vec2& pos)
 	{
@@ -655,14 +671,19 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addText", &GameObject::addText,
 		"addTexture", &GameObject::addTexture,
 
+		"removeRenderable", &GameObject::removeRenderable, 
+		"getRenderable", &GameObject::getRenderable,
+
 		"setPosition", &GameObject::setPosition,
 		"setRotation", &GameObject::setRotation,
 		"setScale", &GameObject::setScale,
-		"setLevel", &GameObject::setLevel
+		"setLevel", &GameObject::setLevel,
+		"setAlignment", &GameObject::setAlignment
 		);
 
 
 	lua.new_usertype<GameObject::RenderableData>("RenderableData",
+		"index", &GameObject::RenderableData::id,
 		"position", &GameObject::RenderableData::pos,
 		"rotation", &GameObject::RenderableData::rotation,
 		"textureSize", &GameObject::RenderableData::textureSize,

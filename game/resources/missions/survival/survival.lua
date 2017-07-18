@@ -31,7 +31,7 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
 	monster.experienceMultiplier = 0.9 + math.random() * 0.2
 	monster.scoreMultiplier = 0.9 + math.random() * 0.2
 	
-	if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 30.0 - clamp(min/7) * 15 < missionTime then
+	if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 20.0 - clamp(min/7) * 10 < missionTime then
 		missionData.lastBossSpawn = missionTime
 		monster.data.isBoss = true
 		monster.scriptTable.makeBoss(monster, min)
@@ -443,4 +443,66 @@ function Survival.onMonsterDied(monster)
 		missionData.firstKill = false
 		spawnRandomGun(monster.position)
 	end
+end
+
+function removeBuffIcon(name, dontUpdate)
+	local buffData = missionData.buffs[name] 
+	if buffData ~= nil then
+		missionData.buffObject:removeRenderable(buffData.renderable)
+		missionData.buffs[name] = nil
+		missionData.buffCount = missionData.buffCount - 1
+		
+		if dontUpdate ~= true then
+			updateBuffPositions()
+		end
+	end
+end
+
+function addBuffIcon(name, path)
+	if missionData.buffObject == nil then
+		missionData.buffObject = addGameObject("BuffIcons")
+		missionData.buffObject:setAlignment(RenderableAlignment.top)
+		missionData.buffObject:setLevel(RenderableLevel.objectGUI)
+		BuffIcons.repositionGUI(missionData.buffObject)
+		missionData.buffs = {}
+		missionData.buffCount = 0
+	end
+	
+	removeBuffIcon(name, true)
+	
+	local buffObject = missionData.buffObject
+	local renderable = buffObject:addTexture(path, "resources/default")
+	renderable.textureSize = Vec2:new(15.0, 15.0)
+	renderable.position = Vec2:new(0, 0)
+	renderable.alignment = RenderableAlignment.top
+	renderable:update()
+	
+	local buffData = {}
+	buffData.renderable = renderable.index
+	buffData.name = name
+	buffData.id = getUniqueId()
+	missionData.buffs[name] = buffData
+	missionData.buffCount = missionData.buffCount + 1
+	
+	updateBuffPositions()
+end
+
+function updateBuffPositions()
+	local p = 0
+	local shift = (missionData.buffCount - 1) * 34.0 / 2
+	
+	for key,value in pairs(missionData.buffs) do
+		local renderable = missionData.buffObject:getRenderable(value.renderable)
+		renderable.position = Vec2:new(p * 34 - shift, 0)
+		renderable:update()
+		p = p + 1
+	end
+end
+
+BuffIcons = {}
+function BuffIcons.init()
+end
+function BuffIcons.repositionGUI(gameObject)
+	gameObject:setPosition(Vec2.new(0, -90 / getCameraZoom()))
+	gameObject:setScale(Vec2.new(1.0 / getCameraZoom(), 1.0 / getCameraZoom()))
 end
