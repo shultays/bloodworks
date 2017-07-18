@@ -478,7 +478,7 @@ function addBuffIcon(name, path)
 	renderable:update()
 	
 	local buffData = {}
-	buffData.renderable = renderable.index
+	buffData.renderable = renderable.id
 	buffData.name = name
 	buffData.id = getUniqueId()
 	missionData.buffs[name] = buffData

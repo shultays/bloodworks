@@ -42,7 +42,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
 		newBullet.position = bullet.position
 		newBullet.moveAngle = bullet.moveAngle - math.pi * 0.1
 		newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
-		monster:addIgnoreId(newBullet.index)
+		monster:addIgnoreId(newBullet.id)
 		
 		newBullet = gun:addBullet()
 		particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
@@ -53,7 +53,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
 		newBullet.position = bullet.position
 		newBullet.moveAngle = bullet.moveAngle + math.pi * 0.1
 		newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
-		monster:addIgnoreId(newBullet.index)
+		monster:addIgnoreId(newBullet.id)
 		
 		
 		playSound({path = "resources/sounds/split_gun.ogg", position = bullet.position, volume = 0.5})
