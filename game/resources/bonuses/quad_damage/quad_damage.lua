@@ -13,6 +13,8 @@ function QuadDamage.spawn(pos)
 		data.boost.data.time = time
 	end
 	playSound({path = "resources/sounds/metal_riff.ogg", volume = 0.5})
+	
+	addBuffIcon("QuadDamage", "resources/bonuses/quad_damage/icon.png")
 end
 
 function QuadDamage.init(gameObject)
@@ -41,5 +43,6 @@ function QuadDamage.onTick(gameObject)
 		QuadDamage.data.postProcess = nil
 		player.damageMultiplier:removeBuff(QuadDamage.buffId)
 		gameObject.toBeRemoved = true
+		removeBuffIcon("QuadDamage")
 	end
 end

@@ -423,6 +423,7 @@ void Bloodworks::windowResized(int width, int height)
 	cGame::windowResized(width, height);
 	mainMenu->resize();
 	player->resize();
+	missionController->repositionGUI();
 }
 
 void Bloodworks::clearMission()
@@ -765,13 +766,36 @@ void Bloodworks::tick()
 			{
 				perks[i]->takeLevel();
 				onPerkUsed(perks[i]);
+				break;
 			}
 		}
 	}
 
 	if (input.isKeyPressed(key_3))
 	{
-		bonuses[0]->spawnAt(player->getPosition());
+		std::string s;
+		int z = randInt(3);
+		if (z == 0)
+		{
+			s = "Slowdown Monsters";
+		}
+		else if (z == 1)
+		{
+			s = "Double Experience";
+		}
+		else
+		{
+			s = "Quad Damage";
+		}
+
+		for (int i = 0; i < bonuses.size(); i++)
+		{
+			if (bonuses[i]->getName() == s)
+			{
+				bonuses[i]->spawnAt(player->getPosition());
+				break;
+			}
+		}
 	}
 
 	if (input.isKeyPressed(key_4))

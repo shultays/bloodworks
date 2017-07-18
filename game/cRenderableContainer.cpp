@@ -23,3 +23,15 @@ void cRenderableContainer::addRenderable(cRenderable *child)
 	child->setAlignment(alignment);
 	renderables.push_back(childData);
 }
+
+void cRenderableContainer::removeRenderable(cRenderable *child)
+{
+	for (int i = 0; i < renderables.size(); i++)
+	{
+		if (renderables[i].child == child)
+		{
+			renderables.erase(renderables.begin() + i);
+			return;
+		}
+	}
+}
