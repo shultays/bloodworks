@@ -57,10 +57,10 @@ MonsterController::~MonsterController()
 	monsters.clear();
 	for (auto& monsterTemplate : monsterTemplates)
 	{
-		auto& m = monsterTemplate.second;
-		SAFE_DELETE(m);
+		SAFE_DELETE(monsterTemplate);
 	}
 	monsterTemplates.clear();
+	monsterTemplateIndices.clear();
 }
 
 const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  const
@@ -274,7 +274,7 @@ void MonsterController::damageMonstersInRangeWithIgnoreId(const Vec2& pos, float
 
 Monster* MonsterController::addMonster(const std::string& monsterTemplateName)
 {
-	MonsterTemplate *monsterTemplate = monsterTemplates[monsterTemplateName];
+	MonsterTemplate *monsterTemplate = monsterTemplates[monsterTemplateIndices[monsterTemplateName]];
 
 	Monster *newMonster = new Monster(bloodworks);
 	monstersMap[newMonster->id] = newMonster;
@@ -303,7 +303,8 @@ Monster* MonsterController::getMonster(int id) const
 void MonsterController::addMonsterTemplate(nlohmann::json& j)
 {
 	MonsterTemplate *t = new MonsterTemplate(j);
-	monsterTemplates[t->getName()] = t;
+	monsterTemplates.push_back(t);
+	monsterTemplateIndices[t->getName()] = (int)monsterTemplates.size() - 1;
 }
 
 Vec2 MonsterController::getRandomPos(sol::table& args)

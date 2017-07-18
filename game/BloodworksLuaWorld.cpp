@@ -416,6 +416,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getBulletController()->addCustomBullet(params);
 	});
 
+	lua.set_function("getAllMonsterTypeCount",
+		[&]() -> int
+	{
+		return (int)bloodworks->getMonsterController()->getTemplates().size();
+	});
+
+	lua.set_function("getMonsterTypeAt",
+		[&](int i) -> MonsterTemplate*
+	{
+		return bloodworks->getMonsterController()->getTemplates()[i];
+	});
+
 	lua.set_function("addMonster",
 		[&](std::string monsterTemplate) -> Monster*
 	{
@@ -607,6 +619,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addTimer", &Monster::addTimer,
 		"setScale", &Monster::setScale,
 
+		"knockbackResistance", &Monster::knockbackResistance,
 		"addKnockback", &Monster::addKnockback,
 
 		"dropChance", &Monster::dropChance,
@@ -693,6 +706,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"gun", sol::readonly(&Player::gun),
 		"experience", sol::readonly(&Player::experience),
 		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
+		"playShootAnimation", &Player::playShootAnimation,
 		"data", &Player::data
 		);
 

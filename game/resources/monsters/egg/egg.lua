@@ -29,6 +29,15 @@ function Egg.init(monster, min)
 	if math.random() < 0.07 then
 		data.monsterType = "Spider"
 	end
+	monster.knockbackResistance:addBuff(0.1)
+end
+
+function Egg.spawnChanceInMission(missionData, min)
+	return 0.05 + clamp(min * 0.3) * 0.04
+end
+
+function Egg.buffStats(monster, min)
+	monster.data.spawnInterval = monster.data.spawnInterval - clamp(min/10)
 end
 
 function Egg.onHit(monster, damage, args)
@@ -42,7 +51,7 @@ function Egg.onTick(monster)
 	if data.spawnTime < 0.0 then
 		data.spawnTime = data.spawnTime + data.spawnInterval
 		
-		if getMonsterCount() < Survival.maxMonster then
+		if missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster then
 			local m = addRandomMonster(data.monsterType, true, true, 1.0)
 			m:setScale(m.scale * 0.8)
 			m.position = monster.position

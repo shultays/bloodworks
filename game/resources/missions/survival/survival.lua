@@ -1,56 +1,40 @@
 
 function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, levelReduce)
-    local m = "Alien"
-    local min = missionTime / 60.0 +  math.random() * 1.5 + Survival.extraMin
+    local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
 	
 	if levelReduce ~= nil then
 		min = min - levelReduce
 	end
 	
-    if math.random() < 0.1 + clamp(min * 0.5) * 0.2 then
-        m = "Spider"
-    elseif math.random() < 0.02 + clamp(min * 0.5) * 0.01 then
-        m = "Egg"
-    end
-
-	m = "Egg"
-		
 	if forceType ~= nil then
 		m = forceType
+	else
+		local randChance = math.random() * missionData.totalChanceSpawn
+		for key,value in pairs(missionData.spawnRates) do
+			randChance = randChance - value
+			if randChance <= 0.000001 then
+				m = key
+				break
+			end
+		end
+
+		if m == "" then
+			print("error not picked mon type")
+			m = "Alien"
+		end
 	end
+	
     local monster = addMonster(m)
-    monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
-    monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
-    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
-    monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
-	
-	monster.data.hitWaitTime = monster.data.hitWaitTime  * (1.0 - clamp(min * 0.1) * 0.8)
-	monster.data.hitInterval = monster.data.hitInterval  * (1.0 - clamp(min * 0.1) * 0.4)
-	monster.data.minDamage = math.floor(monster.data.minDamage * (1.0 + min * 0.2))
-	monster.data.maxDamage = math.floor(monster.data.maxDamage * (1.0 + min * 0.2))
-	
-	monster.experienceMultiplier = math.random() * 0.4 + 0.8
-	
-	if monster.data.spawnInterval ~= nil then
-		monster.data.spawnInterval = monster.data.spawnInterval - clamp(min/10)
-	end
 	
 	monster.hitPoint = math.floor(monster.hitPoint * (1.0 + clamp(min * 0.05) * 1.0))
-	
+	monster.experienceMultiplier = math.random() * 0.4 + 0.8
 	monster.experienceMultiplier = 0.9 + math.random() * 0.2
 	monster.scoreMultiplier = 0.9 + math.random() * 0.2
 	
-	if cannotBecomeBoss ~= true and monster.data.cannotBecomeBoss ~= true and Survival.lastBossSpawn + 30.0 - clamp(min/7) * 15 < missionTime then
-		Survival.lastBossSpawn = missionTime
-		makeBoss(monster)
-	elseif cannotShootBullets ~= true and monster.data.cannotShootBullets ~= true and monster.data.shootsBullets == false and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
-		monster.data.shootsBullets = true
-		monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.3))
-		monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.4))
-		monster.data.bulletRate = monster.data.bulletRate - clamp(min * 0.1) * 2.0
-		monster.data.bulletRandom = monster.data.bulletRandom - clamp(min * 0.15) * 0.2
-		monster.colorMultiplier:addBuff(Vec4.new(0.8, 0.95, 0.8, 1.0))
-		monster:modifyDrawLevel(1)
+	if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 30.0 - clamp(min/7) * 15 < missionTime then
+		missionData.lastBossSpawn = missionTime
+		monster.data.isBoss = true
+		monster.scriptTable.makeBoss(monster, min)
 	else
 		local r = 0.9 + 0.1 * math.random()
 		local g = 0.9 + 0.1 * math.random()
@@ -67,11 +51,15 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
 		monster.colorMultiplier:addBuff(Vec4.new(r, g, b, 1.0))
 	end
 	
+	if monster.scriptTable.buffStats ~= nil then
+		monster.scriptTable.buffStats(monster, min)
+	end
+	
     return monster
 end
 
-function makeBoss(monster)
-    local min = missionTime / 60.0 +  math.random() * 1.5 + Survival.extraMin
+function makeBossDefault(monster)
+    local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
 	monster.hitPoint = math.floor(monster.hitPoint * 1.5)
 	
 	monster.data.minDamage = math.floor(monster.data.minDamage * 1.1)
@@ -89,6 +77,7 @@ function makeBoss(monster)
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
 		monster:setScale(1.0 + math.random() * 0.3)
+		monster.knockbackResistance:addBuff(0.07)
 	elseif t == 2 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
 		monster:setScale(monster.scale * 0.85)
@@ -98,9 +87,10 @@ function makeBoss(monster)
 		monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
 	elseif t == 4 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
-		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.55
+		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.85
 		monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
 		monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
+		monster.knockbackResistance:addBuff(0.4)
 	elseif t == 5 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
 		monster.data.shootsBullets = true
@@ -185,6 +175,7 @@ function makeBoss(monster)
 		monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
 		monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
 		monster.data.targetShift = Vec2.new(0.0, 0.0)
+		monster.knockbackResistance:addBuff(0.0)
 		monster.scriptTable.onTick = function (monster)
 			local diffToPlayer = player.position - monster.position 
 			local distanceToPlayer = diffToPlayer:length()
@@ -252,7 +243,7 @@ function makeBoss(monster)
 			if monster.data.spawnTimer < 0.0 then
 				monster.data.spawnTimer = 3.0
 				
-				if getMonsterCount() < Survival.maxMonster then
+				if getMonsterCount() < missionData.maxMonster then
 					local newMonster = addMonster(monster.monsterTemplate.name)
 					newMonster.position = monster.position
 					newMonster:setScale(math.max(0.3, monster.scale * 0.60))
@@ -276,9 +267,9 @@ function makeBoss(monster)
 					
 					monster.scriptTable = shallowcopy(monster.scriptTable)
 					monster.scriptTable.onKilled = function (monster)
-						Survival.ignoreMonsterCount = Survival.ignoreMonsterCount - 1
+						missionData.ignoreMonsterCount = missionData.ignoreMonsterCount - 1
 					end
-					Survival.ignoreMonsterCount = Survival.ignoreMonsterCount + 1
+					missionData.ignoreMonsterCount = missionData.ignoreMonsterCount + 1
 				end
 			end
 		end
@@ -290,32 +281,60 @@ end
 function Survival.init()
 	local theSeed = os.time()
 	math.randomseed( theSeed )
-	Survival.ignoreMonsterCount = 0
-    Survival.extraMin = 0.0
-    Survival.lastSpawnTime = 0.0
-	Survival.lastBossSpawn = -500
-	local spawn
-	if DEBUG then
-		Survival.maxMonster = 20
-		spawn = 10
-	else
-		Survival.maxMonster = 650
-		spawn = 50
-	end
-	
-	for i = 1, spawn do
-		local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
-        local monster = addRandomMonster()
-		monster.position = pos
-		monster.moveAngle =  math.random() * math.pi * 2.0
-	end
-    
-	Survival.perkPerLevel = 3
-	Survival.firstKill = true
-	missionData = Survival
+	missionData = {}
+	missionData.ignoreMonsterCount = 0
+    missionData.extraMin = 0.0
+    missionData.lastSpawnTime = 0.0
+	missionData.lastBossSpawn = -500
+	missionData.perkPerLevel = 3
+	missionData.firstKill = true
+	missionData.firstTick = true
+	missionData.timeToCalcSpawn = -0.1
 end
 
 function Survival.onTick()
+    local min = missionTime / 60.0
+	
+	missionData.timeToCalcSpawn = missionData.timeToCalcSpawn - dt
+	
+	if missionData.timeToCalcSpawn < 0.0 then
+		missionData.timeToCalcSpawn = math.random() * 0.5 + 0.5
+
+		missionData.spawnRates = {}
+		local monsterTypeCount = getAllMonsterTypeCount()
+		missionData.totalChanceSpawn = 0.0
+		
+		local m = ""
+		for i = 0, monsterTypeCount - 1 do
+			local monsterType = getMonsterTypeAt(i)
+			if monsterType.scriptTable.spawnChanceInMission ~= nil then
+				local chance = monsterType.scriptTable.spawnChanceInMission(missionData, min)
+				missionData.totalChanceSpawn = missionData.totalChanceSpawn + chance
+				missionData.spawnRates[monsterType.name] = chance
+			end
+		end
+	end
+	
+	if missionData.firstTick then
+		missionData.firstTick = false
+		local spawn
+		if DEBUG then
+			missionData.maxMonster = 20
+			spawn = 10
+		else
+			missionData.maxMonster = 650
+			spawn = 50
+		end
+		
+		for i = 1, spawn do
+			local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
+			local monster = addRandomMonster()
+			monster.position = pos
+			monster.moveAngle =  math.random() * math.pi * 2.0
+		end
+	end
+
+
 	if isKeyPressed(keys.Escape) or isKeyPressed(keys.joystick_0_button_back) then
 		if gotoMainMenu() then
 			return
@@ -335,15 +354,15 @@ function Survival.onTick()
 	end
 	NukeOnDeath.onTick()
 	if isKeyReleased(keys.PageUp) then
-		Survival.extraMin = Survival.extraMin + 0.5
-		print("Extra Min " .. Survival.extraMin)
+		missionData.extraMin = missionData.extraMin + 0.5
+		print("Extra Min " .. missionData.extraMin)
 	end
 	if isKeyReleased(keys.PageDown) then
-		Survival.extraMin = Survival.extraMin - 0.5
-		if Survival.extraMin < 0.0 then
-			Survival.extraMin = 0.0
+		missionData.extraMin = missionData.extraMin - 0.5
+		if missionData.extraMin < 0.0 then
+			missionData.extraMin = 0.0
 		end
-		print("Extra Min " .. Survival.extraMin)
+		print("Extra Min " .. missionData.extraMin)
 	end
 	
 	if isKeyReleased(keys.Delete) then	
@@ -357,7 +376,7 @@ function Survival.onTick()
 	end
 	
 	if isKeyReleased(keys.Insert) then
-		local t = Survival.maxMonster - getMonsterCount()
+		local t = missionData.maxMonster - getMonsterCount()
 		for i = 1, t - 10 do
 			local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
 			local monster = addRandomMonster()
@@ -366,12 +385,11 @@ function Survival.onTick()
 		end
 	end
 	
-    local min = missionTime / 60.0
-	local curMaxMonster = math.floor(lerp(55, Survival.maxMonster, clamp(min * 0.15)))
+	local curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.15)))
 	
-    if missionTime - Survival.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - Survival.ignoreMonsterCount < curMaxMonster 
-	and getMonsterCount() < Survival.maxMonster and player.isDead == false then
-        Survival.lastSpawnTime = missionTime
+    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - missionData.ignoreMonsterCount < curMaxMonster 
+	and getMonsterCount() < missionData.maxMonster and player.isDead == false then
+        missionData.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
 		monster.position = pos
@@ -421,8 +439,8 @@ end
 
 
 function Survival.onMonsterDied(monster)
-	if Survival.firstKill then
-		Survival.firstKill = false
+	if missionData.firstKill then
+		missionData.firstKill = false
 		spawnRandomGun(monster.position)
 	end
 end
