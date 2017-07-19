@@ -1,0 +1,7 @@
+{
+  "type" : "bonus",
+  "name": "Faster Movement",
+  "iconFile" : "resources/bonuses/faster_movement/icon.png",
+  "scriptFile" : "resources/bonuses/faster_movement/faster_movement.lua",
+  "scriptName" : "FasterMovementBonus"
+}
