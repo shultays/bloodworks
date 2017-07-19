@@ -40,7 +40,6 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	}
 
 	drop.pos = position;
-	printf("%s\n", drop.gun->getName().c_str());
 
 	cRenderableContainer *group = new cRenderableContainer(bloodworks);
 
@@ -65,7 +64,7 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	group->setWorldMatrix(Mat3::translationMatrix(position));
 	drop.renderable = group;
 	drop.text = text;
-	bloodworks->addRenderable(drop.renderable, OBJECT_GUI);
+	bloodworks->addRenderable(drop.renderable, PLAYER - 1);
 
 	drops.push_back(drop);
 }
@@ -85,7 +84,6 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	{
 		drop.bonus = bonuses[randInt((int)bonuses.size())];
 	}
-	printf("%s\n", drop.bonus->getName().c_str());
 	drop.gun = nullptr;
 	drop.pos = position;
 
@@ -105,7 +103,7 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	group->setWorldMatrix(Mat3::translationMatrix(position));
 	drop.renderable = group;
 	drop.text = text;
-	bloodworks->addRenderable(drop.renderable, OBJECT_GUI);
+	bloodworks->addRenderable(drop.renderable, PLAYER - 1);
 
 	drops.push_back(drop);
 }

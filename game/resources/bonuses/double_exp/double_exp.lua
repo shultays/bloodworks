@@ -9,6 +9,7 @@ function DoubleExp.spawn(pos)
 	
 	addBuffIcon("DoubleExp", "resources/bonuses/double_exp/icon.png")
 	
+	playSound({path = "resources/sounds/double_exp.ogg", volume = 0.8})
 	if DoubleExp.data.gameObject == nil then
 		DoubleExp.data.gameObject = addGameObject("DoubleExp")
 	end
