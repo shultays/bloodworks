@@ -1,0 +1,12 @@
+{
+  "type" : "particle",
+  "maxLifeTime" : 3.0,
+  
+  "vertexShader" : "resources/particles/flame/shader.vs",
+  "pixelShader" : "resources/particles/flame/shader.ps",
+  
+  "textures" : "resources/particles/flame/flame.png",
+  
+  "scriptFile" : "resources/particles/flame/script.lua",
+  "scriptName" : "FlameParticle"
+}
