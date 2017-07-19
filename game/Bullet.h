@@ -26,7 +26,7 @@ class Bullet
 	float meshRotation;
 
 	Vec2 moveDir;
-	Vec2 moveSpeedDir;
+	Vec2 moveVelocity;
 
 	Vec2 meshScale;
 

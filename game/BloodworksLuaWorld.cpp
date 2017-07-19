@@ -47,6 +47,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
 		sol::meta_function::unary_minus, [](const Vec2& a) { return -a; },
 
+		"rotateBy", [](Vec2& v, float angle) { v = v * Mat2::rotation(angle); },
+
 		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
 		"getAngle", &Vec2::toAngle,
 
@@ -196,7 +198,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setScale", [](Bullet& b, float scale) { b.scale = scale; b.updateDrawable(); },
 
 		"moveDir", sol::readonly(&Bullet::moveDir),
-		"moveSpeedDir", sol::readonly(&Bullet::moveSpeedDir),
+		"moveVelocity", sol::readonly(&Bullet::moveVelocity),
 
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
@@ -706,7 +708,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveDir", sol::readonly(&Player::moveDir),
 		"visible", sol::readonly(&Player::visible),
 		"isDead", sol::readonly(&Player::isDead),
-		"moveSpeedDir", sol::readonly(&Player::moveSpeedDir),
+		"moveSpeedDir", sol::readonly(&Player::moveVelocity),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
 		"maxSpeed", &Player::maxSpeed,

@@ -59,9 +59,9 @@ void Bullet::tick()
 		}
 	}
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveSpeedDir = moveDir * moveSpeed * bloodworks->getPlayer()->getBulletSpeedMultiplier();
+	moveVelocity = moveDir * moveSpeed * bloodworks->getPlayer()->getBulletSpeedMultiplier();
 
-	pos += moveSpeedDir * dt;
+	pos += moveVelocity * dt;
 	clampPos();
 	updateDrawable();
 

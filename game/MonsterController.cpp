@@ -192,11 +192,9 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 	return closestMonster;
 }
 
-std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, float range)
+void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, std::vector<Monster*>& foundMonsters)
 {
 	float maxDistanceSquared = range * range;
-
-	std::vector<Monster*> foundMonsters;
 
 	if (range > 200)
 	{
@@ -244,7 +242,7 @@ std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, 
 	}
 	else
 	{
-		for (auto& monster : monsters)
+		for (Monster* monster : monsters)
 		{
 			if (monster->getPosition().distanceSquared(pos) < maxDistanceSquared)
 			{
@@ -252,14 +250,13 @@ std::vector<Monster*> MonsterController::getAllMonstersInRange(const Vec2& pos, 
 			}
 		}
 	}
-
-	return foundMonsters;
 }
 
 void MonsterController::damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId)
 {
-	std::vector<Monster*> monsters = getAllMonstersInRange(pos, range);
-	for (auto& monster : monsters)
+	std::vector<Monster*> found;
+	getAllMonstersInRange(pos, range, found);
+	for (Monster* monster : found)
 	{
 		if (ignoreId  == -1|| monster->hasIgnoreId(ignoreId) == false)
 		{
@@ -365,7 +362,8 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 
 		if (notNearMonsters)
 		{
-			auto monstersInrange = getAllMonstersInRange(pos, 100.0f);
+			std::vector<Monster*> monstersInrange;
+			getAllMonstersInRange(pos, 100.0f, monstersInrange);
 			for (auto& m : monstersInrange)
 			{
 				score += 100.0f * 100.0f - m->getPosition().distanceSquared(pos);
@@ -414,7 +412,7 @@ void MonsterController::reset()
 	monsters.clear();
 }
 
-void MonsterController::runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const
+void MonsterController::runForEachMonsterInRadius(const Vec2& pos, float radius, std::function<bool(Monster *monster) >& func) const
 {
 	IntVec2 start = grid.getNodeIndex(pos - radius);
 	IntVec2 end = grid.getNodeIndex(pos + radius);
@@ -429,9 +427,49 @@ void MonsterController::runForEachMonsterInRadius(Vec2 pos, float radius, std::f
 				if (monster->lastRunCheck != runIndex)
 				{
 					monster->lastRunCheck = runIndex;
-					if (func(monster) == false)
+					float r = radius + monster->getRadius();	
+					float rSquared = r * r;
+					if (monster->getPosition().distanceSquared(pos) < rSquared && func(monster) == false)
 					{
 						return;
+					}
+				}
+			}
+		}
+	}
+}
+
+void MonsterController::runForEachMonsterInPie(const Vec2& pos, float radius, float angle, float angleWidth, std::function<bool(Monster *monster) >& func) const
+{
+	IntVec2 start = grid.getNodeIndex(pos - radius);
+	IntVec2 end = grid.getNodeIndex(pos + radius);
+	int runIndex = bloodworks->getUniqueId();
+	for (int i = start.x; i <= end.x; i++)
+	{
+		for (int j = start.y; j <= end.y; j++)
+		{
+			auto node = grid.getNodeAtIndex(IntVec2(i, j));
+			for (Monster *monster : node)
+			{
+				if (monster->lastRunCheck != runIndex)
+				{
+					monster->lastRunCheck = runIndex;
+					float r = radius + monster->getRadius();
+					float rSquared = r * r;
+					if (monster->getPosition().distanceSquared(pos) < rSquared)
+					{
+						Vec2 diff = monster->getPosition() - pos;
+						float d = diff.length() + 0.0001f;
+						float toMonster = diff.toAngle();
+						float diffAngle = angleDiff(angle, toMonster);
+						float addAngle = atan2(monster->getRadius(), d);
+						if (abs(diffAngle) < angleWidth + addAngle)
+						{
+							if (func(monster) == false)
+							{
+								return;
+							}
+						}
 					}
 				}
 			}
