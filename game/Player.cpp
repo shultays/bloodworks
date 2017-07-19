@@ -251,9 +251,9 @@ void Player::tick()
 	}
 
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveSpeedDir = moveDir * moveSpeed;
+	moveVelocity = moveDir * moveSpeed;
 
-	Vec2 moveAmount = moveSpeedDir * dt;
+	Vec2 moveAmount = moveVelocity * dt;
 	Vec2 newPos = pos + moveAmount;
 	oldMoveAmount = moveAmount;
 	Vec2 boundaryMin = bloodworks->getMapMin() + 20.0f;

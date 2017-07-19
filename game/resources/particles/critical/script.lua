@@ -39,7 +39,7 @@ function CriticalParticle.addParticle(params, pos, args)
 	params.moveSpeed = params.moveSpeed * (args.moveSpeed * (1.0 + math.random() * 0.5))
 	
 	if params.bullet ~= nil then
-		params.moveSpeed = params.moveSpeed + params.bullet.moveSpeedDir
+		params.moveSpeed = params.moveSpeed + params.bullet.moveVelocity
 	end
 	
 	params.initialScale = args.initialScale * (1.0 + math.random())

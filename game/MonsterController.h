@@ -41,7 +41,7 @@ public:
 	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
 	Monster* getClosestMonsterInRange(const Vec2& pos, float range);
 	Monster* getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId);
-	std::vector<Monster*> getAllMonstersInRange(const Vec2& pos, float range);
+	void getAllMonstersInRange(const Vec2& pos, float range, std::vector<Monster*>& foundMonsters);
 
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);
 	void damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId);
@@ -54,7 +54,8 @@ public:
 	void addMonsterTemplate(nlohmann::json& j);
 	Vec2 getRandomPos(sol::table& args);
 	void reset();
-	void runForEachMonsterInRadius(Vec2 pos, float radius, std::function<bool(Monster *monster) >& func) const;
+	void runForEachMonsterInRadius(const Vec2& pos, float radius, std::function<bool(Monster *monster) >& func) const;
+	void runForEachMonsterInPie(const Vec2& pos, float radius, float angle, float angleWidth, std::function<bool(Monster *monster) >& func) const;
 	void relocateMonster(Monster* monster);
 
 	const std::vector<MonsterTemplate*>& getTemplates() const

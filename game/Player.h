@@ -35,7 +35,7 @@ class Player
 	Gun *secondaryGun;
 	Vec2 aimDir;
 	Vec2 moveDir;
-	Vec2 moveSpeedDir;
+	Vec2 moveVelocity;
 	float aimAngle;
 	float oldSpreadAngle;
 	int hitPoints;

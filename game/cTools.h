@@ -91,7 +91,6 @@ inline T lerp(const T& a, const T& b, float lerpAmount)
 
 float angleDiff(float a, float b);
 
-
 float approachAngle(float moveAngle, float wantedAngle, float rotation);
 
 bool textFileRead(std::string path, std::string &data);
