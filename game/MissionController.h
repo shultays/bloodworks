@@ -50,10 +50,7 @@ public:
 	void onPlayerDied();
 	bool isLoaded() const;
 
-	sol::table& getMissionData()
-	{
-		return scriptTable;
-	}
+	sol::table getMissionData();
 	void onMonsterDied(Monster* monster);
 	void repositionGUI();
 };

@@ -159,8 +159,40 @@ Player::~Player()
 	killSounds.clear();
 }
 
+#include "cParticle.h"
+#include "MonsterController.h"
+#include "Monster.h"
+
+cParticle* p = nullptr;
 void Player::tick()
 {
+	if (input.isKeyDown(key_f4))
+	{
+		if (p == nullptr)
+		{
+			p = new cParticle(bloodworks, bloodworks->getParticleTemplate("FlameParticle"), lua.create_table());
+			bloodworks->addRenderable(p, PLAYER + 100);
+		}
+		sol::table t = lua.create_table();
+		t["moveSpeed"] = aimDir * 300.0f + moveVelocity;
+		float a = 0.15f;
+		float d = 150.0f;
+		if (input.isKeyDown(key_f3))
+		{
+			debugRenderer.addLine(gunPos, gunPos + (aimDir * Mat2::rotation(-a)) * d);
+			debugRenderer.addLine(gunPos, gunPos + (aimDir * Mat2::rotation(a)) * d);
+			std::function<bool(Monster *monster)> f = [&](Monster *monster) -> bool
+			{
+				debugRenderer.addCircle(monster->getPosition(), monster->getRadius());
+				return true;
+			};
+			bloodworks->getMonsterController()->runForEachMonsterInPie(gunPos, d, aimAngle, a, f);
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			p->addParticle(gunPos, t);
+		}
+	}
 	if (visible == false)
 	{
 		return;

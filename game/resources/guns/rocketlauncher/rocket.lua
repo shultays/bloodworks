@@ -17,7 +17,7 @@ function RocketLauncher.onTick(gun)
 			bullet.radius = 6
 			bullet.data.moveAngle = bullet.moveAngle
 			bullet.data.moveSpeed = bullet.moveSpeed
-			bullet.data.lateralSpeedDir = player.moveSpeedDir - (player.moveDir * player.moveSpeedDir:dot(player.aimDir))
+			bullet.data.lateralSpeedDir = player.moveVelocity - (player.moveDir * player.moveVelocity:dot(player.aimDir))
 			bullet.data.lateralSpeed = bullet.data.lateralSpeedDir:safeNormalize() * 0.3
 			bullet.data.lifeTime = 2.5
 			bullet.meshRotation = bullet.moveAngle

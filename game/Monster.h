@@ -29,6 +29,7 @@ class Monster
 	float moveSpeed;
 	float moveAngle;
 	Vec2 moveDir;
+	Vec2 moveVelocity;
 
 	Vec2 partScale;
 	Vec2 textureSize;
@@ -72,6 +73,7 @@ class Monster
 	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
 
 	int lastRunCheck;
+	float lastSoundTime;
 
 	BuffFloat knockbackResistance;
 	BuffFloat moveSpeedMultiplier;

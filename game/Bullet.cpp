@@ -30,6 +30,14 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	onDamageArgs["gun"] = gun;
 	meshRotation = -1500;
 	monsterBullet = false;
+	if (gun)
+	{
+		lifeTime = gun->getBulletLifeTime();
+	}
+	startTime = timer.getTime();
+
+	particleArgs = lua.create_table();
+	particleArgs["bullet"] = this;
 }
 
 Bullet::~Bullet()
@@ -65,7 +73,7 @@ void Bullet::tick()
 	clampPos();
 	updateDrawable();
 
-	if (bloodworks->isCoorOutside(pos, -20.0f))
+	if (bloodworks->isCoorOutside(pos, -20.0f) || (lifeTime > 0.0f && timer.getTime() - startTime > lifeTime))
 	{
 		removeSelf();
 	}
@@ -75,8 +83,6 @@ void Bullet::tick()
 		return;
 	}
 
-	auto table = lua.create_table();
-	table["bullet"] = this;
 	for (auto& particleData : particles)
 	{
 		Vec2 finalPos = pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2));
@@ -90,7 +96,7 @@ void Bullet::tick()
 				particleData.lastSpawnPos = finalPos;
 			}
 
-			particleData.particle->addParticle(particleData.lastSpawnPos, table);
+			particleData.particle->addParticle(particleData.lastSpawnPos, particleArgs);
 		}
 	}
 	

@@ -72,6 +72,7 @@ class Gun
 
 	float spawnChance;
 	sol::function dynamicSpawnChance;
+	float bulletLifeTime;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();
@@ -119,6 +120,6 @@ public:
 	float getReloadPercentage() const;
 
 	int getMaxAmmo();
-
 	float getSpawnChance();
+	float getBulletLifeTime() const;
 };
