@@ -9,6 +9,7 @@ class cRenderable;
 class cRenderableContainer;
 enum class RenderableAlignment;
 enum class TextAlignment;
+class cParticle;
 
 class GameObject
 {
@@ -22,7 +23,7 @@ class GameObject
 		text
 	};
 
-	struct RenderableData
+	struct RenderableData // todo is this necessary? we can just return instances of texture/text
 	{
 		int id;
 		GameObject *gameObject;
@@ -52,6 +53,7 @@ class GameObject
 
 	cRenderableContainer *renderableGroup;
 	std::vector<RenderableData> renderables;
+	std::vector<cParticle*> particles;
 	int level;
 	RenderableAlignment alignment;
 
@@ -86,6 +88,7 @@ public:
 
 	RenderableData& addTexture(const std::string& texture, const std::string& shader);
 	RenderableData& addText(const std::string& text, const std::string& font);
+	cParticle* addParticle(const std::string& particleTemplate, const sol::table& args);
 	void removeRenderable(int id);
 
 	RenderableData& getRenderable(int id);

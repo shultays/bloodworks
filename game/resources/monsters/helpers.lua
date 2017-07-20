@@ -27,6 +27,9 @@ function StunController.getSlowAmount(monster)
 end
 
 function StunController.onHit(monster, damage, args)
+	if args.noSlowdown == true then
+		return
+	end
 	local data = monster.data
 	if args.customSlowdownAmount ~= nil then
 		data.customSlowdownAmount = args.customSlowdownAmount

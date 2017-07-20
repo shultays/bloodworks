@@ -428,6 +428,9 @@ void Bloodworks::windowResized(int width, int height)
 
 void Bloodworks::clearMission()
 {
+	lua["gameObjects"] = lua.create_table();
+	lua["mission"] = lua.create_table();
+
 	gamePlaySlowdown = targetGamePlaySlowdown = 1.0f;
 	coral.getSoundManager()->clearAllSounds();
 
@@ -470,7 +473,6 @@ void Bloodworks::clearMission()
 		perk->reset();
 	}
 	usedPerks.clear();
-
 	for (auto& bonus : bonuses)
 	{
 		bonus->reset();
@@ -505,10 +507,9 @@ bool Bloodworks::loadMission(const std::string& mission)
 	mainMenu->setVisible(false);
 	input.hideMouse();
 
-
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pistol")
+		if (gun->getName() == "Flamethrower")
 		{
 			player->setGun(gun);
 		}
