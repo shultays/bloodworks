@@ -1,0 +1,23 @@
+{
+  "type" : "gun",
+  "name": "Flamethrower",
+  "artFolder" : "resources/guns/flamethrower/",
+  "icon" : "icon.png",
+  
+  "bulletRadius" : 10.0,
+  "bulletSpeed" : 300.0,
+  "bulletDamage" : [6, 12],
+  "hideSpread" : true,
+  
+  "maxAmmo" : 100,
+  "reloadTime" : 2.4,
+  "bulletLifeTime" : 0.67,
+  
+  "firingSound" : {
+	"path" : "resources/sounds/flame.ogg",
+	"volume" : 0.25
+  },
+  
+  "scriptFile" : "resources/guns/flamethrower/flamethrower.lua",
+  "scriptName" : "Flamethrower"
+}

@@ -153,9 +153,6 @@ void MissionController::loadMission(const std::string& name)
 			lua["missionTime"] = timer.getTime() - missionLoadTime;
 			lua["missionLoadTime"] = missionLoadTime;
 
-			lua["gameObjects"] = lua.create_table();
-			lua["mission"] = lua.create_table();
-
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
 			missionLoopHandle = missionLoop.play();
@@ -166,6 +163,9 @@ void MissionController::loadMission(const std::string& name)
 
 void MissionController::reset()
 {
+	lua["gameObjects"] = lua.create_table();
+	lua["mission"] = lua.create_table();
+
 	if (loadedMission >= 0)
 	{
 		scriptTable = lua[missions[loadedMission].scriptName] = lua.create_table();
@@ -198,6 +198,11 @@ void MissionController::onPlayerDied()
 bool MissionController::isLoaded() const
 {
 	return loadedMission >= 0;
+}
+
+sol::table MissionController::getMissionData()
+{
+	return lua["missionData"];
 }
 
 void MissionController::onMonsterDied(Monster* monster)

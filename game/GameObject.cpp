@@ -6,6 +6,7 @@
 #include "cTexture.h"
 #include "Bloodworks.h"
 #include "cFont.h"
+#include "cParticle.h"
 
 void GameObject::updateMatrix()
 {
@@ -106,6 +107,15 @@ GameObject::RenderableData& GameObject::addText(const std::string& text, const s
 
 	renderableData.update();
 	return renderables[(int)renderables.size() - 1];
+}
+
+cParticle* GameObject::addParticle(const std::string& particleTemplate, const sol::table& args)
+{
+	checkRenderable();
+	cParticle* p = new cParticle(bloodworks, bloodworks->getParticleTemplate(particleTemplate), args);
+	renderableGroup->addRenderable(p);
+	particles.push_back(p);
+	return p;
 }
 
 void GameObject::removeRenderable(int id)

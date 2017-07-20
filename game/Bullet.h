@@ -32,6 +32,8 @@ class Bullet
 
 	float scale;
 	float radius;
+	float startTime;
+	float lifeTime;
 	int damage;
 	cRenderableContainer *renderable;
 	int id;
@@ -44,6 +46,7 @@ class Bullet
 	std::string shouldHitMonsterTest;
 
 	sol::table data;
+	sol::table particleArgs;
 	sol::table onDamageArgs;
 
 	int penetrateCount;
