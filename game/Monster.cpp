@@ -33,6 +33,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	experienceMultiplier = 1.0f;
 	scoreMultiplier = 1.0f;
 	isDead = false;
+	lastSoundTime = 0.0f;
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
@@ -122,10 +123,10 @@ void Monster::tick()
 		timers.resize(timers.size() - 1);
 		scriptTable[t.func](t.args);
 	}
-
+	moveVelocity = Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier();
 	if (moveSpeed > 0.0f)
 	{
-		position += Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier() * timer.getDt();
+		position += moveVelocity * timer.getDt();
 	}
 
 	float dt = timer.getDt();
@@ -188,14 +189,20 @@ void Monster::doDamage(int damage, const Vec2& dir)
 	doDamageWithArgs(damage, dir, t);
 }
 
-void Monster::doDamageWithArgs(int damage, const Vec2& dir, sol::table& args)
+void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& args)
 {
 	if (isDead)
 	{
 		return;
 	}
+	Vec2 dir = dirInput;
+	if (dir.lengthSquared() < 0.01f)
+	{
+		dir = -moveDir;
+	}
 	damage = (int)(damage * bloodworks->getPlayer()->getDamageMultiplier());
 	hitPoint -= damage;
+
 	if (scriptTable["onHit"])
 	{
 		scriptTable["onHit"](this, damage, args);
@@ -300,15 +307,19 @@ cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args
 {
 	cParticle *particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
 	particles.push_back(particle);
-	bloodworks->addRenderable(particle, MONSTERS + 1);
+	bloodworks->addRenderable(particle, renderable->getLevel() + 1);
 	return particle;
 }
 
 void Monster::spawnParticle(cParticle *particleToSpawn, sol::table& params)
 {
-	for (auto& particle : particles)
+	if (particleToSpawn)
 	{
-		if (particleToSpawn == nullptr || particle == particleToSpawn)
+		particleToSpawn->addParticle(position, params);
+	}
+	else
+	{
+		for (auto& particle : particles)
 		{
 			particle->addParticle(position, params);
 		}
@@ -433,8 +444,9 @@ void Monster::killSelf(const Vec2& blowDir)
 		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 
-	if (monsterTemplate->killSounds.size())
+	if (monsterTemplate->killSounds.size() && timer.getTime() - lastSoundTime > 0.1f)
 	{
+		lastSoundTime = timer.getTime();
 		cSoundSampleShr s = monsterTemplate->killSounds[randInt((int)monsterTemplate->killSounds.size())];
 		bloodworks->playSoundAtMap(position, s, 0.7f);
 	}

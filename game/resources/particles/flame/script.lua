@@ -18,7 +18,6 @@ function FlameParticle.addParticle(params, pos, args)
 	params.pos = Vec2.new(pos.x, pos.y)
 	
 	params.color = Vec3.new(1.0, 1.0 - math.random() * 0.2, 1.0 - math.random() * 0.2)
-	
 	params.moveSpeed = params.moveSpeed * (1.0 + math.random() * 0.1)
 	params.moveSpeed:rotateBy(-0.05 + math.random() * 0.1)
 	

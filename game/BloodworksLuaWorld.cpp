@@ -173,6 +173,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addTexture", &cParticle::addTexture
 		);
 
+	
 
 	lua.new_usertype<cPostProcess>("PostProcess",
 		"isEnabled", &cPostProcess::isEnabled,
@@ -350,6 +351,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"bulletRadius", &Gun::bulletRadius,
 		"bulletSpeed", &Gun::bulletSpeed,
 		"scriptTable", &Gun::scriptTable,
+		"bulletLifeTime", &Gun::bulletLifeTime,
 
 		"spreadAngle", &Gun::spreadAngle,
 		"crosshairDistance", &Gun::crosshairDistance,
@@ -610,6 +612,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,
 		"moveAngle", &Monster::moveAngle,
+		"moveVelocity", sol::readonly(&Monster::moveVelocity),
 		"moveDir", sol::readonly(&Monster::moveDir),
 
 		"getPathPos", &Monster::getPathPos,
@@ -672,6 +675,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &GameObject::data,
 		"addText", &GameObject::addText,
 		"addTexture", &GameObject::addTexture,
+		"addParticle", &GameObject::addParticle,
 
 		"removeRenderable", &GameObject::removeRenderable, 
 		"getRenderable", &GameObject::getRenderable,
@@ -708,7 +712,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"moveDir", sol::readonly(&Player::moveDir),
 		"visible", sol::readonly(&Player::visible),
 		"isDead", sol::readonly(&Player::isDead),
-		"moveSpeedDir", sol::readonly(&Player::moveVelocity),
+		"moveVelocity", sol::readonly(&Player::moveVelocity),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
 		"maxSpeed", &Player::maxSpeed,

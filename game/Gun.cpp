@@ -71,8 +71,12 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	}
 	iconPath = artFolder + j["icon"].get<std::string>();
 
-	bulletSize.w = j["bulletSize"].at(0).get<float>();
-	bulletSize.h = j["bulletSize"].at(1).get<float>();
+	if (j.count("bulletSize"))
+	{
+		bulletSize.w = j["bulletSize"].at(0).get<float>();
+		bulletSize.h = j["bulletSize"].at(1).get<float>();
+	}
+
 	bulletRadius = j["bulletRadius"].get<float>();
 	bulletSpeed = j["bulletSpeed"].get<float>();
 
@@ -150,10 +154,17 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		reloadTime = 2.0f;
 	}
 
+	if (j.count("bulletLifeTime"))
+	{
+		bulletLifeTime = j["bulletLifeTime"].get<float>();
+	}
+	else
+	{
+		bulletLifeTime = -1.0f;
+	}
+
 	buffedMaxAmmo = currentAmmo = getMaxAmmo();
 	reloading = false;
-
-	scriptTable["init"](this);
 }
 
 void Gun::stop()
@@ -374,6 +385,11 @@ float Gun::getSpawnChance()
 		return dynamicSpawnChance();
 	}
 	return spawnChance;
+}
+
+float Gun::getBulletLifeTime() const
+{
+	return bulletLifeTime;
 }
 
 int Gun::getCurrentAmmo() const

@@ -34,7 +34,11 @@ void main(void)
 	finalColor.g *= 1.0 - dt / 1.0; 
 	finalColor.b *= 1.0 - dt / 1.0; 
 	
-	vColor = vec4(finalColor, 0.4 - dt * 0.5 * (2));
+	float alpha = 0.4;
+	if (dt > 0.3){
+		alpha -= dt - 0.3;
+	}
+	vColor = vec4(finalColor, alpha);
 	
 	vVertexUV = uv * vec2(1.0/12.0, 1.0/6.0) + uvStart;
 }
