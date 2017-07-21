@@ -353,6 +353,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"scriptTable", &Gun::scriptTable,
 		"bulletLifeTime", &Gun::bulletLifeTime,
 
+		"firingSoundFadein", &Gun::gunShootSoundFadein,
+		"firingSoundFadeout", &Gun::gunShootSoundFadeout,
+		"firingCurVolume", &Gun::gunShootSoundCurVolume,
+		"playFiringSound", &Gun::playGunShootSound,
+
 		"spreadAngle", &Gun::spreadAngle,
 		"crosshairDistance", &Gun::crosshairDistance,
 
@@ -703,7 +708,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.new_usertype<Player>("Player",
 		"position", &Player::pos,
 		"moveSpeed", &Player::moveSpeed,
-		"moveAngle", &Player::moveAngle,
 		"crosshairPos", sol::readonly(&Player::crosshairPos),
 		"crosshairDistance", sol::readonly(&Player::crosshairDistance),
 		"gunPos", sol::readonly(&Player::gunPos),

@@ -124,7 +124,7 @@ void Monster::tick()
 		scriptTable[t.func](t.args);
 	}
 	moveVelocity = Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier();
-	if (moveSpeed > 0.0f)
+	if (moveSpeed > 0.0f && input.isKeyUp(key_f6))
 	{
 		position += moveVelocity * timer.getDt();
 	}

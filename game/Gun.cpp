@@ -94,6 +94,11 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	lua.script_file(scriptFilePath);
 
+	gunShootSoundFadein = 0.1f;
+	gunShootSoundFadeout = 0.1f;
+	playGunShootSound = false;
+	gunShootSoundCurVolume = 0.0f;
+
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
 		LaserTemplate *laserTemplate = new LaserTemplate(game, j);
@@ -108,9 +113,22 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 		laser = nullptr;
 	}
 
+	gunShootSoundContinuous = false;
+	if (j.count("firingSoundContinuous"))
+	{
+		gunShootSoundContinuous = j["firingSoundContinuous"].get<bool>();
+	}
 	if (j.count("firingSound"))
 	{
 		gunShootSound.loadSample(j["firingSound"]);
+	}
+	if (j.count("firingSoundFadein"))
+	{
+		gunShootSoundFadein = j["firingSoundFadein"].get<float>();
+	}
+	if (j.count("firingSoundFadeout"))
+	{
+		gunShootSoundFadeout = j["firingSoundFadeout"].get<float>();
 	}
 
 	if (j.count("bulletHitSound"))
@@ -165,6 +183,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	buffedMaxAmmo = currentAmmo = getMaxAmmo();
 	reloading = false;
+
 }
 
 void Gun::stop()
@@ -177,6 +196,7 @@ void Gun::stop()
 		if (gunShootSoundHandle.isValid())
 		{
 			gunShootSoundHandle.stop();
+			gunShootSoundCurVolume = 0.0f;
 		}
 	}
 }
@@ -235,21 +255,61 @@ void Gun::tick(float dt)
 
 	scriptTable["onTick"](this);
 
-	if (laser && timer.getDt() > 0.0f)
+	if (gunShootSoundContinuous && gunShootSound.isValid())
 	{
-		if (gunShootSound.isValid())
+		if (laser)
 		{
-			if (laser->isVisible() && gunShootSoundHandle.isValid() == false)
+			playGunShootSound = laser->isVisible();
+		}
+		if (playGunShootSound)
+		{
+			if (gunShootSoundFadein <= 0.0f)
+			{
+				gunShootSoundCurVolume = gunShootSound.getVolume();
+			}
+			else
+			{
+				gunShootSoundCurVolume += dt / gunShootSoundFadein;
+			}
+			gunShootSoundCurVolume = min(gunShootSoundCurVolume, gunShootSound.getVolume());
+			if (gunShootSoundHandle.isValid() == false)
 			{
 				gunShootSoundHandle = gunShootSound.play();
 				gunShootSoundHandle.setLooped(true);
+				gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
 				bloodworks->addGameSound(gunShootSoundHandle);
 			}
-			else if (!laser->isVisible() && gunShootSoundHandle.isValid())
+			else
 			{
-				gunShootSoundHandle.stop();
-				gunShootSoundHandle.clear();
+				gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
 			}
+		}
+		else if (playGunShootSound == false)
+		{
+			if (gunShootSoundHandle.isValid())
+			{
+				if (gunShootSoundFadeout <= 0.0f)
+				{
+					gunShootSoundCurVolume = -1.0f;
+				}
+				else
+				{
+					gunShootSoundCurVolume -= dt / gunShootSoundFadeout;
+				}
+
+				if (gunShootSoundCurVolume < 0.0f)
+				{
+					gunShootSoundCurVolume = 0.0f;
+					gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
+					gunShootSoundHandle.stop();
+					gunShootSoundHandle.clear();
+				}
+				else
+				{
+					gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
+				}
+			}
+
 		}
 	}
 }
@@ -433,7 +493,7 @@ Bullet* Gun::addBullet()
 
 	bloodworks->onAddedGunBullet(this, bullet);
 
-	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime())
+	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime() && gunShootSoundContinuous == false)
 	{
 		lastShootSoundTime = timer.getTime();
 		bloodworks->addGameSound(gunShootSound.play());
