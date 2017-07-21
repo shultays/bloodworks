@@ -55,6 +55,7 @@ function Egg.onTick(monster)
 			local m = addRandomMonster(data.monsterType, true, true, 1.0)
 			m:setScale(m.scale * 0.8)
 			m.position = monster.position
+			Survival.ignoreMonsterForCount(m)
 		end
 	end
 end

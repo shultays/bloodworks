@@ -15,6 +15,7 @@
   "maxAmmo" : 40,
   "reloadTime" : 1.5,
   
+  "firingSoundContinuous" : true,
   "firingSound" : {
 	"path" : "resources/sounds/laser.ogg",
 	"volume" : 0.55

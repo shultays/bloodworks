@@ -196,7 +196,7 @@ function BulletShooter.init(monster)
 	data.bulletMinDamage = 2
 	data.bulletMaxDamage = 6
 	data.bulletSpeed = 300
-	data.bulletRate = 4.0
+	data.bulletRate = 3.0
 	data.bulletRandom = 0.3
 	data.shootsBullets = false
 end
@@ -230,6 +230,7 @@ function BulletShooter.onTick(monster)
 			bullet.moveSpeed = data.bulletSpeed
 			bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
 			bullet.monsterBullet = true
+			bullet.radius = 6.0
 			bullet:addRenderableTextureWithSize("resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
 		end
 	end

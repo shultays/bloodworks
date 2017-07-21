@@ -13,10 +13,10 @@
   "reloadTime" : 2.4,
   "bulletLifeTime" : 0.67,
   
-  "firingSound" : {
-	"path" : "resources/sounds/flame.ogg",
-	"volume" : 0.25
-  },
+  "firingSoundContinuous" : true,
+  "firingSound" : "resources/sounds/flame.ogg",
+  "firingSoundFadein" : 0.1,
+  "firingSoundFadeout" : 0.6,
   
   "scriptFile" : "resources/guns/flamethrower/flamethrower.lua",
   "scriptName" : "Flamethrower"
