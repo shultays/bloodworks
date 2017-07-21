@@ -13,7 +13,7 @@
 #include "Monster.h"
 
 
-#define MUSIC_VOLUME 0.5f
+#define MUSIC_VOLUME 0.4f
 
 MissionController::~MissionController()
 {

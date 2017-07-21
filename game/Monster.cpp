@@ -226,7 +226,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 
 			bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
 			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
-			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime())
+			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime() && (damage > 15 || randFloat() < 0.3f))
 			{
 				lastHitSoundPlayTime = timer.getTime();
 				cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
