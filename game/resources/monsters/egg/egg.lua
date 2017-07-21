@@ -51,7 +51,7 @@ function Egg.onTick(monster)
 	if data.spawnTime < 0.0 then
 		data.spawnTime = data.spawnTime + data.spawnInterval
 		
-		if missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster then
+		if (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and missionData.ignoreMonsterCount < 50 then
 			local m = addRandomMonster(data.monsterType, true, true, 1.0)
 			m:setScale(m.scale * 0.8)
 			m.position = monster.position
