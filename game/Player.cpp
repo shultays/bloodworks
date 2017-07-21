@@ -769,7 +769,7 @@ void Player::updateExperience()
 	scale = min(scale, scaledExpBarSize.x);
 	if (scale > 0.01f && bloodworks->isMissionLoaded())
 	{
-		experienceBarActive->setVisible(true);
+		experienceBarActive->setVisible(visible);
 		experienceBarActive->setWorldMatrix(Mat3::scaleMatrix(scale, scaledExpBarSize.y - 2.0f / bloodworks->getCameraZoom()).translateBy(expPosX / bloodworks->getCameraZoom(), expPos / bloodworks->getCameraZoom()));
 	}
 	else

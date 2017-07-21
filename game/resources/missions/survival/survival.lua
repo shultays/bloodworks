@@ -244,28 +244,30 @@ function makeBossDefault(monster)
 			if monster.data.spawnTimer < 0.0 then
 				monster.data.spawnTimer = monster.data.spawnTimer + 3.0
 				
-				local newMonster = addMonster(monster.monsterTemplate.name)
-				newMonster.position = monster.position
-				newMonster:setScale(math.max(0.3, monster.scale * 0.60))
-				newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
-				
-				newMonster.data.playerSeeRange = monster.data.playerSeeRange
-				newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
-				newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+				if missionData.ignoreMonsterCount < 50 then
+					local newMonster = addMonster(monster.monsterTemplate.name)
+					newMonster.position = monster.position
+					newMonster:setScale(math.max(0.3, monster.scale * 0.60))
+					newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+					
+					newMonster.data.playerSeeRange = monster.data.playerSeeRange
+					newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
+					newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
 
-				newMonster.data.hitWaitTime = monster.data.hitWaitTime
-				newMonster.data.hitInterval = monster.data.hitInterval
-				newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
-				newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
+					newMonster.data.hitWaitTime = monster.data.hitWaitTime
+					newMonster.data.hitInterval = monster.data.hitInterval
+					newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
+					newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
 
-				newMonster.experienceMultiplier = 0.0
-				newMonster.scoreMultiplier = 0.0
+					newMonster.experienceMultiplier = 0.0
+					newMonster.scoreMultiplier = 0.0
 
-				newMonster.hitPoint = math.floor(monster.data.maxHitpoint * 0.2)
-				newMonster.data.randomMove = true
-				newMonster.moveAngle = -monster.moveAngle
-				
-				Survival.ignoreMonsterForCount(newMonster)
+					newMonster.hitPoint = math.floor(monster.data.maxHitpoint * 0.2)
+					newMonster.data.randomMove = true
+					newMonster.moveAngle = -monster.moveAngle
+					
+					Survival.ignoreMonsterForCount(newMonster)
+				end
 			end
 		end
 	end
@@ -291,6 +293,14 @@ function Survival.init()
 	missionData.firstKill = true
 	missionData.firstTick = true
 	missionData.timeToCalcSpawn = -0.1
+	if DEBUG then
+		missionData.maxMonster = 20
+	else
+		missionData.maxMonster = 650
+		spawn = 50
+	end
+	missionData.curMaxMonster = missionData.maxMonster
+		
 end
 
 function Survival.onTick()
@@ -320,10 +330,8 @@ function Survival.onTick()
 		missionData.firstTick = false
 		local spawn
 		if DEBUG then
-			missionData.maxMonster = 20
 			spawn = 10
 		else
-			missionData.maxMonster = 650
 			spawn = 50
 		end
 		
@@ -386,9 +394,8 @@ function Survival.onTick()
 		end
 	end
 	
-	local curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.15)))
-	
-    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.15) * 0.5) and getMonsterCount() - missionData.ignoreMonsterCount < curMaxMonster 
+	missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
+    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.05) * 0.5) and getMonsterCount() - missionData.ignoreMonsterCount < missionData.curMaxMonster 
 	and getMonsterCount() < missionData.maxMonster and player.isDead == false then
         missionData.lastSpawnTime = missionTime
 		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
@@ -398,6 +405,9 @@ function Survival.onTick()
     end
 end
 
+function shouldSpawnMonster()
+	return 
+end
 
 function Survival.onPlayerDied()
 	local gameObject = addGameObject("FadeOutImage")
