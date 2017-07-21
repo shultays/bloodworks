@@ -1,0 +1,12 @@
+{
+  "type" : "particle",
+  "maxLifeTime" : 3.0,
+  
+  "vertexShader" : "resources/particles/flareTrail/shader.vs",
+  "pixelShader" : "resources/particles/flareTrail/shader.ps",
+  
+  "textures" : "resources/particles/flareTrail/particle.png",
+  
+  "scriptFile" : "resources/particles/flareTrail/script.lua",
+  "scriptName" : "FlareTrailParticle"
+}
