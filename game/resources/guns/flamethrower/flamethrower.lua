@@ -24,6 +24,9 @@ function Flamethrower.onTick(gun)
 		for i = 1,6 do
 			gun.data.particle:addParticle(player.gunPos, {moveSpeed = (player.aimDir * 300.0) + player.moveVelocity})
 		end
+		gun.playFiringSound = true
+	else
+		gun.playFiringSound = false
 	end
 end
 

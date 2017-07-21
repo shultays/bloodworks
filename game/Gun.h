@@ -73,6 +73,12 @@ class Gun
 	float spawnChance;
 	sol::function dynamicSpawnChance;
 	float bulletLifeTime;
+
+	float gunShootSoundFadein;
+	float gunShootSoundFadeout;
+	bool playGunShootSound;
+	float gunShootSoundCurVolume;
+	bool gunShootSoundContinuous;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j);
 	~Gun();

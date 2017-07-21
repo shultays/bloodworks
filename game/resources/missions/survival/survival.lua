@@ -232,6 +232,7 @@ function makeBossDefault(monster)
 		monster.data.oldTick = monster.scriptTable.onTick
 		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster.moveSpeed = monster.moveSpeed * 0.5
+		monster.data.maxHitpoint = monster.hitPoint
 		monster:setScale(0.8 + math.random() * 0.3)
 		monster.scriptTable.onTick = function (monster)
 			monster.data.oldTick(monster)
@@ -241,42 +242,42 @@ function makeBossDefault(monster)
 			monster.data.spawnTimer = monster.data.spawnTimer - dt
 			
 			if monster.data.spawnTimer < 0.0 then
-				monster.data.spawnTimer = 3.0
+				monster.data.spawnTimer = monster.data.spawnTimer + 3.0
 				
-				if getMonsterCount() < missionData.maxMonster then
-					local newMonster = addMonster(monster.monsterTemplate.name)
-					newMonster.position = monster.position
-					newMonster:setScale(math.max(0.3, monster.scale * 0.60))
-					newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
-					
-					newMonster.data.playerSeeRange = monster.data.playerSeeRange
-					newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
-					newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+				local newMonster = addMonster(monster.monsterTemplate.name)
+				newMonster.position = monster.position
+				newMonster:setScale(math.max(0.3, monster.scale * 0.60))
+				newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+				
+				newMonster.data.playerSeeRange = monster.data.playerSeeRange
+				newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
+				newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
 
-					newMonster.data.hitWaitTime = monster.data.hitWaitTime
-					newMonster.data.hitInterval = monster.data.hitInterval
-					newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
-					newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
+				newMonster.data.hitWaitTime = monster.data.hitWaitTime
+				newMonster.data.hitInterval = monster.data.hitInterval
+				newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
+				newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
 
-					newMonster.experienceMultiplier = 0.0
-					newMonster.scoreMultiplier = 0.0
+				newMonster.experienceMultiplier = 0.0
+				newMonster.scoreMultiplier = 0.0
 
-					newMonster.hitPoint = math.floor(monster.hitPoint * 0.2)
-					newMonster.data.randomMove = true
-					newMonster.moveAngle = -monster.moveAngle
-					
-					monster.scriptTable = shallowcopy(monster.scriptTable)
-					monster.scriptTable.onKilled = function (monster)
-						missionData.ignoreMonsterCount = missionData.ignoreMonsterCount - 1
-					end
-					missionData.ignoreMonsterCount = missionData.ignoreMonsterCount + 1
-				end
+				newMonster.hitPoint = math.floor(monster.data.maxHitpoint * 0.2)
+				newMonster.data.randomMove = true
+				newMonster.moveAngle = -monster.moveAngle
+				
+				Survival.ignoreMonsterForCount(newMonster)
 			end
 		end
-	
 	end
 end
 
+
+function Survival.ignoreMonsterForCount(monster)
+	if monster.data.ignoreForCount ~= true then
+		monster.data.ignoreForCount = true
+		missionData.ignoreMonsterCount = missionData.ignoreMonsterCount + 1
+	end
+end
 
 function Survival.init()
 	local theSeed = os.time()
@@ -442,6 +443,11 @@ function Survival.onMonsterDied(monster)
 	if missionData.firstKill then
 		missionData.firstKill = false
 		spawnRandomGun(monster.position)
+	end
+	
+	if monster.data.ignoreForCount == true then
+		monster.data.ignoreForCount = false
+		missionData.ignoreMonsterCount = missionData.ignoreMonsterCount - 1
 	end
 end
 
