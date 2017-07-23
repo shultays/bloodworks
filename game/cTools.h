@@ -5,6 +5,7 @@
 #include "cRect.h"
 #include <string>
 #include <assert.h>
+#include <algorithm>
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
@@ -31,6 +32,13 @@ const double d_pi = E_PI;
 const double d_pi_2 = (E_PI * 2.0);
 const double d_pi_d2 = (E_PI * 0.5);
 const double d_pi_3d2 = (E_PI * 1.5);
+
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
 
 template <class T>
 inline const T& min(const T& a, const T& b)
@@ -105,8 +113,19 @@ int randInt(int begin, int end);
 float randFloat(float limit);
 float randFloat(float begin, float end);
 
-void fixFolderPath(std::string& path);
-void fixFilePath(std::string& path);
+inline void fixFilePath(std::string& path)
+{
+	std::replace(path.begin(), path.end(), '\\', '/');
+}
+
+inline void fixFolderPath(std::string& path)
+{
+	fixFilePath(path);
+	if (path[path.size() - 1] != '/')
+	{
+		path = path + '/';
+	}
+}
 
 void printStack();
 void printExceptionStack(void* pExp);
