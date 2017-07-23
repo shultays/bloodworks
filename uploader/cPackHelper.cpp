@@ -3,6 +3,7 @@
 #include "DirentHelper.h"
 #include "tools.h"
 #include <vector>
+#include <iostream>
 
 int getInt(FILE *fin)
 {
@@ -30,62 +31,87 @@ void putStr(FILE *fout, const std::string& str)
 	fwrite(str.c_str(), sizeof(char), size, fout);
 }
 
-
-void cPackHelper::packFolder(const std::string& f, const std::string& file)
+bool isTypeCorrect(const DirentHelper::File& f)
 {
-	std::string fFixed = f;
-	fixFolderPath(fFixed);
-	DirentHelper::Folder folder(f);
+	return f.isTypeOf("png") || f.isTypeOf("json") || f.isTypeOf("ogg") || f.isTypeOf("lua");
+}
+
+bool cPackHelper::packFolder(const std::string& pathUnfixed, const std::string& file, bool checkTypes)
+{
+	std::string folderPath = pathUnfixed;
+	fixFolderPath(folderPath);
+	DirentHelper::Folder folder(folderPath);
 	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
 
-	FILE *fout;
-	fopen_s(&fout, file.c_str(), "wb");
-	std::vector<long> pos;
-	pos.resize(files.size());
-	putInt(fout, 0);
-	putInt(fout, (int)files.size());
-	for (int i = 0; i < files.size(); i++)
+	if (files.size() > 0)
 	{
-		auto& f = files[i];
-		std::string path = f.folder + f.file;
-		fixFilePath(path);
-		
-		path = path.substr(fFixed.size());
-
-		putStr(fout, path);
-		pos[i] = ftell(fout);
-		putInt(fout, 0);
-	}
-
-	int headerSize = ftell(fout);
-	fseek(fout, 0, SEEK_SET);
-	fwrite(&headerSize, 1, 1, fout);
-	fseek(fout, 0, SEEK_END);
-
-	for (int i = 0; i < files.size(); i++)
-	{
-		auto& f = files[i];
-		FILE *fin;
-		fopen_s(&fin, (f.folder + f.file).c_str(), "rb");
-
-		char buf[BUFSIZ];
-		size_t total = 0;
-		size_t n;
-		while ((n = fread(buf, 1, sizeof(buf), fin)) > 0)
+		bool allValid = true;
+		for (auto& f : files)
 		{
-			total += n;
-			if (fwrite(buf, 1, n, fout) != n)
-				abort();
-			if (ferror(fout))
-				abort();
+			if (isTypeCorrect(f) == false)
+			{
+				allValid = false;
+				std::cout << "Invalid file type : " << f.folder + f.file << std::endl;
+			}
+			else
+			{
+				//std::cout << f.folder + f.file << std::endl;
+			}
 		}
-		fclose(fin);
+		if (allValid)
+		{
+			FILE *fout;
+			fopen_s(&fout, file.c_str(), "wb");
+			std::vector<long> pos;
+			pos.resize(files.size());
+			putInt(fout, 0);
+			putInt(fout, (int)files.size());
+			for (int i = 0; i < files.size(); i++)
+			{
+				auto& f = files[i];
+				std::string path = f.folder + f.file;
+				fixFilePath(path);
 
-		fseek(fout, pos[i], SEEK_SET);
-		putInt(fout, (int)total);
-		fseek(fout, 0, SEEK_END);
+				path = path.substr(folderPath.size());
+
+				putStr(fout, path);
+				pos[i] = ftell(fout);
+				putInt(fout, 0);
+			}
+
+			int headerSize = ftell(fout);
+			fseek(fout, 0, SEEK_SET);
+			fwrite(&headerSize, sizeof(int), 1, fout);
+			fseek(fout, 0, SEEK_END);
+
+			for (int i = 0; i < files.size(); i++)
+			{
+				auto& f = files[i];
+				FILE *fin;
+				fopen_s(&fin, (f.folder + f.file).c_str(), "rb");
+
+				char buf[BUFSIZ];
+				size_t total = 0;
+				size_t n;
+				while ((n = fread(buf, 1, sizeof(buf), fin)) > 0)
+				{
+					total += n;
+					if (fwrite(buf, 1, n, fout) != n)
+						abort();
+					if (ferror(fout))
+						abort();
+				}
+				fclose(fin);
+
+				fseek(fout, pos[i], SEEK_SET);
+				putInt(fout, (int)total);
+				fseek(fout, 0, SEEK_END);
+			}
+			fclose(fout);
+			return true;
+		}
 	}
-	fclose(fout);
+	return false;
 }
 
 void cPackHelper::unpackFile(const std::string& f, const std::string& folder)
