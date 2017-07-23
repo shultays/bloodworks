@@ -5,67 +5,121 @@
 #include "cPackHelper.h"
 #include <iostream>
 
+#include "UserDetails.h"
+
 #define CURL_STATICLIB 
 #include <curl/curl.h>
 
-
-bool isTypeCorrect(const DirentHelper::File& f)
-{
-	return f.isTypeOf("png") || f.isTypeOf("json") || f.isTypeOf("ogg") || f.isTypeOf("lua");
-}
-
-void sendFile(const std::string& file)
-{
-	curl_global_init(CURL_GLOBAL_DEFAULT);
-	CURL *curl = curl_easy_init();
-	if (curl) {
-
-		struct curl_httppost *formpost = NULL;
-		struct curl_httppost *lastptr = NULL;
-		struct curl_slist *headerlist = NULL;
-
-		/* Fill in the filename field */
-		curl_formadd(&formpost,
-			&lastptr,
-			CURLFORM_COPYNAME, "userfile",
-			CURLFORM_FILE, file.c_str(),
-			CURLFORM_END);
-
-		/* Fill in the submit field too, even if this is rarely needed */
-		curl_formadd(&formpost,
-			&lastptr,
-			CURLFORM_COPYNAME, "upload",
-			CURLFORM_COPYCONTENTS, "upload",
-			CURLFORM_END);
-
-
-		curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/upload.php");
-
-		//curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-		curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
-
-		/* Perform the request, res will get the return code */
-		CURLcode res = curl_easy_perform(curl);
-		/* Check for errors */
-		if (res != CURLE_OK)
-			fprintf(stderr, "curl_easy_perform() failed: %s\n",
-				curl_easy_strerror(res));
-
-		/* always cleanup */
-		curl_easy_cleanup(curl);
-
-		/* then cleanup the formpost chain */
-		curl_formfree(formpost);
-		/* free slist */
-		curl_slist_free_all(headerlist);
-	}
-	curl_global_cleanup();
-
-
-}
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
 
 int main(int argn, const char* argv[])
 {
+	srand((unsigned)time(0));
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	UserDetails account;
+	if (account.hasStoredUser())
+	{
+		account.tryLogin();
+	}
+
+	while (account.isLoginned() == false)
+	{
+		std::string username, password;
+		int answer;
+		do
+		{
+			std::cout << "1 - Create new user\n2 - Login with existing user\n";
+			std::cin >> answer;
+		} while (answer != 1 && answer != 2);
+
+		if (answer == 1 || answer == 2)
+		{
+			if (answer == 1)
+			{
+				std::cout << "Creating new user...\n";
+			}
+			else if (answer == 2)
+			{
+				std::cout << "Logining with existing user...\n";
+			}
+			while (true)
+			{
+				username = "";
+				password = "";
+				std::cout << "Enter username:\n";
+
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+				getline(std::cin, username);
+
+				username.erase(std::remove(username.begin(), username.end(), '\n'), username.end());
+				username.erase(std::remove(username.begin(), username.end(), '\r'), username.end());
+
+				if (username == "")
+				{
+					break;
+				}
+
+				std::string invalidChars = account.getInvalidCharsInUsername(username);
+				if (invalidChars.size() > 0)
+				{
+					std::cout << "Invalid characters in username : " << invalidChars << "\n";
+					continue;
+				}
+				if (answer == 1)
+				{
+					std::cout << "Enter password (leave empty for a random password):\n";
+				}
+				else if (answer == 2)
+				{
+					std::cout << "Enter password:\n";
+				}
+				getline(std::cin, password);
+
+				password.erase(std::remove(password.begin(), password.end(), '\n'), password.end());
+				password.erase(std::remove(password.begin(), password.end(), '\r'), password.end());
+
+				invalidChars = account.getInvalidCharsInPassword(password);
+				if (invalidChars.size() > 0)
+				{
+					std::cout << "Invalid characters in password : " << invalidChars << "\n";
+					continue;
+				}
+
+				if (password == "")
+				{
+					if (answer == 1)
+					{
+						password = account.getRandomPassword(12);
+						std::cout << "Random password : " << password;
+						std::cout << "\nNote it and press enter.\n";
+						std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				if (answer == 1)
+				{
+					account.tryRegister(username, password);
+				}
+				else if (answer == 2)
+				{
+					account.tryLogin(username, password);
+				}
+
+				break;
+			}
+		}
+	}
+
 	std::string path;
 	
 	if (argn > 1)
@@ -74,31 +128,19 @@ int main(int argn, const char* argv[])
 	}
 	if (path.length() == 0)
 	{
+		std::cout << "Enter a mod folder to upload:\n";
 		std::cin >> path;
 	}
 
-	DirentHelper::Folder folder("guns/rifle");
-	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
-	bool allValid = true;
-	for (auto& f : files)
+
+	std::string tempName = "uploader/temp.bld";
+	bool done = cPackHelper::packFolder(path, tempName);
+	if (done)
 	{
-		if (isTypeCorrect(f) == false)
-		{
-			allValid = false;
-			std::cout << "Invalid type : " << f.folder + f.file << std::endl;
-		}
-		else
-		{
-			std::cout << "valid : " << f.folder + f.file << std::endl;
-		}
-	}
-	if (allValid)
-	{
-		std::string tempName = "temp.bld";
-		cPackHelper::packFolder(folder.name, tempName);
-		sendFile(tempName);
+		account.sendFile(account.getUsername(), account.getPassword(), tempName);
 		cPackHelper::deleteFile(tempName);
 	}
+	curl_global_cleanup();
 
 	std::cin >> path;
     return 0;
