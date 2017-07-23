@@ -157,12 +157,14 @@
     <ClCompile Include="cPackHelper.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="uploader.cpp" />
+    <ClCompile Include="UserDetails.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cPackHelper.h" />
     <ClInclude Include="dirent.h" />
     <ClInclude Include="DirentHelper.h" />
     <ClInclude Include="tools.h" />
+    <ClInclude Include="UserDetails.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
