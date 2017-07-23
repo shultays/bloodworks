@@ -1,6 +1,8 @@
-game.VC.VC.opendb
 /game/x64/
+/uploader/x64/
 /x64/
 *.db
 game.VC.db
 /.vs/
+/uploader/.vs/
+*.opendb
