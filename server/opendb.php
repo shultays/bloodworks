@@ -1,8 +1,8 @@
 <?php
-$servername = "mysql.enginmercan.com";
-$username_db = "bloodworks_db";
-$password_db = "k2a0631k2NTa!!-";
-$dbname = "bloodworks_files";
+$servername = "";
+$username_db = "";
+$password_db = "";
+$dbname = "";
 
 $link = mysqli_init();
 
