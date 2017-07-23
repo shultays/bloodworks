@@ -13,8 +13,6 @@
 
 #define USERFILE "uploader/user_details.txt"
 
-std::string readBuffer;
-
 class UserDetails
 {
 	std::string username;
@@ -25,8 +23,9 @@ class UserDetails
 
 	static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	{
+		std::string* str = (std::string*)userp;
 		size_t realsize = size * nmemb;
-		readBuffer.append((char*)contents, realsize);
+		(*str).append((char*)contents, realsize);
 		return realsize;
 	}
 public:
@@ -103,6 +102,7 @@ public:
 
 	bool UserDetails::tryLogin(const std::string& username, const std::string& password)
 	{
+		std::string readBuffer;
 		if (logined == false && username.length() > 0 && password.length() > 0)
 		{
 			CURL *curl = curl_easy_init();
@@ -126,7 +126,8 @@ public:
 
 				curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/login.php");
 				curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
-				readBuffer = "";
+
+				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 				CURLcode res = curl_easy_perform(curl);
 				if (res != CURLE_OK)
@@ -183,6 +184,7 @@ public:
 	bool UserDetails::tryRegister(const std::string& username, const std::string& password)
 	{
 		logined = false;
+		std::string readBuffer;
 		if (logined == false && username.length() > 0 && password.length() > 0)
 		{
 			CURL *curl = curl_easy_init();
@@ -207,7 +209,7 @@ public:
 				curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/register.php");
 				curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
 
-				readBuffer = "";
+				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 				CURLcode res = curl_easy_perform(curl);
 				if (res != CURLE_OK)
@@ -275,7 +277,7 @@ public:
 	bool UserDetails::sendFile(const std::string& username, const std::string& password, const std::string& file)
 	{
 		bool success = false;
-		readBuffer = "";
+		std::string readBuffer = "";
 		CURL *curl = curl_easy_init();
 		if (curl)
 		{
@@ -309,6 +311,7 @@ public:
 
 			curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/upload.php");
 			curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 
 			CURLcode res = curl_easy_perform(curl);
