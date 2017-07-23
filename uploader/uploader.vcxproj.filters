@@ -18,31 +18,5 @@
     <ClCompile Include="uploader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cPackHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UserDetails.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DirentHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dirent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cPackHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tools.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UserDetails.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
