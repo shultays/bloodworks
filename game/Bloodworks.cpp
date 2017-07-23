@@ -29,6 +29,7 @@
 #include "BloodworksControls.h"
 #include "cTexturedQuadRenderable.h"
 #include "cTexturedQuadRenderable.h"
+#include "ModWindow.h"
 
 #include <sstream>
 
@@ -70,6 +71,7 @@ void Bloodworks::init()
 	bulletController = new BulletController(this);
 	missionController = new MissionController(this);
 	oneShotSoundManager = new OneShotSoundManager(this);
+	modWindow = new ModWindow(this);
 
 	player = new Player(this);
 
@@ -338,6 +340,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(bulletController);
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(oneShotSoundManager);
+	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
 }
 
@@ -748,6 +751,7 @@ void Bloodworks::tick()
 	mainMenu->tick(optionsPopup->isVisible());
 	optionsPopup->tick();
 	oneShotSoundManager->tick();
+	modWindow->tick();
 
 	for (int i = 0; i < gameSounds.size(); i++)
 	{

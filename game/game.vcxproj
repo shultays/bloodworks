@@ -192,6 +192,7 @@
     <ClCompile Include="cMath.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cPostProcess.cpp" />
+    <ClCompile Include="ModWindow.cpp" />
     <ClCompile Include="MonsterTemplate.cpp" />
     <ClCompile Include="Coral.cpp" />
     <ClCompile Include="cGame.cpp" />
@@ -287,6 +288,7 @@
     <ClInclude Include="LuaBuffController.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MissionController.h" />
+    <ClInclude Include="ModWindow.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="MonsterTemplate.h" />
