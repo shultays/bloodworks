@@ -183,6 +183,15 @@
     <ClCompile Include="ModWindow.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cSlave.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="cSlaveWindows.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="cMutexWindows.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -394,6 +403,15 @@
     </ClInclude>
     <ClInclude Include="ModWindow.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="cSlave.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="cMutex.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="cSlaveWork.h">
+      <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
