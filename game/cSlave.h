@@ -93,7 +93,8 @@ class cSlaveController
 		controllerMutex.releaseMutex();
 	}
 public:
-
+	cSlaveController();
+	~cSlaveController();
 	void startSlaves(int slaveCount);
 	void freeSlaves();
 	void addWork(cSlaveWork* work);

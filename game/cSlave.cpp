@@ -17,6 +17,16 @@ void cSlave::startSlaveThread(cSlaveController* controller)
 	startSlaveThreadNative();
 }
 
+cSlaveController::cSlaveController()
+{
+
+}
+
+cSlaveController::~cSlaveController()
+{
+	freeSlaves();
+}
+
 void cSlaveController::startSlaves(int slaveCount) 
 {
 	this->slaveCount = slaveCount;
