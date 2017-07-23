@@ -190,8 +190,11 @@
     <ClCompile Include="cKeyMapButton.cpp" />
     <ClCompile Include="cLuaWorld.cpp" />
     <ClCompile Include="cMath.cpp" />
+    <ClCompile Include="cMutexWindows.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cPostProcess.cpp" />
+    <ClCompile Include="cSlave.cpp" />
+    <ClCompile Include="cSlaveWindows.cpp" />
     <ClCompile Include="ModWindow.cpp" />
     <ClCompile Include="MonsterTemplate.cpp" />
     <ClCompile Include="Coral.cpp" />
@@ -245,6 +248,7 @@
     <ClInclude Include="cKeyMapButton.h" />
     <ClInclude Include="cMat.h" />
     <ClInclude Include="cMath.h" />
+    <ClInclude Include="cMutex.h" />
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />
@@ -261,6 +265,8 @@
     <ClInclude Include="cScrollContainer.h" />
     <ClInclude Include="cShader.h" />
     <ClInclude Include="cSharedPtr.h" />
+    <ClInclude Include="cSlave.h" />
+    <ClInclude Include="cSlaveWork.h" />
     <ClInclude Include="cSlider.h" />
     <ClInclude Include="cSound.h" />
     <ClInclude Include="cSoundManager.h" />

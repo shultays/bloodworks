@@ -6,6 +6,10 @@
 #include "cGame.h"
 #include "cTools.h"
 #include "cSoundManager.h"
+#include "cSlave.h"
+
+#define CURL_STATICLIB 
+#include <curl/curl.h>
 
 #ifdef _WIN32
 #include "Windows.h"
@@ -42,6 +46,7 @@ void Coral::tick()
 		{
 			lastUpdateTime = t;
 		}
+		slaveController->update();
 		debugRenderer.tick(timer.getDt());
 		game->tickInternal();
 		input.tick();
@@ -149,6 +154,11 @@ void Coral::initFrameBuffers()
 
 void Coral::init()
 {
+	slaveController = new cSlaveController();
+	slaveController->startSlaves(3);
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+
 	gameRunning = true;
 	fullScreen = false;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
@@ -182,5 +192,6 @@ void Coral::clear()
 	glDeleteBuffers(1, &postProcessQuad);
 
 	SAFE_DELETE(soundManager);
+	SAFE_DELETE(slaveController);
 }
 
