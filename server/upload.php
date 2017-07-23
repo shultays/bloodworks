@@ -1,5 +1,4 @@
 <?php
-
 function endsWith($haystack, $needle)
 {
     $length = strlen($needle);
@@ -14,7 +13,55 @@ function isValidFile($name) {
 	return endsWith($name, ".lua") or endsWith($name, ".png") or endsWith($name, ".json") or endsWith($name, ".ogg");
 } 
 
-if(isset($_POST['upload']) and $_FILES['userfile']['size'] > 0)
+$success = "error";
+$validUser = false;
+
+include 'opendb.php';
+$userid = "-1";
+
+if(isset($_POST['username']) and isset($_POST['password']))
+{
+	$username = $_POST['username'];
+	$username = addslashes($username);
+	$password = $_POST['password'];
+	$password = addslashes($password);
+	
+	include 'hasher.php';
+
+	if(validUsername($username) and validPassword($password)) 
+	{ 
+		$query = "SELECT password, id FROM users WHERE username = '$username' LIMIT 1";
+		$result = mysqli_query($link, $query);
+		if (mysqli_num_rows($result) == 0) 
+		{
+			$success = "username does not exist";	
+		}
+		else
+		{
+			list($realpass, $userid) = mysqli_fetch_array($result);
+			if ($realpass === hashText($password))
+			{
+				$validUser = true;
+			}
+			else
+			{
+				$success = "invalid password";
+			}
+		}
+	}
+}
+
+$validUpload = false;
+if (isset($_POST['upload']) and $_FILES['userfile']['size'] > 0)
+{
+	$validUpload = true;
+}
+else
+{
+	$success = "upload error";
+}
+
+if($validUser and $validUpload)
 {
 	$fileName = $_FILES['userfile']['name'];
 	$tmpName  = $_FILES['userfile']['tmp_name'];
@@ -26,36 +73,35 @@ if(isset($_POST['upload']) and $_FILES['userfile']['size'] > 0)
 	fclose($fp);
 
 	$headerSize = unpack("i", $content)[1];
+	//echo $headerSize . "\n" ;
 
-	$headerSize -= 4;
-	$header = substr ( $content , 4, $headerSize);
+	$header = substr ($content , 4, $headerSize - 4);
 
 	$fileNum = unpack("i", $header)[1];
-	echo $fileNum . "\n" ;
-	$headerSize -= 4;
-	$header = substr ( $header , 4, $headerSize);
+	//echo $fileNum . "\n" ;
+	$header = substr ($header , 4);
 
 	$allValid = true;
 
+	//echo $header . "\n\n";
 	for( $i = 0; $i<$fileNum; $i++ ) 
 	{
 		$len = unpack("i", $header)[1];
-		echo $len . "\n" ;
-		$headerSize -= 4;
-		$header = substr($header, 4, $headerSize);
+		//echo $len . "\n" ;
+		$header = substr($header, 4);
 		
 		$name = substr($header, 0, $len);
-		echo $name . "\n" ;
-		$headerSize -= $len + 4;
-		$header = substr($header, $len + 4, $headerSize);
+		//echo $name . "\n" ;
+		$header = substr($header, $len + 4);
 		
 		if (isValidFile($name) == false){
 			$allValid = false;
+			//echo $name;
 		}
 	}
 
-	echo $allValid . "\n";
-
+	//echo $allValid . "\n";
+	
 	if(!get_magic_quotes_gpc())
 	{
 		$fileName = addslashes($fileName);
@@ -63,30 +109,29 @@ if(isset($_POST['upload']) and $_FILES['userfile']['size'] > 0)
 
 	if ($allValid)
 	{
+		$fileName = addslashes($fileName);
+		$fileType = addslashes($fileType);
 		$content = addslashes($content);
-		include 'opendb.php';
+		$type = addslashes($type);
 
-		$query = "INSERT INTO upload (name, size, type, content ) ".
-		"VALUES ('$fileName', '$fileSize', '$fileType', '$content')";
+		$query = "INSERT INTO upload (name, size, type, content, userid ) ".
+		"VALUES ('$fileName', '$fileSize', '$fileType', '$content', '$userid')";
 
-		mysqli_query($link, $query) or die('Error, query failed');
-		include 'closedb.php';
-		echo "<br>File $fileName uploaded<br>";
+		if (mysqli_query($link, $query))
+		{
+			$success = "true";
+		}
+		else
+		{
+			$success = "sql error";
+		}
+	}
+	else
+	{
+		$success = "invalid files";
 	}
 }
+
+echo $success;
+include 'closedb.php';
 ?>
-<html>
-<body>
-<form method="post" enctype="multipart/form-data">
-<table width="350" border="0" cellpadding="1" cellspacing="1" class="box">
-<tr>
-<td width="246">
-<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
-<input name="userfile" type="file" id="userfile">
-</td>
-<td width="80"><input name="upload" type="submit" class="box" id="upload" value=" Upload " ></td>
-</tr>
-</table>
-</form>
-</body>
-</html>
