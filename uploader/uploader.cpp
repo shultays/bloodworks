@@ -1,21 +1,11 @@
 
 #pragma warning(disable: 4996)
 
-#include "DirentHelper.h"
-#include "cPackHelper.h"
+#include "../game/DirentHelper.h"
+#include "../game/cPackHelper.h"
+#include "../game/UserDetails.h"
+
 #include <iostream>
-
-#include "UserDetails.h"
-
-#define CURL_STATICLIB 
-#include <curl/curl.h>
-
-#ifdef max
-#undef max
-#endif
-#ifdef min
-#undef min
-#endif
 
 int main(int argn, const char* argv[])
 {
@@ -142,7 +132,9 @@ int main(int argn, const char* argv[])
 	}
 	curl_global_cleanup();
 
+#ifdef _DEBUG
 	std::cin >> path;
+#endif
     return 0;
 }
 
