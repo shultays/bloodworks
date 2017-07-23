@@ -3,14 +3,11 @@
 #include "cTexturedQuadRenderable.h"
 #include "Bloodworks.h"
 #include "cTexture.h"
+#include "cGlobals.h"
 
-ModWindow::ModWindow(Bloodworks *bloodworks)
+ModWindow::ModWindow(Bloodworks *bloodworks) : loginWork(this)
 {
 	this->bloodworks = bloodworks;
-	if (userDetails.hasStoredUser())
-	{
-		userDetails.tryLogin();
-	}
 
 	mainWindow = new cRenderableContainer(bloodworks);
 	mainWindow->setAlignment(RenderableAlignment::center);
@@ -20,6 +17,13 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 	mainWindow->addRenderable(t);
 	mainWindow->setVisible(false);
 	bloodworks->addRenderable(mainWindow, GUI + 151);
+
+	cSlaveController* slaveController = coral.getSlaveController();
+
+	if (userDetails.hasStoredUser())
+	{
+		bloodworks->addSlaveWork(&loginWork);
+	}
 }
 
 ModWindow::~ModWindow()
@@ -29,4 +33,5 @@ ModWindow::~ModWindow()
 
 void ModWindow::tick()
 {
+	loginWork.isDone();
 }
