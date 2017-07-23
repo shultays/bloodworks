@@ -42,6 +42,7 @@ class OneShotSoundManager;
 class OptionsPopup;
 class cPersistent;
 class ModWindow;
+class cSlaveWork;
 
 class Bloodworks : public cGame
 {
@@ -247,4 +248,5 @@ public:
 	}
 	bool isOptionsVisible() const;
 	void onLevelUp();
+	void addSlaveWork(cSlaveWork* work);
 };
