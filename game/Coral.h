@@ -9,6 +9,7 @@ extern GLuint postProcessQuad;
 
 class cSoundManager;
 class StackWalkerToConsole;
+class cSlaveController;
 
 class Coral 
 {
@@ -29,6 +30,7 @@ class Coral
 	int windowWidth, windowHeight;
 	bool gameRunning;
 	cSoundManager *soundManager;
+	cSlaveController *slaveController;
 
 public:
 	Coral();
@@ -47,8 +49,14 @@ public:
 	}
 
 	bool isDebuggerPresent();
+
 	cSoundManager* getSoundManager() const
 	{
 		return soundManager;
+	}
+
+	cSlaveController* getSlaveController() const
+	{
+		return slaveController;
 	}
 };

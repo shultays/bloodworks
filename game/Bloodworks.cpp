@@ -30,6 +30,7 @@
 #include "cTexturedQuadRenderable.h"
 #include "cTexturedQuadRenderable.h"
 #include "ModWindow.h"
+#include "cSlave.h"
 
 #include <sstream>
 
@@ -666,6 +667,11 @@ void Bloodworks::onLevelUp()
 	{
 		levelUpPopup->showLevelUpText();
 	}
+}
+
+void Bloodworks::addSlaveWork(cSlaveWork* work)
+{
+	coral.getSlaveController()->addWork(work);
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
