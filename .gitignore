@@ -6,3 +6,4 @@ game.VC.db
 /.vs/
 /uploader/.vs/
 *.opendb
+user_details.txt
