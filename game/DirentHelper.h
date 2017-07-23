@@ -4,17 +4,17 @@
 #include "cTools.h"
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace DirentHelper
 {
-
 	class File
 	{
 	public:
 		std::string folder;
 		std::string file;
 
-		bool isTypeOf(const std::string& type)
+		bool isTypeOf(const std::string& type) const
 		{
 			size_t pos = file.find_last_of(".");
 			if (pos != std::string::npos && file.substr(pos + 1) == type)
@@ -68,7 +68,6 @@ namespace DirentHelper
 			runOnEachFile(func, recursive);
 
 		}
-
 
 		void runOnEachFile(std::function<void(File&)>& func, bool recursive = false)
 		{
