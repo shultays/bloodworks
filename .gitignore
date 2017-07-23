@@ -7,3 +7,4 @@ game.VC.db
 /uploader/.vs/
 *.opendb
 user_details.txt
+opendb.php
