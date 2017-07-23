@@ -383,5 +383,11 @@
     <ClInclude Include="cPostProcess.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
+    <ClInclude Include="cPackHelper.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="UserDetails.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
