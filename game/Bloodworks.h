@@ -41,6 +41,7 @@ class MainMenu;
 class OneShotSoundManager;
 class OptionsPopup;
 class cPersistent;
+class ModWindow;
 
 class Bloodworks : public cGame
 {
@@ -65,6 +66,7 @@ class Bloodworks : public cGame
 	cPostProcess *pausePostProcess;
 	LevelUpPopup *levelUpPopup;
 	OptionsPopup *optionsPopup;
+	ModWindow *modWindow;
 
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
