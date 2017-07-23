@@ -180,6 +180,9 @@
     <ClCompile Include="cPostProcess.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="ModWindow.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -387,6 +390,9 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="UserDetails.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="ModWindow.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
