@@ -4,11 +4,12 @@
 #include "Bullet.h"
 #include "cGlobals.h"
 
-Perk::Perk(nlohmann::json& j)
+Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
+	this->bloodworks = bloodworks;
 	name = j["name"].get<std::string>();
 	description = j["description"].get<std::string>();
-	iconPath = j["iconFile"].get<std::string>();
+	iconPath = file.folder + j["iconFile"].get<std::string>();
 	scriptName = j["scriptName"].get<std::string>();
 
 	if (j.count("maxLevel"))
@@ -24,8 +25,11 @@ Perk::Perk(nlohmann::json& j)
 
 	level = 0;
 	scriptTable = lua[scriptName] = lua.create_table();
+	std::string folder = file.folder;
+	fixFolderPath(folder);
+	scriptTable["basePath"] = folder;
 
-	std::string scriptPath = j["scriptFile"].get<std::string>();
+	std::string scriptPath = file.folder + j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 
 	onAddGunBulletFunc = scriptTable["onAddGunBullet"];

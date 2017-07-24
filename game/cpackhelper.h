@@ -71,6 +71,7 @@ public:
 				std::vector<long> pos;
 				pos.resize(files.size());
 				putInt(fout, 0);
+				putInt(fout, 0);
 				putInt(fout, (int)files.size());
 				for (int i = 0; i < files.size(); i++)
 				{
@@ -86,7 +87,7 @@ public:
 				}
 
 				int headerSize = ftell(fout);
-				fseek(fout, 0, SEEK_SET);
+				fseek(fout, sizeof(int), SEEK_SET);
 				fwrite(&headerSize, sizeof(int), 1, fout);
 				fseek(fout, 0, SEEK_END);
 
@@ -113,6 +114,11 @@ public:
 					putInt(fout, (int)total);
 					fseek(fout, 0, SEEK_END);
 				}
+
+				int fileSize = ftell(fout);
+				fseek(fout, 0, SEEK_SET);
+				fwrite(&fileSize, sizeof(int), 1, fout);
+
 				fclose(fout);
 				return true;
 			}

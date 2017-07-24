@@ -11,15 +11,13 @@
 #include "Monster.h"
 #include "BloodworksControls.h"
 
-Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
+Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
 	this->bloodworks = bloodworks;
 
 	lastShootSoundTime = timer.getTime();
 
 	name = j["name"].get<std::string>();
-	artFolder = j["artFolder"].get<std::string>();
-	fixFolderPath(artFolder);
 
 	if (j.count("hideSpread"))
 	{
@@ -57,7 +55,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	}
 	if (j.count("bulletTexture"))
 	{
-		bulletTexturePath = artFolder + j["bulletTexture"].get<std::string>();
+		bulletTexturePath = file.folder + j["bulletTexture"].get<std::string>();
 		bulletTexture = resources.getTexture(bulletTexturePath);
 	}
 	if (j.count("bulletMeshShift"))
@@ -69,7 +67,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	{
 		bulletMeshShift.setZero();
 	}
-	iconPath = artFolder + j["icon"].get<std::string>();
+	iconPath = file.folder + j["icon"].get<std::string>();
 
 	if (j.count("bulletSize"))
 	{
@@ -82,10 +80,13 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	damage = IntVec2(j["bulletDamage"].at(0).get<int>(), j["bulletDamage"].at(1).get<int>());
 
-	std::string scriptFilePath = j["scriptFile"].get<std::string>();
+	std::string scriptFilePath = file.folder + j["scriptFile"].get<std::string>();
 	fixFilePath(scriptFilePath);
 	scriptName = j["scriptName"].get<std::string>();
 	scriptTable = lua[scriptName] = lua.create_table();
+	std::string folder = file.folder;
+	fixFolderPath(folder);
+	scriptTable["basePath"] = folder;
 	data = lua.create_table();
 	id = bloodworks->getUniqueId();
 
@@ -101,7 +102,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
-		LaserTemplate *laserTemplate = new LaserTemplate(game, j);
+		LaserTemplate *laserTemplate = new LaserTemplate(game, j, file);
 		bloodworks->addLaserTemplate(laserTemplate);
 		laser = new LaserRenderable(bloodworks, laserTemplate);
 		laser->setWorldMatrix(Mat3::identity());
@@ -120,7 +121,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 	}
 	if (j.count("firingSound"))
 	{
-		gunShootSound.loadSample(j["firingSound"]);
+		gunShootSound.loadSample(j["firingSound"], file);
 	}
 	if (j.count("firingSoundFadein"))
 	{
@@ -133,12 +134,12 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	if (j.count("bulletHitSound"))
 	{
-		bulletHitSound.loadSample(j["bulletHitSound"]);
+		bulletHitSound.loadSample(j["bulletHitSound"], file);
 	}
 
 	if (j.count("reloadBeginSound"))
 	{
-		reloadBeginSound.loadSample(j["reloadBeginSound"]);
+		reloadBeginSound.loadSample(j["reloadBeginSound"], file);
 	}
 	else
 	{
@@ -147,7 +148,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j)
 
 	if (j.count("reloadEndSound"))
 	{
-		reloadEndSound.loadSample(j["reloadEndSound"]);
+		reloadEndSound.loadSample(j["reloadEndSound"], file);
 	}
 	else
 	{
