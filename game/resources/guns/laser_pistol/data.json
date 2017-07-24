@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Laser Pistol",
-  "artFolder" : "resources/guns/laser_pistol/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [15.0, 15.0],
@@ -13,10 +12,10 @@
   "reloadTime" : 2.0,
   
   "firingSound" : {
-	"path" : "resources/sounds/laser_pistol.ogg",
+	"path" : "~/resources/sounds/laser_pistol.ogg",
 	"volume" : 0.85
   },
   
-  "scriptFile" : "resources/guns/laser_pistol/laser_pistol.lua",
+  "scriptFile" : "laser_pistol.lua",
   "scriptName" : "LaserPistol"
 }

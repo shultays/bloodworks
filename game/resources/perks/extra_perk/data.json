@@ -2,8 +2,8 @@
   "type" : "perk",
   "name": "More Perks on Level Up",
   "description": "You have a bigger list of perks to select when you level up.",
-  "iconFile" : "resources/perks/extra_perk/icon.png",
-  "scriptFile" : "resources/perks/extra_perk/extra_perk.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "extra_perk.lua",
   "scriptName" : "ExtraPerk",
   "maxLevel" : 2,
   "hideLevelText" : true

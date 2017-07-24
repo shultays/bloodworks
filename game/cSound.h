@@ -5,6 +5,7 @@
 #include "json.h"
 #include "sol.h"
 #include "cResources.h"
+#include "DirentHelper.h"
 
 class cSoundManager;
 class Wav;
@@ -89,7 +90,7 @@ public:
 		sample = nullptr;
 	}
 
-	void loadSample(nlohmann::json& j);
+	void loadSample(nlohmann::json& j, const DirentHelper::File& file);
 	void loadSample(sol::table& t);
 
 	cSoundHandle play();

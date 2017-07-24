@@ -16,7 +16,7 @@ end
 
 function NukeOnDeath.onPlayerDied()
 	addExplosion(player.position, 400.0, 300.0, 550, 850)
-	playSound({path = "resources/sounds/explode.ogg"})
+	playSound({path = "~/resources/sounds/explode.ogg"})
 	player.data.lastHomingTime = time
 	player.data.homingCount = 0
 	player.data.nukeSpawning = true

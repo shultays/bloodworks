@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Quad Damage",
-  "iconFile" : "resources/bonuses/quad_damage/icon.png",
-  "scriptFile" : "resources/bonuses/quad_damage/quad_damage.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "quad_damage.lua",
   "scriptName" : "QuadDamage"
 }

@@ -2,11 +2,11 @@
   "type" : "particle",
   "maxLifeTime" : 5.0,
   
-  "vertexShader" : "resources/particles/explosionFire/shader.vs",
-  "pixelShader" : "resources/particles/explosionFire/shader.ps",
+  "vertexShader" : "shader.vs",
+  "pixelShader" : "shader.ps",
   
-  "textures" : ["resources/particles/explosionFire/fire.png", "resources/particles/explosionFire/clouds.png"],
+  "textures" : ["fire.png", "clouds.png"],
   
-  "scriptFile" : "resources/particles/explosionFire/script.lua",
+  "scriptFile" : "script.lua",
   "scriptName" : "ExplosionFireParticle"
 }

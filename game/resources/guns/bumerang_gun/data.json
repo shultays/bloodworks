@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Bumerang Gun",
-  "artFolder" : "resources/guns/bumerang_gun/",
   "icon" : "bullet.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],
@@ -15,10 +14,10 @@
   
   
   "firingSound" : {
-	"path" : "resources/sounds/throw.ogg",
+	"path" : "~/resources/sounds/throw.ogg",
 	"volume" : 0.70
   },
   
-  "scriptFile" : "resources/guns/bumerang_gun/bumerang_gun.lua",
+  "scriptFile" : "bumerang_gun.lua",
   "scriptName" : "BumerangGun"
 }

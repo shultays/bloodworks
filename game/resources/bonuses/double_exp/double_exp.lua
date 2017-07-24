@@ -7,9 +7,9 @@ function DoubleExp.spawn(pos)
 	player.monsterExperienceMultiplier:addBuffWithId(DoubleExp.buffId, 2.0)
 	player.monsterExperienceMultiplier:setBuffDuration(DoubleExp.buffId, duration)
 	
-	addBuffIcon("DoubleExp", "resources/bonuses/double_exp/icon.png")
+	addBuffIcon("DoubleExp", DoubleExp.basePath .. "icon.png")
 	
-	playSound({path = "resources/sounds/double_exp.ogg", volume = 0.8})
+	playSound({path = "~/resources/sounds/double_exp.ogg", volume = 0.8})
 	if DoubleExp.data.gameObject == nil then
 		DoubleExp.data.gameObject = addGameObject("DoubleExp")
 	end

@@ -72,63 +72,76 @@ if($validUser and $validUpload)
 	$content = fread($fp, filesize($tmpName));
 	fclose($fp);
 
-	$headerSize = unpack("i", $content)[1];
-	//echo $headerSize . "\n" ;
-
-	$header = substr ($content , 4, $headerSize - 4);
-
-	$fileNum = unpack("i", $header)[1];
-	//echo $fileNum . "\n" ;
-	$header = substr ($header , 4);
-
-	$allValid = true;
-
-	//echo $header . "\n\n";
-	for( $i = 0; $i<$fileNum; $i++ ) 
-	{
-		$len = unpack("i", $header)[1];
-		//echo $len . "\n" ;
-		$header = substr($header, 4);
-		
-		$name = substr($header, 0, $len);
-		//echo $name . "\n" ;
-		$header = substr($header, $len + 4);
-		
-		if (isValidFile($name) == false){
-			$allValid = false;
-			//echo $name;
-		}
-	}
-
-	//echo $allValid . "\n";
+	$sizes = unpack("ifileSize/iheaderSize", $content);
 	
-	if(!get_magic_quotes_gpc())
+	$fileSizeInHeader = $sizes["fileSize"];
+	
+	if ($fileSizeInHeader !== $_FILES['userfile']['size'])
 	{
-		$fileName = addslashes($fileName);
-	}
-
-	if ($allValid)
-	{
-		$fileName = addslashes($fileName);
-		$fileType = addslashes($fileType);
-		$content = addslashes($content);
-		$type = addslashes($type);
-
-		$query = "INSERT INTO upload (name, size, type, content, userid ) ".
-		"VALUES ('$fileName', '$fileSize', '$fileType', '$content', '$userid')";
-
-		if (mysqli_query($link, $query))
-		{
-			$success = "true";
-		}
-		else
-		{
-			$success = "sql error";
-		}
+		$success = "upload error";
 	}
 	else
 	{
-		$success = "invalid files";
+		$headerSize = $sizes["headerSize"];
+		// echo "fileSizeInHeader " . $fileSizeInHeader . "\n" ;
+		// echo "headerSize " . $headerSize . "\n" ;
+		// echo "_FILESS " . $_FILES['userfile']['size'] . "\n" ;
+
+		$header = substr ($content , 8, $headerSize - 8);
+
+		$fileNum = unpack("i", $header)[1];
+		// echo $fileNum . "\n" ;
+		$header = substr ($header , 4);
+
+		$allValid = true;
+
+		// echo $header . "\n\n";
+		for( $i = 0; $i<$fileNum; $i++ ) 
+		{
+			$len = unpack("i", $header)[1];
+			// echo $len . "\n" ;
+			$header = substr($header, 4);
+			
+			$name = substr($header, 0, $len);
+			// echo $name . "\n" ;
+			$header = substr($header, $len + 4);
+			
+			if (isValidFile($name) == false){
+				$allValid = false;
+				// echo $name;
+			}
+		}
+
+		// echo $allValid . "\n";
+		
+		if(!get_magic_quotes_gpc())
+		{
+			$fileName = addslashes($fileName);
+		}
+
+		if ($allValid)
+		{
+			$fileName = addslashes($fileName);
+			$fileType = addslashes($fileType);
+			$content = addslashes($content);
+			$type = addslashes($type);
+
+			$query = "INSERT INTO upload (name, size, type, content, userid ) ".
+			"VALUES ('$fileName', '$fileSize', '$fileType', '$content', '$userid')";
+
+			if (mysqli_query($link, $query))
+			{
+				$success = "true";
+			}
+			else
+			{
+				$success = "sql error";
+			}
+		}
+		else
+		{
+			$success = "invalid files";
+		}
 	}
 }
 
