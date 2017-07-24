@@ -18,6 +18,46 @@ $validUser = false;
 
 include 'opendb.php';
 $userid = "-1";
+$validHeader = false;
+
+if(isset($_POST['name']) and strlen($_POST['name']) > 0)
+{
+	$validHeader = true;
+	$name = $_POST['name'];
+	$name = addslashes($name);
+	$description = (isset($_POST['description']) ? $_POST['description'] : "");
+	$description = addslashes($description);
+	$version = (isset($_POST['version']) ? $_POST['version'] : "0");
+	$version = addslashes($version);
+	$creator = (isset($_POST['creator']) ? $_POST['creator'] : "");
+	$creator = addslashes($creator);
+	
+	if (isset($_FILES['icon']))
+	{
+		if ($_FILES['icon']['size'] > 0)
+		{
+			$tmpName  = $_FILES['icon']['tmp_name'];
+
+			$fp      = fopen($tmpName, 'r');
+			$icon = fread($fp, filesize($tmpName));
+			$icon = addslashes($icon);
+			fclose($fp);
+		}
+		else
+		{
+			$validHeader = false;
+			$success = "invalid icon";
+		}
+	}
+	else
+	{
+		$icon = "";
+	}
+}
+else
+{
+	$success = "no name is given for mod";
+}
 
 if(isset($_POST['username']) and isset($_POST['password']))
 {
@@ -52,7 +92,7 @@ if(isset($_POST['username']) and isset($_POST['password']))
 }
 
 $validUpload = false;
-if (isset($_POST['upload']) and $_FILES['userfile']['size'] > 0)
+if (isset($_POST['upload']) and isset($_FILES['userfile']) and  $_FILES['userfile']['size'] > 0)
 {
 	$validUpload = true;
 }
@@ -61,7 +101,7 @@ else
 	$success = "upload error";
 }
 
-if($validUser and $validUpload)
+if($validHeader and $validUser and $validUpload)
 {
 	$fileName = $_FILES['userfile']['name'];
 	$tmpName  = $_FILES['userfile']['tmp_name'];
@@ -125,9 +165,9 @@ if($validUser and $validUpload)
 			$fileType = addslashes($fileType);
 			$content = addslashes($content);
 			$type = addslashes($type);
-
-			$query = "INSERT INTO upload (name, size, type, content, userid ) ".
-			"VALUES ('$fileName', '$fileSize', '$fileType', '$content', '$userid')";
+	
+			$query = "INSERT INTO upload (name, description, version, creator, icon, size, type, content, userid ) ".
+			"VALUES ('$name', '$description', '$version', '$creator', '$icon', '$fileSize', '$fileType', '$content', '$userid')";
 
 			if (mysqli_query($link, $query))
 			{

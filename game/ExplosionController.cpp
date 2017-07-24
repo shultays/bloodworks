@@ -3,6 +3,7 @@
 #include "cParticle.h"
 #include "cTexturedQuadRenderable.h"
 #include "MonsterController.h"
+#include "cTools.h"
 
 ExplosionController::ExplosionController(Bloodworks *bloodworks)
 {
@@ -49,8 +50,8 @@ void ExplosionController::tick()
 		float alpha = 0.0f;
 		float a0 = min(20.0f, explosionData.maxScale * 0.2f);
 		float a1 = min(50.0f, explosionData.maxScale * 0.5f);
-		float a2 = max(explosionData.maxScale - 50.0f, explosionData.maxScale * 0.8f, a1);
-
+		float a2 = max(explosionData.maxScale - 50.0f, explosionData.maxScale * 0.8f);
+		a2 = max(a2, a1);
 		if (newScale < a0)
 		{
 			alpha = 0.0f;
