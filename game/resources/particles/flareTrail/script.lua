@@ -27,6 +27,6 @@ function FlareTrailParticle.addParticle(params, pos)
 	
 	params.fadeOutSpeed = 3.8 + math.random() * 0.2
 	
-	params.texture = "resources/particles/flareTrail/particle.png"
+	params.texture = FlareTrailParticle.basePath .. "particle.png"
 	
 end

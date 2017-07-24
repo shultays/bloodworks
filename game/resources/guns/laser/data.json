@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Laser",
-  "artFolder" : "resources/guns/laser/",
   "icon" : "icon.png",
   "bulletTexture" : "laser.png",
   "bulletSize" : [15.0, 15.0],
@@ -9,7 +8,7 @@
   "bulletSpeed" : 500.0,
   "bulletDamage" : [10, 20],
   
-  "scriptFile" : "resources/guns/laser/laser.lua",
+  "scriptFile" : "laser.lua",
   "scriptName" : "Laser",
   
   "maxAmmo" : 40,
@@ -17,13 +16,13 @@
   
   "firingSoundContinuous" : true,
   "firingSound" : {
-	"path" : "resources/sounds/laser.ogg",
+	"path" : "~/resources/sounds/laser.ogg",
 	"volume" : 0.55
   },
   
   "isLaser" : true,
-  "laserTexture" : "resources/guns/laser/laser.png",
-  "laserShader" : "resources/guns/laser/laser",
+  "laserTexture" : "laser.png",
+  "laserShader" : "laser",
   
   "laserThickness" : 20.0,
   

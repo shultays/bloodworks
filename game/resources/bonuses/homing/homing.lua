@@ -14,7 +14,7 @@ function HomingOrb.spawn(pos)
 		bullet.moveAngle = 0
 		bullet.script = HomingOrbBullet
 		bullet.onHitCallback = "onHit"
-		bullet:addRenderableTextureWithSize("resources/bonuses/homing/bullet.png", Vec2.new(14.0, 14.0))
+		bullet:addRenderableTextureWithSize(HomingOrb.basePath .. "bullet.png", Vec2.new(14.0, 14.0))
 		
 		bullet.data.lastHitIndex = -1
 		bullet.radius = 12.0
@@ -30,9 +30,9 @@ function HomingOrb.spawn(pos)
 		particle.args.initialScale = 10.0
 		particle.args.initialAlpha = 0.4
 		particle.args.scaleSpeed = -20
-		particle:setTexture("resources/bonuses/homing/particle.png")
+		particle:setTexture(HomingOrb.basePath .. "particle.png")
 		
-		playSound({path = "resources/sounds/plasma.ogg"})
+		playSound({path = "~/resources/sounds/plasma.ogg"})
 	end
 end
 
@@ -51,7 +51,7 @@ function HomingOrbBullet.onTick(bullet)
 end
 
 function HomingOrbBullet.onHit(bullet, monster)
-	playSound({path = "resources/sounds/plasma_hit.ogg", position = bullet.position})
+	playSound({path = "~/resources/sounds/plasma_hit.ogg", position = bullet.position})
 	monster:addIgnoreId(HomingOrb.homingOrbId)
 	bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, HomingOrb.homingOrbId)
 	bullet.damage = math.floor(math.random() * 40 + 30)

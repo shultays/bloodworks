@@ -8,6 +8,7 @@
 #include "json.h"
 #include "cSound.h"	
 #include "BuffFloat.h"	
+#include "DirentHelper.h"	
 
 class Bloodworks;
 class Bullet;
@@ -20,7 +21,6 @@ class Gun
 
 	Bloodworks *bloodworks;
 	std::string name;
-	std::string artFolder;
 	std::string bulletTexturePath;
 	std::string iconPath;
 	cTextureShr bulletTexture;
@@ -80,7 +80,7 @@ class Gun
 	float gunShootSoundCurVolume;
 	bool gunShootSoundContinuous;
 public:
-	Gun(Bloodworks *bloodworks, nlohmann::json& j);
+	Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	~Gun();
 	void stop();
 	void start();

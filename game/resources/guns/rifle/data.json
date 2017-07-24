@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Rifle",
-  "artFolder" : "resources/guns/rifle/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],
@@ -15,10 +14,10 @@
   
   
   "firingSound" : {
-	"path" : "resources/sounds/rifle.ogg",
+	"path" : "~/resources/sounds/rifle.ogg",
 	"volume" : 0.70
   },
   
-  "scriptFile" : "resources/guns/rifle/rifle.lua",
+  "scriptFile" : "rifle.lua",
   "scriptName" : "Rifle"
 }

@@ -2,8 +2,8 @@
   "type" : "perk",
   "name": "Random Weapon",
   "description": "Get a random weapon.",
-  "iconFile" : "resources/perks/random_weapon/icon.png",
-  "scriptFile" : "resources/perks/random_weapon/random_weapon.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "random_weapon.lua",
   "scriptName" : "RandomWeapon",
   "maxLevel" : -1
 }

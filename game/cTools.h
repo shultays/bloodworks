@@ -115,7 +115,20 @@ float randFloat(float begin, float end);
 
 inline void fixFilePath(std::string& path)
 {
+	size_t pos = path.find_last_of("~");
+	if (pos != std::string::npos)
+	{
+		path = path.substr(pos + 1);
+	}
 	std::replace(path.begin(), path.end(), '\\', '/');
+	if (path[0] == '.')
+	{
+		path = path.substr(1);
+	}
+	if (path[0] == '/')
+	{
+		path = path.substr(1);
+	}
 }
 
 inline void fixFolderPath(std::string& path)

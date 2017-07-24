@@ -101,7 +101,8 @@ Player::Player(Bloodworks *bloodworks)
 
 	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
-	shootRenderable->addAnimation(getAnimationData("resources/assault/gun_fire/data.json"));
+	
+	shootRenderable->addAnimation(getAnimationData(DirentHelper::File("resources/assault/gun_fire/", "data.json")));
 	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
 	renderable->addRenderable(shootRenderable);
 
