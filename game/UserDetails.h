@@ -3,6 +3,7 @@
 #include <string>
 #include "UserDetails.h"
 #include "cPackHelper.h"
+#include "json.h"
 
 #include <fstream>
 #include <algorithm>
@@ -274,8 +275,23 @@ public:
 		return password;
 	}
 
-	bool UserDetails::sendFile(const std::string& username, const std::string& password, const std::string& file)
+	bool UserDetails::sendFile(const std::string& username, const std::string& password, const std::string& path, nlohmann::json& modInfo, const std::string& file)
 	{
+		if (modInfo.count("name") == 0)
+		{
+			std::cout << "Error : mod name cannot be empty\n";
+			return false;
+		}
+		if (modInfo.count("icon"))
+		{
+			DirentHelper::File f;
+			f.file = modInfo["icon"].get<std::string>();
+			if (f.isTypeOf("png") == false)
+			{
+				std::cout << "Error : mod icon must be a png file\n";
+				return false;
+			}
+		}
 		bool success = false;
 		std::string readBuffer = "";
 		CURL *curl = curl_easy_init();
@@ -284,6 +300,46 @@ public:
 			struct curl_httppost *formpost = NULL;
 			struct curl_httppost *lastptr = NULL;
 			struct curl_slist *headerlist = NULL;
+
+			curl_formadd(&formpost,
+				&lastptr,
+				CURLFORM_COPYNAME, "name",
+				CURLFORM_COPYCONTENTS, modInfo["name"].get<std::string>().c_str(),
+				CURLFORM_END);
+
+			if (modInfo.count("description"))
+			{
+				curl_formadd(&formpost,
+					&lastptr,
+					CURLFORM_COPYNAME, "description",
+					CURLFORM_COPYCONTENTS, modInfo["description"].get<std::string>().c_str(),
+					CURLFORM_END);
+			}
+			if (modInfo.count("version"))
+			{
+				curl_formadd(&formpost,
+					&lastptr,
+					CURLFORM_COPYNAME, "version",
+					CURLFORM_COPYCONTENTS, modInfo["version"].get<std::string>().c_str(),
+					CURLFORM_END);
+			}
+			if (modInfo.count("creator"))
+			{
+				curl_formadd(&formpost,
+					&lastptr,
+					CURLFORM_COPYNAME, "creator",
+					CURLFORM_COPYCONTENTS, modInfo["creator"].get<std::string>().c_str(),
+					CURLFORM_END);
+			}
+
+			if (modInfo.count("icon"))
+			{
+				curl_formadd(&formpost,
+					&lastptr,
+					CURLFORM_COPYNAME, "icon",
+					CURLFORM_FILE, (path + modInfo["icon"].get<std::string>()).c_str(),
+					CURLFORM_END);
+			}
 
 			curl_formadd(&formpost,
 				&lastptr,
