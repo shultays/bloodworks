@@ -3,9 +3,11 @@
 #include "cVec.h"
 #include "cMat.h"
 #include "cRect.h"
+#include <stdlib.h>
 #include <string>
 #include <assert.h>
 #include <algorithm>
+#include <fstream>
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
@@ -101,7 +103,21 @@ float angleDiff(float a, float b);
 
 float approachAngle(float moveAngle, float wantedAngle, float rotation);
 
-bool textFileRead(std::string path, std::string &data);
+inline bool textFileRead(std::string path, std::string &data)
+{
+	data = "";
+	std::ifstream t(path);
+	if (!t.good()) {
+		return false;
+	}
+	t.seekg(0, std::ios::end);
+	data.reserve((unsigned int)t.tellg());
+	t.seekg(0, std::ios::beg);
+
+	data.assign((std::istreambuf_iterator<char>(t)),
+		std::istreambuf_iterator<char>());
+	return true;
+}
 
 void sleepMS(int ms);
 
