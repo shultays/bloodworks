@@ -4,6 +4,7 @@
 #include "../game/DirentHelper.h"
 #include "../game/cPackHelper.h"
 #include "../game/UserDetails.h"
+#include "../game/json.h"
 
 #include <iostream>
 
@@ -122,13 +123,26 @@ int main(int argn, const char* argv[])
 		std::cin >> path;
 	}
 
+	fixFolderPath(path);
+	std::string jsonPath = path + "mod_info.json";
+	std::string jsonText;
+	textFileRead(jsonPath, jsonText);
 
-	std::string tempName = "uploader/temp.bld";
-	bool done = cPackHelper::packFolder(path, tempName);
-	if (done)
+	if (jsonText.length() == 0)
 	{
-		account.sendFile(account.getUsername(), account.getPassword(), tempName);
-		cPackHelper::deleteFile(tempName);
+		std::cout << "Couldn't find mod file:" << jsonPath << "\n";
+	}
+	else
+	{
+		nlohmann::json j = nlohmann::json::parse(jsonText.c_str());
+
+		std::string tempName = "uploader/temp.bld";
+		bool done = cPackHelper::packFolder(path, tempName);
+		if (done)
+		{
+			account.sendFile(account.getUsername(), account.getPassword(), path, j, tempName);
+			cPackHelper::deleteFile(tempName);
+		}
 	}
 	curl_global_cleanup();
 
