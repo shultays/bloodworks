@@ -3,11 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\game</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>resources\monsters\egg</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>resources\mods\gift_box</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\game</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>resources\monsters\egg</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>resources\mods\gift_box</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
