@@ -80,23 +80,6 @@ float approachAngle(float moveAngle, float wantedAngle, float rotation)
 	return moveAngle;
 }
 
-bool textFileRead(std::string path, std::string &data)
-{
-	data = "";
-	std::ifstream t(path);
-	if (!t.good()) {
-		return false;
-	}
-	t.seekg(0, std::ios::end);
-	data.reserve((unsigned int)t.tellg());
-	t.seekg(0, std::ios::beg);
-
-	data.assign((std::istreambuf_iterator<char>(t)),
-		std::istreambuf_iterator<char>());
-	return true;
-}
-
-
 void sleepMS(int ms) 
 {
 #ifdef WINDOWS
