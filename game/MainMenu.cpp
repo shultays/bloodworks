@@ -33,7 +33,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	mods = new cButton(bloodworks);
 	mods->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
 	mods->addRenderable(text);
@@ -173,6 +173,10 @@ void MainMenu::tick(bool hasPopup)
 		{
 			bloodworks->showOptions();
 		}
+		else if (mods->isClicked())
+		{
+			bloodworks->showMods();
+		}
 		else if (quit->isClicked() || mapper.isKeyPressed(GameKey::Back))
 		{
 			coral.quitGame();
@@ -193,6 +197,8 @@ void MainMenu::setVisible(bool visible)
 	{
 		handle = music->play();
 		handle.setLooped(true);
+		float volume = bloodworks->getMusicVolumeMultiplier();
+		handle.setVolume(volume);
 		input.showMouse();
 		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
 	}

@@ -249,4 +249,6 @@ public:
 	bool isOptionsVisible() const;
 	void onLevelUp();
 	void addSlaveWork(cSlaveWork* work);
+	float getMusicVolumeMultiplier();
+	void showMods();
 };
