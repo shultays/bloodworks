@@ -13,7 +13,14 @@ namespace DirentHelper
 	public:
 		std::string folder;
 		std::string file;
-
+		File(){}
+		File(const std::string folder, const std::string file)
+		{
+			this->folder = folder;
+			fixFolderPath(this->folder);
+			this->file = file;
+			fixFilePath(this->file);
+		}
 		bool isTypeOf(const std::string& type) const
 		{
 			size_t pos = file.find_last_of(".");

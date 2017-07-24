@@ -4,6 +4,7 @@
 #include "cRenderableWithShader.h"
 #include "json.h"
 #include "sol.h"
+#include "DirentHelper.h"
 
 #define MAX_QUAD 256
 
@@ -45,7 +46,7 @@ class cParticleTemplate
 	int uCurrentTime;
 public:
 
-	cParticleTemplate(nlohmann::json& j);
+	cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file);
 
 	~cParticleTemplate()
 	{

@@ -2,8 +2,8 @@
   "type" : "perk",
   "name": "Regeneration",
   "description": "You slowly regenerate your missing health.",
-  "iconFile" : "resources/perks/regen/icon.png",
-  "scriptFile" : "resources/perks/regen/regen.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "regen.lua",
   "scriptName" : "Regen",
   "maxLevel" : 3
 }

@@ -15,7 +15,7 @@
   {
 	"stand" : 
 	{
-		"baseFolder" : "resources/monsters/spider/art",
+		"baseFolder" : "art",
 		"looped" : true,
 		"frameDuration" : 0.5,
 		"frames":
@@ -26,7 +26,7 @@
 	
 	"walk" : 
 	{
-		"baseFolder" : "resources/monsters/spider/art",
+		"baseFolder" : "art",
 		"looped" : true,
 		"frameDuration" : 0.1,
 		"frames":
@@ -40,7 +40,7 @@
 	
 	"attack" : 
 	{
-		"baseFolder" : "resources/monsters/spider/art",
+		"baseFolder" : "art",
 		"frameDuration" : 0.1,
 		"frames":
 		[
@@ -54,41 +54,41 @@
 	}
   },
   
-  "scriptFile" : "resources/monsters/spider/spider.lua",
+  "scriptFile" : "spider.lua",
   "scriptName" : "Spider",
   
   "bodyParts" : [
-	["resources/monsters/spider/art/part0.png", 17.0, 0.0],
-	["resources/monsters/spider/art/part1.png", 5.0, 19.5],
-	["resources/monsters/spider/art/part2.png", 5.0, -16.5],
-	["resources/monsters/spider/art/part3.png", -13.0, -18.0],
-	["resources/monsters/spider/art/part4.png", -12.5, 4.5],
-	["resources/monsters/spider/art/part5.png", -4.5, 0.0],
-	["resources/monsters/spider/art/part6.png", -4.0, 17.5]
+	["art/part0.png", 17.0, 0.0],
+	["art/part1.png", 5.0, 19.5],
+	["art/part2.png", 5.0, -16.5],
+	["art/part3.png", -13.0, -18.0],
+	["art/part4.png", -12.5, 4.5],
+	["art/part5.png", -4.5, 0.0],
+	["art/part6.png", -4.0, 17.5]
   ],
   
   "bodyPartBits" : [
-	"resources/monsters/spider/art/bit0.png", 
-	"resources/monsters/spider/art/bit1.png", 
-	"resources/monsters/spider/art/bit2.png", 
-	"resources/monsters/spider/art/bit3.png", 
-	"resources/monsters/spider/art/bit4.png", 
-	"resources/monsters/spider/art/bit5.png", 
-	"resources/monsters/spider/art/bit6.png", 
-	"resources/monsters/spider/art/bit7.png", 
-	"resources/monsters/spider/art/bit8.png"
+	"art/bit0.png", 
+	"art/bit1.png", 
+	"art/bit2.png", 
+	"art/bit3.png", 
+	"art/bit4.png", 
+	"art/bit5.png", 
+	"art/bit6.png", 
+	"art/bit7.png", 
+	"art/bit8.png"
   ],
   
   "hitSounds" : [
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ], 
   
   "killSounds" : [
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ]
   
   

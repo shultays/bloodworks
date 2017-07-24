@@ -5,6 +5,7 @@
 #include "cMat.h"
 #include "cVec.h"
 #include "sol.h"
+#include "DirentHelper.h"
 
 #include "cAnimatedRenderable.h"
 
@@ -41,7 +42,7 @@ class MonsterTemplate
 	float bitSpeed;
 public:
 	MonsterTemplate(){}
-	MonsterTemplate(nlohmann::json& j);
+	MonsterTemplate(nlohmann::json& j, const DirentHelper::File& file);
 
 	~MonsterTemplate();
 

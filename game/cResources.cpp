@@ -106,7 +106,12 @@ cShaderShr cResources::getShader(const std::string& file)
 
 cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 {
-	std::string ID = shaderID(vertexShaderFile, pixelShaderFile);
+	std::string vpath = vertexShaderFile;
+	fixFilePath(vpath);
+	std::string ppath = pixelShaderFile;
+	fixFilePath(ppath);
+
+	std::string ID = shaderID(vpath, ppath);
 	std::unordered_map<std::string, cShaderShr>::iterator got = shaders.find(ID);
 	if (got != shaders.end())
 	{
@@ -116,29 +121,33 @@ cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std:
 	cShaderShr shader = new cShader();
 	shader.setCustomDeallocator(this);
 
-	shader->loadFromFile(vertexShaderFile, pixelShaderFile);
+	shader->loadFromFile(vpath, ppath);
 	shaders[ID] = shader;
 	return shader;
 }
 
 cTextureShr cResources::getTexture(const std::string& textureName)
 {
-	std::string ID = textureID(textureName);
+	std::string path = textureName;
+	fixFilePath(path);
+	std::string ID = textureID(path);
 	std::unordered_map<std::string, cTextureShr>::iterator got = textures.find(ID);
 	if (got != textures.end())
 	{
 		return got->second;
 	}
 
-	cTextureShr texture = new cTexture(textureName);
+	cTextureShr texture = new cTexture(path);
 	texture.setCustomDeallocator(this);
 
 	textures[ID] = texture;
 	return texture;
 }
 
-cSoundSampleShr cResources::getSoundSample(const std::string& soundSamplePath)
+cSoundSampleShr cResources::getSoundSample(const std::string& soundSamplePathNotFixed)
 {
+	std::string soundSamplePath = soundSamplePathNotFixed;
+	fixFilePath(soundSamplePath);
 	std::string ID = soundSampleID(soundSamplePath);
 	std::unordered_map<std::string, cSoundSampleShr>::iterator got = soundSamples.find(ID);
 
@@ -157,14 +166,17 @@ cSoundSampleShr cResources::getSoundSample(const std::string& soundSamplePath)
 
 cFontShr cResources::getFont(const std::string& fontDataPath)
 {
-	std::string ID = textureID(fontDataPath);
+	std::string path = fontDataPath;
+	fixFilePath(path);
+
+	std::string ID = textureID(path);
 	std::unordered_map<std::string, cFontShr>::iterator got = fonts.find(ID);
 	if (got != fonts.end())
 	{
 		return got->second;
 	}
 
-	cFontShr font = new cFont(fontDataPath);
+	cFontShr font = new cFont(path);
 	font.setCustomDeallocator(this);
 
 	fonts[ID] = font;
