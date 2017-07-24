@@ -9,6 +9,7 @@ private:
 	cFontShr font;
 	float textSize;
 	std::string text;
+	std::string textToPrint;
 	friend class cDebugRenderable;
 	float length;
 	bool lengthDirty;
@@ -16,18 +17,29 @@ private:
 	VerticalTextAlignment verticalTextAlignment;
 	float maxLength;
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
-public:
+	bool multiline;
 
+	void strReplace(std::string& str, const std::string& oldStr, const std::string& newStr)
+	{
+		std::string::size_type pos = 0u;
+		while ((pos = str.find(oldStr, pos)) != std::string::npos) 
+		{
+			str.replace(pos, oldStr.length(), newStr);
+			pos += newStr.length();
+		}
+	}
+public:
 	cTextRenderable(cGame *game, cFontShr font, std::string text = "", float textSize = 38.0f, Vec4 textColor = Vec4(1.0f)) : cRenderableWithShader(game, "resources/default.vs", "resources/default.ps")
 	{
 		this->font = font;
-		this->text = text;
+		setText(text);
 		this->textSize = textSize;
 		this->color = textColor;
 		setTextAllignment(TextAlignment::left);
 		setVerticalTextAllignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
 		maxLength = FLT_MAX;
+		multiline = true;
 	}
 
 	virtual ~cTextRenderable()
@@ -54,6 +66,9 @@ public:
 	void setText(const std::string& text)
 	{
 		this->text = text;
+		textToPrint = text;
+
+		strReplace(textToPrint, "<br>", "\n");
 		lengthDirty = true;
 	}
 
@@ -69,4 +84,5 @@ public:
 	}
 	void setVerticalTextAllignment(VerticalTextAlignment param1);
 	const std::string& getText() const;
+	void setMultiline(bool multiline);
 };
