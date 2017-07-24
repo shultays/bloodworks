@@ -2,6 +2,7 @@
 #include "cShader.h"
 #include "cTexture.h"
 #include "cGlobals.h"
+#include "DirentHelper.h"
 
 void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
@@ -41,7 +42,7 @@ const IntVec2& cAnimatedTexturedQuadRenderable::getTextureSize() const
 	return animations[0].frames[0].texture->getDimensions();
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData, const DirentHelper::File& file)
 {
 	bool looped = false;
 	if (animData.count("looped"))
@@ -53,10 +54,10 @@ cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::strin
 
 	float frameDuration = 0.1f;
 
-	std::string artFolder = "";
+	std::string artFolder = file.folder;
 	if (animData.count("baseFolder"))
 	{
-		artFolder = animData["baseFolder"].get<std::string>();
+		artFolder += animData["baseFolder"].get<std::string>();
 	}
 	fixFolderPath(artFolder);
 	if (animData.count("frameDuration"))
@@ -84,23 +85,23 @@ cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::strin
 	return animation;
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::iterator& it)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::iterator& it, const DirentHelper::File& file)
 {
-	return getAnimationData(it.key(), it.value());
+	return getAnimationData(it.key(), it.value(), file);
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j, const DirentHelper::File& file)
 {
-	return getAnimationData(j["name"].get<std::string>(), j);
+	return getAnimationData(j["name"].get<std::string>(), j, file);
 }
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& file)
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const DirentHelper::File& file)
 {
 	std::string jsonFile;
-	textFileRead(file, jsonFile);
+	textFileRead(file.folder + file.file, jsonFile);
 	nlohmann::json j = nlohmann::json::parse(jsonFile.c_str());
 
-	return getAnimationData(j);
+	return getAnimationData(j, file);
 }
 
 cAnimatedTexturedQuadRenderable::AnimationData& cAnimatedTexturedQuadRenderable::AnimationData::addFrame(const std::string& texturePath, float duration)

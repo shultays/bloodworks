@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Railgun",
-  "artFolder" : "resources/guns/railgun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],
@@ -14,10 +13,10 @@
   "reloadTime" : 3.0,
   
   "firingSound" : {
-	"path" : "resources/sounds/railgun.ogg",
+	"path" : "~/resources/sounds/railgun.ogg",
 	"volume" : 0.75
   },
   
-  "scriptFile" : "resources/guns/railgun/railgun.lua",
+  "scriptFile" : "railgun.lua",
   "scriptName" : "Railgun"
 }

@@ -15,7 +15,7 @@ function AmmoManiac.spawn(pos)
 	player.shootSpeedMultiplier:setBuffDuration(AmmoManiac.buffId, duration)
 	player.damageMultiplier:setBuffDuration(AmmoManiac.buffId, duration)
 
-	addBuffIcon("AmmoManiac", "resources/bonuses/bullet_crazy/icon.png")
+	addBuffIcon("AmmoManiac", AmmoManiac.basePath .. "icon.png")
 	
 	if AmmoManiac.data.gameObject == nil then
 		AmmoManiac.data.gameObject = addGameObject("AmmoManiac")

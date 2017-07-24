@@ -2,7 +2,7 @@
 #include "cGlobals.h"
 #include "json.h"
 
-MonsterTemplate::MonsterTemplate(nlohmann::json& j)
+MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
@@ -26,12 +26,12 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 
 	for (nlohmann::json::iterator it = animations.begin(); it != animations.end(); ++it)
 	{
-		cAnimatedTexturedQuadRenderable::AnimationData data = getAnimationData(it);
+		cAnimatedTexturedQuadRenderable::AnimationData data = getAnimationData(it, file);
 		animationData.push_back(data);
 	}
 
 	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
-	scriptPath = j["scriptFile"].get<std::string>();
+	scriptPath = file.folder + j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 
 	if (j.count("bitSpeed"))
@@ -50,12 +50,12 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 		BodyPartData data;
 		if (val.is_array())
 		{
-			data.texture = resources.getTexture((val[0].get<std::string>()));
+			data.texture = resources.getTexture(file.folder + val[0].get<std::string>());
 			data.shift = Vec2(val[1].get<float>(), val[2].get<float>());
 		}
 		else
 		{
-			data.texture = resources.getTexture((it.value().get<std::string>()));
+			data.texture = resources.getTexture(file.folder + it.value().get<std::string>());
 			data.shift.setZero();
 		}
 		bodyParts.push_back(data);
@@ -65,9 +65,8 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 
 	for (nlohmann::json::iterator it = partBits.begin(); it != partBits.end(); ++it)
 	{
-		bodyPartBits.push_back(resources.getTexture(it.value().get<std::string>()));
+		bodyPartBits.push_back(resources.getTexture(file.folder + it.value().get<std::string>()));
 	}
-
 
 	if (j.count("hitSounds"))
 	{
@@ -75,7 +74,7 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 
 		for (nlohmann::json::iterator it = hitSoundsJson.begin(); it != hitSoundsJson.end(); ++it)
 		{
-			hitSounds.push_back(resources.getSoundSample(it.value().get<std::string>()));
+			hitSounds.push_back(resources.getSoundSample(file.folder + it.value().get<std::string>()));
 		}
 	}
 
@@ -85,7 +84,7 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j)
 
 		for (nlohmann::json::iterator it = killSoundsJson.begin(); it != killSoundsJson.end(); ++it)
 		{
-			killSounds.push_back(resources.getSoundSample(it.value().get<std::string>()));
+			killSounds.push_back(resources.getSoundSample(file.folder + it.value().get<std::string>()));
 		}
 	}
 

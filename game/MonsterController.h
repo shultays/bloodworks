@@ -10,6 +10,7 @@ class MonsterTemplate;
 #include "cGrid.h"
 #include "sol.h"
 #include "json.h"
+#include "DirentHelper.h"
 
 class MonsterController
 {
@@ -51,7 +52,7 @@ public:
 	int getMonsterCount() const;
 	Monster* getMonster(int id) const;
 
-	void addMonsterTemplate(nlohmann::json& j);
+	void addMonsterTemplate(nlohmann::json& j, const DirentHelper::File& file);
 	Vec2 getRandomPos(sol::table& args);
 	void reset();
 	void runForEachMonsterInRadius(const Vec2& pos, float radius, std::function<bool(Monster *monster) >& func) const;

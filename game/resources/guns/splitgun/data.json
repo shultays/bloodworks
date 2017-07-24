@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Split Gun",
-  "artFolder" : "resources/guns/splitgun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
@@ -13,6 +12,6 @@
   "maxAmmo" : 8,
   "reloadTime" : 1.2,
   
-  "scriptFile" : "resources/guns/splitgun/splitgun.lua",
+  "scriptFile" : "splitgun.lua",
   "scriptName" : "SplitGun"
 }

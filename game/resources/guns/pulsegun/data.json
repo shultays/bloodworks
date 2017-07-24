@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Pulse Gun",
-  "artFolder" : "resources/guns/PulseGun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [20.0, 20.0],
@@ -14,10 +13,10 @@
   "reloadTime" : 1.2,
   
   "firingSound" : {
-	"path" : "resources/sounds/pulse.ogg",
+	"path" : "~/resources/sounds/pulse.ogg",
 	"volume" : 0.75
   },
   
-  "scriptFile" : "resources/guns/pulsegun/pulsegun.lua",
+  "scriptFile" : "pulsegun.lua",
   "scriptName" : "PulseGun"
 }

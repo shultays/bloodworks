@@ -4,10 +4,12 @@
 
 #include "json.h"
 #include "sol.h"
+#include "DirentHelper.h"
 
-class Gun;
+class Bloodworks;
 class Bullet;
 class Monster;
+class Gun;
 
 class Perk
 {
@@ -26,8 +28,9 @@ class Perk
 	sol::function onPlayerDamagedFunc;
 	sol::function onMonsterDiedFunc;
 	sol::function onReloadFunc;
+	Bloodworks* bloodworks;
 public:
-	Perk(nlohmann::json& j);
+	Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 
 	void takeLevel();
 

@@ -3,6 +3,7 @@
 #include "cShader.h"
 #include "cRenderableWithShader.h"
 #include "json.h"
+#include "DirentHelper.h"
 
 class Bloodworks;
 
@@ -36,7 +37,7 @@ class LaserTemplate
 	cGame *game;
 public:
 	void render(float laserLength);
-	LaserTemplate(cGame *game, nlohmann::json& j);
+	LaserTemplate(cGame *game, nlohmann::json& j, const DirentHelper::File& file);
 	~LaserTemplate();
 	const std::string& getName() const;
 };

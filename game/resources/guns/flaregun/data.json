@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Flare Gun",
-  "artFolder" : "resources/guns/flaregun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [5.0, 3.0],
@@ -14,10 +13,10 @@
   "reloadTime" : 0.6,
   
   "firingSound" : {
-	"path" : "resources/sounds/flare.ogg",
+	"path" : "~/resources/sounds/flare.ogg",
 	"volume" : 3.75
   },
   
-  "scriptFile" : "resources/guns/flaregun/flaregun.lua",
+  "scriptFile" : "flaregun.lua",
   "scriptName" : "FlareGun"
 }

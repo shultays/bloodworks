@@ -15,7 +15,7 @@
   {
 	"stand" : 
 	{
-		"baseFolder" : "resources/monsters/egg/art",
+		"baseFolder" : "art",
 		"looped" : false,
 		"frameDuration" : 0.12,
 		"frames":
@@ -36,40 +36,40 @@
 	}
   },
   
-  "scriptFile" : "resources/monsters/egg/egg.lua",
+  "scriptFile" : "egg.lua",
   "scriptName" : "Egg",
   
   "bitSpeed" : 0.4,
   
   "bodyParts" : [
-	["resources/monsters/egg/art/part0.png", 118, -118],
-	["resources/monsters/egg/art/part1.png", -14.55, -275.6],
-	["resources/monsters/egg/art/part2.png", 334.7, 43.65],
-	["resources/monsters/egg/art/part3.png", 186.1, -219],
-	["resources/monsters/egg/art/part4.png", -25.55, -215.6],
-	["resources/monsters/egg/art/part5.png", -130, 220],
-	["resources/monsters/egg/art/part6.png", -16, 56],
-	["resources/monsters/egg/art/part7.png", -222, -32],
-	["resources/monsters/egg/art/part8.png", 130, 234],
-	["resources/monsters/egg/art/part9.png", 186, 116]
+	["art/part0.png", 118, -118],
+	["art/part1.png", -14.55, -275.6],
+	["art/part2.png", 334.7, 43.65],
+	["art/part3.png", 186.1, -219],
+	["art/part4.png", -25.55, -215.6],
+	["art/part5.png", -130, 220],
+	["art/part6.png", -16, 56],
+	["art/part7.png", -222, -32],
+	["art/part8.png", 130, 234],
+	["art/part9.png", 186, 116]
   ],
   
   "bodyPartBits" : [
-	"resources/monsters/egg/art/bit0.png", 
-	"resources/monsters/egg/art/bit1.png", 
-	"resources/monsters/egg/art/bit2.png", 
-	"resources/monsters/egg/art/bit3.png"
+	"art/bit0.png", 
+	"art/bit1.png", 
+	"art/bit2.png", 
+	"art/bit3.png"
   ],
   
   "hitSounds" : [
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ],
   
   "killSounds" : [
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ]
 }
