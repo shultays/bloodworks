@@ -13,8 +13,6 @@
 #include "Monster.h"
 
 
-#define MUSIC_VOLUME 0.4f
-
 MissionController::~MissionController()
 {
 	reset();
@@ -26,7 +24,6 @@ MissionController::MissionController(Bloodworks *bloodworks)
 	loadedMission = -1;
 	missionLoop.setSample(resources.getSoundSample("resources/sounds/game_music.ogg"));
 	missionLoop.setLooped(true);
-	missionLoop.setVolume(MUSIC_VOLUME);
 	missionLoop.setSpeed(1.0f);
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
@@ -71,7 +68,7 @@ void MissionController::tick()
 			{
 				musicVolume = 0.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * MUSIC_VOLUME);
+			missionLoopHandle.setVolume(musicVolume * bloodworks->getMusicVolumeMultiplier());
 		}
 	}
 	else
@@ -83,7 +80,7 @@ void MissionController::tick()
 			{
 				musicVolume = 1.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * MUSIC_VOLUME);
+			missionLoopHandle.setVolume(musicVolume * bloodworks->getMusicVolumeMultiplier());
 		}
 	}
 

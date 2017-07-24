@@ -250,8 +250,7 @@ void Bloodworks::init()
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-
-	const bool testMenu = false;
+	const bool testMenu = true;
 	if (coral.isDebuggerPresent() && testMenu == false)
 	{
 		globalVolume = 0.0f;
@@ -683,6 +682,17 @@ void Bloodworks::addSlaveWork(cSlaveWork* work)
 	coral.getSlaveController()->addWork(work);
 }
 
+float Bloodworks::getMusicVolumeMultiplier()
+{
+	float v = config->getInt("music_volume", 50) / 100.0f;
+	return v;
+}
+
+void Bloodworks::showMods()
+{
+	modWindow->setVisible(true);
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -763,10 +773,10 @@ void Bloodworks::tick()
 	}
 
 	luaWorld->tick();
-	mainMenu->tick(optionsPopup->isVisible());
+	mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible());
 	optionsPopup->tick();
-	oneShotSoundManager->tick();
 	modWindow->tick();
+	oneShotSoundManager->tick();
 
 	for (int i = 0; i < gameSounds.size(); i++)
 	{
