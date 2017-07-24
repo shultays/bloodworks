@@ -36,7 +36,7 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 		gameObject.data.fadeInDuration = 0.0
 		gameObject.data.fadeOutDuration = 0.3
 		gameObject:setLevel(RenderableLevel.monsters + 5)
-		gameObject.data.renderable = gameObject:addTexture("resources/guns/plasmagun/bullet.png", "resources/default")
+		gameObject.data.renderable = gameObject:addTexture(PlasmaGun.basePath .. "bullet.png", "~/resources/default")
 		gameObject.data.renderable.alignment = RenderableAlignment.world
 		gameObject.data.renderable.textureSize = Vec2.new(6.0, 6.0)
 		gameObject.data.renderable:update()
@@ -48,7 +48,7 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 			gameObject2.data.fadeInDuration = 0.0
 			gameObject2.data.fadeOutDuration = 0.3
 			gameObject2:setLevel(RenderableLevel.monsters + 4)
-			gameObject2.data.renderable = gameObject2:addTexture("resources/guns/plasmagun/line.png", "resources/default")
+			gameObject2.data.renderable = gameObject2:addTexture(PlasmaGun.basePath .. "line.png", "~/resources/default")
 			gameObject2.data.renderable.alignment = RenderableAlignment.world
 			gameObject2.data.renderable.textureSize = Vec2.new(1.0, 3.0)
 			gameObject2.data.renderable:update()

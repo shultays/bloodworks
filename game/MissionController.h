@@ -6,6 +6,7 @@
 #include "cMat.h"
 #include "cVec.h"
 #include "cSound.h"
+#include "DirentHelper.h"
 
 class Bloodworks;
 class cRenderable;
@@ -43,7 +44,7 @@ public:
 	void tick();
 	GameObject* addGameObject(const std::string& script);
 	void removeGameObject(int id);
-	void addMission(nlohmann::json& j);
+	void addMission(nlohmann::json& j, const DirentHelper::File& file);
 
 	void loadMission(const std::string& name);
 	void reset();

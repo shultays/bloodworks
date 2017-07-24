@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Circle Fire",
-  "iconFile" : "resources/bonuses/circle_fire/icon.png",
-  "scriptFile" : "resources/bonuses/circle_fire/circle_fire.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "circle_fire.lua",
   "scriptName" : "CircleFire"
 }

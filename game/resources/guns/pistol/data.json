@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Pistol",
-  "artFolder" : "resources/guns/pistol/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
@@ -13,8 +12,8 @@
   "maxAmmo" : 12,
   "reloadTime" : 1.2,
   
-  "firingSound" : "resources/sounds/pistol.ogg",
+  "firingSound" : "~/resources/sounds/pistol.ogg",
   
-  "scriptFile" : "resources/guns/pistol/pistol.lua",
+  "scriptFile" : "pistol.lua",
   "scriptName" : "Pistol"
 }

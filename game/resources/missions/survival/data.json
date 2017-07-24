@@ -2,6 +2,6 @@
   "type": "mission",
   "name": "Survival",
   
-  "scriptFile" : "resources/missions/survival/survival.lua",
+  "scriptFile" : "survival.lua",
   "scriptName" : "Survival"
 }

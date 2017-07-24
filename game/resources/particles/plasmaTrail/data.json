@@ -2,11 +2,11 @@
   "type" : "particle",
   "maxLifeTime" : 3.0,
   
-  "vertexShader" : "resources/particles/plasmaTrail/shader.vs",
-  "pixelShader" : "resources/particles/plasmaTrail/shader.ps",
+  "vertexShader" : "shader.vs",
+  "pixelShader" : "shader.ps",
   
-  "textures" : "resources/particles/plasmaTrail/particle.png",
+  "textures" : "particle.png",
   
-  "scriptFile" : "resources/particles/plasmaTrail/script.lua",
+  "scriptFile" : "script.lua",
   "scriptName" : "PlasmaTrailParticle"
 }

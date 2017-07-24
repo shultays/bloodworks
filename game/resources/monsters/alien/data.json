@@ -15,7 +15,7 @@
   {
 	"stand" : 
 	{
-		"baseFolder" : "resources/monsters/alien/art",
+		"baseFolder" : "art",
 		"looped" : true,
 		"frameDuration" : 0.5,
 		"frames":
@@ -26,7 +26,7 @@
 	
 	"walk" : 
 	{
-		"baseFolder" : "resources/monsters/alien/art",
+		"baseFolder" : "art",
 		"looped" : true,
 		"frameDuration" : 0.1,
 		"frames":
@@ -44,7 +44,7 @@
 	
 	"attack" : 
 	{
-		"baseFolder" : "resources/monsters/alien/art",
+		"baseFolder" : "art",
 		"frameDuration" : 0.1,
 		"frames":
 		[
@@ -57,48 +57,48 @@
 	}
   },
   
-  "scriptFile" : "resources/monsters/alien/alien.lua",
+  "scriptFile" : "alien.lua",
   "scriptName" : "Alien",
   
   "bodyParts" : [
-	"resources/monsters/alien/art/head.png",
-	["resources/monsters/alien/art/arm1.png", 8.0, -30],
-	["resources/monsters/alien/art/arm2.png", 8.0, 30],
-	["resources/monsters/alien/art/part1.png", -4, -24],
-	["resources/monsters/alien/art/part2.png", -3, 21],
-	["resources/monsters/alien/art/part3.png", -13.0, 6.0],
-	["resources/monsters/alien/art/part4.png", 23.0, -29.0],
-	["resources/monsters/alien/art/part5.png", 18.0, 26.0]
+	"art/head.png",
+	["art/arm1.png", 8.0, -30],
+	["art/arm2.png", 8.0, 30],
+	["art/part1.png", -4, -24],
+	["art/part2.png", -3, 21],
+	["art/part3.png", -13.0, 6.0],
+	["art/part4.png", 23.0, -29.0],
+	["art/part5.png", 18.0, 26.0]
   ],
   
   "bodyPartBits" : [
-	"resources/monsters/alien/art/bit0.png", 
-	"resources/monsters/alien/art/bit1.png", 
-	"resources/monsters/alien/art/bit2.png", 
-	"resources/monsters/alien/art/bit3.png", 
-	"resources/monsters/alien/art/bit4.png", 
-	"resources/monsters/alien/art/bit5.png", 
-	"resources/monsters/alien/art/bit6.png", 
-	"resources/monsters/alien/art/bit7.png", 
-	"resources/monsters/alien/art/bit8.png" 
+	"art/bit0.png", 
+	"art/bit1.png", 
+	"art/bit2.png", 
+	"art/bit3.png", 
+	"art/bit4.png", 
+	"art/bit5.png", 
+	"art/bit6.png", 
+	"art/bit7.png", 
+	"art/bit8.png" 
   ],
   
   "hitSounds" : [
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ],
   
   "killSounds" : [
-	"resources/sounds/monster_hit/die_0.ogg", 
-	"resources/sounds/monster_hit/die_1.ogg", 
-	"resources/sounds/monster_hit/die_2.ogg", 
-	"resources/sounds/monster_hit/die_3.ogg", 
-	"resources/sounds/monster_hit/die_4.ogg", 
-	"resources/sounds/monster_hit/die_5.ogg",
-	"resources/sounds/monster_hit/hit_0.ogg", 
-	"resources/sounds/monster_hit/hit_1.ogg", 
-	"resources/sounds/monster_hit/hit_2.ogg"
+	"~/resources/sounds/monster_hit/die_0.ogg", 
+	"~/resources/sounds/monster_hit/die_1.ogg", 
+	"~/resources/sounds/monster_hit/die_2.ogg", 
+	"~/resources/sounds/monster_hit/die_3.ogg", 
+	"~/resources/sounds/monster_hit/die_4.ogg", 
+	"~/resources/sounds/monster_hit/die_5.ogg",
+	"~/resources/sounds/monster_hit/hit_0.ogg", 
+	"~/resources/sounds/monster_hit/hit_1.ogg", 
+	"~/resources/sounds/monster_hit/hit_2.ogg"
   ]
   
 }

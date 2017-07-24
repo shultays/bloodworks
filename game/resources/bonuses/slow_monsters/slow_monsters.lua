@@ -10,9 +10,9 @@ function SlowMonsters.spawn(pos)
 	end
 	buff:setBuffDuration(8.0 * player.data.bonusDurationMultiplier)
 	buff:restart()
-	playSound({path = "resources/sounds/slow.ogg", volume = 0.6})
-	
-	addBuffIcon("SlowMonsters", "resources/bonuses/slow_monsters/icon.png")
+	playSound({path = "~/resources/sounds/slow.ogg", volume = 0.6})
+
+	addBuffIcon("SlowMonsters", SlowMonsters.basePath .. "icon.png")
 	
 	if SlowMonsters.data.gameObject == nil then
 		SlowMonsters.data.gameObject = addGameObject("SlowMonsters")

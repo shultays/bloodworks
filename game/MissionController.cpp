@@ -129,12 +129,12 @@ void MissionController::removeGameObject(int id)
 	gameObjects.erase(id);
 }
 
-void MissionController::addMission(nlohmann::json& j)
+void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& file)
 {
 	MissionData data;
 	data.name = j["name"].get<std::string>();
 	data.scriptName = j["scriptName"].get<std::string>();
-	data.scriptFile = j["scriptFile"].get<std::string>();
+	data.scriptFile = file.folder + j["scriptFile"].get<std::string>();
 	missions.push_back(data);
 }
 
