@@ -31,18 +31,18 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 
 			int lastSpaceIndex = -1;
 
-			for (int i = firstCharToDraw; i < text.size(); i++)
+			for (int i = firstCharToDraw; i < textToPrint.size(); i++)
 			{
 				float charSize = font->defaultSize;
-				if (font->charInfos[text[i]].x >= 0)
+				if (font->charInfos[textToPrint[i]].x >= 0)
 				{
-					charSize = (float)font->charInfos[text[i]].w;
+					charSize = (float)font->charInfos[textToPrint[i]].w;
 				}
-				if (text[i] == ' ')
+				if (textToPrint[i] == ' ')
 				{
 					lastSpaceIndex = i;
 				}
-				if (text[i] == '\n')
+				if (textToPrint[i] == '\n')
 				{
 					lastCharToDraw = i + 1;
 					break;
@@ -89,7 +89,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 		for (int i = firstCharToDraw; i < lastCharToDraw; i++)
 		{
 			float charSize = font->defaultSize;
-			auto& info = font->charInfos[text[i]];
+			auto& info = font->charInfos[textToPrint[i]];
 			if (info.x >= 0)
 			{
 				shader->setWorldMatrix(temp);
@@ -111,7 +111,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 		}
 
 		glDisableVertexAttribArray(0);
-		if (lastCharToDraw >= text.size())
+		if (multiline == false || lastCharToDraw >= textToPrint.size())
 		{
 			break;
 		}
@@ -129,4 +129,9 @@ void cTextRenderable::setVerticalTextAllignment(VerticalTextAlignment verticalTe
 const std::string& cTextRenderable::getText() const
 {
 	return text;
+}
+
+void cTextRenderable::setMultiline(bool multiline)
+{
+	this->multiline = multiline;
 }
