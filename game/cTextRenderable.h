@@ -14,7 +14,7 @@ private:
 	bool lengthDirty;
 	TextAlignment textAlignment;
 	VerticalTextAlignment verticalTextAlignment;
-
+	float maxLength;
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 public:
 
@@ -27,11 +27,23 @@ public:
 		setTextAllignment(TextAlignment::left);
 		setVerticalTextAllignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
+		maxLength = FLT_MAX;
 	}
 
 	virtual ~cTextRenderable()
 	{
 		font = nullptr;
+	}
+
+	void setMaxLength(float maxLength)
+	{
+		this->maxLength = maxLength;
+		lengthDirty = true;
+	}
+
+	float getMaxLength() const
+	{
+		return maxLength;
 	}
 
 	void setTextAllignment(TextAlignment alignment)

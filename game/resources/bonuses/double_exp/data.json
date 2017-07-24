@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Double Experience",
-  "iconFile" : "resources/bonuses/double_exp/icon.png",
-  "scriptFile" : "resources/bonuses/double_exp/double_exp.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "double_exp.lua",
   "scriptName" : "DoubleExp"
 }

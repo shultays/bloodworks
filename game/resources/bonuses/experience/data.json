@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Experience",
-  "iconFile" : "resources/bonuses/experience/icon.png",
-  "scriptFile" : "resources/bonuses/experience/experience.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "experience.lua",
   "scriptName" : "Experience"
 }

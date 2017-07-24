@@ -27,6 +27,6 @@ function RocketSmokeParticle.addParticle(params, pos)
 	
 	params.fadeOutSpeed = 0.4 + math.random() * 0.4
 	
-	params.texture = "resources/particles/rocketSmoke/particle.png"
+	params.texture = RocketSmokeParticle.basePath .. "particle.png"
 	
 end

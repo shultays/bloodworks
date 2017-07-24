@@ -3,6 +3,7 @@
 #include "cShader.h"
 #include "cGame.h"
 #include "cGlobals.h"
+#include "DirentHelper.h"
 
 GLuint laserQuad = -1;
 
@@ -88,7 +89,8 @@ void LaserTemplate::render(float laserLength)
 
 	glDrawArrays(GL_QUADS, 0, 12);
 }
-LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j)
+
+LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j, const DirentHelper::File& file)
 {
 	this->game = game;
 	if (j.count("name"))
@@ -104,8 +106,8 @@ LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j)
 	laserBeginShift = j["laserBeginShift"].get<float>();
 	laserEndShift = j["laserEndShift"].get<float>();
 
-	laserTexture = resources.getTexture(j["laserTexture"].get<std::string>());
-	shader = resources.getShader(j["laserShader"].get<std::string>());
+	laserTexture = resources.getTexture(file.folder + j["laserTexture"].get<std::string>());
+	shader = resources.getShader(file.folder + j["laserShader"].get<std::string>());
 
 	aYShift = shader->addAttribute("yShift", TypeFloat);
 	widthMult1 = shader->addAttribute("widthMult1", TypeFloat);

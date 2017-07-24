@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Freeze Laser",
-  "artFolder" : "resources/guns/frost_laser/",
   "icon" : "icon.png",
   "bulletTexture" : "laser.png",
   "bulletSize" : [15.0, 15.0],
@@ -9,7 +8,7 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [10, 16],
   
-  "scriptFile" : "resources/guns/frost_laser/frost_laser.lua",
+  "scriptFile" : "frost_laser.lua",
   "scriptName" : "FrostLaser",
   
   "maxAmmo" : 40,
@@ -17,13 +16,13 @@
   
   "firingSoundContinuous" : true,
   "firingSound" : {
-	"path" : "resources/sounds/laser.ogg",
+	"path" : "~/resources/sounds/laser.ogg",
 	"volume" : 0.35
   },
   
   "isLaser" : true,
-  "laserTexture" : "resources/guns/frost_laser/laser.png",
-  "laserShader" : "resources/guns/frost_laser/laser",
+  "laserTexture" : "laser.png",
+  "laserShader" : "laser",
   
   "laserThickness" : 80.0,
   

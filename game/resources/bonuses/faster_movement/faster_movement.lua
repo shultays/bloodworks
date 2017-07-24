@@ -10,9 +10,9 @@ function FasterMovementBonus.spawn(pos)
 	end
 	buff:setBuffDuration(12.0 * player.data.bonusDurationMultiplier)
 	buff:restart()
-	playSound({path = "resources/sounds/movement_bonus.ogg"})
+	playSound({path = "~/resources/sounds/movement_bonus.ogg"})
 	
-	addBuffIcon("FasterMovementBonus", "resources/bonuses/faster_movement/icon.png")
+	addBuffIcon("FasterMovementBonus", FasterMovementBonus.basePath .. "icon.png")
 	
 	if FasterMovementBonus.data.gameObject == nil then
 		FasterMovementBonus.data.gameObject = addGameObject("FasterMovementBonus")

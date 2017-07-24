@@ -2,6 +2,7 @@
 
 #include "cRenderableWithShader.h"
 #include "json.h"
+#include "DirentHelper.h"
 
 class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 {
@@ -215,10 +216,10 @@ public:
 
 
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData);
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& name, nlohmann::json& animData, const DirentHelper::File& file);
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j);
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& j, const DirentHelper::File& file);
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::iterator& it);
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json::iterator& it, const DirentHelper::File& file);
 
-cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const std::string& file);
+cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const DirentHelper::File& file);

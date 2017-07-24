@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Machine Gun",
-  "artFolder" : "resources/guns/machinegun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
@@ -14,10 +13,10 @@
   "reloadTime" : 1.5,
   
   "firingSound" : {
-	"path" : "resources/sounds/assault.ogg",
+	"path" : "~/resources/sounds/assault.ogg",
 	"volume" : 0.80
   },
   
-  "scriptFile" : "resources/guns/machinegun/machine.lua",
+  "scriptFile" : "machine.lua",
   "scriptName" : "MachineGun"
 }

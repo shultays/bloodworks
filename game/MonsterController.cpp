@@ -297,9 +297,9 @@ Monster* MonsterController::getMonster(int id) const
 	return element == monstersMap.end() ? nullptr : element->second;
 }
 
-void MonsterController::addMonsterTemplate(nlohmann::json& j)
+void MonsterController::addMonsterTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
-	MonsterTemplate *t = new MonsterTemplate(j);
+	MonsterTemplate *t = new MonsterTemplate(j, file);
 	monsterTemplates.push_back(t);
 	monsterTemplateIndices[t->getName()] = (int)monsterTemplates.size() - 1;
 }

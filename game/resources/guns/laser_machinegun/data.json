@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Laser Machine Gun",
-  "artFolder" : "resources/guns/laser_machinegun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],
@@ -13,10 +12,10 @@
   "reloadTime" : 2.5,
   
   "firingSound" : {
-	"path" : "resources/sounds/laser_machinegun.ogg",
+	"path" : "~/resources/sounds/laser_machinegun.ogg",
 	"volume" : 2.55
   },
   
-  "scriptFile" : "resources/guns/laser_machinegun/laser_machine.lua",
+  "scriptFile" : "laser_machine.lua",
   "scriptName" : "LaserMachineGun"
 }

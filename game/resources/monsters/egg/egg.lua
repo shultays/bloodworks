@@ -11,15 +11,6 @@ function Egg.init(monster, min)
 	monster:modifyDrawLevel(2)
 	monster.colorMultiplier:addBuff(Vec4.new(0.6, 0.6, 0.6, 1.0))
 	
-    data.maxMoveSpeed = 0.0
-    data.maxRotateSpeed = 0.0
-    data.playerSeeRange = 0.0
-	data.minDamage = 0
-	data.maxDamage = 0
-	
-	data.hitWaitTime = 0.0
-	data.hitInterval = 0.0
-	
 	data.spawnInterval = 3.0 + math.random() * 0.5
 	data.spawnTime = data.spawnInterval * (1.0 + math.random())
 	

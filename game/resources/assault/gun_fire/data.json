@@ -5,7 +5,6 @@
 
 	"frameDuration" : 0.1,
 	
-	"baseFolder" : "resources/assault/gun_fire",
 	"frames":
 	[
 		["f0.png", 0.05],
