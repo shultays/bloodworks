@@ -6,5 +6,5 @@ auto_open_perk_popup 1
 sensitivity     48
 full_screen     0
 vsync           0
-volume          50
-music_volume    50
+volume          0
+music_volume    0

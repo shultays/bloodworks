@@ -48,11 +48,15 @@ public:
 
 		pressedInside = false;
 
+		defaultShift.setZero();
 		hoverShift.setZero();
-		hoverScale = 100.0f;
+		defaultScale = 1.0f;
+		hoverScale = 1.0f;
+		defaultRotation = 0.0f;
 		hoverRotation = 0.0f;
 		hoverTime = 0.0f;
 		hoverSpeed = 1.0f;
+
 		enforceHovering = no_enforce;
 		lastRenderCrop = Rect::invalid();
 	}
