@@ -1,7 +1,6 @@
 {
   "type" : "gun",
   "name": "Shrink Gun",
-  "artFolder" : "resources/guns/shrinkgun/",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
@@ -14,10 +13,10 @@
   "reloadTime" : 1.8,
   
   "firingSound" : {
-	"path" : "resources/sounds/shrink_shoot.ogg",
+	"path" : "~/resources/sounds/shrink_shoot.ogg",
 	"volume" : 1.0
   },
   
-  "scriptFile" : "resources/guns/shrinkgun/shrinkgun.lua",
+  "scriptFile" : "shrinkgun.lua",
   "scriptName" : "ShrinkGun"
 }

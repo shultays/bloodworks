@@ -2,8 +2,8 @@
   "type" : "perk",
   "name": "Heal Up",
   "description": "You fully heal yourself.",
-  "iconFile" : "resources/perks/heal_up/icon.png",
-  "scriptFile" : "resources/perks/heal_up/heal_up.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "heal_up.lua",
   "scriptName" : "HealUp",
   "maxLevel" : -1
 }

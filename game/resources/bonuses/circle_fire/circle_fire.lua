@@ -24,12 +24,12 @@ function CircleFire.onTick(gameObject)
         bullet.position = gameObject.data.position
         bullet.moveSpeed = 450.0
         bullet.moveAngle = angle
-        bullet:addRenderableTextureWithSize("resources/bonuses/circle_fire/bullet.png", Vec2.new(14.0, 14.0))
+        bullet:addRenderableTextureWithSize(CircleFire.basePath .. "bullet.png", Vec2.new(14.0, 14.0))
         
 		gameObject.data.i = gameObject.data.i + 1
         if gameObject.data.i == 4 then
 			if gameObject.data.lastShootIndex % 2 == 0 then
-				playSound({path = "resources/sounds/laser_machinegun.ogg", position = gameObject.data.position})
+				playSound({path = "~/resources/sounds/laser_machinegun.ogg", position = gameObject.data.position})
 			end
             gameObject.data.i = 0
             gameObject.data.lastShootIndex = gameObject.data.lastShootIndex + 1

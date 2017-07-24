@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Ammo Maniac",
-  "iconFile" : "resources/bonuses/bullet_crazy/icon.png",
-  "scriptFile" : "resources/bonuses/bullet_crazy/bullet_crazy.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "bullet_crazy.lua",
   "scriptName" : "AmmoManiac"
 }

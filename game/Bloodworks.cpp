@@ -84,34 +84,43 @@ void Bloodworks::init()
 		{
 			nlohmann::json j;
 			appendJson(j, f.folder + f.file);
+			if (j.count("disabled") && j["disabled"].get<bool>() == true)
+			{
+				continue;
+			}
+
+			if (j.count("type") == 0)
+			{
+				continue;
+			}
 			std::string type = j["type"].get<std::string>();
 			if (type == "gun")
 			{
-				Gun *gun = new Gun(this, j);
+				Gun *gun = new Gun(this, j, f);
 				guns.push_back(gun);
 			}
 			else if (type == "bonus")
 			{
-				Bonus *bonus = new Bonus(j);
+				Bonus *bonus = new Bonus(this, j, f);
 				bonuses.push_back(bonus);
 			}
 			else if (type == "particle")
 			{
-				cParticleTemplate *particleTemplate = new cParticleTemplate(j);
+				cParticleTemplate *particleTemplate = new cParticleTemplate(j, f);
 				particles[particleTemplate->getName()] = particleTemplate;
 			}
 			else if (type == "perk")
 			{
-				Perk *perk = new Perk(j);
+				Perk *perk = new Perk(this, j, f);
 				perks.push_back(perk);
 			}
 			else if (type == "monster")
 			{
-				monsterController->addMonsterTemplate(j);
+				monsterController->addMonsterTemplate(j, f);
 			}
 			else if (type == "mission")
 			{
-				missionController->addMission(j);
+				missionController->addMission(j, f);
 			}
 		}
 	}

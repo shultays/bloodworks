@@ -1,7 +1,7 @@
 {
   "type" : "bonus",
   "name": "Reflex Boost",
-  "iconFile" : "resources/bonuses/reflex_boost/icon.png",
-  "scriptFile" : "resources/bonuses/reflex_boost/reflex_boost.lua",
+  "iconFile" : "icon.png",
+  "scriptFile" : "reflex_boost.lua",
   "scriptName" : "ReflexBoost"
 }

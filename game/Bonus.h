@@ -4,6 +4,9 @@
 #include "cTools.h"
 #include "json.h"
 #include "sol.h"
+#include "DirentHelper.h"
+
+class Bloodworks;
 
 class Bonus
 {
@@ -13,8 +16,9 @@ class Bonus
 
 	float spawnChance;
 	sol::function dynamicSpawnChance;
+	Bloodworks *bloodworks;
 public:
-	Bonus(nlohmann::json& j);
+	Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	void spawnAt(const Vec2& pos);
 	const std::string& getIconPath() const;
 	const std::string& getName() const;

@@ -10,9 +10,9 @@ function ReflexBoost.spawn(pos)
 		data.boost.data.time = time
 	end
 	
-	addBuffIcon("ReflexBoost", "resources/bonuses/reflex_boost/icon.png")
+	addBuffIcon("ReflexBoost", ReflexBoost.basePath .. "icon.png")
 	
-	playSound({path = "resources/sounds/clock.ogg", volume = "0.9"})
+	playSound({path = "~/resources/sounds/clock.ogg", volume = "0.9"})
 	
 	if ReflexBoost.data.isSlow ~= true then
 		ReflexBoost.data.isSlow = true

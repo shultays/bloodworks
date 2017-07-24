@@ -4,12 +4,15 @@
 #include "cGame.h"
 #include "cTexture.h"
 
-cParticleTemplate::cParticleTemplate(nlohmann::json& j)
+cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
-	shader = resources.getShader(j["vertexShader"].get<std::string>(), j["pixelShader"].get<std::string>());
+	shader = resources.getShader(file.folder + j["vertexShader"].get<std::string>(), file.folder + j["pixelShader"].get<std::string>());
 	scriptName = j["scriptName"].get<std::string>();
 	scriptTable = lua[scriptName] = lua.create_table();
-	std::string scriptPath = j["scriptFile"].get<std::string>();
+	std::string folder = file.folder;
+	fixFolderPath(folder);
+	scriptTable["basePath"] = folder;
+	std::string scriptPath = file.folder + j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 
 	maxLifeTime = j["maxLifeTime"].get<float>();
@@ -106,12 +109,12 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j)
 	{
 		for (auto& t : j["textures"])
 		{
-			textures.push_back(resources.getTexture(t.get<std::string>()));
+			textures.push_back(resources.getTexture(file.folder + t.get<std::string>()));
 		}
 	}
 	else
 	{
-		textures.push_back(resources.getTexture(j["textures"].get<std::string>()));
+		textures.push_back(resources.getTexture(file.folder + j["textures"].get<std::string>()));
 	}
 	scriptTable["initSystem"]();
 }

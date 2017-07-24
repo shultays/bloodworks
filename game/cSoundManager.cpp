@@ -40,8 +40,9 @@ cSoundSample::cSoundSample(cSoundManager* soundManager)
 void cSoundSample::loadSample(const std::string& file)
 {
 	this->file = file;
+	fixFilePath(this->file);
 	sample = new SoLoud::Wav();
-	int ret = sample->load(file.c_str());
+	int ret = sample->load(this->file.c_str());
 	assert(ret == 0);
 }
 
@@ -151,15 +152,15 @@ const std::string& cSoundSample::getName() const
 	return file;
 }
 
-void cSoundSampleWithParams::loadSample(nlohmann::json& j)
+void cSoundSampleWithParams::loadSample(nlohmann::json& j, const DirentHelper::File& file)
 {
 	if (j.is_string())
 	{
-		sample = resources.getSoundSample(j.get<std::string>());
+		sample = resources.getSoundSample(file.folder + j.get<std::string>());
 	}
 	else
 	{
-		sample = resources.getSoundSample(j["path"].get<std::string>());
+		sample = resources.getSoundSample(file.folder + j["path"].get<std::string>());
 		if (j.count("volume"))
 		{
 			volume = j["volume"].get<float>();

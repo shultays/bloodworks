@@ -224,7 +224,7 @@ function makeBossDefault(monster)
 					monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
 				end
 				
-				playSound({path = "resources/sounds/shimmer_1.ogg"})
+				playSound({path = "~/resources/sounds/shimmer_1.ogg"})
 			end
 		end
 	elseif t == 11 then
@@ -487,7 +487,7 @@ function addBuffIcon(name, path)
 	removeBuffIcon(name, true)
 	
 	local buffObject = missionData.buffObject
-	local renderable = buffObject:addTexture(path, "resources/default")
+	local renderable = buffObject:addTexture(path, "~/resources/default")
 	renderable.textureSize = Vec2:new(15.0, 15.0)
 	renderable.position = Vec2:new(0, 0)
 	renderable.alignment = RenderableAlignment.top

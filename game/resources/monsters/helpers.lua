@@ -51,7 +51,7 @@ MeleeHitImage = {}
 function MeleeHitImage.build(monster)
 	local gameObject =  addGameObject("MeleeHitImage")
 	gameObject.data.startTime = time
-	gameObject.data.renderable = gameObject:addTexture("resources/monsters/melee_hit.png", "resources/default")
+	gameObject.data.renderable = gameObject:addTexture("~/resources/monsters/melee_hit.png", "~/resources/default")
 	gameObject:setPosition(player.position)
 	gameObject:setScale(Vec2.new(0.35, 0.35))
 	gameObject:setRotation(-math.pi * 0.5 - monster.moveAngle)
@@ -170,7 +170,7 @@ function MonsterMeleeHelper.onTick(monster)
 		if data.willHit and data.lastHitTime + data.hitWaitTime < time then
 			data.willHit = false
 			player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)), angleToPlayer)
-			playSound({path = "resources/sounds/melee_woosh.ogg", volume = 0.3})
+			playSound({path = "~/resources/sounds/melee_woosh.ogg", volume = 0.3})
             if player.data.noSlowdownOnHit == nil then
 				player.maxSpeed:addBuffWithId(MonsterMeleeHelper.slowBuffId, data.slowdownAmount)
 				player.maxSpeed:setBuffDuration(MonsterMeleeHelper.slowBuffId, data.slowdownDuration)
@@ -231,7 +231,7 @@ function BulletShooter.onTick(monster)
 			bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
 			bullet.monsterBullet = true
 			bullet.radius = 6.0
-			bullet:addRenderableTextureWithSize("resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
+			bullet:addRenderableTextureWithSize("~/resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
 		end
 	end
 end
