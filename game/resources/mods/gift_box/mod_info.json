@@ -1,7 +1,7 @@
 {
   "name" : "Giftboxes",
   "icon" : "mod_icon.png",
-  "description" : "Adds random gift box spawns to game.\n\nShoot gift boxes to receive your gift!",
+  "description" : "Adds random gift box spawns to game.<br><br>Shoot gift boxes to receive your gift!",
   "creator" : "taytay",
   "version" : "1.0"
 }

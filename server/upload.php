@@ -1,4 +1,14 @@
 <?php
+function clearForJson($str)
+{
+	$str = str_replace('"', "", $str);
+	$str = str_replace('$', "", $str);
+	$str = str_replace('\\', "", $str);
+	$str = str_replace('\n', "", $str);
+	$str = str_replace('\r', "", $str);
+	$str = str_replace('\t', "", $str);
+	return $str;
+}
 function endsWith($haystack, $needle)
 {
     $length = strlen($needle);
@@ -23,14 +33,14 @@ $validHeader = false;
 if(isset($_POST['name']) and strlen($_POST['name']) > 0)
 {
 	$validHeader = true;
-	$name = $_POST['name'];
-	$name = addslashes($name);
+	$modname = $_POST['name'];
+	$modname = clearForJson(addslashes($modname));
 	$description = (isset($_POST['description']) ? $_POST['description'] : "");
-	$description = addslashes($description);
+	$description = clearForJson(addslashes($description));
 	$version = (isset($_POST['version']) ? $_POST['version'] : "0");
-	$version = addslashes($version);
+	$version = clearForJson(addslashes($version));
 	$creator = (isset($_POST['creator']) ? $_POST['creator'] : "");
-	$creator = addslashes($creator);
+	$creator = clearForJson(addslashes($creator));
 	
 	if (isset($_FILES['icon']))
 	{
@@ -167,7 +177,7 @@ if($validHeader and $validUser and $validUpload)
 			$type = addslashes($type);
 	
 			$query = "INSERT INTO upload (name, description, version, creator, icon, size, type, content, userid ) ".
-			"VALUES ('$name', '$description', '$version', '$creator', '$icon', '$fileSize', '$fileType', '$content', '$userid')";
+			"VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$fileSize', '$fileType', '$content', '$userid')";
 
 			if (mysqli_query($link, $query))
 			{
