@@ -170,6 +170,10 @@ void RunGame()
 			{
 				input.releaseKey(event.button.button + mouse_start);
 			}
+			else if (event.type == SDL_MOUSEWHEEL)
+			{
+				input.mouseWhellMove(event.wheel.x, event.wheel.y);
+			}
 			else if (event.type == SDL_KEYDOWN)
 			{
 				input.pressKey(event.key.keysym.scancode);

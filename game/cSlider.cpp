@@ -67,6 +67,29 @@ void cSlider::check(const Vec2& mousePos, bool ignoreClick)
 	bgButton->check(shiftedPos, ignoreClick);
 	sliderButton->check(shiftedPos, ignoreClick);
 
+	if (input.getMouseWheel() && bgButton->isHovering())
+	{
+		if (isFloat)
+		{
+			float shift = input.getMouseWheel() * 0.05f * (maxValueF - minValueF);
+			setValue(getValue() + shift);
+		}
+		else
+		{
+			int shift = (int)round(input.getMouseWheel() * 0.05f * (maxValue - minValue));
+			if (input.getMouseWheel() > 0 && shift <= 0)
+			{
+				shift = 1;
+			}
+			else if (input.getMouseWheel() < 0 && shift >= 0)
+			{
+				shift = -1;
+			}
+			setValue(getIntValue() + shift);
+		}
+		input.clearWheel();
+	}
+
 	if (sliderButton->isPressed())
 	{
 		pressShift = relativeMouse[axis] - sliderButton->getPosition()[axis];
@@ -118,7 +141,7 @@ void cSlider::setValue(int value)
 	curValue = value;
 	clamp(curValue, minValue, maxValue);
 	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
-	float t = ((float)value - minValue) / (maxValue - minValue);
+	float t = ((float)curValue - minValue) / (maxValue - minValue);
 	float pos = -maxShift + maxShift * 2.0f * t;
 	setSliderPos(pos);
 }
@@ -135,7 +158,7 @@ void cSlider::setValue(float value)
 	curValueF = value;
 	clamp(curValueF, minValueF, maxValueF);
 	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
-	float t = (value - minValueF) / (maxValueF - minValueF);
+	float t = (curValueF - minValueF) / (maxValueF - minValueF);
 	float pos = -maxShift + maxShift * 2.0f * t;
 	setSliderPos(pos);
 
