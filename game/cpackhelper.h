@@ -132,6 +132,7 @@ public:
 		std::vector<int> sizes;
 		FILE *fin;
 		fopen_s(&fin, f.c_str(), "rb");
+		int totalSize = getInt(fin);
 		int headerSize = getInt(fin);
 		int fileCount = getInt(fin);
 		for (int i = 0; i < fileCount; i++)
@@ -177,7 +178,7 @@ public:
 		fclose(fin);
 	}
 
-	static int cPackHelper::deleteFolder(const std::string &refcstrRootDirectory, bool bDeleteSubdirectories /*= true*/)
+	static int cPackHelper::deleteFolder(const std::string &refcstrRootDirectory, bool bDeleteSubdirectories /*= true*/, bool deleteRoot = true)
 	{
 		bool            bSubdirectory = false;       // Flag, indicating whether
 													 // subdirectories have been found
@@ -203,7 +204,7 @@ public:
 						if (bDeleteSubdirectories)
 						{
 							// Delete subdirectory
-							int iRC = deleteFolder(strFilePath, bDeleteSubdirectories);
+							int iRC = deleteFolder(strFilePath, bDeleteSubdirectories, true);
 							if (iRC)
 								return iRC;
 						}
@@ -227,21 +228,24 @@ public:
 			// Close handle
 			::FindClose(hFile);
 
-			DWORD dwError = ::GetLastError();
-			if (dwError != ERROR_NO_MORE_FILES)
-				return dwError;
-			else
+			if (deleteRoot)
 			{
-				if (!bSubdirectory)
+				DWORD dwError = ::GetLastError();
+				if (dwError != ERROR_NO_MORE_FILES)
+					return dwError;
+				else
 				{
-					// Set directory attributes
-					if (::SetFileAttributesA(refcstrRootDirectory.c_str(),
-						FILE_ATTRIBUTE_NORMAL) == FALSE)
-						return ::GetLastError();
+					if (!bSubdirectory)
+					{
+						// Set directory attributes
+						if (::SetFileAttributesA(refcstrRootDirectory.c_str(),
+							FILE_ATTRIBUTE_NORMAL) == FALSE)
+							return ::GetLastError();
 
-					// Delete directory
-					if (::RemoveDirectoryA(refcstrRootDirectory.c_str()) == FALSE)
-						return ::GetLastError();
+						// Delete directory
+						if (::RemoveDirectoryA(refcstrRootDirectory.c_str()) == FALSE)
+							return ::GetLastError();
+					}
 				}
 			}
 		}

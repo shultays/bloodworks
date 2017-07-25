@@ -6,31 +6,29 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	cRenderableWithShader::render(isIdentity, mat, crop);
 	font->texture->bindTexture();
-	int row = 0;
-	int lastCharToDraw = 0;
-	while (true)
+
+	struct LineData
 	{
-		Mat3 temp2 = worldMatrix;
-		temp2 = Mat3::scaleMatrix(textSize) * temp2;
-		temp2.translateBy((float)font->leftPadding, (float)font->bottomPadding);
+		int startIndex;
+		int endIndex;
+		float length;
+		bool useSurplus;
+	};
 
-		if (verticalTextAlignment == VerticalTextAlignment::top)
-		{
-			temp2.translateBy(0.0f, -textSize);
-		}
-		else if (verticalTextAlignment == VerticalTextAlignment::mid)
-		{
-			temp2.translateBy(0.0f, -textSize * 0.5f);
-		}
+	std::vector<struct LineData> lineData;
+	lineData.reserve(4);
 
-		int firstCharToDraw = lastCharToDraw;
-		//if (lengthDirty) // todo fix this
+	{
+		int lastCharToDraw = 0;
+		while (true)
 		{
-			lengthDirty = false;
-			length = 0.0f;
+			struct LineData data;
+			data.useSurplus = false;
 
+			int firstCharToDraw = lastCharToDraw;
 			int lastSpaceIndex = -1;
-
+			float lengthAtSpace = 0.0f;
+			float length = 0.0f;
 			for (int i = firstCharToDraw; i < textToPrint.size(); i++)
 			{
 				float charSize = font->defaultSize;
@@ -41,6 +39,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 				if (textToPrint[i] == ' ')
 				{
 					lastSpaceIndex = i;
+					lengthAtSpace = length;
 				}
 				if (textToPrint[i] == '\n')
 				{
@@ -58,38 +57,79 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 					else
 					{
 						lastCharToDraw = lastSpaceIndex + 1;
+						length = lengthAtSpace;
+						data.useSurplus = true;
 					}
 					break;
 				}
 				length = newLength;
 				lastCharToDraw = i + 1;
 			}
+
+			data.startIndex = firstCharToDraw;
+			data.endIndex = lastCharToDraw;
+			data.length = length;
+			lineData.push_back(data);
+			if (lineData.size() >= maxLine || lastCharToDraw >= textToPrint.size())
+			{
+				break;
+			}
+		}
+	}
+
+	float lineHeight = textSize + 6.0f;
+
+	for (int l=0; l<lineData.size(); l++)
+	{
+		auto& line = lineData[l];
+		Mat3 temp2 = worldMatrix;
+		temp2 = Mat3::scaleMatrix(textSize) * temp2;
+		temp2.translateBy((float)font->leftPadding, (float)font->bottomPadding);
+
+		if (verticalTextAlignment == VerticalTextAlignment::top)
+		{
+			temp2.translateBy(0.0f, -textSize - lineHeight*lineData.size());
+		}
+		else if (verticalTextAlignment == VerticalTextAlignment::mid)
+		{
+			temp2.translateBy(0.0f, textSize * -0.5f + lineHeight * ((lineData.size() - 1) * 0.5f));
 		}
 
 		Mat3 temp = isIdentity ? temp2 : temp2 * mat;
 
 		if (textAlignment == TextAlignment::center)
 		{
-			temp.translateBy(-length * 0.5f, 0.0f);
+			temp.translateBy(-line.length * 0.5f, 0.0f);
 		}
 		else if (textAlignment == TextAlignment::right)
 		{
-			temp.translateBy(-length, 0.0f);
+			temp.translateBy(-line.length, 0.0f);
 		}
 
-		if (row > 0)
+		float subplusLength = 0.0f;
+
+		if (textAlignment == TextAlignment::fit && line.endIndex - line.startIndex > 0 && line.useSurplus)
 		{
-			temp.translateBy(0.0f, -row * (textSize + 3.0f));
+			if (maxLength - line.length < maxLength * 0.5f)
+			{
+				subplusLength = (maxLength - line.length) / (line.endIndex - line.startIndex);
+			}
+		}
+
+		if (l > 0)
+		{
+			temp.translateBy(0.0f, -l * lineHeight);
 		}
 		
 		glActiveTexture(GL_TEXTURE0);
 		shader->setColor(color);
 		shader->setTexture0(0);
 
-		for (int i = firstCharToDraw; i < lastCharToDraw; i++)
+		for (int i = line.startIndex; i < line.endIndex; i++)
 		{
+			char c = textToPrint[i];
 			float charSize = font->defaultSize;
-			auto& info = font->charInfos[textToPrint[i]];
+			auto& info = font->charInfos[c];
 			if (info.x >= 0)
 			{
 				shader->setWorldMatrix(temp);
@@ -104,20 +144,17 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 
 				charSize = (float)info.w;
 			}
-
 			Vec2 shift = Vec2(charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding, 0.0f);
 			shift = (Vec3(shift.x, shift.y, 0.0f) * mat).vec2;
 			temp.translateBy(shift);
+			if (subplusLength > 0.0f)
+			{
+				temp.translateBy(subplusLength, 0.0f);
+			}
 		}
-
-		glDisableVertexAttribArray(0);
-		if (multiline == false || lastCharToDraw >= textToPrint.size())
-		{
-			break;
-		}
-		row++;
 	}
 
+	glDisableVertexAttribArray(0);
 	glDisable(GL_TEXTURE_2D);
 }
 
@@ -129,9 +166,4 @@ void cTextRenderable::setVerticalTextAllignment(VerticalTextAlignment verticalTe
 const std::string& cTextRenderable::getText() const
 {
 	return text;
-}
-
-void cTextRenderable::setMultiline(bool multiline)
-{
-	this->multiline = multiline;
 }

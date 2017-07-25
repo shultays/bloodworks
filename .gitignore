@@ -1,4 +1,6 @@
 /game/x64/
+/game/resources/mods/
+/game/resources/temp/
 /uploader/x64/
 /x64/
 *.db
