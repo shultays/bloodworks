@@ -94,7 +94,11 @@ void Bloodworks::init()
 				continue;
 			}
 			std::string type = j["type"].get<std::string>();
-			if (type == "gun")
+			if (type == "mod")
+			{
+				modWindow->addInstalledMod(j, f);
+			}
+			else if (type == "gun")
 			{
 				Gun *gun = new Gun(this, j, f);
 				guns.push_back(gun);
