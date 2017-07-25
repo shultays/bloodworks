@@ -2,6 +2,7 @@
 
 #include "UserDetails.h"
 #include "cSlaveWork.h"
+#include <unordered_map>
 
 class Bloodworks;
 class cRenderableContainer;
@@ -12,6 +13,7 @@ class ModWindow
 {
 	Bloodworks *bloodworks;
 	cRenderableContainer *mainWindow;
+	cRenderableContainer *modListWindow;
 	cScrollContainer *modList;
 	UserDetails userDetails;
 
@@ -41,15 +43,24 @@ class ModWindow
 		virtual void runOnMain();
 	} fetchResults;
 
-	nlohmann::json modsJson;
 
 	bool loginning;
 	bool fetchingResults;
 	std::vector<cButton*> modSelectButtons;
+
+	struct ModData
+	{
+		nlohmann::json jsonData;
+		DirentHelper::File filePath;
+	};
+	std::vector<struct ModData> loadedMods;
+	std::vector<struct ModData> installedMods;
+	std::unordered_map<std::string, int> installedModIndices;
 public:
 	ModWindow(Bloodworks *bloodworks);
 	~ModWindow();
 	bool isVisible() const;
 	void setVisible(bool visible);
 	void tick();
+	void addInstalledMod(nlohmann::json& j, DirentHelper::File& f);
 };
