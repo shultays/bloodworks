@@ -284,6 +284,7 @@ private:
 
 	void pressKey(int key);
 	void releaseKey(int key);
+	void mouseWhellMove(int x, int y);
 
 	void setMousePos(const Vec2& pos, const Vec2& relativePos);
 
@@ -292,6 +293,7 @@ private:
 	Vec2 prevMousePos;
 	bool mouseShown;
 	bool ignoreNextMove;
+	IntVec2 mouseWheel;
 
 	std::string names[key_count];
 	std::unordered_map<std::string, Key> nameMap;
@@ -388,4 +390,15 @@ public:
 	void setMousePosition(int x, int y);
 	void setJoystickAxis(int joystick, int axis, int value);
 	const std::string& getKeyName(Key key);
+
+	int getMouseWheel() const
+	{
+		return mouseWheel[1];
+	}
+
+	const IntVec2& getMouseWheel2d() const
+	{
+		return mouseWheel;
+	}
+	void clearWheel();
 };
