@@ -40,4 +40,5 @@ public:
 	void spawnDrop(const Vec2& position);
 	void reset();
 	void onMonsterDied(Monster* monster, float dropChance);
+	float getLastSpawnTime() const;
 };

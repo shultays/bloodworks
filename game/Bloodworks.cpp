@@ -76,58 +76,7 @@ void Bloodworks::init()
 
 	player = new Player(this);
 
-	DirentHelper::Folder folder("./resources");
-	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
-	for (auto& f : files)
-	{
-		if (f.isTypeOf("json"))
-		{
-			nlohmann::json j;
-			appendJson(j, f.folder + f.file);
-			if (j.count("disabled") && j["disabled"].get<bool>() == true)
-			{
-				continue;
-			}
-
-			if (j.count("type") == 0)
-			{
-				continue;
-			}
-			std::string type = j["type"].get<std::string>();
-			if (type == "mod")
-			{
-				modWindow->addInstalledMod(j, f);
-			}
-			else if (type == "gun")
-			{
-				Gun *gun = new Gun(this, j, f);
-				guns.push_back(gun);
-			}
-			else if (type == "bonus")
-			{
-				Bonus *bonus = new Bonus(this, j, f);
-				bonuses.push_back(bonus);
-			}
-			else if (type == "particle")
-			{
-				cParticleTemplate *particleTemplate = new cParticleTemplate(j, f);
-				particles[particleTemplate->getName()] = particleTemplate;
-			}
-			else if (type == "perk")
-			{
-				Perk *perk = new Perk(this, j, f);
-				perks.push_back(perk);
-			}
-			else if (type == "monster")
-			{
-				monsterController->addMonsterTemplate(j, f);
-			}
-			else if (type == "mission")
-			{
-				missionController->addMission(j, f);
-			}
-		}
-	}
+	loadMod("resources");
 
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
@@ -695,6 +644,62 @@ float Bloodworks::getMusicVolumeMultiplier()
 void Bloodworks::showMods()
 {
 	modWindow->setVisible(true);
+}
+
+void Bloodworks::loadMod(const std::string& path)
+{
+	DirentHelper::Folder folder(path);
+	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
+	for (auto& f : files)
+	{
+		if (f.isTypeOf("json"))
+		{
+			nlohmann::json j;
+			appendJson(j, f.folder + f.file);
+			if (j.count("disabled") && j["disabled"].get<bool>() == true)
+			{
+				continue;
+			}
+
+			if (j.count("type") == 0)
+			{
+				continue;
+			}
+			std::string type = j["type"].get<std::string>();
+			if (type == "mod")
+			{
+				modWindow->addInstalledMod(j, f);
+			}
+			else if (type == "gun")
+			{
+				Gun *gun = new Gun(this, j, f);
+				guns.push_back(gun);
+			}
+			else if (type == "bonus")
+			{
+				Bonus *bonus = new Bonus(this, j, f);
+				bonuses.push_back(bonus);
+			}
+			else if (type == "particle")
+			{
+				cParticleTemplate *particleTemplate = new cParticleTemplate(j, f);
+				particles[particleTemplate->getName()] = particleTemplate;
+			}
+			else if (type == "perk")
+			{
+				Perk *perk = new Perk(this, j, f);
+				perks.push_back(perk);
+			}
+			else if (type == "monster")
+			{
+				monsterController->addMonsterTemplate(j, f);
+			}
+			else if (type == "mission")
+			{
+				missionController->addMission(j, f);
+			}
+		}
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()

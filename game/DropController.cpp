@@ -267,3 +267,8 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 	}
 }
 
+float DropController::getLastSpawnTime() const
+{
+	return lastDropSpawn;
+}
+

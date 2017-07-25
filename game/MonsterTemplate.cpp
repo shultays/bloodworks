@@ -6,7 +6,14 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& fi
 {
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
-	textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
+	if (j.count("textureShift"))
+	{
+		textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());
+	}
+	else
+	{
+		textureShift.setZero();
+	}
 	hitPoint = j["hitPoint"].get<int>();
 	experience = j["experience"].get<int>();
 	score = j["score"].get<int>();
@@ -29,8 +36,8 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& fi
 		cAnimatedTexturedQuadRenderable::AnimationData data = getAnimationData(it, file);
 		animationData.push_back(data);
 	}
-
-	scriptTable = lua[j["scriptName"].get<std::string>()] = lua.create_table();
+	scriptName = j["scriptName"].get<std::string>();
+	scriptTable = lua[scriptName] = lua.create_table();
 	scriptPath = file.folder + j["scriptFile"].get<std::string>();
 	lua.script_file(scriptPath);
 
@@ -137,5 +144,10 @@ MonsterTemplate::~MonsterTemplate()
 		hitSound = nullptr;
 	}
 	hitSounds.clear();
+}
+
+const std::string& MonsterTemplate::getScriptName() const
+{
+	return scriptName;
 }
 

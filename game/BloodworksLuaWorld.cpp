@@ -561,6 +561,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getDropController()->spawnGun(pos);
 	});
 
+	lua.set_function("getLastBonusSpawnTime",
+		[&]()
+	{
+		return bloodworks->getDropController()->getLastSpawnTime();
+	});
 	lua.set_function("spawnGun",
 		[&](const Vec2& pos, const std::string& name)
 	{
@@ -664,6 +669,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"addParticleSpawner", &Monster::addParticleSpawner,
 		"spawnParticle", &Monster::spawnParticle,
+		"spawnParticleShifted", &Monster::spawnParticleShifted,
 
 		"modifyDrawLevel", [&](Monster* monster, int level)
 	{

@@ -20,6 +20,8 @@ public:
 	void check(const Vec2& mousePos);
 
 	void addRenderable(cRenderable *child);
+	void removeRenderable(cRenderable *child);
+
 	void setRect(const Rect& rect);
 	void setMaxScroll(float maxScroll);
 	const Mat3& getScrollMatrix() const;
@@ -28,4 +30,5 @@ public:
 		return crop;
 	}
 	bool isMouseInside(const Vec2& mousePos) const;
+	void setScroll(float scroll);
 };
