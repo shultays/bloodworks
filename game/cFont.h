@@ -42,7 +42,8 @@ enum class TextAlignment
 {
 	left,
 	center,
-	right
+	right,
+	fit
 };
 
 enum class VerticalTextAlignment
