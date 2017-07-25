@@ -282,6 +282,12 @@ public:
 			std::cout << "Error : mod name cannot be empty\n";
 			return false;
 		}
+		std::string invalidChars = getInvalidCharsInUsername(modInfo["name"].get<std::string>());
+		if (invalidChars.size() > 0)
+		{
+			std::cout << "Error : mod name has invalid characters:" << invalidChars << "\n";
+			return false;
+		}
 		if (modInfo.count("icon"))
 		{
 			DirentHelper::File f;
