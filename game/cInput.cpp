@@ -16,7 +16,7 @@ void cInput::init()
 	prevMousePos = mousePos = Vec2::zero();
 	joyAxisPos = Vec2::zero();
 	joyAxisPos2 = Vec2::zero();
-
+	mouseWheel.setZero();
 	setLuaKeys();
 }
 
@@ -30,6 +30,7 @@ void cInput::tick()
 {
 	memcpy(prevKeyStates, keyStates, sizeof(prevKeyStates));
 	prevMousePos = mousePos;
+	mouseWheel.setZero();
 }
 
 bool cInput::hasJoyStick() const
@@ -72,6 +73,17 @@ void cInput::setJoystickAxis(int joystick, int axis, int value)
 const std::string& cInput::getKeyName(Key key)
 {
 	return names[key];
+}
+
+void cInput::clearWheel()
+{
+	mouseWheel.setZero();
+}
+
+void cInput::mouseWhellMove(int x, int y)
+{
+	mouseWheel.x += x;
+	mouseWheel.y += y;
 }
 
 void cInput::releaseKey(int key)
