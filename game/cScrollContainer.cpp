@@ -41,7 +41,14 @@ void cScrollContainer::setColor(const Vec4& color)
 void cScrollContainer::check(const Vec2& mousePos)
 {
 	slider->check(mousePos);
-	if (slider->isChanged())
+	bool update = slider->isChanged();
+	if (input.getMouseWheel() && isMouseInside(mousePos))
+	{
+		float shift = input.getMouseWheel() * 20.0f / maxScroll;
+		slider->setValue(slider->getValue() + shift);
+		update = true;
+	}
+	if (update)
 	{
 		float val = 1.0f - slider->getFloatValue();
 		content->setWorldMatrix(Mat3::translationMatrix(0.0f, val * (maxScroll - (crop.getMax().y - crop.getMin().y))));
