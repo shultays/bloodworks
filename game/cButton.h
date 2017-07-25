@@ -31,6 +31,7 @@ class cButton : public cRenderableContainer
 	int enforceHovering;
 
 	Rect lastRenderCrop;
+	void *userData;
 public:
 	enum
 	{
@@ -59,6 +60,17 @@ public:
 
 		enforceHovering = no_enforce;
 		lastRenderCrop = Rect::invalid();
+		userData = nullptr;
+	}
+
+	void setUserData(void *userData)
+	{
+		this->userData = userData;
+	}
+
+	void* getUserData() const
+	{
+		return userData;
 	}
 
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
