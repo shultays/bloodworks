@@ -55,7 +55,7 @@ public:
 
 	bool isOutside(float x, float y) const
 	{
-		return x < min.x || y < min.x || x > max.x || y > max.y;
+		return x < min.x || y < min.y || x > max.x || y > max.y;
 	}
 
 	bool isOutside(const Vec2& pos) const
