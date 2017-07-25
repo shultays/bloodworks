@@ -301,7 +301,7 @@ void MonsterController::addMonsterTemplate(nlohmann::json& j, const DirentHelper
 {
 	MonsterTemplate *t = new MonsterTemplate(j, file);
 	monsterTemplates.push_back(t);
-	monsterTemplateIndices[t->getName()] = (int)monsterTemplates.size() - 1;
+	monsterTemplateIndices[t->getScriptName()] = (int)monsterTemplates.size() - 1;
 }
 
 Vec2 MonsterController::getRandomPos(sol::table& args)

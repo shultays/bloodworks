@@ -54,6 +54,11 @@ void cScrollContainer::addRenderable(cRenderable *child)
 	child->setShader(resources.getShader("resources/defaultWithCrop"));
 }
 
+void cScrollContainer::removeRenderable(cRenderable *child)
+{
+	content->removeRenderable(child);
+}
+
 void cScrollContainer::setRect(const Rect& rect)
 {
 	this->crop = rect;
@@ -77,4 +82,10 @@ const Mat3& cScrollContainer::getScrollMatrix() const
 bool cScrollContainer::isMouseInside(const Vec2& mousePos) const
 {
 	return crop.isInside(game->getRelativeMousePos(mousePos, alignment));
+}
+
+void cScrollContainer::setScroll(float scroll)
+{
+	float s = 1.0f - scroll / maxScroll;
+	slider->setValue(s);
 }

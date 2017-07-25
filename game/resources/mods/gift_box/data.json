@@ -1,15 +1,14 @@
 {
   "type" : "monster",
   "name": "Gift Box",
-  "hitPoint": 300,
-  "size" : [50.0, 42.5],
-  "textureShift" : [0.0, 5.0],
+  "hitPoint": 1,
+  "size" : [20.0, 20.0],
   "bulletRadius" : 28.0,
   "collisionRadius" : 22.0,
   "hasBlood" : true,
   
-  "experience" : 50,
-  "score" : 150,
+  "experience" : 0,
+  "score" : 0,
   
   "animations" : 
   {
