@@ -378,7 +378,6 @@ void OptionsPopup::tick()
 
 	if (lastClickedTitle == inputTitle)
 	{
-		inputGroup->check(input.getMousePos());
 		bool isInside = inputGroup->isMouseInside(input.getMousePos());
 		Vec2 transformedPos = input.getMousePos() - inputGroup->getScrollMatrix().row2.vec2;
 
@@ -389,6 +388,7 @@ void OptionsPopup::tick()
 			config->set("sensitivity", sensitivity->getIntValue());
 		}
 
+		inputGroup->check(input.getMousePos());
 		if (inUseKey && inUseKey->isInUse() == false)
 		{
 			inUseKey->cancel();
