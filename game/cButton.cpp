@@ -5,6 +5,10 @@
 
 void cButton::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
+	if (isDirty)
+	{
+		setWorldMatrix(Mat3::scaleMatrix(lerp(defaultScale, hoverScale, hoverTime)).rotateBy(lerp(defaultRotation, hoverRotation, hoverTime)).translateBy(lerp(defaultShift, hoverShift, hoverTime)));
+	}
 	cRenderableContainer::render(isIdentity, mat, crop);
 	lastRenderCrop = crop;
 }
@@ -15,6 +19,11 @@ void cButton::check(const Vec2& mousePos, bool ignoreClick)
 	prevHovering = hovering;
 
 	hovering = down = false;
+
+	if (visible == false)
+	{
+		return;
+	}
 
 	Vec2 transformedMousePos = game->getRelativeMousePos(mousePos, getAlignment());
 	Vec2 diff = transformedMousePos - defaultShift;
@@ -53,5 +62,6 @@ void cButton::check(const Vec2& mousePos, bool ignoreClick)
 		hoverSound->play();
 	}
 	saturate(hoverTime);
+	isDirty = false;
 	setWorldMatrix(Mat3::scaleMatrix(lerp(defaultScale, hoverScale, hoverTime)).rotateBy(lerp(defaultRotation, hoverRotation, hoverTime)).translateBy(lerp(defaultShift, hoverShift, hoverTime)));
 }

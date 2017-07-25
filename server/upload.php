@@ -27,10 +27,21 @@ $success = "error";
 $validUser = false;
 
 include 'opendb.php';
+include 'hasher.php';
 $userid = "-1";
 $validHeader = false;
 
-if(isset($_POST['name']) and strlen($_POST['name']) > 0)
+$folderName = "";
+
+if(isset($_POST['foldername']))
+{
+	$folderName = $_POST['foldername'];
+	$folderName = preg_replace('/ /i', '_', $folderName);
+	$folderName = preg_replace('/[^a-z0-9A-Z_]/i', '', $folderName);
+	$folderName = clearForJson(addslashes($folderName));
+}
+	
+if(isset($_POST['name']) and strlen($_POST['name']) > 0 and validUsername($_POST['name']))
 {
 	$validHeader = true;
 	$modname = $_POST['name'];
@@ -66,7 +77,7 @@ if(isset($_POST['name']) and strlen($_POST['name']) > 0)
 }
 else
 {
-	$success = "no name is given for mod";
+	$success = "invalid mod name";
 }
 
 if(isset($_POST['username']) and isset($_POST['password']))
@@ -75,8 +86,6 @@ if(isset($_POST['username']) and isset($_POST['password']))
 	$username = addslashes($username);
 	$password = $_POST['password'];
 	$password = addslashes($password);
-	
-	include 'hasher.php';
 
 	if(validUsername($username) and validPassword($password)) 
 	{ 
@@ -176,8 +185,8 @@ if($validHeader and $validUser and $validUpload)
 			$content = addslashes($content);
 			$type = addslashes($type);
 	
-			$query = "INSERT INTO upload (name, description, version, creator, icon, size, type, content, userid ) ".
-			"VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$fileSize', '$fileType', '$content', '$userid')";
+			$query = "INSERT INTO upload (name, description, version, creator, icon, folder, size, type, content, userid ) ".
+			"VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$folderName', '$fileSize', '$fileType', '$content', '$userid')";
 
 			if (mysqli_query($link, $query))
 			{

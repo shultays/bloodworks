@@ -298,6 +298,25 @@ public:
 				return false;
 			}
 		}
+
+		std::string last_folder_path = path;
+		fixFilePath(last_folder_path);
+		if (last_folder_path[last_folder_path.size() - 1] == '/')
+		{
+			last_folder_path.resize(last_folder_path.size() - 1);
+		}
+
+		std::size_t found = last_folder_path.find_last_of('/');
+		if (found != std::string::npos)
+		{
+			last_folder_path = last_folder_path.substr(found + 1);
+		}
+
+		if (last_folder_path.size() == 0)
+		{
+			std::cout << "Error : folder name error\n";
+			return false;
+		}
 		bool success = false;
 		std::string readBuffer = "";
 		CURL *curl = curl_easy_init();
@@ -306,6 +325,18 @@ public:
 			struct curl_httppost *formpost = NULL;
 			struct curl_httppost *lastptr = NULL;
 			struct curl_slist *headerlist = NULL;
+
+			curl_formadd(&formpost,
+				&lastptr,
+				CURLFORM_COPYNAME, "foldername",
+				CURLFORM_COPYCONTENTS, last_folder_path.c_str(),
+				CURLFORM_END);
+
+			curl_formadd(&formpost,
+				&lastptr,
+				CURLFORM_COPYNAME, "name",
+				CURLFORM_COPYCONTENTS, modInfo["name"].get<std::string>().c_str(),
+				CURLFORM_END);
 
 			curl_formadd(&formpost,
 				&lastptr,

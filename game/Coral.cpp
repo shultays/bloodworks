@@ -7,6 +7,7 @@
 #include "cTools.h"
 #include "cSoundManager.h"
 #include "cSlave.h"
+#include "cPackHelper.h"
 
 #define CURL_STATICLIB 
 #include <curl/curl.h>
@@ -24,6 +25,8 @@ Coral::Coral()
 	lastUpdateTime = 0.0f;
 
 	tempFrameBuffer[0] = -1;
+
+	cPackHelper::deleteFolder(TEMP_FOLDER, true, false);
 }
 
 void Coral::tick()

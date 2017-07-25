@@ -32,6 +32,7 @@ class cButton : public cRenderableContainer
 
 	Rect lastRenderCrop;
 	void *userData;
+	bool isDirty = false;
 public:
 	enum
 	{
@@ -61,6 +62,7 @@ public:
 		enforceHovering = no_enforce;
 		lastRenderCrop = Rect::invalid();
 		userData = nullptr;
+		isDirty = true;
 	}
 
 	void setUserData(void *userData)
