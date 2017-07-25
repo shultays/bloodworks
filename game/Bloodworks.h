@@ -251,4 +251,5 @@ public:
 	void addSlaveWork(cSlaveWork* work);
 	float getMusicVolumeMultiplier();
 	void showMods();
+	void loadMod(const std::string& path);
 };

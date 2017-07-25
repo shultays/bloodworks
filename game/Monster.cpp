@@ -72,6 +72,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	dropChance = 0.05f;
 	firstTick = true;
 	hasShouldHitScript = scriptTable["shouldHit"];
+	luaTick = scriptTable["onTick"];
 	scriptTable["init"](this);
 }
 
@@ -103,7 +104,10 @@ void Monster::tick()
 	{
 		renderable->setColor(colorMultiplier.getBuffedValue());
 	}
-	scriptTable["onTick"](this);
+	if (luaTick)
+	{
+		luaTick(this);
+	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
@@ -224,7 +228,10 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 			r = sqrtf(r);
 			Vec2 shift = spawnDir * r * collisionRadius * 2.0f;
 
-			bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+			if (hasBlood)
+			{
+				bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+			}
 			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime() && (damage > 15 || randFloat() < 0.3f))
 			{
@@ -313,15 +320,20 @@ cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args
 
 void Monster::spawnParticle(cParticle *particleToSpawn, sol::table& params)
 {
+	spawnParticleShifted(Vec2::zero(), particleToSpawn, params);
+}
+
+void Monster::spawnParticleShifted(const Vec2& shift, cParticle *particleToSpawn, sol::table& params)
+{
 	if (particleToSpawn)
 	{
-		particleToSpawn->addParticle(position, params);
+		particleToSpawn->addParticle(position + shift, params);
 	}
 	else
 	{
 		for (auto& particle : particles)
 		{
-			particle->addParticle(position, params);
+			particle->addParticle(position + shift, params);
 		}
 	}
 }
@@ -387,11 +399,12 @@ void Monster::killSelf(const Vec2& blowDir)
 {
 	assert(isDead == false);
 	isDead = true;
-	if (scriptTable["onKilled"])
-	{
-		scriptTable["onKilled"](this);
-	}
 
+	auto& onKilled = scriptTable["onKilled"];
+	if (onKilled)
+	{
+		onKilled(this);
+	}
 
 	bloodworks->onMonsterDied(this, dropChance);
 
@@ -422,7 +435,10 @@ void Monster::killSelf(const Vec2& blowDir)
 	
 	if (blowDir.isNonZero())
 	{
-		bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
+		if (hasBlood)
+		{
+			bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
+		}
 		for (int i : parts)
 		{
 			cTextureShr s = monsterTemplate->bodyParts[i].texture;

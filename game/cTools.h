@@ -15,6 +15,8 @@
 #define offsetof(st, m) ((size_t)&(((st *)0)->m))
 #endif
 
+#define TEMP_FOLDER "resources/temp/"
+
 template <class T>
 inline void swapt(T& a, T& b)
 {
