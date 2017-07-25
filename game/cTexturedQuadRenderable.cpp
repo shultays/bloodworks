@@ -5,6 +5,11 @@
 
 void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
+	if (texture[0] == nullptr)
+	{
+		return;
+	}
+
 	cRenderableWithShader::render(isIdentity, mat, crop);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quad);
@@ -50,12 +55,22 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rec
 
 void cTexturedQuadRenderable::setTexture(int i, const std::string& texturePath)
 {
-	texture[i] = resources.getTexture(texturePath);
+	if (texturePath.length() == 0)
+	{
+		texture[i] = nullptr;
+	}
+	else
+	{
+		texture[i] = resources.getTexture(texturePath);
+	}
 }
 
 cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const std::string& texturePath, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
 {
 	setTexture(texturePath);
-	setWorldMatrix(Mat3::translationMatrix(texture[0]->getDimensions().toVec()));
+	if (texture[0] != nullptr)
+	{
+		setWorldMatrix(Mat3::translationMatrix(texture[0]->getDimensions().toVec()));
+	}
 }
 

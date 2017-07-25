@@ -328,6 +328,17 @@ function Survival.onTick()
 	
 	if missionData.firstTick then
 		missionData.firstTick = false
+		
+		local monsterTypeCount = getAllMonsterTypeCount()
+		
+		for i = 0, monsterTypeCount - 1 do
+			local monsterType = getMonsterTypeAt(i)
+			if monsterType.scriptTable.onMissionLoad ~= nil then
+				monsterType.scriptTable.onMissionLoad(missionData)
+			end
+		end
+		
+		
 		local spawn
 		if DEBUG then
 			spawn = 10
@@ -450,7 +461,7 @@ end
 
 
 function Survival.onMonsterDied(monster)
-	if missionData.firstKill then
+	if missionData.firstKill and monster.dropChance > 0 then
 		missionData.firstKill = false
 		spawnRandomGun(monster.position)
 	end

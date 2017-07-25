@@ -2,7 +2,7 @@
   "type" : "mod",
   "name" : "Giftboxes",
   "icon" : "mod_icon.png",
-  "description" : "Adds random gift box spawns to game.<br><br>Shoot gift boxes to receive your gift!",
+  "description" : "Santa has visited to Bloodworks! And he drops random gift boxes on the map.<br><br>Shoot boxes to unwrap your gift!",
   "creator" : "taytay",
   "version" : "1.0"
 }
