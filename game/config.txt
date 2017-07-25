@@ -3,7 +3,7 @@ gore            1
 screen_shake    1
 lock_crosshair  1
 auto_open_perk_popup 1
-sensitivity     48
+sensitivity     0
 full_screen     0
 vsync           0
 volume          0
