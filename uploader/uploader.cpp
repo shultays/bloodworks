@@ -10,6 +10,15 @@
 
 int main(int argn, const char* argv[])
 {
+	bool uploadAll = false;
+	std::vector<DirentHelper::Folder> allMods;
+	int modIndex = 0;
+	if (uploadAll)
+	{
+		DirentHelper::Folder f("resources/mods");
+		allMods = f.getSubFolders();
+	}
+
 	srand((unsigned)time(0));
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	UserDetails account;
@@ -112,38 +121,53 @@ int main(int argn, const char* argv[])
 	}
 
 	std::string path;
-	
-	if (argn > 1)
+	do
 	{
-		path = argv[1];
-	}
-	if (path.length() == 0)
-	{
-		std::cout << "Enter a mod folder to upload:\n";
-		std::cin >> path;
-	}
-
-	fixFolderPath(path);
-	std::string jsonPath = path + "mod_info.json";
-	std::string jsonText;
-	textFileRead(jsonPath, jsonText);
-
-	if (jsonText.length() == 0)
-	{
-		std::cout << "Couldn't find mod file:" << jsonPath << "\n";
-	}
-	else
-	{
-		nlohmann::json j = nlohmann::json::parse(jsonText.c_str());
-
-		std::string tempName = "uploader/temp.bld";
-		bool done = cPackHelper::packFolder(path, tempName);
-		if (done)
+		if (uploadAll)
 		{
-			account.sendFile(account.getUsername(), account.getPassword(), path, j, tempName);
-			cPackHelper::deleteFile(tempName);
+			if (modIndex == allMods.size())
+			{
+				uploadAll = false;
+				break;
+			}
+			else
+			{
+				path = allMods[modIndex++].getPath();
+			}
 		}
-	}
+		else if (argn > 1)
+		{
+			path = argv[1];
+		}
+		if (path.length() == 0)
+		{
+			std::cout << "Enter a mod folder to upload:\n";
+			std::cin >> path;
+		}
+
+		fixFolderPath(path);
+		std::string jsonPath = path + "mod_info.json";
+		std::string jsonText;
+		textFileRead(jsonPath, jsonText);
+
+		if (jsonText.length() == 0)
+		{
+			std::cout << "Couldn't find mod file:" << jsonPath << "\n";
+		}
+		else
+		{
+			nlohmann::json j = nlohmann::json::parse(jsonText.c_str());
+
+			std::string tempName = "resources/temp/temp.bld";
+			bool done = cPackHelper::packFolder(path, tempName);
+			if (done)
+			{
+				account.sendFile(account.getUsername(), account.getPassword(), path, j, tempName);
+				cPackHelper::deleteFile(tempName);
+			}
+		}
+
+	} while (uploadAll);
 	curl_global_cleanup();
 
 #ifdef _DEBUG

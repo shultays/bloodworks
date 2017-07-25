@@ -8,14 +8,48 @@ class Bloodworks;
 class cRenderableContainer;
 class cButton;
 class cScrollContainer;
+class cTextRenderable;
+class cTexturedQuadRenderable;
 
 class ModWindow
 {
 	Bloodworks *bloodworks;
 	cRenderableContainer *mainWindow;
 	cRenderableContainer *modListWindow;
+	cRenderableContainer *modDetailWindow;
 	cScrollContainer *modList;
 	UserDetails userDetails;
+
+	int fetchingImageId;
+
+	bool loginning;
+	bool fetchingResults;
+	std::vector<cButton*> modSelectButtons;
+
+	struct ModData
+	{
+		nlohmann::json jsonData;
+		DirentHelper::File filePath;
+	};
+	std::vector<struct ModData> loadedMods;
+	std::vector<struct ModData> installedMods;
+	std::unordered_map<std::string, int> installedModIndices;
+
+	void showModDetails(struct ModData& modData);
+
+	bool detailInstalled;
+	cTextRenderable *detailName;
+	cTexturedQuadRenderable *detailIcon;
+	cTextRenderable *detailVersion;
+	cTextRenderable *detailCreator;
+	cTextRenderable *detailDescription;
+	cButton *detailInstallButton;
+	cTextRenderable *detailInstallText;
+	ModData detailedMod;
+
+	void updateList();
+
+public:
 
 	class LoginWork : public cSlaveWork
 	{
@@ -40,23 +74,30 @@ class ModWindow
 			this->modWindow = modWindow;
 		}
 		virtual void runOnSlave();
-		virtual void runOnMain();
 	} fetchResults;
 
-
-	bool loginning;
-	bool fetchingResults;
-	std::vector<cButton*> modSelectButtons;
-
-	struct ModData
+	class FetchImage : public cSlaveWork
 	{
-		nlohmann::json jsonData;
-		DirentHelper::File filePath;
-	};
-	std::vector<struct ModData> loadedMods;
-	std::vector<struct ModData> installedMods;
-	std::unordered_map<std::string, int> installedModIndices;
-public:
+	public:
+		ModWindow *modWindow;
+		int id;
+		virtual void runOnSlave();
+		virtual void runOnMain();
+	} fetchImage;
+
+	class FetchMod : public cSlaveWork
+	{
+	public:
+		std::string readBuffer;
+		int byteToLoad;
+		ModWindow *modWindow;
+		int id;
+		bool valid;
+		std::string installPath;
+		virtual void runOnSlave();
+		virtual void runOnMain();
+	} fetchMod;
+
 	ModWindow(Bloodworks *bloodworks);
 	~ModWindow();
 	bool isVisible() const;

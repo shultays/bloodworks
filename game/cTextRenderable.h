@@ -11,14 +11,12 @@ private:
 	std::string text;
 	std::string textToPrint;
 	friend class cDebugRenderable;
-	float length;
 	bool lengthDirty;
 	TextAlignment textAlignment;
 	VerticalTextAlignment verticalTextAlignment;
 	float maxLength;
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
-	bool multiline;
-
+	int maxLine;
 	void strReplace(std::string& str, const std::string& oldStr, const std::string& newStr)
 	{
 		std::string::size_type pos = 0u;
@@ -39,7 +37,7 @@ public:
 		setVerticalTextAllignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
 		maxLength = FLT_MAX;
-		multiline = true;
+		maxLine = INT_MAX;
 	}
 
 	virtual ~cTextRenderable()
@@ -84,5 +82,8 @@ public:
 	}
 	void setVerticalTextAllignment(VerticalTextAlignment param1);
 	const std::string& getText() const;
-	void setMultiline(bool multiline);
+	void setMaxLineCount(int maxLine)
+	{
+		this->maxLine = maxLine;
+	}
 };

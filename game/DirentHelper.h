@@ -62,6 +62,47 @@ namespace DirentHelper
 		{
 		}
 
+		bool exists() const
+		{
+			DIR *dir;
+			dir = opendir(name.c_str());
+			if (dir == nullptr)
+			{
+				closedir(dir);
+				return true;
+			}
+			return false;
+		}
+
+		const std::string getPath() const
+		{
+			return name;
+		}
+
+		std::vector<Folder> getSubFolders()
+		{
+			std::vector<Folder> folders;
+			struct dirent *ent;
+			DIR *dir = openDir();
+			while ((ent = readdir(dir)) != NULL)
+			{
+				if (ent->d_name[0] != '.')
+				{
+					if (S_ISREG(ent->d_type))
+					{
+					}
+					else if (S_ISDIR(ent->d_type))
+					{
+						std::string s = name + ent->d_name;
+						Folder f(s);
+						folders.push_back(f);
+					}
+				}
+			}
+			closeDir(dir);
+			return folders;
+		}
+
 		std::vector<File> getAllFiles(bool recursive = false)
 		{
 			std::vector<File> files;
@@ -73,7 +114,6 @@ namespace DirentHelper
 		{
 			std::function<void(File&)> func = [&](File &file) {files.push_back(file); };
 			runOnEachFile(func, recursive);
-
 		}
 
 		void runOnEachFile(std::function<void(File&)>& func, bool recursive = false)
