@@ -27,4 +27,5 @@ public:
 	void resize();
 	void tick(bool hasPopup);
 	void setVisible(bool visible);
+	void setMusicVolume(float volume);
 };

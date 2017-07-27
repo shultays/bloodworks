@@ -2,9 +2,9 @@
 gore            1
 screen_shake    1
 lock_crosshair  1
-auto_open_perk_popup 1
-sensitivity     0
+auto_open_perk_popup 0
+sensitivity     29
 full_screen     0
 vsync           0
-volume          0
-music_volume    0
+volume          100
+music_volume    100
