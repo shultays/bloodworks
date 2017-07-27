@@ -143,7 +143,7 @@ void MainMenu::resize()
 
 void MainMenu::tick(bool hasPopup)
 {
-	if (bloodworksText->isVisible() == false || bloodworks->isOptionsVisible())
+	if (bloodworksText->isVisible() == false || hasPopup)
 	{
 		return;
 	}
@@ -197,13 +197,20 @@ void MainMenu::setVisible(bool visible)
 	{
 		handle = music->play();
 		handle.setLooped(true);
-		float volume = bloodworks->getMusicVolumeMultiplier();
-		handle.setVolume(volume);
+		handle.setVolume(bloodworks->getMusicVolumeMultiplier());
 		input.showMouse();
 		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
 	}
 	else
 	{
 		handle.stop();
+	}
+}
+
+void MainMenu::setMusicVolume(float volume)
+{
+	if (handle.isValid())
+	{
+		handle.setVolume(bloodworks->getMusicVolumeMultiplier());
 	}
 }

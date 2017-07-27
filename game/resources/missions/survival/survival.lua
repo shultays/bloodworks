@@ -292,6 +292,7 @@ function Survival.init()
 	missionData.perkPerLevel = 3
 	missionData.firstKill = true
 	missionData.firstTick = true
+	missionData.spawnWeaponOnFirstKill = true
 	missionData.timeToCalcSpawn = -0.1
 	if DEBUG then
 		missionData.maxMonster = 20
@@ -300,11 +301,23 @@ function Survival.init()
 		spawn = 50
 	end
 	missionData.curMaxMonster = missionData.maxMonster
-		
+	
+	
 end
 
 function Survival.onTick()
     local min = missionTime / 60.0
+	
+	local monsterTypeCount = getAllMonsterTypeCount()
+	
+	if missionData.firstTick then
+		for i = 0, monsterTypeCount - 1 do
+			local monsterType = getMonsterTypeAt(i)
+			if monsterType.scriptTable.onMissionLoad ~= nil then
+				monsterType.scriptTable.onMissionLoad(missionData)
+			end
+		end
+	end
 	
 	missionData.timeToCalcSpawn = missionData.timeToCalcSpawn - dt
 	
@@ -327,18 +340,6 @@ function Survival.onTick()
 	end
 	
 	if missionData.firstTick then
-		missionData.firstTick = false
-		
-		local monsterTypeCount = getAllMonsterTypeCount()
-		
-		for i = 0, monsterTypeCount - 1 do
-			local monsterType = getMonsterTypeAt(i)
-			if monsterType.scriptTable.onMissionLoad ~= nil then
-				monsterType.scriptTable.onMissionLoad(missionData)
-			end
-		end
-		
-		
 		local spawn
 		if DEBUG then
 			spawn = 10
@@ -414,6 +415,8 @@ function Survival.onTick()
 		monster.position = pos
 		monster.moveAngle =  math.random() * math.pi * 2.0
     end
+	
+	missionData.firstTick = false
 end
 
 function shouldSpawnMonster()
@@ -461,9 +464,13 @@ end
 
 
 function Survival.onMonsterDied(monster)
-	if missionData.firstKill and monster.dropChance > 0 then
+	if missionData.firstKill then
 		missionData.firstKill = false
+	end
+
+	if missionData.spawnWeaponOnFirstKill == true then
 		spawnRandomGun(monster.position)
+		missionData.spawnWeaponOnFirstKill = false
 	end
 	
 	if monster.data.ignoreForCount == true then

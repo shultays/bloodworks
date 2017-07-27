@@ -65,6 +65,8 @@ void Bloodworks::init()
 	lua.script_file("resources/guns/helpers.lua");
 	lua.script_file("resources/monsters/helpers.lua");
 
+	coral.getSoundManager()->setGlobalVolume(config->getInt("volume", 50) / 100.0f);
+
 	lua["time"] = timer.getTime();
 
 	dropController = new DropController(this);
@@ -206,8 +208,7 @@ void Bloodworks::init()
 	const bool testMenu = true;
 	if (coral.isDebuggerPresent() && testMenu == false)
 	{
-		globalVolume = 0.0f;
-		coral.getSoundManager()->setGlobalVolume(globalVolume);
+		coral.getSoundManager()->setGlobalVolume(0.0f);
 		loadMission("Survival");
 	}
 	else
@@ -218,8 +219,12 @@ void Bloodworks::init()
 		}
 		coral.setFullScreen(config->getBool("full_screen", false) == 1);
 		mainMenu->setVisible(true);
-		showFps = false;
 	}
+#ifdef DEBUG
+	showFps = true;
+#else
+	showFps = false;
+#endif
 }
 
 Bloodworks::Bloodworks()
@@ -242,9 +247,6 @@ Bloodworks::Bloodworks()
 	showFps = true;
 	soundPaused = false;
 	cameraCenterPos.setZero();
-
-	globalVolume = 0.7f;
-	coral.getSoundManager()->setGlobalVolume(globalVolume);
 
 	BloodworksControls::init();
 }
@@ -637,8 +639,7 @@ void Bloodworks::addSlaveWork(cSlaveWork* work)
 
 float Bloodworks::getMusicVolumeMultiplier()
 {
-	float v = config->getInt("music_volume", 50) / 100.0f;
-	return v;
+	return config->getInt("music_volume", 50) / 100.0f;
 }
 
 void Bloodworks::showMods()
@@ -702,6 +703,17 @@ void Bloodworks::loadMod(const std::string& path)
 	}
 }
 
+void Bloodworks::setVolume(float volume)
+{
+	coral.getSoundManager()->setGlobalVolume(volume);
+}
+
+void Bloodworks::setMusicVolume(float volume)
+{
+	mainMenu->setMusicVolume(volume);
+	missionController->setMusicVolume(volume);
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -758,22 +770,20 @@ void Bloodworks::tick()
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
 
-	bool changeGlobalVolume = false;
-	if (input.isKeyDown(key_num_minus))
+	if (input.isKeyDown(key_num_minus) || input.isKeyDown(key_num_plus))
 	{
-		globalVolume -= timer.getNonSlowedDt();
-		changeGlobalVolume = true;
-	}
-	if (input.isKeyDown(key_num_plus))
-	{
-		globalVolume += timer.getNonSlowedDt();
-		changeGlobalVolume = true;
-	}
-
-	if (changeGlobalVolume)
-	{
+		float globalVolume = coral.getSoundManager()->getGlobalVolume();
+		if (input.isKeyDown(key_num_plus))
+		{
+			globalVolume += timer.getNonSlowedDt();
+		}
+		else
+		{
+			globalVolume -= timer.getNonSlowedDt();
+		}
 		clamp(globalVolume, 0.0f, 1.0f);
 		coral.getSoundManager()->setGlobalVolume(globalVolume);
+		config->set("volume", (int)round(globalVolume * 100));
 	}
 
 	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && mapper.isKeyDown(GameKey::LevelUp))
