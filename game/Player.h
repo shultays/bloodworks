@@ -73,7 +73,6 @@ class Player
 
 	int calculateExperienceForLevel(int level);
 	void updateHitPoints();
-	void killSelf();
 
 	std::vector<cSoundSampleShr> hitSounds;
 	std::vector<cSoundSampleShr> killSounds;
@@ -85,6 +84,8 @@ class Player
 
 	float joystickCheckTimer;
 
+	void checkInput(bool& moving, float& wantedAngle);
+	void updateExperience();
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -148,7 +149,31 @@ public:
 	float getClipCountMultiplier();
 	int getBuffedClipSize(int clipSize);
 	void setScore(int score);
-private:
-	void checkInput(bool& moving, float& wantedAngle);
-	void updateExperience();
+	int getMaxHitpoints() const
+	{
+		return maxHitPoints;
+	}
+	int getHitpoints() const
+	{
+		return hitPoints;
+	}
+	void setMaxHitpoints(int maxHitPoints)
+	{
+		this->maxHitPoints = maxHitPoints;
+		if (hitPoints > maxHitPoints)
+		{
+			hitPoints = maxHitPoints;
+		}
+		updateHitPoints();
+	}
+	void setHitpoints(int hitPoints)
+	{
+		this->hitPoints = hitPoints;
+		if (hitPoints > maxHitPoints)
+		{
+			hitPoints = maxHitPoints;
+		}
+		updateHitPoints();
+	}
+	void killSelf();
 };

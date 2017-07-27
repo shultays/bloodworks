@@ -160,3 +160,4 @@ inline void fixFolderPath(std::string& path)
 
 void printStack();
 void printExceptionStack(void* pExp);
+void doBreak();

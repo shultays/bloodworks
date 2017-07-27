@@ -20,8 +20,18 @@ class Bonus
 public:
 	Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	void spawnAt(const Vec2& pos);
-	const std::string& getIconPath() const;
-	const std::string& getName() const;
+	const std::string& getIconPath() const
+	{
+		return iconPath;
+	}
+	const std::string& getName() const
+	{
+		return name;
+	}
+	const std::string& getScriptName() const
+	{
+		return scriptName;
+	}
 	void reset();
 	float getSpawnChance();
 };

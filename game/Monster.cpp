@@ -17,12 +17,14 @@
 #include "cParticle.h"
 #include "BloodworksControls.h"
 #include "MonsterTemplate.h"
+#include "BloodworksDebug.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	id = bloodworks->getUniqueId();
 	lastRunCheck = -1;
+	debugVal = 0;
 	addIgnoreId(id);
 }
 
@@ -66,6 +68,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	bulletRadius = monsterTemplate->bulletRadius;
 	collisionRadius = monsterTemplate->collisionRadius;
 	position = 100.0f;
+	prevPosition = position;
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
 
@@ -97,6 +100,10 @@ Monster::~Monster()
 
 void Monster::tick()
 {
+#ifdef HAS_BLOODWORKS_DEBUG
+	BloodworksDebug::instance->onMonsterPreTick(this);
+#endif
+
 	moveSpeedMultiplier.tick();
 	knockbackResistance.tick();
 	bool colorChanged = colorMultiplier.tick();
@@ -104,7 +111,7 @@ void Monster::tick()
 	{
 		renderable->setColor(colorMultiplier.getBuffedValue());
 	}
-	if (luaTick)
+	if (luaTick && timer.getDt() > 0.0f)
 	{
 		luaTick(this);
 	}
@@ -128,7 +135,8 @@ void Monster::tick()
 		scriptTable[t.func](t.args);
 	}
 	moveVelocity = Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier();
-	if (moveSpeed > 0.0f && input.isKeyUp(key_f6))
+	prevPosition = position;
+	if (moveSpeed > 0.0f)
 	{
 		position += moveVelocity * timer.getDt();
 	}
@@ -154,7 +162,9 @@ void Monster::tick()
 		}
 	}
 	clampPos();
-
+#ifdef HAS_BLOODWORKS_DEBUG
+	BloodworksDebug::instance->onMonsterTick(this);
+#endif
 	std::stringstream ss;
 	ss << (int)hitPoint;
 
@@ -215,7 +225,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 	{
 		if (damage > 0)
 		{
-			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
+			spawnBits(dir * clamped(damage * 0.3f, 0.0f, 20.0f), 3);
 			killSelf(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 		}
 	}
@@ -232,7 +242,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 			{
 				bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
 			}
-			spawnBits(position, dir * clamped(damage * 0.3f, 0.0f, 20.0f));
+			spawnBits(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime() && (damage > 15 || randFloat() < 0.3f))
 			{
 				lastHitSoundPlayTime = timer.getTime();
@@ -268,7 +278,7 @@ void Monster::addIgnoreId(int id)
 	}
 }
 
-bool Monster::hasIgnoreId(int id)
+bool Monster::hasIgnoreId(int id) const
 {
 	return std::binary_search(ignoreIds.begin(), ignoreIds.end(), id);
 }
@@ -285,6 +295,7 @@ void Monster::setPosition(const Vec2& pos)
 {
 	this->position = pos;
 	clampPos();
+	prevPosition = position;
 	bloodworks->getMonsterController()->relocateMonster(this);
 }
 
@@ -351,6 +362,55 @@ void Monster::modifyDrawLevel(int level)
 	renderable->setLevel(renderable->getLevel() + level);
 }
 
+void Monster::spawnBodyParts(const Vec2& blowDir)
+{
+	std::vector<int> parts;
+	int maxCount = (int)monsterTemplate->bodyParts.size();
+	int partCount = randInt(2, maxCount - 2) + 50;
+	if (partCount > maxCount)
+	{
+		partCount = maxCount;
+	}
+	for (int i = 0; i < partCount; i++)
+	{
+		int t = randInt(maxCount);
+		for (int j = 0; j < parts.size(); j++)
+		{
+			if (parts[j] == t)
+			{
+				i--;
+				t = -1;
+				break;
+			}
+		}
+		if (t != -1)
+		{
+			parts.push_back(t);
+		}
+	}
+
+	if (blowDir.isNonZero())
+	{
+		if (hasBlood)
+		{
+			bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
+		}
+		for (int i : parts)
+		{
+			cTextureShr s = monsterTemplate->bodyParts[i].texture;
+			cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
+			partRenderable->setColor(renderable->getColor());
+			Mat3 mat = renderable->getWorldMatrix();
+			partRenderable->setWorldMatrix(mat);
+			bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
+				position + monsterTemplate->bodyParts[i].shift * partScale * Mat2::rotation(moveAngle),
+				monsterTemplate->bodyParts[i].texture->getDimensions().toVec() * partScale,
+				moveAngle - pi_d2,
+				blowDir * 2.0f);
+		}
+	}
+}
+
 void Monster::clampPos()
 {
 	Vec2 old = position;
@@ -360,7 +420,7 @@ void Monster::clampPos()
 	position.y = min(position.y, bloodworks->getMapMax().y + 300.0f);
 }
 
-void Monster::spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits)
+void Monster::spawnBits(const Vec2& blowDir, int extraBits)
 {
 	if (monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
 	{
@@ -408,51 +468,7 @@ void Monster::killSelf(const Vec2& blowDir)
 
 	bloodworks->onMonsterDied(this, dropChance);
 
-	std::vector<int> parts;
-	int maxCount = (int)monsterTemplate->bodyParts.size();
-	int partCount = randInt(2, maxCount - 2) + 50;
-	if (partCount > maxCount)
-	{
-		partCount = maxCount;
-	}
-	for (int i = 0; i < partCount; i++)
-	{
-		int t = randInt(maxCount);
-		for (int j = 0; j < parts.size(); j++)
-		{
-			if (parts[j] == t)
-			{
-				i--;
-				t = -1;
-				break;
-			}
-		}
-		if (t != -1)
-		{
-			parts.push_back(t);
-		}
-	}
-	
-	if (blowDir.isNonZero())
-	{
-		if (hasBlood)
-		{
-			bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
-		}
-		for (int i : parts)
-		{
-			cTextureShr s = monsterTemplate->bodyParts[i].texture;
-			cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
-			partRenderable->setColor(renderable->getColor());
-			Mat3 mat = renderable->getWorldMatrix();
-			partRenderable->setWorldMatrix(mat);
-			bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
-				position + monsterTemplate->bodyParts[i].shift * partScale * Mat2::rotation(moveAngle),
-				monsterTemplate->bodyParts[i].texture->getDimensions().toVec() * partScale,
-				moveAngle - pi_d2,
-				blowDir * 2.0f);
-		}
-	}
+	spawnBodyParts(blowDir);
 
 	if (bloodworks->getPlayer())
 	{

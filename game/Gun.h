@@ -86,11 +86,11 @@ public:
 	void start();
 	void tick(float dt);
 
-	float getMaxCrosshairDistance();
-	float getSpreadAngle();
-	int getId();
+	float getMaxCrosshairDistance() const;
+	float getSpreadAngle() const;
+	int getId() const;
 	sol::table& getScriptTable();
-	const std::string& getName()
+	const std::string& getName() const
 	{
 		return name;
 	}
@@ -125,7 +125,8 @@ public:
 	bool isReloading() const;
 	float getReloadPercentage() const;
 
-	int getMaxAmmo();
+	int getMaxAmmo() const;
 	float getSpawnChance();
 	float getBulletLifeTime() const;
+	const std::string& getScriptName() const;
 };
