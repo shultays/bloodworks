@@ -10,7 +10,7 @@ function TestMission.onTick()
 		gameObject.data.startTime = time
 		gameObject.data.fadeOutStartTime = 2.0
 		gameObject.data.fadeInDuration = 0.5
-		gameObject:setLevel(RenderableLevel.gui + 5)
+		gameObject:setLevel(RenderableLevel.GUI + 5)
 		gameObject.data.renderable = gameObject:addText("Level : " .. mission.level, "resources/fontData.txt")
         gameObject.data.renderable.alignment = RenderableAlignment.bottom
         gameObject.data.renderable:update()
