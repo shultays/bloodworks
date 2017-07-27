@@ -22,4 +22,5 @@ public:
 	Bullet *addCustomBullet(const sol::table& params);
 	void reset();
 	void relocateBullet(Bullet* bullet);
+	void drawDebug();
 };

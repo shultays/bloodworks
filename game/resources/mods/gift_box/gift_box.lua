@@ -16,12 +16,13 @@ function GiftBox.init(monster, min)
 	data.rotate = 0.2 + math.random() * 0.1
 	data.shift = math.random() * math.pi
 
-	monster.data.particle = monster:addParticleSpawner("CriticalParticle", {});
+	data.particle = monster:addParticleSpawner("CriticalParticle", {});
 	
 	monster.knockbackResistance:addBuff(0.0)
 	
 	monster.dropChance = 0.0
 	missionData.giftBoxTime = time
+	data.particleTime = 0.0
 end
 
 function GiftBox.onMissionLoad(missionData)
@@ -41,17 +42,22 @@ function GiftBox.spawnChanceInMission(missionData, min)
 end
 
 function GiftBox.onTick(monster)
-	monster.moveAngle = monster.data.angle + math.sin(time * 6.0 + monster.data.shift) * monster.data.rotate
+	local data = monster.data
+	data.particleTime = data.particleTime - dt
+	if data.particleTime < 0.0 then
+		data.particleTime = data.particleTime + 0.01
 
-	local s = Vec2:new()
-	s:setAngle(math.random() * math.pi * 2.0)
-	s = s * 20
+		local s = Vec2:new()
+		s:setAngle(math.random() * math.pi * 2.0)
+		s = s * 20
 
-	monster:spawnParticleShifted(s, monster.data.particle, {initialScale = 15.0, moveSpeed = 150.0})
+		monster:spawnParticleShifted(s, data.particle, {initialScale = 15.0, moveSpeed = 150.0})
+	end
+	monster.moveAngle = data.angle + math.sin(time * 6.0 + data.shift) * data.rotate
 end
 
 function GiftBox.onKilled(monster)
-	if monster.data.spawnType == "gun" then
+	if data.spawnType == "gun" then
 		spawnRandomGun(monster.position)
 	else
 		spawnRandomBonus(monster.position)

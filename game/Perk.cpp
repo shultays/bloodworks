@@ -92,6 +92,7 @@ int Perk::onPlayerDamaged(int damage, float dir, sol::table& params)
 
 void Perk::reset()
 {
+	scriptTable["data"] = lua.create_table();
 	if (scriptTable["reset"])
 	{
 		scriptTable["reset"]();

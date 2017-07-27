@@ -149,7 +149,6 @@ void cDebugRenderable::addCircle(const Vec2& center, float radius, float time /*
 		addLine(center + newVec, center + oldVec, time, color);
 		oldVec = newVec;
 	}
-
 }
 
 void cDebugRenderable::render()
