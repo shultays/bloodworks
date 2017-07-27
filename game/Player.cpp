@@ -11,6 +11,7 @@
 #include "DirentHelper.h"
 #include "BloodworksControls.h"
 #include "BloodRenderable.h"
+#include "BloodworksConfig.h"
 
 #include <sstream>
 
@@ -281,7 +282,7 @@ void Player::tick()
 
 	pos = pos + moveAmount;
 
-	float sensitivityMult = bloodworks->getConfig()->getInt("sensitivity", 50) / 50.0f;
+	float sensitivityMult = bloodworks->getConfig()->getSensitivity();
 	sensitivityMult = 0.5f * sensitivityMult * sensitivityMult + 0.5f;
 
 	bool joystickUsed = false;
@@ -318,7 +319,7 @@ void Player::tick()
 			crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown() * sensitivityMult;
 		}
 
-		if (bloodworks->getConfig()->getBool("lock_crosshair", true))
+		if (bloodworks->getConfig()->getLockCrosshair())
 		{
 			float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
 			float lengthSquared = crosshairPos.lengthSquared();

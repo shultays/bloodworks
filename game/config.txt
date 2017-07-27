@@ -1,10 +1,10 @@
 
 gore            1
-screen_shake    1
-lock_crosshair  1
-auto_open_perk_popup 0
-sensitivity     29
-full_screen     0
-vsync           0
-volume          100
-music_volume    100
+screenShake     1
+lockCrosshair   1
+autoOpenLevelupPopup 1
+sensitivity     50
+volume          46
+musicVolume     100
+fullScreen      0
+vSync           1
