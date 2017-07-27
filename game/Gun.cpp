@@ -315,22 +315,22 @@ void Gun::tick(float dt)
 	}
 }
 
-float Gun::getMaxCrosshairDistance()
+float Gun::getMaxCrosshairDistance() const
 {
 	return crosshairDistance;
 }
 
-float Gun::getSpreadAngle()
+float Gun::getSpreadAngle() const
 {
 	return spreadAngle;
 }
 
-int Gun::getId()
+int Gun::getId() const
 {
 	return id;
 }
 
-sol::table& Gun::getScriptTable()
+sol::table& Gun::getScriptTable() 
 {
 	return scriptTable;
 }
@@ -434,7 +434,7 @@ void Gun::reload()
 	}
 }
 
-int Gun::getMaxAmmo()
+int Gun::getMaxAmmo() const
 {
 	return bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
 }
@@ -451,6 +451,11 @@ float Gun::getSpawnChance()
 float Gun::getBulletLifeTime() const
 {
 	return bulletLifeTime;
+}
+
+const std::string& Gun::getScriptName() const
+{
+	return scriptName;
 }
 
 int Gun::getCurrentAmmo() const

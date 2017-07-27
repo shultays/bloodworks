@@ -17,6 +17,7 @@ class Monster
 {
 	friend class MonsterController;
 	friend class BloodworksLuaWorld;
+	friend class Bloodworks;
 
 	cAnimatedTexturedQuadRenderable *renderable;
 	cTextRenderable *healthRenderable;
@@ -26,6 +27,7 @@ class Monster
 	int id;
 
 	Vec2 position;
+	Vec2 prevPosition;
 	float moveSpeed;
 	float moveAngle;
 	Vec2 moveDir;
@@ -70,7 +72,6 @@ class Monster
 	float lastHitSoundPlayTime;
 
 	void killSelf(const Vec2& blowDir);
-	void spawnBits(const Vec2& position, const Vec2& blowDir, int extraBits = 0);
 
 	int lastRunCheck;
 	float lastSoundTime;
@@ -90,6 +91,7 @@ class Monster
 	std::vector<Knockback> knockbacks;
 
 	void clampPos();
+	int debugVal;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
@@ -102,17 +104,22 @@ public:
 	void doDamage(int damage, const Vec2& dir);
 	void doDamageWithArgs(int damage, const Vec2& dir, sol::table& args);
 	Vec2 getPathPos(const Vec2& pos);
-	bool isRemoved()
+	bool isRemoved() const
 	{
 		return isDead;
 	}
 
-	const Vec2& getPosition()
+	const Vec2& getPosition() const
 	{
 		return position;
 	}
 
-	float getRadius()
+	const Vec2& getPreviousPosition() const
+	{
+		return prevPosition;
+	}
+
+	float getRadius() const
 	{
 		return bulletRadius;
 	}
@@ -122,7 +129,7 @@ public:
 	bool hasShouldHitScript;
 
 	void addIgnoreId(int id);
-	bool hasIgnoreId(int id);
+	bool hasIgnoreId(int id) const;
 
 	void copyIgnoreId(Monster *other);
 	void setPosition(const Vec2& pos);
@@ -133,4 +140,14 @@ public:
 	void spawnParticleShifted(const Vec2& shift, cParticle *particle, sol::table& params);
 	void addKnockback(const Vec2& speed, float duration);
 	void modifyDrawLevel(int level);
+	void spawnBodyParts(const Vec2& blowDir);
+	void spawnBits(const Vec2& blowDir, int extraBits = 0);
+	void setDebug(int debug)
+	{
+		this->debugVal = debug;
+	}
+	int getDebug() const
+	{
+		return debugVal;
+	}
 };
