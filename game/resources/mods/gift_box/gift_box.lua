@@ -21,16 +21,22 @@ function GiftBox.init(monster, min)
 	monster.knockbackResistance:addBuff(0.0)
 	
 	monster.dropChance = 0.0
+	missionData.giftBoxTime = time
 end
 
 function GiftBox.onMissionLoad(missionData)
 	local m = addRandomMonster("GiftBox")
 	m.position = player.position + Vec2.new(0, 200)
 	m.data.spawnType = "gun"
+	
+	missionData.spawnWeaponOnFirstKill = false
 end
 
 
 function GiftBox.spawnChanceInMission(missionData, min)
+	if time - missionData.giftBoxTime > 40.0 then
+		return 0.00
+	end
 	return 0.05
 end
 
@@ -48,6 +54,6 @@ function GiftBox.onKilled(monster)
 	if monster.data.spawnType == "gun" then
 		spawnRandomGun(monster.position)
 	else
-		soawnRandomBonus(monster.position)
+		spawnRandomBonus(monster.position)
 	end
 end
