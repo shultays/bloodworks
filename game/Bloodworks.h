@@ -43,6 +43,7 @@ class OptionsPopup;
 class cPersistent;
 class ModWindow;
 class cSlaveWork;
+class BloodworksConfig;
 
 class Bloodworks : public cGame
 {
@@ -78,7 +79,7 @@ class Bloodworks : public cGame
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
 
-	cPersistent* config;
+	BloodworksConfig* config;
 
 	int nextUniqueId;
 	int nextGlobalUniqueId;
@@ -213,7 +214,7 @@ public:
 		return paused;
 	}
 
-	cPersistent* getConfig()
+	BloodworksConfig* getConfig()
 	{
 		return config;
 	}
@@ -247,9 +248,8 @@ public:
 	bool isOptionsVisible() const;
 	void onLevelUp();
 	void addSlaveWork(cSlaveWork* work);
-	float getMusicVolumeMultiplier();
 	void showMods();
 	void loadMod(const std::string& path);
-	void setVolume(float volume);
-	void setMusicVolume(float volume);
+	void updateVolume();
+	void updateMusicVolume();
 };
