@@ -8,6 +8,7 @@
 #include "cTexturedQuadRenderable.h"
 #include "cTextRenderable.h"
 #include "BloodworksControls.h"
+#include "BloodworksConfig.h"
 
 MainMenu::MainMenu(Bloodworks *b)
 {
@@ -197,7 +198,7 @@ void MainMenu::setVisible(bool visible)
 	{
 		handle = music->play();
 		handle.setLooped(true);
-		handle.setVolume(bloodworks->getMusicVolumeMultiplier());
+		handle.setVolume(bloodworks->getConfig()->getMusicVolume());
 		input.showMouse();
 		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
 	}
@@ -211,6 +212,6 @@ void MainMenu::setMusicVolume(float volume)
 {
 	if (handle.isValid())
 	{
-		handle.setVolume(bloodworks->getMusicVolumeMultiplier());
+		handle.setVolume(bloodworks->getConfig()->getMusicVolume());
 	}
 }
