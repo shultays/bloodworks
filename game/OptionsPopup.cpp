@@ -39,6 +39,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	// gameplay
 	gameplayTitle = new cButton(bloodworks);
+	gameplayTitle->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 	gameplayTitle->setAlignment(RenderableAlignment::center);
 	gameplayTitle->setDefaultMatrix(Vec2(-titleX, titleY), Vec2(1.0f), 0.0f);
 	gameplayTitle->setHoverMatrix(Vec2(-titleX, titleY), Vec2(1.3f), 0.0f);
@@ -129,6 +130,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	// input
 
 	inputTitle = new cButton(bloodworks);
+	inputTitle->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 	inputTitle->setAlignment(RenderableAlignment::center);
 	inputTitle->setDefaultMatrix(Vec2(0.0f, titleY), Vec2(1.0f), 0.0f);
 	inputTitle->setHoverMatrix(Vec2(0.0f, titleY), Vec2(1.3f), 0.0f);
@@ -187,6 +189,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	// audio video
 	audioVideoTitle = new cButton(bloodworks);
+	audioVideoTitle->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 	audioVideoTitle->setAlignment(RenderableAlignment::center);
 	audioVideoTitle->setDefaultMatrix(Vec2(titleX, titleY), Vec2(1.0f), 0.0f);
 	audioVideoTitle->setHoverMatrix(Vec2(titleX, titleY), Vec2(1.3f), 0.0f);
@@ -435,10 +438,12 @@ void OptionsPopup::tick()
 		if (volume->isChanged())
 		{
 			config->set("volume", volume->getIntValue());
+			bloodworks->setVolume(volume->getIntValue() / 50.0f);
 		}
 		if (musicVolume->isChanged())
 		{
 			config->set("music_volume", musicVolume->getIntValue());
+			bloodworks->setMusicVolume(volume->getIntValue() / 50.0f);
 		}
 	}
 
