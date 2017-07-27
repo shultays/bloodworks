@@ -13,6 +13,7 @@ class MonsterTemplate
 {
 	friend class BloodworksLuaWorld;
 	friend class Monster;
+	friend class Bloodworks;
 	Vec2 size;
 	Vec2 textureShift;
 	std::string name;

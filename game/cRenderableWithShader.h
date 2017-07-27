@@ -73,10 +73,9 @@ public:
 
 class cRenderableWithShader : public cRenderable, public cUniformDataWithShader
 {
-protected:
+public:
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
 
-public:
 	cRenderableWithShader(cGame *game, const std::string& shaderPath);
 
 	cRenderableWithShader(cGame *game, cShaderShr shader) : cRenderable(game)

@@ -31,6 +31,21 @@ Coral::Coral()
 
 void Coral::tick()
 {
+	if (lastFullScreen != fullScreen)
+	{
+		lastFullScreen = fullScreen;
+		if (fullScreen)
+		{
+			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			// SDL_SetWindowSize(mainWindow, 1200, 800);
+		}
+		else
+		{
+			SDL_SetWindowFullscreen(mainWindow, 0);
+			// SDL_SetWindowSize(mainWindow, 800, 600);
+		}
+	}
+
 	float slowdown = game->getSlowdown();
 
 	float t;
@@ -95,16 +110,6 @@ void Coral::setFullScreen(bool fullScreen)
 	if (this->fullScreen != fullScreen)
 	{
 		this->fullScreen = fullScreen;
-		if (fullScreen)
-		{
-			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
-			// SDL_SetWindowSize(mainWindow, 1200, 800);
-		}
-		else
-		{
-			SDL_SetWindowFullscreen(mainWindow, 0);
-			// SDL_SetWindowSize(mainWindow, 800, 600);
-		}
 	}
 }
 
@@ -164,6 +169,7 @@ void Coral::init()
 
 	gameRunning = true;
 	fullScreen = false;
+	lastFullScreen = false;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
 
 	GLfloat vertexData[] =

@@ -44,15 +44,11 @@ class cPersistent;
 class ModWindow;
 class cSlaveWork;
 class BloodworksConfig;
+class BloodworksDebug;
 
 class Bloodworks : public cGame
 {
 	Player *player;
-
-	int tickCount;
-	int renderCount;
-	float lastSetTickTime;
-	float lastSetRenderTime;
 
 	MissionController *missionController;
 	MonsterController *monsterController;
@@ -96,16 +92,13 @@ class Bloodworks : public cGame
 
 	bool paused;
 
-	bool showFps;
 	MainMenu *mainMenu;
 
 	float soundSpeed;
 	bool soundPaused;
 
 	std::vector<cSoundHandle> gameSounds;
-
 	std::vector<cParticle*> orphanParticles;
-
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -145,6 +138,11 @@ public:
 	const std::vector<Bonus*>& Bloodworks::getBonuses() const
 	{
 		return bonuses;
+	}
+
+	const std::vector<Perk*>& Bloodworks::getPerks() const
+	{
+		return perks;
 	}
 
 	Player* getPlayer() const
