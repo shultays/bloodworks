@@ -54,4 +54,5 @@ public:
 	sol::table getMissionData();
 	void onMonsterDied(Monster* monster);
 	void repositionGUI();
+	void setMusicVolume(float volume);
 };

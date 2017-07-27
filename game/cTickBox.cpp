@@ -1,6 +1,7 @@
 #include "cTickBox.h"
 #include "cTexturedQuadRenderable.h"
 #include "cTexture.h"
+#include "cGlobals.h"
 
 cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)
 {
@@ -14,6 +15,7 @@ cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &u
 	uncheckedRenderable->setAlignment(getAlignment());
 	addRenderable(uncheckedRenderable);
 
+	setSounds(resources.getSoundSample("resources/sounds/click.ogg"), nullptr);
 	setChecked(isChecked);
 }
 
