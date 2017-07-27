@@ -63,4 +63,5 @@ public:
 	{
 		return monsterTemplates;
 	}
+	void drawDebug();
 };
