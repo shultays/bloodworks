@@ -192,6 +192,9 @@
     <ClCompile Include="cMutexWindows.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
+    <ClCompile Include="BloodworksConfig.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -412,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="cSlaveWork.h">
       <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodworksConfig.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
