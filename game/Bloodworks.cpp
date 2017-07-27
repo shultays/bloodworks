@@ -220,7 +220,7 @@ void Bloodworks::init()
 #ifdef DEBUG
 	showFps = true;
 #else
-	showFps = false;
+	showFps = coral.isDebuggerPresent();
 #endif
 }
 
