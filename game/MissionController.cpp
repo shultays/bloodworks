@@ -25,6 +25,7 @@ MissionController::MissionController(Bloodworks *bloodworks)
 	missionLoop.setSample(resources.getSoundSample("resources/sounds/game_music.ogg"));
 	missionLoop.setLooped(true);
 	missionLoop.setSpeed(1.0f);
+	missionLoop.setVolume(bloodworks->getMusicVolumeMultiplier());
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
 	reset();
@@ -219,6 +220,14 @@ void MissionController::repositionGUI()
 		{
 			lua[gameObject->script]["repositionGUI"](gameObject);
 		}
+	}
+}
+
+void MissionController::setMusicVolume(float volume)
+{
+	if (missionLoopHandle.isValid())
+	{
+		missionLoopHandle.setVolume(musicVolume * volume);
 	}
 }
 

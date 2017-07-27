@@ -44,7 +44,6 @@ cSlider::cSlider(cGame *game, bool isVertical) : cRenderableContainer(game)
 	curValueF = 0.5f;
 	setValue(0.5f);
 	valueChanged = false;
-
 }
 
 void cSlider::check(const Vec2& mousePos, bool ignoreClick)

@@ -21,4 +21,5 @@ public:
 	}
 	void clearAllSounds();
 	void setGlobalVolume(float globalVolume);
+	float getGlobalVolume() const;
 };

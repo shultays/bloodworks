@@ -31,6 +31,11 @@ void cSoundManager::setGlobalVolume(float globalVolume)
 	soloud->setGlobalVolume(globalVolume);
 }
 
+float cSoundManager::getGlobalVolume() const
+{
+	return soloud->getGlobalVolume();
+}
+
 cSoundSample::cSoundSample(cSoundManager* soundManager)
 {
 	this->soundManager = soundManager;
@@ -72,7 +77,7 @@ void cSoundHandle::setVolume(float volume)
 {
 	if (handle != -1)
 	{
-		coral.getSoundManager()->soloud->setVolume(handle, volume);
+		coral.getSoundManager()->soloud->setVolume(handle, volume * coral.getSoundManager()->getGlobalVolume());
 	}
 }
 
