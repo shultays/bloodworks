@@ -290,7 +290,7 @@ function addBuffIcon(name, path)
 	if missionData.buffObject == nil then
 		missionData.buffObject = addGameObject("BuffIcons")
 		missionData.buffObject:setAlignment(RenderableAlignment.top)
-		missionData.buffObject:setLevel(RenderableLevel.gui)
+		missionData.buffObject:setLevel(RenderableLevel.GUI)
 		BuffIcons.repositionGUI(missionData.buffObject)
 		missionData.buffs = {}
 		missionData.buffCount = 0
