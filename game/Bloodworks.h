@@ -53,8 +53,6 @@ class Bloodworks : public cGame
 	float lastSetTickTime;
 	float lastSetRenderTime;
 
-	float globalVolume;
-
 	MissionController *missionController;
 	MonsterController *monsterController;
 	BulletController *bulletController;
@@ -252,4 +250,6 @@ public:
 	float getMusicVolumeMultiplier();
 	void showMods();
 	void loadMod(const std::string& path);
+	void setVolume(float volume);
+	void setMusicVolume(float volume);
 };
