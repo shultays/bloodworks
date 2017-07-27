@@ -12,14 +12,14 @@ RenderableAlignment = {
 }
 
 RenderableLevel = {
-	background = 0,
+	background = -1000,
 	monsters = 1000,
 	player = 2000,
 	gameObjects = 3000,
 	bullets = 4000,
 	objectGUI = 5000,
 	foreground = 6000,
-	gui = 7000
+	GUI = 7000
 }
 
 
