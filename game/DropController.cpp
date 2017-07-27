@@ -110,22 +110,6 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 
 void DropController::tick()
 {
-	if (input.isKeyPressed(key_6))
-	{
-		sol::table t = lua.create_table();
-		t["notNearPlayer"] = true;
-		for (int i = 0; i < 100; i++)
-		{
-			Vec2 v;
-			do 
-			{
-				v.x = bloodworks->getMapMin().x + randFloat(bloodworks->getMapSize().x);
-				v.y = bloodworks->getMapMin().y + randFloat(bloodworks->getMapSize().y);
-			} while (v.distanceSquared(bloodworks->getPlayer()->getPosition()) < 20.0f);
-			spawnDrop(v);
-		}
-	}
-
 	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
 	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (int i = 0; i < drops.size(); i++)

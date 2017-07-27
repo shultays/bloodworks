@@ -195,6 +195,9 @@
     <ClCompile Include="BloodworksConfig.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="BloodworksDebug.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -417,6 +420,9 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="BloodworksConfig.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodworksDebug.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

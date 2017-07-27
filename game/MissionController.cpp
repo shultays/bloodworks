@@ -232,3 +232,14 @@ void MissionController::setMusicVolume(float volume)
 	}
 }
 
+void MissionController::onDebugTick()
+{
+	if (loadedMission != -1)
+	{
+		if (scriptTable["onDebugTick"])
+		{
+			scriptTable["onDebugTick"]();
+		}
+	}
+}
+

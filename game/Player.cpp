@@ -168,19 +168,6 @@ void Player::tick()
 		return;
 	}
 
-	if (input.isKeyPressed(key_g))
-	{
-		if (maxHitPoints == 100)
-		{
-			maxHitPoints = hitPoints = 100000000;
-		}
-		else
-		{
-			maxHitPoints = hitPoints = 100;
-		}
-		updateHitPoints();
-	}
-
 	maxSpeed.tick();
 	damageMultiplier.tick();
 	shootSpeedMultiplier.tick();
@@ -447,10 +434,6 @@ void Player::tick()
 		secondaryGun->tick(dt);
 	}
 
-	if (input.isKeyPressed(key_q))
-	{
-		killSelf();
-	}
 }
 
 void Player::setGun(Gun *gun)

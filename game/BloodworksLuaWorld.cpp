@@ -615,6 +615,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"name", &Monster::name,
 		"id", sol::readonly(&Monster::id),
 
+		"debugVal", &Monster::debugVal,
+
 		"scriptTable", &Monster::scriptTable,
 
 		"animationSpeed", &Monster::animationSpeed,
@@ -744,6 +746,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"experience", sol::readonly(&Player::experience),
 		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
 		"playShootAnimation", &Player::playShootAnimation,
+		"getMaxHitpoints", &Player::getMaxHitpoints,
+		"getHitpoints", &Player::getHitpoints,
+		"setMaxHitpoints", &Player::setMaxHitpoints,
+		"setHitpoints", &Player::setHitpoints,
+
 		"data", &Player::data
 		);
 
