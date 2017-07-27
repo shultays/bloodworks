@@ -18,17 +18,42 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 void MonsterController::tick()
 {
+	float closestDistance = FLT_MAX;
+	Monster* closestMonster = nullptr;
+	Vec2 pos = bloodworks->getPlayer()->getCrosshairPos() + bloodworks->getPlayer()->getPosition();
 	for (int i = 0; i < monsters.size(); i++)
 	{
-		if (monsters[i]->isDead)
+		auto& monster = monsters[i];
+		if (monster->isDead)
 		{
-			grid.removeFromGrid(monsters[i]);
-			monstersMap.erase(monsters[i]->getId());
-			SAFE_DELETE(monsters[i]);
-			monsters[i] = monsters[monsters.size() - 1];
+			grid.removeFromGrid(monster);
+			monstersMap.erase(monster->getId());
+			SAFE_DELETE(monster);
+			monster = monsters[monsters.size() - 1];
 			monsters.resize(monsters.size() - 1);
 			i--;
 		}
+		else
+		{
+			if (monster->getDebug() == -1)
+			{
+				monster->setDebug(0);
+			}
+			if (monster->getDebug() == 0)
+			{
+				float distance = monster->getPosition().distanceSquared(pos);
+				if (closestDistance > distance)
+				{
+					closestDistance = distance;
+					closestMonster = monster;
+				}
+			}
+		}
+	}
+
+	if (closestMonster)
+	{
+		closestMonster->setDebug(-1);
 	}
 
 	for (int i=0; i<monsters.size(); i++)
@@ -39,11 +64,6 @@ void MonsterController::tick()
 		{
 			grid.relocate(monster);
 		}
-	}
-	
-	if (input.isKeyDown(key_f1))
-	{
-		grid.drawDebug();
 	}
 }
 
@@ -480,6 +500,11 @@ void MonsterController::runForEachMonsterInPie(const Vec2& pos, float radius, fl
 void MonsterController::relocateMonster(Monster* monster)
 {
 	grid.relocate(monster);
+}
+
+void MonsterController::drawDebug()
+{
+	grid.drawDebug();
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

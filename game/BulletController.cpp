@@ -50,10 +50,6 @@ void BulletController::tick()
 		}
 	}
 
-	if (input.isKeyDown(key_f2))
-	{
-		grid.drawDebug();
-	}
 }
 
 
@@ -87,4 +83,9 @@ void BulletController::reset()
 void BulletController::relocateBullet(Bullet* bullet)
 {
 	grid.relocate(bullet);
+}
+
+void BulletController::drawDebug()
+{
+	grid.drawDebug();
 }

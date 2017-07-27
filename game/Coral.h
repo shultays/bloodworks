@@ -26,6 +26,7 @@ class Coral
 	GLuint tempFrameBufferTextureRender[2];
 
 	bool fullScreen;
+	bool lastFullScreen;
 	void initFrameBuffers();
 	int windowWidth, windowHeight;
 	bool gameRunning;
