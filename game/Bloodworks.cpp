@@ -32,8 +32,12 @@
 #include "ModWindow.h"
 #include "cSlave.h"
 #include "BloodworksConfig.h"
-
+#include "BloodworksDebug.h"
 #include <sstream>
+
+#ifdef HAS_BLOODWORKS_DEBUG
+BloodworksDebug *bloodworksDebug;
+#endif
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
@@ -206,21 +210,12 @@ void Bloodworks::init()
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-	const bool testGame = false;
-	if (coral.isDebuggerPresent() && testGame)
-	{
-		coral.getSoundManager()->setGlobalVolume(0.0f);
-		loadMission("Survival");
-	}
-	else
-	{
-		coral.setFullScreen(config->getFullScreen());
-		mainMenu->setVisible(true);
-	}
-#ifdef DEBUG
-	showFps = true;
-#else
-	showFps = coral.isDebuggerPresent();
+	coral.setFullScreen(config->getFullScreen());
+	mainMenu->setVisible(true);
+
+#ifdef HAS_BLOODWORKS_DEBUG
+	bloodworksDebug = new BloodworksDebug(this);
+	bloodworksDebug->onInit();
 #endif
 }
 
@@ -238,10 +233,6 @@ Bloodworks::Bloodworks()
 	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
 	paused = false;
 
-	lastSetTickTime = lastSetRenderTime = 0.0f;
-	tickCount = renderCount = 0;
-
-	showFps = true;
 	soundPaused = false;
 	cameraCenterPos.setZero();
 
@@ -303,6 +294,10 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
+
+#ifdef HAS_BLOODWORKS_DEBUG
+	SAFE_DELETE(bloodworksDebug);
+#endif
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -473,13 +468,17 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 	for (auto& gun : guns)
 	{
-		if (gun->getName() == "Pistol")
+		if (gun->getScriptName() == "Pistol")
 		{
 			player->setGun(gun);
 		}
 	}
 	missionController->loadMission(mission);
 	player->setVisible(true);
+#ifdef HAS_BLOODWORKS_DEBUG
+	bloodworksDebug->onLoadMission();
+#endif 
+
 	return true;
 }
 
@@ -735,49 +734,13 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
-	if (input.isKeyPressed(key_n))
-	{
-		showFps = !showFps;
-		if (showFps == false)
-		{
-			debugRenderer.removeText(0);
-			debugRenderer.removeText(1);
-		}
-	}
-
-	if (showFps)
-	{
-		tickCount++;
-		if (timer.getRealTime() - lastSetTickTime > 1.0f)
-		{
-			lastSetTickTime += 1.0f;
-			std::stringstream ss;
-			ss << "FPS " << tickCount << " Monster " << monsterController->getMonsterCount();
-			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
-
-			tickCount = 0;
-		}
-	}
+#ifdef HAS_BLOODWORKS_DEBUG
+	bloodworksDebug->onTick();
+#endif
 
 	lua["dt"] = timer.getDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
-
-	if (input.isKeyDown(key_num_minus) || input.isKeyDown(key_num_plus))
-	{
-		float globalVolume = coral.getSoundManager()->getGlobalVolume();
-		if (input.isKeyDown(key_num_plus))
-		{
-			globalVolume += timer.getNonSlowedDt();
-		}
-		else
-		{
-			globalVolume -= timer.getNonSlowedDt();
-		}
-		clamp(globalVolume, 0.0f, 1.0f);
-		coral.getSoundManager()->setGlobalVolume(globalVolume);
-		config->setVolume(globalVolume);
-	}
 
 	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && mapper.isKeyDown(GameKey::LevelUp))
 	{
@@ -800,63 +763,6 @@ void Bloodworks::tick()
 		}
 	}
 
-	if (input.isKeyPressed(key_2))
-	{
-		for (int i = 0; i < perks.size(); i++)
-		{
-			if (perks[i]->isTakenFully() == false && perks[i]->getName() == "Stationary Reload")
-			{
-				perks[i]->takeLevel();
-				onPerkUsed(perks[i]);
-				break;
-			}
-		}
-	}
-
-	if (input.isKeyPressed(key_3))
-	{
-		std::string s;
-		int z = randInt(3);
-		if (z == 0)
-		{
-			s = "Slowdown Monsters";
-		}
-		else if (z == 1)
-		{
-			s = "Double Experience";
-		}
-		else
-		{
-			s = "Quad Damage";
-		}
-
-		for (int i = 0; i < bonuses.size(); i++)
-		{
-			if (bonuses[i]->getName() == s)
-			{
-				bonuses[i]->spawnAt(player->getPosition());
-				break;
-			}
-		}
-	}
-
-	if (input.isKeyPressed(key_4))
-	{
-		for (int i = 0; i < guns.size(); i++)
-		{
-			dropController->spawnGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
-		}
-
-		for (int i = 0; i < bonuses.size(); i++)
-		{
-			dropController->spawnBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
-		}
-	}
-
-	if (input.isKeyPressed(key_5) && levelUpPopup->isVisible() == false)
-	{
-		player->doLevelup();
-	}
 	bloodRenderable->tick();
 	missionController->tick();
 
@@ -1014,17 +920,6 @@ void Bloodworks::tickGameSlowdown()
 		changeSlowdown = true;
 	}
 
-	if (input.isKeyPressed(key_z))
-	{
-		changeSlowdown = true;
-		targetGamePlaySlowdown = gamePlaySlowdown = 0.1f;
-	}
-	if (input.isKeyPressed(key_x))
-	{
-		changeSlowdown = true;
-		targetGamePlaySlowdown = gamePlaySlowdown = 1.0f;
-	}
-
 	if (changeSlowdown)
 	{
 		float newSoundSpeed = pauseSlowdown * gamePlaySlowdown;
@@ -1040,17 +935,8 @@ void Bloodworks::tickGameSlowdown()
 
 void Bloodworks::render()
 {
-	if (showFps)
-	{
-		renderCount++;
-		if (timer.getRealTime() - lastSetRenderTime > 1.0f)
-		{
-			lastSetRenderTime += 1.0f;
-			std::stringstream ss;
-			ss << "Render " << renderCount;
-			debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+#ifdef HAS_BLOODWORKS_DEBUG
+	bloodworksDebug->onRender();
+#endif
 
-			renderCount = 0;
-		}
-	}
 }

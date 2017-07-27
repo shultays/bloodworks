@@ -88,10 +88,78 @@ function Survival.onTick()
 		return
 	end
 
-	if isKeyReleased(keys.Home) then
-			HomingOrb.spawn(player.position)
+	missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
+    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.05) * 0.5) and canSpawnMonster() and player.isDead == false then
+        missionData.lastSpawnTime = missionTime
+		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
+        local monster = addRandomMonster()
+		monster.position = pos
+		monster.moveAngle =  math.random() * math.pi * 2.0
+    end
+	
+	missionData.firstTick = false
+end
+
+
+function Survival.onPlayerDied()
+	local gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.GUI + 5)
+	gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 120
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, 50))
+	
+	gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.GUI + 5)
+	gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 32
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, -40))
+	
+	gameObject = addGameObject("FadeOutImage")
+	gameObject.data.startTime = time
+	gameObject.data.fadeOutStartTime = -1
+	gameObject.data.fadeInDuration = 1.0
+	gameObject:setLevel(RenderableLevel.GUI + 5)
+	gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
+	gameObject.data.renderable.alignment = RenderableAlignment.center
+	gameObject.data.renderable.textSize = 32
+	gameObject.data.renderable.color = 0
+	gameObject.data.renderable:update()
+	gameObject:setPosition(Vec2.new(0, -80))
+	
+end
+
+function Survival.onMonsterDied(monster)
+	if missionData.firstKill then
+		missionData.firstKill = false
 	end
-	NukeOnDeath.onTick()
+
+	if missionData.spawnWeaponOnFirstKill == true then
+		spawnRandomGun(monster.position)
+		missionData.spawnWeaponOnFirstKill = false
+	end
+	
+	if monster.data.ignoreForCount == true then
+		monster.data.ignoreForCount = false
+		missionData.ignoreMonsterCount = missionData.ignoreMonsterCount - 1 
+	end
+end
+
+function Survival.onDebugTick()
+	if isKeyReleased(keys.Home) then
+		HomingOrb.spawn(player.position)
+	end
 	if isKeyReleased(keys.PageUp) then
 		missionData.extraMin = missionData.extraMin + 0.5
 		print("Extra Min " .. missionData.extraMin)
@@ -122,71 +190,5 @@ function Survival.onTick()
 			monster.position = pos
 			monster.moveAngle =  math.random() * math.pi * 2.0
 		end
-	end
-	
-	missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
-    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.05) * 0.5) and canSpawnMonster() and player.isDead == false then
-        missionData.lastSpawnTime = missionTime
-		local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
-        local monster = addRandomMonster()
-		monster.position = pos
-		monster.moveAngle =  math.random() * math.pi * 2.0
-    end
-	
-	missionData.firstTick = false
-end
-
-function Survival.onPlayerDied()
-	local gameObject = addGameObject("FadeOutImage")
-	gameObject.data.startTime = time
-	gameObject.data.fadeOutStartTime = -1
-	gameObject.data.fadeInDuration = 1.0
-	gameObject:setLevel(RenderableLevel.gui + 5)
-	gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 120
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
-	gameObject:setPosition(Vec2.new(0, 50))
-	
-	gameObject = addGameObject("FadeOutImage")
-	gameObject.data.startTime = time
-	gameObject.data.fadeOutStartTime = -1
-	gameObject.data.fadeInDuration = 1.0
-	gameObject:setLevel(RenderableLevel.gui + 5)
-	gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 32
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
-	gameObject:setPosition(Vec2.new(0, -40))
-	
-	gameObject = addGameObject("FadeOutImage")
-	gameObject.data.startTime = time
-	gameObject.data.fadeOutStartTime = -1
-	gameObject.data.fadeInDuration = 1.0
-	gameObject:setLevel(RenderableLevel.gui + 5)
-	gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 32
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
-	gameObject:setPosition(Vec2.new(0, -80))
-	
-end
-
-function Survival.onMonsterDied(monster)
-	if missionData.firstKill then
-		missionData.firstKill = false
-	end
-
-	if missionData.spawnWeaponOnFirstKill == true then
-		spawnRandomGun(monster.position)
-		missionData.spawnWeaponOnFirstKill = false
-	end
-	
-	if monster.data.ignoreForCount == true then
-		monster.data.ignoreForCount = false
-		missionData.ignoreMonsterCount = missionData.ignoreMonsterCount - 1 
 	end
 end

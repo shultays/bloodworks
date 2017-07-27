@@ -138,3 +138,10 @@ void printExceptionStack(void* pExp)
 	stack.printExceptionStack((EXCEPTION_POINTERS*)pExp);
 #endif
 }
+
+void doBreak()
+{
+#ifdef _WIN32
+	__debugbreak();
+#endif
+}

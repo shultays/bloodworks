@@ -48,8 +48,9 @@ bool Init()
 		return false;
 	}
 
+	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		800, 600, flags);
 
 	if (!mainWindow)
 	{

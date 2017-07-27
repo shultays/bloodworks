@@ -55,4 +55,5 @@ public:
 	void onMonsterDied(Monster* monster);
 	void repositionGUI();
 	void setMusicVolume(float volume);
+	void onDebugTick();
 };

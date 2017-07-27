@@ -64,6 +64,11 @@ public:
 		return description;
 	}
 
+	const std::string& getScriptName() const
+	{
+		return scriptName;
+	}
+
 	void onTick();
 	void onAddGunBullet(Gun *gun, Bullet *bullet);
 	void onReload(Gun *gun);
