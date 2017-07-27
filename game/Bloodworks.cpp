@@ -31,6 +31,7 @@
 #include "cTexturedQuadRenderable.h"
 #include "ModWindow.h"
 #include "cSlave.h"
+#include "BloodworksConfig.h"
 
 #include <sstream>
 
@@ -55,17 +56,17 @@ void Bloodworks::init()
 {
 	nextGlobalUniqueId = 0;
 
-	config = new cPersistent();
-	config->setFileBackup("config.txt");
+	config = new BloodworksConfig();
 
 	luaWorld = new BloodworksLuaWorld(this);
 	luaWorld->reset();
 
 	lua.script_file("resources/helpers.lua");
+	lua.script_file("resources/missions/helpers.lua");
 	lua.script_file("resources/guns/helpers.lua");
 	lua.script_file("resources/monsters/helpers.lua");
 
-	coral.getSoundManager()->setGlobalVolume(config->getInt("volume", 50) / 100.0f);
+	coral.getSoundManager()->setGlobalVolume(config->getVolume());
 
 	lua["time"] = timer.getTime();
 
@@ -205,19 +206,15 @@ void Bloodworks::init()
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-	const bool testMenu = true;
-	if (coral.isDebuggerPresent() && testMenu == false)
+	const bool testGame = false;
+	if (coral.isDebuggerPresent() && testGame)
 	{
 		coral.getSoundManager()->setGlobalVolume(0.0f);
 		loadMission("Survival");
 	}
 	else
 	{
-		if (testMenu == false)
-		{
-			coral.setFullScreen(true);
-		}
-		coral.setFullScreen(config->getBool("full_screen", false) == 1);
+		coral.setFullScreen(config->getFullScreen());
 		mainMenu->setVisible(true);
 	}
 #ifdef DEBUG
@@ -622,7 +619,7 @@ bool Bloodworks::isOptionsVisible() const
 
 void Bloodworks::onLevelUp()
 {
-	if (config->getBool("auto_open_perk_popup", true))
+	if (config->getAutoOpenLevelupPopup())
 	{
 		openLevelupPopup();
 	}
@@ -635,11 +632,6 @@ void Bloodworks::onLevelUp()
 void Bloodworks::addSlaveWork(cSlaveWork* work)
 {
 	coral.getSlaveController()->addWork(work);
-}
-
-float Bloodworks::getMusicVolumeMultiplier()
-{
-	return config->getInt("music_volume", 50) / 100.0f;
 }
 
 void Bloodworks::showMods()
@@ -703,15 +695,16 @@ void Bloodworks::loadMod(const std::string& path)
 	}
 }
 
-void Bloodworks::setVolume(float volume)
+void Bloodworks::updateVolume()
 {
-	coral.getSoundManager()->setGlobalVolume(volume);
+	coral.getSoundManager()->setGlobalVolume(config->getVolume());
 }
 
-void Bloodworks::setMusicVolume(float volume)
+
+void Bloodworks::updateMusicVolume()
 {
-	mainMenu->setMusicVolume(volume);
-	missionController->setMusicVolume(volume);
+	mainMenu->setMusicVolume(config->getMusicVolume());
+	missionController->setMusicVolume(config->getMusicVolume());
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
@@ -783,7 +776,7 @@ void Bloodworks::tick()
 		}
 		clamp(globalVolume, 0.0f, 1.0f);
 		coral.getSoundManager()->setGlobalVolume(globalVolume);
-		config->set("volume", (int)round(globalVolume * 100));
+		config->setVolume(globalVolume);
 	}
 
 	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && mapper.isKeyDown(GameKey::LevelUp))
@@ -895,6 +888,7 @@ void Bloodworks::tick()
 	if (mapper.isKeyPressed(GameKey::Fullscreen))
 	{
 		coral.setFullScreen(!coral.isFullScreen());
+		config->setFullScreen(coral.isFullScreen());
 		if (coral.isFullScreen())
 		{
 			cameraZoom = 0.8f;

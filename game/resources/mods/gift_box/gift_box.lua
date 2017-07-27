@@ -34,7 +34,7 @@ end
 
 
 function GiftBox.spawnChanceInMission(missionData, min)
-	if time - missionData.giftBoxTime > 40.0 then
+	if time - missionData.giftBoxTime < 40.0 then
 		return 0.00
 	end
 	return 0.05

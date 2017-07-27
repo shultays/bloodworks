@@ -11,6 +11,7 @@
 #include "BulletController.h"
 #include "Bullet.h"
 #include "Monster.h"
+#include "BloodworksConfig.h"
 
 
 MissionController::~MissionController()
@@ -25,7 +26,7 @@ MissionController::MissionController(Bloodworks *bloodworks)
 	missionLoop.setSample(resources.getSoundSample("resources/sounds/game_music.ogg"));
 	missionLoop.setLooped(true);
 	missionLoop.setSpeed(1.0f);
-	missionLoop.setVolume(bloodworks->getMusicVolumeMultiplier());
+	missionLoop.setVolume(bloodworks->getConfig()->getMusicVolume());
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
 	reset();
@@ -69,7 +70,7 @@ void MissionController::tick()
 			{
 				musicVolume = 0.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * bloodworks->getMusicVolumeMultiplier());
+			missionLoopHandle.setVolume(musicVolume * bloodworks->getConfig()->getMusicVolume());
 		}
 	}
 	else
@@ -81,7 +82,7 @@ void MissionController::tick()
 			{
 				musicVolume = 1.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * bloodworks->getMusicVolumeMultiplier());
+			missionLoopHandle.setVolume(musicVolume * bloodworks->getConfig()->getMusicVolume());
 		}
 	}
 
