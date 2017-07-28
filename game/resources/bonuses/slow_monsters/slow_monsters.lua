@@ -1,6 +1,7 @@
 SlowMonsters.buffId = getGlobalUniqueId()
 
-function SlowMonsters.spawn(pos)
+function SlowMonsters.spawn(bonus, pos)
+	print(SlowMonsters.buffId)
 	player.globalMonsterSpeedMultiplier:addBuffWithId(SlowMonsters.buffId, 0.4)
 	local buff = player.globalMonsterSpeedMultiplier:getBuffInfo(SlowMonsters.buffId)
 	if buff:getCurrentBuffAmount() >= 0.99 then
@@ -14,19 +15,12 @@ function SlowMonsters.spawn(pos)
 
 	addBuffIcon("SlowMonsters", SlowMonsters.basePath .. "icon.png")
 	
-	if SlowMonsters.data.gameObject == nil then
-		SlowMonsters.data.gameObject = addGameObject("SlowMonsters")
-	end
+	bonus:setActive(true)
 end
 
-function SlowMonsters.onTick(gameObject)
+function SlowMonsters.onTick(bonus)
 	if player.globalMonsterSpeedMultiplier:hasBuffInfo(SlowMonsters.buffId) == false then
 		removeBuffIcon("SlowMonsters")
-		gameObject.toBeRemoved = true
-		SlowMonsters.data.gameObject = nil
+		bonus:setActive(false)
 	end
-end
-
-function SlowMonsters.clear()
-	SlowMonsters.buffId = nil
 end

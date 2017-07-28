@@ -43,10 +43,11 @@ class GameObject
 
 	int id;
 	bool toBeRemoved;
-	bool hasOnTick;
-	bool hasBulletCollision;
-	bool hasPlayerCollision;
-	bool hasMonsterCollision;
+
+	sol::function onTick;
+	sol::function onBulletCollision; // todo implement these
+	sol::function onPlayerCollision;
+	sol::function onMonsterCollision;
 
 	std::string script;
 	sol::table data;

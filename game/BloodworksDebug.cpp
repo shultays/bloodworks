@@ -108,20 +108,7 @@ void BloodworksDebug::onTick()
 
 	if (input.isKeyPressed(key_3))
 	{
-		std::string s;
-		int z = randInt(3);
-		if (z == 0)
-		{
-			s = "Slowdown Monsters";
-		}
-		else if (z == 1)
-		{
-			s = "Double Experience";
-		}
-		else
-		{
-			s = "Quad Damage";
-		}
+		std::string s = "Invincibility";
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{

@@ -3,6 +3,10 @@
 #include "cTools.h"
 #include "cGlobals.h"
 #include "json.h"
+#include "Gun.h"
+#include "Monster.h"
+#include "Bullet.h"
+#include "Bloodworks.h"
 
 Bonus::Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
@@ -19,32 +23,129 @@ Bonus::Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File
 		spawnChance = j["spawnChance"].get<float>();
 	}
 	lua[scriptName] = lua.create_table();
+	sol::table scriptTable = lua[scriptName];
 	std::string folder = file.folder;
 	fixFolderPath(folder);
-	lua[scriptName]["basePath"] = folder;
+	scriptTable["basePath"] = folder;
 	lua.script_file(scriptFile);
-	dynamicSpawnChance = lua[scriptName]["variableBonusChance"];
+
+	spawnFunc = scriptTable["spawn"];
+
+	dynamicSpawnChance = scriptTable["variableBonusChance"];
+	onAddGunBulletFunc = scriptTable["onAddGunBullet"];
+	onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];
+	onTickFunc = scriptTable["onTick"];
+	onReloadFunc = scriptTable["onReload"];
+	onMonsterDiedFunc = scriptTable["onMonsterDied"];
+	onPlayerDiedFunc = scriptTable["onPlayerDied"];
+	onPlayerPickedGunFunc = scriptTable["onPlayerPickedGun"];
+	onPlayerPickedBonusFunc = scriptTable["onPlayerPickedBonus"];
+
+	active = false;
+}
+
+void Bonus::setActive(bool active)
+{
+	if (this->active != active)
+	{
+		this->active = active;
+		if (active)
+		{
+			bloodworks->addToActiveBonuses(this);
+		}
+		else
+		{
+			bloodworks->removeFromActiveBonuses(this);
+		}
+	}
 }
 
 void Bonus::spawnAt(const Vec2& pos)
 {
-	lua[scriptName]["spawn"](pos);
+	spawnFunc(this, pos);
 }
 
 void Bonus::reset()
 {
+	active = false;
 	if (lua[scriptName]["clear"])
 	{
 		lua[scriptName]["clear"]();
 	}
-	lua[scriptName]["data"] = lua.create_table();
+	data = lua.create_table();
+	lua[scriptName]["data"] = data;
 }
 
 float Bonus::getSpawnChance()
 {
 	if (dynamicSpawnChance)
 	{
-		return dynamicSpawnChance();
+		return dynamicSpawnChance(this);
 	}
 	return spawnChance;
+}
+
+void Bonus::onTick()
+{
+	if (onTickFunc)
+	{
+		onTickFunc(this);
+	}
+}
+
+void Bonus::onAddGunBullet(Gun *gun, Bullet *bullet)
+{
+	if (onAddGunBulletFunc)
+	{
+		onAddGunBulletFunc(this, gun, bullet);
+	}
+}
+
+void Bonus::onReload(Gun *gun)
+{
+	if (onReloadFunc)
+	{
+		onReloadFunc(this, gun);
+	}
+}
+
+int Bonus::onPlayerDamaged(int damage, float dir, sol::table& params)
+{
+	if (onPlayerDamagedFunc)
+	{
+		return onPlayerDamagedFunc(this, damage, dir, params);
+	}
+	return damage;
+}
+
+void Bonus::onPlayerDied()
+{
+	if (onPlayerDiedFunc)
+	{
+		onPlayerDiedFunc(this);
+	}
+}
+
+void Bonus::onMonsterDied(Monster* monster)
+{
+	if (onMonsterDiedFunc)
+	{
+		onMonsterDiedFunc(this, monster);
+	}
+}
+
+void Bonus::onPlayerPickedGun(Gun *gun)
+{
+	if (onPlayerPickedGunFunc)
+	{
+		onPlayerPickedGunFunc(this, gun);
+	}
+}
+
+void Bonus::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
+{
+	if (onPlayerPickedBonusFunc)
+	{
+		onPlayerPickedBonusFunc(this, bonus, pos);
+	}
 }

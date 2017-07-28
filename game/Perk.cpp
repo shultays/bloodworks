@@ -2,6 +2,7 @@
 #include "Gun.h"
 #include "Monster.h"
 #include "Bullet.h"
+#include "Bonus.h"
 #include "cGlobals.h"
 
 Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
@@ -37,6 +38,9 @@ Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& 
 	onTickFunc = scriptTable["onTick"];
 	onReloadFunc = scriptTable["onReload"];
 	onMonsterDiedFunc = scriptTable["onMonsterDied"];
+	onPlayerDiedFunc = scriptTable["onPlayerDied"];
+	onPlayerPickedGunFunc = scriptTable["onPlayerPickedGun"];
+	onPlayerPickedBonusFunc = scriptTable["onPlayerPickedBonus"];
 
 	reset();
 }
@@ -55,6 +59,16 @@ void Perk::takeLevel()
 			scriptTable["init"](level);
 		}
 	}
+}
+
+void Perk::reset()
+{
+	scriptTable["data"] = lua.create_table();
+	if (scriptTable["reset"])
+	{
+		scriptTable["reset"]();
+	}
+	level = 0;
 }
 
 void Perk::onTick()
@@ -90,21 +104,11 @@ int Perk::onPlayerDamaged(int damage, float dir, sol::table& params)
 	return damage;
 }
 
-void Perk::reset()
-{
-	scriptTable["data"] = lua.create_table();
-	if (scriptTable["reset"])
-	{
-		scriptTable["reset"]();
-	}
-	level = 0;
-}
-
 void Perk::onPlayerDied()
 {
-	if (scriptTable["onPlayerDied"])
+	if (onPlayerDiedFunc)
 	{
-		scriptTable["onPlayerDied"]();
+		onPlayerDiedFunc();
 	}
 }
 
@@ -113,5 +117,21 @@ void Perk::onMonsterDied(Monster* monster)
 	if (onMonsterDiedFunc)
 	{
 		onMonsterDiedFunc(monster);
+	}
+}
+
+void Perk::onPlayerPickedGun(Gun *gun)
+{
+	if (onPlayerPickedGunFunc)
+	{
+		onPlayerPickedGunFunc(gun);
+	}
+}
+
+void Perk::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
+{
+	if (onPlayerPickedBonusFunc)
+	{
+		onPlayerPickedBonusFunc(bonus, pos);
 	}
 }
