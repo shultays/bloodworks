@@ -12,7 +12,7 @@ class cFont
 		GLuint vbo;
 	};
 
-	CharInfo charInfos[128];
+	CharInfo charInfos[256];
 	int leftPadding, rightPadding, topPadding, bottomPadding;
 	cTextureShr texture;
 
