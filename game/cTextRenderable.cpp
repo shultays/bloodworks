@@ -32,16 +32,17 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 			for (int i = firstCharToDraw; i < textToPrint.size(); i++)
 			{
 				float charSize = font->defaultSize;
-				if (font->charInfos[textToPrint[i]].x >= 0)
+				unsigned char c = textToPrint[i];
+				if (font->charInfos[c].x >= 0)
 				{
-					charSize = (float)font->charInfos[textToPrint[i]].w;
+					charSize = (float)font->charInfos[c].w;
 				}
-				if (textToPrint[i] == ' ')
+				if (c == ' ')
 				{
 					lastSpaceIndex = i;
 					lengthAtSpace = length;
 				}
-				if (textToPrint[i] == '\n')
+				if (c == '\n')
 				{
 					lastCharToDraw = i + 1;
 					break;
@@ -127,7 +128,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 
 		for (int i = line.startIndex; i < line.endIndex; i++)
 		{
-			char c = textToPrint[i];
+			unsigned char c = textToPrint[i];
 			float charSize = font->defaultSize;
 			auto& info = font->charInfos[c];
 			if (info.x >= 0)

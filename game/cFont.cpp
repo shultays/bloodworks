@@ -5,7 +5,7 @@
 cFont::cFont(const std::string& fontData)
 {
 	this->fontData = fontData;
-	for (int i = 0; i < 128; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		charInfos[i].x = -1;
 		charInfos[i].w = 32;
@@ -25,7 +25,7 @@ cFont::cFont(const std::string& fontData)
 	int t = 0;
 	while (ifs.good())
 	{
-		char c;
+		unsigned char c;
 		int x, y, w, h;
 		ifs >> c >> x >> y >> w >> h;
 		t++;
@@ -38,7 +38,7 @@ cFont::cFont(const std::string& fontData)
 		maxHeight = max(maxHeight, h);
 	}
 
-	for (int i = 0; i < 128; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		if (charInfos[i].x < 0)
 		{
@@ -78,7 +78,7 @@ cFont::cFont(const std::string& fontData)
 cFont::~cFont()
 {
 	texture = nullptr;
-	for (int i = 0; i < 128; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		if (charInfos[i].x < 0)
 		{
