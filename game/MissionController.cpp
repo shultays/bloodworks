@@ -29,6 +29,7 @@ MissionController::MissionController(Bloodworks *bloodworks)
 	missionLoop.setVolume(bloodworks->getConfig()->getMusicVolume());
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
+	gameSpeedMultiplier.setBaseValue(1.0f);
 	reset();
 }
 
@@ -38,6 +39,7 @@ void MissionController::tick()
 	{
 		return;
 	}
+	gameSpeedMultiplier.tick();
 	lua["missionTime"] = timer.getTime() - missionLoadTime;
 	lua["missionLoadTime"] = missionLoadTime;
 	scriptTable["onTick"]();
@@ -46,13 +48,14 @@ void MissionController::tick()
 	for (auto& g : gameObjects)
 	{
 		auto& gameObject = g.second;
-		if (gameObject->hasOnTick)
+		if (gameObject->onTick)
 		{
-			lua[gameObject->script]["onTick"](gameObject);
-			if (gameObject->toBeRemoved)
-			{
-				toBeRemoved.push_back(g.first);
-			}
+			gameObject->onTick(gameObject);
+		}
+
+		if (gameObject->toBeRemoved)
+		{
+			toBeRemoved.push_back(g.first);
 		}
 	}
 
@@ -70,7 +73,7 @@ void MissionController::tick()
 			{
 				musicVolume = 0.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * bloodworks->getConfig()->getMusicVolume());
+			updateMusicVolume();
 		}
 	}
 	else
@@ -82,7 +85,7 @@ void MissionController::tick()
 			{
 				musicVolume = 1.0f;
 			}
-			missionLoopHandle.setVolume(musicVolume * bloodworks->getConfig()->getMusicVolume());
+			updateMusicVolume();
 		}
 	}
 
@@ -106,17 +109,23 @@ GameObject* MissionController::addGameObject(const std::string& script)
 	sol::table gameObject = lua["gameObjects"][object->id] = lua.create_table();
 
 	object->data = gameObject;
-	object->hasOnTick = lua[script]["onTick"];
-	object->hasBulletCollision = lua[script]["onBulletCollision"];
-	object->hasBulletCollision = lua[script]["onPlayerCollision"];
-	object->hasBulletCollision = lua[script]["onMonsterCollision"];
 	object->script = script;
+
 	gameObjects[object->id] = object;
 
-	if (lua[script]["init"])
+	if (script.length() > 0)
 	{
-		lua[script]["init"](object);
+		object->onTick = lua[script]["onTick"];
+		object->onBulletCollision = lua[script]["onBulletCollision"];
+		object->onPlayerCollision = lua[script]["onPlayerCollision"];
+		object->onMonsterCollision = lua[script]["onMonsterCollision"];
+
+		if (lua[script]["init"])
+		{
+			lua[script]["init"](object);
+		}
 	}
+
 	return object;
 }
 
@@ -155,6 +164,7 @@ void MissionController::loadMission(const std::string& name)
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
 			missionLoopHandle = missionLoop.play();
+			updateMusicVolume();
 			return;
 		}
 	}
@@ -164,7 +174,7 @@ void MissionController::reset()
 {
 	lua["gameObjects"] = lua.create_table();
 	lua["mission"] = lua.create_table();
-
+	gameSpeedMultiplier.clear();
 	if (loadedMission >= 0)
 	{
 		scriptTable = lua[missions[loadedMission].scriptName] = lua.create_table();
@@ -224,11 +234,11 @@ void MissionController::repositionGUI()
 	}
 }
 
-void MissionController::setMusicVolume(float volume)
+void MissionController::updateMusicVolume()
 {
 	if (missionLoopHandle.isValid())
 	{
-		missionLoopHandle.setVolume(musicVolume * volume);
+		missionLoopHandle.setVolume(musicVolume * bloodworks->getConfig()->getMusicVolume());
 	}
 }
 
