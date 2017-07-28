@@ -96,7 +96,7 @@ void LevelUpPopup::show(bool levelAdded)
 	levelupGroup->setVisible(true);
 	std::stringstream ss;
 
-	ss << "You are level " << bloodworks->getPlayer()->getLevel() << " !";
+	ss << "You are level " << bloodworks->getPlayer()->getLevel() << "!";
 	levelupGroupTitle->setText(ss.str());
 
 	std::stringstream ss2;
