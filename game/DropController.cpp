@@ -134,10 +134,12 @@ void DropController::tick()
 			if (drop.gun)
 			{
 				bloodworks->getPlayer()->setGun(drop.gun);
+				bloodworks->onPlayerPickedGun(drop.gun);
 			}
 			else
 			{
 				drop.bonus->spawnAt(drop.pos);
+				bloodworks->onPlayerPickedBonus(drop.bonus, drop.pos);
 			}
 			remove = true;
 		}

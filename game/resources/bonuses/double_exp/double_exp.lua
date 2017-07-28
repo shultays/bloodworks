@@ -1,6 +1,6 @@
 DoubleExp.buffId = getGlobalUniqueId()
 		
-function DoubleExp.spawn(pos)
+function DoubleExp.spawn(bonus, pos)
 
 	local duration = 15.0 * player.data.bonusDurationMultiplier
 	
@@ -10,15 +10,12 @@ function DoubleExp.spawn(pos)
 	addBuffIcon("DoubleExp", DoubleExp.basePath .. "icon.png")
 	
 	playSound({path = "~/resources/sounds/double_exp.ogg", volume = 0.8})
-	if DoubleExp.data.gameObject == nil then
-		DoubleExp.data.gameObject = addGameObject("DoubleExp")
-	end
+	bonus:setActive(true)
 end
 
-function DoubleExp.onTick(gameObject)
+function DoubleExp.onTick(bonus)
 	if player.monsterExperienceMultiplier:hasBuffInfo(DoubleExp.buffId) == false then
 		removeBuffIcon("DoubleExp")
-		gameObject.toBeRemoved = true
-		DoubleExp.data.gameObject = nil
+		bonus:setActive(false)
 	end
 end

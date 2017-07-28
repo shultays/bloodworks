@@ -1,55 +1,49 @@
+ReflexBoost.buffId = getGlobalUniqueId()
 
-function ReflexBoost.spawn(pos)
+function ReflexBoost.spawn(bonus, pos)
 	local data = ReflexBoost.data
-	if data.boost == nil then
-		data.boost = addGameObject("ReflexBoost")
+
+	local duration = 6.0 * player.data.bonusDurationMultiplier
+	
+	local gameSpeed = getGameSpeedMultiplier()
+	gameSpeed:addBuffWithId(ReflexBoost.buffId, 0.5)
+	gameSpeed:setBuffDuration(ReflexBoost.buffId, duration)
+	gameSpeed:setBuffFadeInFadeOut(ReflexBoost.buffId, 0.25, 0.25)
+	
+	if bonus:isActive() == false then
+		bonus:setActive(true)
+		data.shaderStartTime = time
 		data.postProcess = addPostProcess("resources/post_process/sepia.ps")
 		data.postProcess:setShaderWeight(0.0)
-		data.shaderStartTime = time
-	else
-		data.boost.data.time = time
 	end
+	data.time = time
+	playSound({path = "~/resources/sounds/clock.ogg", volume = 1.6})
 	
 	addBuffIcon("ReflexBoost", ReflexBoost.basePath .. "icon.png")
-	
-	playSound({path = "~/resources/sounds/clock.ogg", volume = "0.9"})
-	
-	if ReflexBoost.data.isSlow ~= true then
-		ReflexBoost.data.isSlow = true
-		multiplyGameSpeed(0.5)
-	end
-end
-
-function ReflexBoost.init(gameObject)
-	gameObject.data.time = time
 end
 
 
-function ReflexBoost.onTick(gameObject)
-	local t = time - ReflexBoost.data.shaderStartTime
-	local a = 0.5
+function ReflexBoost.onTick(bonus)
+	local data = ReflexBoost.data
 	
-	if t < 0.25 then
-		a = t * 2.0
-	end
-	t = time - gameObject.data.time
-	
-	local duration = 5.0 * player.data.bonusDurationMultiplier
-	
-	if t > duration - 0.25 then
-	    a = (duration - t) * 2.0
-		if ReflexBoost.data.isSlow then
-			ReflexBoost.data.isSlow = false
-			multiplyGameSpeed(1.0 / 0.5)
-		end
-	end
-	
-	ReflexBoost.data.postProcess:setShaderWeight(a)
-	if (time - gameObject.data.time) > duration then
-		ReflexBoost.data.boost = nil
-		removePostProcess(ReflexBoost.data.postProcess)
-		ReflexBoost.data.postProcess = nil
-		gameObject.toBeRemoved = true
+	local gameSpeed = getGameSpeedMultiplier()
+	if gameSpeed:hasBuffInfo(ReflexBoost.buffId) == false then
 		removeBuffIcon("ReflexBoost")
+		bonus:setActive(false)
+		
+		removePostProcess(data.postProcess)
+		data.postProcess = nil
+		return
 	end
+	local t = time - data.shaderStartTime
+	local a = 1.0
+	if t < 0.25 then
+		a = t * 4.0
+	end
+	
+	local remaining = gameSpeed:getBuffRemainingTime(ReflexBoost.buffId)
+	if remaining < 0.25 then
+		a = remaining * 4.0
+	end
+	ReflexBoost.data.postProcess:setShaderWeight(a)
 end

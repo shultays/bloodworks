@@ -208,7 +208,7 @@ void MainMenu::setVisible(bool visible)
 	}
 }
 
-void MainMenu::setMusicVolume(float volume)
+void MainMenu::updateMusicVolume()
 {
 	if (handle.isValid())
 	{
