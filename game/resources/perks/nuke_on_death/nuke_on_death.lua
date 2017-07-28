@@ -17,7 +17,7 @@ NukeOnDeathObject = {}
 function NukeOnDeathObject.onTick(gameObject)
 	local data = gameObject.data
 	if data.nukeSpawning then
-		if data.homingCount < 6 and data.lastHomingTime + 0.15 < time then
+		if data.homingCount < 8 and data.lastHomingTime + 0.15 < time then
 			data.lastHomingTime = time
 			HomingOrb.spawn(data.position)
 			data.homingCount = data.homingCount + 1
