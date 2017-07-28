@@ -1,0 +1,7 @@
+{
+  "type" : "bonus",
+  "name": "Invincibility",
+  "iconFile" : "icon.png",
+  "scriptFile" : "invincibility.lua",
+  "scriptName" : "Invincibility"
+}

@@ -230,7 +230,7 @@ Bloodworks::Bloodworks()
 
 	postProcessEndLevel = (GUI + FOREGROUND) / 2;
 
-	targetGamePlaySlowdown = pauseSlowdown = gamePlaySlowdown = 1.0f;
+	pauseSlowdown = 1.0f;
 	paused = false;
 
 	soundPaused = false;
@@ -302,18 +302,16 @@ Bloodworks::~Bloodworks()
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
 {
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onAddGunBullet(gun, bullet);
+		}
+	}
 	for (auto& perk : usedPerks)
 	{
 		perk->onAddGunBullet(gun, bullet);
-	}
-}
-
-void Bloodworks::multiplyGameSpeed(float multiplier)
-{
-	targetGamePlaySlowdown *= multiplier;
-	if (targetGamePlaySlowdown > 0.99f)
-	{
-		targetGamePlaySlowdown = 1.0f;
 	}
 }
 
@@ -356,12 +354,15 @@ void Bloodworks::onPerkUsed(Perk *levelupPerks)
 
 int Bloodworks::onPlayerDamaged(int damage, float dir, sol::table& params)
 {
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			damage = bonus->onPlayerDamaged(damage, dir, params);
+		}
+	}
 	for (auto& perk : usedPerks)
 	{
-		if (damage <= 0)
-		{
-			return damage;
-		}
 		damage = perk->onPlayerDamaged(damage, dir, params);
 	}
 	return damage;
@@ -390,7 +391,6 @@ void Bloodworks::clearMission()
 	lua["gameObjects"] = lua.create_table();
 	lua["mission"] = lua.create_table();
 
-	gamePlaySlowdown = targetGamePlaySlowdown = 1.0f;
 	coral.getSoundManager()->clearAllSounds();
 
 	setSoundSpeed(1.0f);
@@ -436,6 +436,7 @@ void Bloodworks::clearMission()
 	{
 		bonus->reset();
 	}
+	activeBonuses.clear();
 	for (auto& gun : guns)
 	{
 		gun->reset();
@@ -484,6 +485,13 @@ bool Bloodworks::loadMission(const std::string& mission)
 
 void Bloodworks::onPlayerDied()
 {
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onPlayerDied();
+		}
+	}
 	for (auto& perk : usedPerks)
 	{
 		perk->onPlayerDied();
@@ -589,6 +597,13 @@ bool Bloodworks::isMissionLoaded() const
 
 void Bloodworks::onGunReloaded(Gun* gun)
 {
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onReload(gun);
+		}
+	}
 	for (auto& perk : usedPerks)
 	{
 		perk->onReload(gun);
@@ -597,6 +612,10 @@ void Bloodworks::onGunReloaded(Gun* gun)
 
 void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
 {
+	for (auto& bonus : usedPerks)
+	{
+		bonus->onMonsterDied(monster);
+	}
 	for (auto& perk : usedPerks)
 	{
 		perk->onMonsterDied(monster);
@@ -702,8 +721,54 @@ void Bloodworks::updateVolume()
 
 void Bloodworks::updateMusicVolume()
 {
-	mainMenu->setMusicVolume(config->getMusicVolume());
-	missionController->setMusicVolume(config->getMusicVolume());
+	mainMenu->updateMusicVolume();
+	missionController->updateMusicVolume();
+}
+
+void Bloodworks::addToActiveBonuses(Bonus* bonusToAdd)
+{
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus == bonusToAdd)
+		{
+			return;
+		}
+	}
+	activeBonuses.push_back(bonusToAdd);
+}
+
+void Bloodworks::removeFromActiveBonuses(Bonus *bonus)
+{
+}
+
+void Bloodworks::onPlayerPickedGun(Gun *gun)
+{
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onPlayerPickedGun(gun);
+		}
+	}
+	for (auto& perk : usedPerks)
+	{
+		perk->onPlayerPickedGun(gun);
+	}
+}
+
+void Bloodworks::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
+{
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onPlayerPickedBonus(bonus, pos);
+		}
+	}
+	for (auto& perk : usedPerks)
+	{
+		perk->onPlayerPickedBonus(bonus, pos);
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
@@ -764,9 +829,8 @@ void Bloodworks::tick()
 	}
 
 	bloodRenderable->tick();
-	missionController->tick();
-
 	player->tick();
+	tickCamera();
 
 	for (int i = 0; i < orphanParticles.size(); i++)
 	{
@@ -777,15 +841,29 @@ void Bloodworks::tick()
 			orphanParticles.resize(orphanParticles.size() - 1);
 		}
 	}
-
+	for (int i = 0; i < activeBonuses.size(); i++)
+	{
+		if (activeBonuses[i]->isActive() == false)
+		{
+			activeBonuses[i] = activeBonuses[activeBonuses.size() - 1];
+			activeBonuses.resize(activeBonuses.size() - 1);
+			i--;
+		}
+	}
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onTick();
+		}
+	}
 	for (auto& perk : usedPerks)
 	{
 		perk->onTick();
 	}
-
-	tickCamera();
 	monsterController->tick();
 	bulletController->tick();
+	missionController->tick();
 	dropController->tick();
 	explosionController->tick();
 	levelUpPopup->tick();
@@ -878,7 +956,6 @@ void Bloodworks::tickGameSlowdown()
 		}
 	}
 
-	bool changeSlowdown = false;
 	if (paused && pauseSlowdown > 0.0f)
 	{
 		pauseSlowdown -= timer.getNonSlowedDt() * 2.0f;
@@ -887,7 +964,6 @@ void Bloodworks::tickGameSlowdown()
 			pauseSlowdown = 0.0f;
 		}
 		pausePostProcess->setShaderWeight(1.0f - pauseSlowdown);
-		changeSlowdown = true;
 	}
 	else if (!paused && pauseSlowdown < 1.0f)
 	{
@@ -898,29 +974,12 @@ void Bloodworks::tickGameSlowdown()
 			pausePostProcess->setEnabled(false);
 		}
 		pausePostProcess->setShaderWeight(1.0f - pauseSlowdown);
-		changeSlowdown = true;
 	}
 
-	if (gamePlaySlowdown > targetGamePlaySlowdown)
-	{
-		gamePlaySlowdown -= timer.getNonSlowedDt() * 0.3f;
-		if (gamePlaySlowdown < targetGamePlaySlowdown)
-		{
-			gamePlaySlowdown = targetGamePlaySlowdown;
-		}
-		changeSlowdown = true;
-	}
-	else if (gamePlaySlowdown < targetGamePlaySlowdown)
-	{
-		gamePlaySlowdown += timer.getNonSlowedDt() * 0.3f;
-		if (gamePlaySlowdown > targetGamePlaySlowdown)
-		{
-			gamePlaySlowdown = targetGamePlaySlowdown;
-		}
-		changeSlowdown = true;
-	}
+	float gamePlaySlowdown = missionController->getGameSpeedMultiplier();
 
-	if (changeSlowdown)
+	float totalSlowdown = pauseSlowdown * gamePlaySlowdown;
+	if (fabs(totalSlowdown - slowdown) > 0.01f)
 	{
 		float newSoundSpeed = pauseSlowdown * gamePlaySlowdown;
 		newSoundSpeed = round(newSoundSpeed * 10.0f) / 10.0f;

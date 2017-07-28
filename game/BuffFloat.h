@@ -10,7 +10,7 @@ class BuffTemplate
 	friend class BuffInfo;
 	T baseValue;
 	T finalValue;
-
+	bool useRealTime;
 public:
 	enum BuffType
 	{
@@ -40,7 +40,7 @@ public:
 
 		void restart()
 		{
-			startTime = timer.getTime();
+			startTime = parent->getTime();
 			setBuffDuration(duration);
 			setBuffFadeInFadeOut(fadeInDuration, fadeOutDuration);
 		}
@@ -59,6 +59,11 @@ public:
 			parent->isDirty = parent->isChangedBeforeTick = true;
 		}
 
+		float getRemainingTime()
+		{
+			return buffEndTime - parent->getTime();
+		}
+
 		void setBuffFadeInFadeOut(float fadeIn, float fadeOut)
 		{
 			this->fadeInDuration = fadeIn;
@@ -74,7 +79,7 @@ public:
 		{
 			T buffValue = buffAmount;
 			float buffMultiplier = 1.0f;
-			float time = timer.getTime();
+			float time = parent->getTime();
 			if (time < fadeInEndTime)
 			{
 				buffMultiplier = (time - startTime) / fadeInDuration;
@@ -116,12 +121,17 @@ private:
 	T totalMultiplyBuff;
 	T totalAddBeforeMultiplyBuff;
 
+	float getTime()
+	{
+		return useRealTime ? timer.getRenderTime() : timer.getTime();
+	}
 public:
 	BuffTemplate()
 	{
 		buffControllerId = -1;
 		baseValue = finalValue = T(1.0f);
 		isChangedBeforeTick = true;
+		useRealTime = false;
 		reset();
 	}
 
@@ -144,7 +154,7 @@ public:
 		auto& buff = buffs[id];
 		buff.buffAmount = amount;
 		buff.buffType = buffType;
-		buff.startTime = timer.getTime();
+		buff.startTime = getTime();
 		buff.duration = 1000000.0f;
 		buff.fadeInDuration = -1.0f;
 		buff.fadeOutDuration = -1.0f;
@@ -155,6 +165,11 @@ public:
 		buff.removeAfterEnds = true;
 		isChangedBeforeTick = isDirty = true;
 		return buff;
+	}
+
+	void setUseRealtime(bool useRealTime)
+	{
+		this->useRealTime = useRealTime;
 	}
 
 	void removeBuff(int id)
@@ -180,6 +195,11 @@ public:
 	void setBuffDuration(int id, float duration)
 	{
 		buffs.at(id).setBuffDuration(duration);
+	}
+
+	float getBuffRemainingTime(int id)
+	{
+		return buffs.at(id).getRemainingTime();
 	}
 
 	void setBuffFadeInFadeOut(int id, float fadeIn, float fadeOut)
@@ -213,7 +233,7 @@ public:
 
 	bool tick()
 	{
-		float time = timer.getTime();
+		float time = getTime();
 
 		if (isDirty || isDirtyNextTick || time < dirtyTickTimeEnd || time > dirtyTickTimeStart)
 		{
@@ -264,7 +284,7 @@ private:
 
 		std::vector<int> toRemove;
 		toRemove.reserve(10);
-		float time = timer.getTime();
+		float time = getTime();
 		for (auto& b : buffs)
 		{
 			auto& buff = b.second;

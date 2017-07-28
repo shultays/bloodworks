@@ -66,6 +66,7 @@ class Bloodworks : public cGame
 
 	std::vector<Gun*> guns;
 	std::vector<Bonus*> bonuses;
+	std::vector<Bonus*> activeBonuses;
 	std::vector<Perk*> perks;
 	std::vector<Perk*> usedPerks;
 
@@ -87,8 +88,6 @@ class Bloodworks : public cGame
 	Vec2 cameraCenterPos;
 
 	float pauseSlowdown;
-	float gamePlaySlowdown;
-	float targetGamePlaySlowdown;
 
 	bool paused;
 
@@ -197,8 +196,6 @@ public:
 		return pauseSlowdown;
 	}
 
-	void multiplyGameSpeed(float multiplier);
-
 	void openLevelupPopup();
 	void doPause();
 	void doUnpause();
@@ -250,4 +247,8 @@ public:
 	void loadMod(const std::string& path);
 	void updateVolume();
 	void updateMusicVolume();
+	void addToActiveBonuses(Bonus* bonus);
+	void removeFromActiveBonuses(Bonus* bonus);
+	void onPlayerPickedGun(Gun * gun);
+	void onPlayerPickedBonus(Bonus * bonus, const Vec2& pos);
 };
