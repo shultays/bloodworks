@@ -169,12 +169,14 @@ function MonsterMeleeHelper.onTick(monster)
 		end
 		if data.willHit and data.lastHitTime + data.hitWaitTime < time then
 			data.willHit = false
-			player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)), angleToPlayer)
-			playSound({path = "~/resources/sounds/melee_woosh.ogg", volume = 0.3})
-            if player.data.noSlowdownOnHit == nil then
-				player.maxSpeed:addBuffWithId(MonsterMeleeHelper.slowBuffId, data.slowdownAmount)
-				player.maxSpeed:setBuffDuration(MonsterMeleeHelper.slowBuffId, data.slowdownDuration)
-				player.maxSpeed:setBuffFadeInFadeOut(MonsterMeleeHelper.slowBuffId, data.slowdownDuration/4, data.slowdownDuration/4)
+			local damage = player:doDamage(math.floor(data.minDamage + math.random() *(data.maxDamage - data.minDamage)), angleToPlayer)
+			if damage > 0 then
+				playSound({path = "~/resources/sounds/melee_woosh.ogg", volume = 0.3})
+				if player.data.noSlowdownOnHit == nil then
+					player.maxSpeed:addBuffWithId(MonsterMeleeHelper.slowBuffId, data.slowdownAmount)
+					player.maxSpeed:setBuffDuration(MonsterMeleeHelper.slowBuffId, data.slowdownDuration)
+					player.maxSpeed:setBuffFadeInFadeOut(MonsterMeleeHelper.slowBuffId, data.slowdownDuration/4, data.slowdownDuration/4)
+				end
 			end
 			
 			MeleeHitImage.build(monster)

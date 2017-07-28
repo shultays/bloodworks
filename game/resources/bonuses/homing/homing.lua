@@ -1,7 +1,7 @@
 
 HomingOrb.homingOrbId = getGlobalUniqueId()
 
-function HomingOrb.spawn(pos)
+function HomingOrb.spawn(bonus, pos)
 
 	local monster = getClosestMonsterWithIgnoreId(pos, HomingOrb.homingOrbId)
 	
