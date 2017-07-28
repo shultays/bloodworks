@@ -21,11 +21,12 @@
 #include "LuaBuffController.h"
 #include "Bonus.h"
 #include "DropController.h"
+#include "Bonus.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
 	this->bloodworks = b;
-	
+
 	buffController = nullptr;
 
 #ifdef DEBUG
@@ -65,7 +66,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"lengthSquared", [](const Vec2& a) { return a.lengthSquared(); },
 
 		"sideVec", &Vec2::sideVec,
-		"copy",  [](const Vec2& a) { return Vec2(a.x, a.y); },
+		"copy", [](const Vec2& a) { return Vec2(a.x, a.y); },
 
 		"rotateBy", [](Vec2& a, float angle) { a = a * Mat2::rotation(angle); },
 
@@ -173,7 +174,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addTexture", &cParticle::addTexture
 		);
 
-	
+
 
 	lua.new_usertype<cPostProcess>("PostProcess",
 		"isEnabled", &cPostProcess::isEnabled,
@@ -244,7 +245,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("removePostProcess",
-		[&](cPostProcess *postProcess) 
+		[&](cPostProcess *postProcess)
 	{
 		bloodworks->removePostProcess(postProcess);
 		SAFE_DELETE(postProcess);
@@ -303,11 +304,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return angleDiff(angle, angleToApproach);
 	});
 
-	lua.set_function("multiplyGameSpeed", [&](float multiplier)
-	{
-		bloodworks->multiplyGameSpeed(multiplier);
-	});
-
 	lua.set_function("getUniqueId", [&]()
 	{
 		return bloodworks->getUniqueId();
@@ -342,6 +338,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		bloodworks->playOneShotSound(args);
 	});
 
+	lua.new_usertype<Bonus>("Bonus",
+		"name", sol::readonly(&Bonus::name),
+		"scriptName", sol::readonly(&Bonus::scriptName),
+		"data", &Bonus::data,
+		"setActive", &Bonus::setActive,
+		"isActive", &Bonus::isActive
+		);
 
 	lua.new_usertype<Gun>("Gun",
 		"id", sol::readonly(&Gun::id),
@@ -380,8 +383,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addBullet", &Gun::addBullet,
 		"laser", &Gun::laser
 		);
-
-
 
 	lua.set_function("getGunCount",
 		[&]() -> int
@@ -566,6 +567,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	{
 		return bloodworks->getDropController()->getLastSpawnTime();
 	});
+
+	lua.set_function("getGameSpeedMultiplier",
+		[&]() -> BuffFloat&
+	{
+		return bloodworks->getMissionController()->getGameSpeedMultiplierBuff();
+	});
+
 	lua.set_function("spawnGun",
 		[&](const Vec2& pos, const std::string& name)
 	{
@@ -765,6 +773,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"restart", &BuffFloat::BuffInfo::restart,
 
 		"removeAfterEnds", &BuffFloat::BuffInfo::removeAfterEnds,
+		"getRemainingTime", &BuffFloat::BuffInfo::getRemainingTime,
 
 		"setBuffAmount", &BuffFloat::BuffInfo::setBuffAmount,
 		"setBuffDuration", &BuffFloat::BuffInfo::setBuffDuration,
@@ -804,6 +813,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setBuffAmount", &BuffFloat::setBuffAmount,
 		"setBuffDuration", &BuffFloat::setBuffDuration,
 		"setBuffFadeInFadeOut", &BuffFloat::setBuffFadeInFadeOut,
+		"getBuffRemainingTime", &BuffFloat::getBuffRemainingTime,
+
+		"setUseRealtime", &BuffFloat::setUseRealtime,
 
 		"getBuffInfo", &BuffFloat::getBuffInfo,
 		"hasBuffInfo", &BuffFloat::hasBuffInfo,
@@ -852,6 +864,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setBuffAmount", &BuffVec4::setBuffAmount,
 		"setBuffDuration", &BuffVec4::setBuffDuration,
 		"setBuffFadeInFadeOut", &BuffVec4::setBuffFadeInFadeOut,
+		"getBuffRemainingTime", &BuffVec4::getBuffRemainingTime,
+
+		"setUseRealtime", &BuffVec4::setUseRealtime,
 
 		"getBuffInfo", &BuffVec4::getBuffInfo,
 		"hasBuffInfo", &BuffVec4::hasBuffInfo,

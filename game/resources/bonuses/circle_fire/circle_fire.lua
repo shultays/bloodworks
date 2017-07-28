@@ -1,5 +1,5 @@
 
-function CircleFire.spawn(pos)
+function CircleFire.spawn(bonus, pos)
 	local t = addGameObject("CircleFire")
 	t.data.position = Vec2.new(pos.x, pos.y)
 end
