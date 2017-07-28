@@ -1,48 +1,46 @@
 QuadDamage.buffId = getGlobalUniqueId()
 
-function QuadDamage.spawn(pos)
+function QuadDamage.spawn(bonus, pos)
 	local data = QuadDamage.data
 
+	local duration = 8.0 * player.data.bonusDurationMultiplier
+	
 	player.damageMultiplier:addBuffWithId(QuadDamage.buffId, 4.0)
-	if data.boost == nil then
-		data.boost = addGameObject("QuadDamage")
-		QuadDamage.shaderStartTime = time
+	player.damageMultiplier:setBuffDuration(QuadDamage.buffId, duration)
+	if bonus:isActive() == false then
+		bonus:setActive(true)
+		data.shaderStartTime = time
 		data.postProcess = addPostProcess("resources/post_process/red_shift.ps")
 		data.postProcess:setShaderWeight(0.0)
-	else
-		data.boost.data.time = time
 	end
+	data.time = time
 	playSound({path = "~/resources/sounds/metal_riff.ogg", volume = 0.5})
 	
 	addBuffIcon("QuadDamage", QuadDamage.basePath .. "icon.png")
 end
 
-function QuadDamage.init(gameObject)
-	gameObject.data.time = time
-end
-
-
-function QuadDamage.onTick(gameObject)
-	local t = time - QuadDamage.shaderStartTime
+function QuadDamage.onTick(bonus)
+	local data = QuadDamage.data
 	
-	local duration = 8.0 * player.data.bonusDurationMultiplier
+	if player.damageMultiplier:hasBuffInfo(QuadDamage.buffId) == false then
+		removeBuffIcon("QuadDamage")
+		bonus:setActive(false)
+		
+		removePostProcess(data.postProcess)
+		data.postProcess = nil
+		return
+	end
 	
+	local t = time - data.shaderStartTime
 	local a = 1.0
 	if t < 0.3 then
 		a = t / 0.3
 	end
-	t = time - gameObject.data.time
-	if t > duration - 1.0 then
-		a = (duration- t)
+	
+	local remaining = player.damageMultiplier:getBuffRemainingTime(QuadDamage.buffId)
+	if remaining < 1.0 then
+		a = remaining
 	end
 	QuadDamage.data.postProcess:setShaderWeight(a)
 
-	if t > duration then
-		QuadDamage.data.boost = nil
-		removePostProcess(QuadDamage.data.postProcess)
-		QuadDamage.data.postProcess = nil
-		player.damageMultiplier:removeBuff(QuadDamage.buffId)
-		gameObject.toBeRemoved = true
-		removeBuffIcon("QuadDamage")
-	end
 end

@@ -1,7 +1,7 @@
 
 AmmoManiac.buffId = getGlobalUniqueId()
 
-function AmmoManiac.spawn(pos)
+function AmmoManiac.spawn(bonus, pos)
 	local duration = 6.0 * player.data.bonusDurationMultiplier
 	player.gunSpreadMultiplier:addBuffWithId(AmmoManiac.buffId, 4.5)
 	player.clipCountMultiplier:addBuffWithId(AmmoManiac.buffId, 4.0)
@@ -17,16 +17,13 @@ function AmmoManiac.spawn(pos)
 
 	addBuffIcon("AmmoManiac", AmmoManiac.basePath .. "icon.png")
 	
-	if AmmoManiac.data.gameObject == nil then
-		AmmoManiac.data.gameObject = addGameObject("AmmoManiac")
-	end
+	bonus:setActive(true)
 end
 
-function AmmoManiac.onTick(gameObject)
+function AmmoManiac.onTick(bonus)
 	if player.clipCountMultiplier:hasBuffInfo(AmmoManiac.buffId) == false then
 		removeBuffIcon("AmmoManiac")
-		gameObject.toBeRemoved = true
-		AmmoManiac.data.gameObject = nil
+		bonus:setActive(false)
 	end
 end
 

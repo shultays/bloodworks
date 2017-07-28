@@ -7,6 +7,7 @@
 #include "cVec.h"
 #include "cSound.h"
 #include "DirentHelper.h"
+#include "BuffFloat.h"
 
 class Bloodworks;
 class cRenderable;
@@ -38,6 +39,8 @@ class MissionController
 	cSoundHandle missionLoopHandle;
 	float soundSpeed;
 	float musicVolume;
+
+	BuffFloat gameSpeedMultiplier; // this can be stored in a mission class
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
@@ -54,6 +57,14 @@ public:
 	sol::table getMissionData();
 	void onMonsterDied(Monster* monster);
 	void repositionGUI();
-	void setMusicVolume(float volume);
+	void updateMusicVolume();
 	void onDebugTick();
+	float getGameSpeedMultiplier()
+	{
+		return gameSpeedMultiplier.getBuffedValue();
+	}
+	BuffFloat& getGameSpeedMultiplierBuff()
+	{
+		return gameSpeedMultiplier;
+	}
 };
