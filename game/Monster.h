@@ -61,6 +61,10 @@ class Monster
 	std::vector<Timer> timers;
 
 	sol::function luaTick;
+	sol::function luaHit;
+	sol::function luaKill;
+	sol::function luaShouldHit;
+
 	float scale;
 	//~lua
 
@@ -126,7 +130,6 @@ public:
 
 	IntVec2 gridStart;
 	IntVec2 gridEnd;
-	bool hasShouldHitScript;
 
 	void addIgnoreId(int id);
 	bool hasIgnoreId(int id) const;

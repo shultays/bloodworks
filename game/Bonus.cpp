@@ -40,7 +40,8 @@ Bonus::Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File
 	onPlayerDiedFunc = scriptTable["onPlayerDied"];
 	onPlayerPickedGunFunc = scriptTable["onPlayerPickedGun"];
 	onPlayerPickedBonusFunc = scriptTable["onPlayerPickedBonus"];
-
+	onMonsterDamagedFunc = scriptTable["onMonsterDamaged"];
+	
 	active = false;
 }
 
@@ -147,5 +148,13 @@ void Bonus::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
 	if (onPlayerPickedBonusFunc)
 	{
 		onPlayerPickedBonusFunc(this, bonus, pos);
+	}
+}
+
+void Bonus::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+{
+	if (onMonsterDamagedFunc)
+	{
+		onMonsterDamagedFunc(this, monster, damage, dir, args);
 	}
 }
