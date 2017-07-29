@@ -6,6 +6,8 @@
 #include "Gun.h"
 #include "Bloodworks.h"
 #include "Player.h"
+#include "cTimeProfiler.h"
+
 BulletController::BulletController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
@@ -27,6 +29,7 @@ void BulletController::addBullet(Bullet* bullet)
 
 void BulletController::tick()
 {
+	ADD_SCOPED_TIME_PROFILER("BulletController::tick");
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		if (bullets[i]->isDead == false)
