@@ -201,6 +201,7 @@
     <ClCompile Include="cPostProcess.cpp" />
     <ClCompile Include="cSlave.cpp" />
     <ClCompile Include="cSlaveWindows.cpp" />
+    <ClCompile Include="cTimeProfiler.cpp" />
     <ClCompile Include="ModWindow.cpp" />
     <ClCompile Include="MonsterTemplate.cpp" />
     <ClCompile Include="Coral.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="cTickBox.h" />
     <ClInclude Include="cTime.h" />
     <ClInclude Include="cGlobals.h" />
+    <ClInclude Include="cTimeProfiler.h" />
     <ClInclude Include="cTools.h" />
     <ClInclude Include="cVec.h" />
     <ClInclude Include="cVecImp.h" />

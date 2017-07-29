@@ -19,6 +19,8 @@ GLuint postProcessQuad;
 
 extern SDL_Window *mainWindow;
 
+#include "cTimeProfiler.h"
+
 Coral::Coral()
 {
 	lastDrawTime = 0.0f;
@@ -45,55 +47,66 @@ void Coral::tick()
 			// SDL_SetWindowSize(mainWindow, 800, 600);
 		}
 	}
-
-	float slowdown = game->getSlowdown();
-
-	float t;
-	int maxTick = 4;
-	while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval && maxTick --> 0)
 	{
-		timer.currentTime = update_interval * slowdown + timer.currentTime;
-		timer.dt = update_interval * slowdown;
-		timer.realDt = update_interval;
-		tickedBeforeRender = true;
-		if (t - lastUpdateTime < update_interval * 2.0f)
-		{
-			lastUpdateTime += update_interval;
-		}
-		else
-		{
-			lastUpdateTime = t;
-		}
-		slaveController->update();
-		debugRenderer.tick(timer.getDt());
-		game->tickInternal();
-		input.tick();
-		mapper.check();
-	}
+		ADD_SCOPED_TIME_PROFILER("frame");
 
-	if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
+		float slowdown = game->getSlowdown();
+		float t;
+		int maxTick = 4;
+		while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval && maxTick --> 0)
+		{
+			ADD_SCOPED_TIME_PROFILER("tick");
+			timer.currentTime = update_interval * slowdown + timer.currentTime;
+			timer.dt = update_interval * slowdown;
+			timer.realDt = update_interval;
+			tickedBeforeRender = true;
+			if (t - lastUpdateTime < update_interval * 2.0f)
+			{
+				lastUpdateTime += update_interval;
+			}
+			else
+			{
+				lastUpdateTime = t;
+			}
+			slaveController->update();
+			debugRenderer.tick(timer.getDt());
+			game->tickInternal();
+			input.tick();
+			mapper.check();
+
+		}
+
+		if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
+		{
+			ADD_SCOPED_TIME_PROFILER("render");
+			if (tickedBeforeRender)
+			{
+				tickedBeforeRender = false;
+				timer.renderDt = (t - lastUpdateTime) * slowdown + timer.currentTime - timer.renderTime;
+				timer.renderTime += timer.renderDt;
+			}
+			else
+			{
+				timer.renderDt = draw_interval * slowdown;
+				timer.renderTime += timer.renderDt;
+			}
+
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			game->renderInternal();
+
+			SDL_GL_SwapWindow(mainWindow);
+			lastDrawTime = timer.getRealTime();
+		}
+	}
+#ifdef SHOW_TIMINGS
+	if (input.isKeyDown(key_f12))
 	{
-		if (tickedBeforeRender)
-		{
-			tickedBeforeRender = false;
-			timer.renderDt = (t - lastUpdateTime) * slowdown + timer.currentTime - timer.renderTime;
-			timer.renderTime += timer.renderDt;
-		}
-		else
-		{
-			timer.renderDt = draw_interval * slowdown;
-			timer.renderTime += timer.renderDt;
-		}
-
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		game->renderInternal();
-
-		SDL_GL_SwapWindow(mainWindow);
-		lastDrawTime = timer.getRealTime();
+		doBreak();
 	}
-	
-	t = timer.getRealTime();
+#endif
+
+	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.01f) 
 	{

@@ -1,7 +1,6 @@
 SlowMonsters.buffId = getGlobalUniqueId()
 
 function SlowMonsters.spawn(bonus, pos)
-	print(SlowMonsters.buffId)
 	player.globalMonsterSpeedMultiplier:addBuffWithId(SlowMonsters.buffId, 0.4)
 	local buff = player.globalMonsterSpeedMultiplier:getBuffInfo(SlowMonsters.buffId)
 	if buff:getCurrentBuffAmount() >= 0.99 then
