@@ -8,6 +8,7 @@
 #include "cAnimatedRenderable.h"
 #include "MonsterTemplate.h"
 #include "Gun.h"
+#include "cTimeProfiler.h"
 
 MonsterController::MonsterController(Bloodworks *bloodworks)
 {
@@ -23,6 +24,7 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 void MonsterController::tick()
 {
+	ADD_SCOPED_TIME_PROFILER("MonsterController::tick");
 	float closestDistance = FLT_MAX;
 	Monster* closestMonster = nullptr;
 	Vec2 pos = bloodworks->getPlayer()->getCrosshairPos() + bloodworks->getPlayer()->getPosition();

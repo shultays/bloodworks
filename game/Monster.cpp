@@ -167,11 +167,15 @@ void Monster::tick()
 #ifdef HAS_BLOODWORKS_CHEATS
 	BloodworksCheats::instance->onMonsterTick(this);
 #endif
-	std::stringstream ss;
-	ss << (int)hitPoint;
+	if (healthRenderable->isVisible())
+	{
+		std::stringstream ss;
+		ss << (int)hitPoint;
 
-	healthRenderable->setText(ss.str());
-	healthRenderable->setWorldMatrix(Mat3::translationMatrix(position + Vec2(0.0f, bulletRadius + 10.0f)));
+		healthRenderable->setText(ss.str());
+		healthRenderable->setWorldMatrix(Mat3::translationMatrix(position + Vec2(0.0f, bulletRadius + 10.0f)));
+	}
+
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(textureSize);
 	mat.translateBy(textureShift);
