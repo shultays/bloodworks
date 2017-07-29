@@ -50,6 +50,7 @@ protected:
 
 	cPriorityVector<cPostProcess*> postProcesses;
 public:
+	cGame();
 	cShaderShr lastShader;
 	RenderableAlignment lastAllignment;
 

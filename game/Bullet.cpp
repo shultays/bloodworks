@@ -34,6 +34,10 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	{
 		lifeTime = gun->getBulletLifeTime();
 	}
+	else
+	{
+		lifeTime = -1.0f;
+	}
 	startTime = timer.getTime();
 
 	particleArgs = lua.create_table();
@@ -87,7 +91,8 @@ void Bullet::tick()
 	{
 		Vec2 finalPos = pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2));
 		Vec2 toFinalPos = (finalPos - particleData.lastSpawnPos).normalized();
-		while (particleData.lastSpawnPos.distanceSquared(finalPos) > particleData.spawnDistance * particleData.spawnDistance)
+		float d = particleData.spawnDistance * particleData.spawnDistance;
+		while (particleData.lastSpawnPos.distanceSquared(finalPos) > d)
 		{
 			
 			particleData.lastSpawnPos += toFinalPos * particleData.spawnDistance;
