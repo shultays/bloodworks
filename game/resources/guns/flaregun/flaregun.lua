@@ -23,7 +23,6 @@ function FlareGun.onBulletHit(gun, bullet, monster)
 	if monster.data.flamethrowerObject == nil then
 		monster.data.flamethrowerObject = addGameObject("BurnMonsterObject")
 		monster.data.flamethrowerObject.data.monster = monster
-		monster.data.flamethrowerObject.data.time = 0.3
 		monster.data.flamethrowerObject.data.damageMin = 6
 		monster.data.flamethrowerObject.data.damageVar = 6
 	end
