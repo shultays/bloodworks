@@ -17,7 +17,7 @@
 #include "cParticle.h"
 #include "BloodworksControls.h"
 #include "MonsterTemplate.h"
-#include "BloodworksCheat.h"
+#include "BloodworksCheats.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -102,8 +102,8 @@ Monster::~Monster()
 
 void Monster::tick()
 {
-#ifdef HAS_BLOODWORKS_CHEAT
-	BloodworksCheat::instance->onMonsterPreTick(this);
+#ifdef HAS_BLOODWORKS_CHEATS
+	BloodworksCheats::instance->onMonsterPreTick(this);
 #endif
 
 	moveSpeedMultiplier.tick();
@@ -164,8 +164,8 @@ void Monster::tick()
 		}
 	}
 	clampPos();
-#ifdef HAS_BLOODWORKS_CHEAT
-	BloodworksCheat::instance->onMonsterTick(this);
+#ifdef HAS_BLOODWORKS_CHEATS
+	BloodworksCheats::instance->onMonsterTick(this);
 #endif
 	std::stringstream ss;
 	ss << (int)hitPoint;
@@ -368,37 +368,41 @@ void Monster::modifyDrawLevel(int level)
 
 void Monster::spawnBodyParts(const Vec2& blowDir)
 {
-	std::vector<int> parts;
-	int maxCount = (int)monsterTemplate->bodyParts.size();
-	int partCount = randInt(2, maxCount - 2) + 50;
-	if (partCount > maxCount)
-	{
-		partCount = maxCount;
-	}
-	for (int i = 0; i < partCount; i++)
-	{
-		int t = randInt(maxCount);
-		for (int j = 0; j < parts.size(); j++)
-		{
-			if (parts[j] == t)
-			{
-				i--;
-				t = -1;
-				break;
-			}
-		}
-		if (t != -1)
-		{
-			parts.push_back(t);
-		}
-	}
-
 	if (blowDir.isNonZero())
 	{
 		if (hasBlood)
 		{
 			bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
 		}
+
+		std::vector<int> parts;
+		int maxCount = (int)monsterTemplate->bodyParts.size();
+		if (maxCount > 0)
+		{
+			int partCount = randInt(2, maxCount);
+			if (partCount > maxCount)
+			{
+				partCount = maxCount;
+			}
+			for (int i = 0; i < partCount; i++)
+			{
+				int t = randInt(maxCount);
+				for (int j = 0; j < parts.size(); j++)
+				{
+					if (parts[j] == t)
+					{
+						i--;
+						t = -1;
+						break;
+					}
+				}
+				if (t != -1)
+				{
+					parts.push_back(t);
+				}
+			}
+		}
+
 		for (int i : parts)
 		{
 			cTextureShr s = monsterTemplate->bodyParts[i].texture;
