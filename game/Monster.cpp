@@ -17,7 +17,7 @@
 #include "cParticle.h"
 #include "BloodworksControls.h"
 #include "MonsterTemplate.h"
-#include "BloodworksDebug.h"
+#include "BloodworksCheat.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -74,8 +74,10 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	dropChance = 0.05f;
 	firstTick = true;
-	hasShouldHitScript = scriptTable["shouldHit"];
+	luaShouldHit = scriptTable["shouldHit"];
 	luaTick = scriptTable["onTick"];
+	luaHit = scriptTable["onHit"];
+	luaKill = scriptTable["onKilled"];
 	scriptTable["init"](this);
 }
 
@@ -100,8 +102,8 @@ Monster::~Monster()
 
 void Monster::tick()
 {
-#ifdef HAS_BLOODWORKS_DEBUG
-	BloodworksDebug::instance->onMonsterPreTick(this);
+#ifdef HAS_BLOODWORKS_CHEAT
+	BloodworksCheat::instance->onMonsterPreTick(this);
 #endif
 
 	moveSpeedMultiplier.tick();
@@ -162,8 +164,8 @@ void Monster::tick()
 		}
 	}
 	clampPos();
-#ifdef HAS_BLOODWORKS_DEBUG
-	BloodworksDebug::instance->onMonsterTick(this);
+#ifdef HAS_BLOODWORKS_CHEAT
+	BloodworksCheat::instance->onMonsterTick(this);
 #endif
 	std::stringstream ss;
 	ss << (int)hitPoint;
@@ -217,10 +219,12 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 	damage = (int)(damage * bloodworks->getPlayer()->getDamageMultiplier());
 	hitPoint -= damage;
 
-	if (scriptTable["onHit"])
+	if (luaHit)
 	{
-		scriptTable["onHit"](this, damage, args);
+		luaHit(this, damage, dir, args);
 	}
+	bloodworks->onMonsterDamaged(this, damage, dir, args);
+
 	if (hitPoint <= 0)
 	{
 		if (damage > 0)
@@ -305,20 +309,20 @@ bool Monster::shouldHit(Bullet *bullet)
 	{
 		return false;
 	}
-	if (scriptTable["shouldHit"])
+	if (luaShouldHit)
 	{
-		return scriptTable["shouldHit"](this, bullet->getGun(), bullet);
+		return luaShouldHit(this, bullet->getGun(), bullet);
 	}
-	return true;
+	return bloodworks->getMonsterController()->shouldHit(this, bullet->getGun(), bullet);
 }
 
 bool Monster::shouldHit(Gun *gun)
 {
-	if (hasShouldHitScript)
+	if (luaShouldHit)
 	{
-		return scriptTable["shouldHit"](this, gun, nullptr);
+		return luaShouldHit(this, gun, nullptr);
 	}
-	return true;
+	return bloodworks->getMonsterController()->shouldHit(this, gun, nullptr);
 }
 
 cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args)
@@ -460,10 +464,9 @@ void Monster::killSelf(const Vec2& blowDir)
 	assert(isDead == false);
 	isDead = true;
 
-	auto& onKilled = scriptTable["onKilled"];
-	if (onKilled)
+	if (luaKill)
 	{
-		onKilled(this);
+		luaKill(this);
 	}
 
 	bloodworks->onMonsterDied(this, dropChance);
