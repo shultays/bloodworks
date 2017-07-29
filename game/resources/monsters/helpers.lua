@@ -26,7 +26,7 @@ function StunController.getSlowAmount(monster)
 	return mul
 end
 
-function StunController.onHit(monster, damage, args)
+function StunController.onHit(monster, damage, dir, args)
 	if args.noSlowdown == true then
 		return
 	end
@@ -144,6 +144,7 @@ function MonsterMeleeHelper.init(monster)
 	monster.data.maxDamage = 11
 	monster.data.slowdownAmount = 0.4
 	monster.data.slowdownDuration = 0.15
+	monster.data.canHit = true
 end
 
 function MonsterMeleeHelper.buffStats(monster, min)
@@ -155,13 +156,16 @@ function MonsterMeleeHelper.buffStats(monster, min)
 end
 
 function MonsterMeleeHelper.onTick(monster)
+	if data.canHit == false then
+		return
+	end
 	local range = 20.0
 	if data.moving == false then
 		range = 30.0
 	end
 	
 	if distanceToPlayer < range + monster.collisionRadius and player.isDead == false then
-		if data.moving or data.lastHitTime + data.hitInterval < time then
+		if data.lastHitTime + data.hitInterval < time then
 			data.lastHitTime = time
 			data.moving = false
 			monster:playAnimation("attack")
@@ -238,10 +242,74 @@ function BulletShooter.onTick(monster)
 	end
 end
 
+function addCustomOnTick(monster, tick)
+	if monster.data.customTick == nil then
+	  monster.data.customTick = {}
+	  monster.data.customTickCount = 0
+	end
+	monster.data.customTick[monster.data.customTickCount] = tick
+	monster.data.customTickCount = monster.data.customTickCount + 1
+end
 
+function customMonsterOnTick(monster)
+	if monster.data.customTick ~= nil then
+		for key,tick in pairs( monster.data.customTick) do
+			tick(monster)
+		end
+	end
+end
 
+function addCustomOnKill(monster, kill)
+	if monster.data.customKill == nil then
+	  monster.data.customKill = {}
+	  monster.data.customKillCount = 0
+	end
+	monster.data.customKill[monster.data.customKillCount] = kill
+	monster.data.customKillCount = monster.data.customKillCount + 1
+end
 
+function customMonsterOnKill(monster, damage, dir, args)
+	if monster.data.customKill ~= nil then
+		for key,kill in pairs(monster.data.customKill) do
+			kill(monster, damage, dir, args)
+		end
+	end
+end
 
+function addCustomOnHit(monster, hit)
+	if monster.data.customHit == nil then
+	  monster.data.customHit = {}
+	  monster.data.customHitCount = 0
+	end
+	monster.data.customHit[monster.data.customHitCount] = hit
+	monster.data.customHitCount = monster.data.customHitCount + 1
+end
 
+function customMonsterOnHit(monster, damage, dir, args)
+	if monster.data.customHit ~= nil then
+		for key,hit in pairs(monster.data.customHit) do
+			hit(monster, damage, dir, args)
+		end
+	end
+end
 
+function addCustomShouldHit(monster, shouldHit)
+	if monster.data.customShouldHit == nil then
+	  monster.data.customShouldHit = {}
+	  monster.data.customShouldHitCount = 0
+	end
+	monster.data.customShouldHit[monster.data.customShouldHitCount] = shouldHit
+	monster.data.customShouldHitCount = monster.data.customShouldHitCount + 1
+end
 
+function customMonsterShouldHit(monster, gun, bullet)
+	if monster.data.customShouldHit ~= nil then
+		for key,shouldHit in pairs(monster.data.customShouldHit) do
+			local r = shouldHit(monster, gun, bullet)
+			if r == false then
+				return false
+			end
+		end
+	end
+	return true
+end

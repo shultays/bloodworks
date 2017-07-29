@@ -32,11 +32,11 @@
 #include "ModWindow.h"
 #include "cSlave.h"
 #include "BloodworksConfig.h"
-#include "BloodworksDebug.h"
+#include "BloodworksCheat.h"
 #include <sstream>
 
-#ifdef HAS_BLOODWORKS_DEBUG
-BloodworksDebug *bloodworksDebug;
+#ifdef HAS_BLOODWORKS_CHEAT
+BloodworksCheat *bloodworksDebug;
 #endif
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
@@ -73,6 +73,7 @@ void Bloodworks::init()
 	coral.getSoundManager()->setGlobalVolume(config->getVolume());
 
 	lua["time"] = timer.getTime();
+
 
 	dropController = new DropController(this);
 	monsterController = new MonsterController(this);
@@ -213,8 +214,8 @@ void Bloodworks::init()
 	coral.setFullScreen(config->getFullScreen());
 	mainMenu->setVisible(true);
 
-#ifdef HAS_BLOODWORKS_DEBUG
-	bloodworksDebug = new BloodworksDebug(this);
+#ifdef HAS_BLOODWORKS_CHEAT
+	bloodworksDebug = new BloodworksCheat(this);
 	bloodworksDebug->onInit();
 #endif
 }
@@ -295,7 +296,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
 
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 	SAFE_DELETE(bloodworksDebug);
 #endif
 }
@@ -476,7 +477,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 	}
 	missionController->loadMission(mission);
 	player->setVisible(true);
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 	bloodworksDebug->onLoadMission();
 #endif 
 
@@ -621,6 +622,7 @@ void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
 		perk->onMonsterDied(monster);
 	}
 
+	monsterController->onMonsterDied(monster);
 	missionController->onMonsterDied(monster);
 	dropController->onMonsterDied(monster, dropChance);
 }
@@ -771,6 +773,23 @@ void Bloodworks::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
 	}
 }
 
+void Bloodworks::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+{
+	for (auto& bonus : activeBonuses)
+	{
+		if (bonus->isActive())
+		{
+			bonus->onMonsterDamaged(monster, damage, dir, args);
+		}
+	}
+	for (auto& perk : usedPerks)
+	{
+		perk->onMonsterDamaged(monster, damage, dir, args);
+	}
+
+	monsterController->onMonsterDamaged(monster, damage, dir, args);
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;
@@ -799,7 +818,7 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 	bloodworksDebug->onTick();
 #endif
 
@@ -994,7 +1013,7 @@ void Bloodworks::tickGameSlowdown()
 
 void Bloodworks::render()
 {
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 	bloodworksDebug->onRender();
 #endif
 

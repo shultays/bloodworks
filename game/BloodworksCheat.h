@@ -1,12 +1,12 @@
 #pragma once
 
-#define HAS_BLOODWORKS_DEBUG
+#define HAS_BLOODWORKS_CHEAT
 
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 
 class Bloodworks;
 class Monster;
-class BloodworksDebug
+class BloodworksCheat
 {
 	Bloodworks *bloodworks;
 	bool showFPS;
@@ -15,9 +15,10 @@ class BloodworksDebug
 	float lastSetTickTime;
 	float lastSetRenderTime;
 	bool moveMonsters;
+	int slowdownBuff;
 public:
-	static BloodworksDebug *instance;
-	BloodworksDebug(Bloodworks *bloodworks);
+	static BloodworksCheat *instance;
+	BloodworksCheat(Bloodworks *bloodworks);
 	void onTick();
 	void onMonsterTick(Monster *monster);
 	void onRender();
