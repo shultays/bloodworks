@@ -73,6 +73,8 @@ function makeBossDefault(monster)
 	monster.scoreMultiplier = 5.0 + math.random() * 2.0
 	monster:modifyDrawLevel(3)
 	local t = math.random(11)
+	--t = 6
+	
 	if t == 1 then
 		monster.hitPoint = monster.hitPoint * 7
 		monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
@@ -101,11 +103,10 @@ function makeBossDefault(monster)
 	elseif t == 6 then
 		monster.data.remainingLife = 3
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster:setScale(0.8 + math.random() * 0.3)
 		monster.experienceMultiplier = monster.experienceMultiplier * 0.3
 		monster.scoreMultiplier = monster.scoreMultiplier * 0.3
-		monster.scriptTable.onKilled = function (monster)
+		monster.data.onKillFuncSplit = function (monster)
 			if monster.data.remainingLife > 0 then
 				monster.data.remainingLife = monster.data.remainingLife - 1
 				for i = 1,2 do
@@ -114,7 +115,6 @@ function makeBossDefault(monster)
 					newMonster.position = monster.position
 					newMonster:setScale(math.max(0.3, monster.scale * 0.80))
 					newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-					newMonster.scriptTable = monster.scriptTable
 					newMonster:copyIgnoreId(monster)
 					
 					newMonster.data.playerSeeRange = monster.data.playerSeeRange
@@ -132,16 +132,18 @@ function makeBossDefault(monster)
 					newMonster.hitPoint = math.floor(monster.hitPoint * 0.5)
 					
 					newMonster.moveAngle = monster.moveAngle + math.pi * (i - 0.5)
+					
+					addCustomOnKill(newMonster, monster.data.onKillFuncSplit)
 				end
 			end
 		end
+		addCustomOnKill(monster, monster.data.onKillFuncSplit)
 	elseif t == 7 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
-		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster:setScale(0.8 + math.random() * 0.3)
 		monster.experienceMultiplier = monster.experienceMultiplier * 0.5
 		monster.scoreMultiplier = monster.scoreMultiplier * 0.5
-		monster.scriptTable.onKilled = function (monster)
+		addCustomOnKill(monster, function (monster)
 			for i = 1,8 do
 				local newMonster = addMonster(monster.monsterTemplate.name)
 				newMonster.position = monster.position
@@ -165,51 +167,57 @@ function makeBossDefault(monster)
 				newMonster.data.randomMove = true
 				newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
 			end
-		end
+		end)
 	elseif t == 8 then
 		monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
-		monster.data.oldTick = monster.scriptTable.onTick
-		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 3.5
 		monster.data.originalSpeed = monster.data.maxMoveSpeed
 		monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
+		monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
+			
 		monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
+		monster.data.hitInterval = monster.data.hitInterval * 0.2
 		monster.data.targetShift = Vec2.new(0.0, 0.0)
 		monster.knockbackResistance:addBuff(0.0)
-		monster.scriptTable.onTick = function (monster)
+		addCustomOnTick(monster, function (monster)
 			local diffToPlayer = player.position - monster.position 
 			local distanceToPlayer = diffToPlayer:length()
 			local angleToPlayer = diffToPlayer:getAngle()
 			local a = fixAngle(angleToPlayer - player.aimAngle)
-			if math.abs(a) > math.pi - 0.2 then
+			local angle = 0.2
+			if distanceToPlayer < 100 then
+				angle = angle + 0.2 * (1.0 - distanceToPlayer / 100.0)
+			end
+			
+			if math.abs(a) > math.pi - angle then
 				monster.data.maxMoveSpeed = 0.0
 				monster.animationSpeed = 0.0
 				monster.moveSpeed = 0.0
+				monster.data.maxRotateSpeed = 0.0
+				monster.data.canHit = false
 			else
 				monster.data.maxMoveSpeed = monster.data.originalSpeed
 				monster.animationSpeed = 1.0
-				monster.data.oldTick(monster)
+				monster.data.maxRotateSpeed = monster.data.originalSpeed
+				monster.data.canHit = true
 			end
-		end
+		end)
 	elseif t == 9 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
-		monster.data.oldTick = monster.scriptTable.onTick
-		monster.scriptTable = shallowcopy(monster.scriptTable)
-		monster.scriptTable.onHit = function(monster, damage, args)
+		addCustomOnHit(monster, function(monster, damage, args)
 			local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
 			monster.colorMultiplier:setBuffDuration(buffId, 1.0)
 			monster.data.lastHitTime = time
-		end
-		
-		monster.scriptTable.shouldHit = function(monster, bullet)
+		end)
+		addCustomShouldHit(monster, function(monster, gun, bullet)
 			return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
-		end
+		end)
 	elseif t == 10 then
 		monster.data.blinkParticle = monster:addParticleSpawner("CriticalParticle", {});
 		monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 1.7, 1.0))
 		monster.hitPoint = math.floor(monster.hitPoint * 1.5)
-		monster.scriptTable = shallowcopy(monster.scriptTable)
-		monster.scriptTable.onHit = function(monster, damage, args)
+
+		addCustomOnHit(monster, function(monster, damage, args)
 			if monster.hitPoint > 0 then
 				local t = math.random() * math.pi * 2.0
 				local r = math.random() * 100.0 + 100.0
@@ -226,16 +234,14 @@ function makeBossDefault(monster)
 				
 				playSound({path = "~/resources/sounds/shimmer_1.ogg"})
 			end
-		end
+		end)
 	elseif t == 11 then
 		monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
-		monster.data.oldTick = monster.scriptTable.onTick
-		monster.scriptTable = shallowcopy(monster.scriptTable)
 		monster.moveSpeed = monster.moveSpeed * 0.5
 		monster.data.maxHitpoint = monster.hitPoint
 		monster:setScale(0.8 + math.random() * 0.3)
-		monster.scriptTable.onTick = function (monster)
-			monster.data.oldTick(monster)
+		
+		addCustomOnTick(monster, function (monster)
 			if monster.data.spawnTimer == nil then
 				monster.data.spawnTimer = 3.0
 			end
@@ -269,7 +275,7 @@ function makeBossDefault(monster)
 					ignoreMonsterForCount(newMonster)
 				end
 			end
-		end
+		end)
 	end
 end
 
