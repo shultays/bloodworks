@@ -39,8 +39,10 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 	levelupGroup->addRenderable(currentPerkName);
 
 	currentPerkExplanation = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 14.0f, Vec4::fromColor(0xFFAAAAAA));
-	currentPerkExplanation->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -110.0f)));
+	currentPerkExplanation->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -117.0f)));
 	currentPerkExplanation->setTextAllignment(TextAlignment::center);
+	currentPerkExplanation->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	currentPerkExplanation->setMaxLength(500.0f);
 	levelupGroup->addRenderable(currentPerkExplanation);
 
 	levelUpText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Tab to Level Up", 24.0f);
