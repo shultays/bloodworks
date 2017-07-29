@@ -44,7 +44,7 @@ class cPersistent;
 class ModWindow;
 class cSlaveWork;
 class BloodworksConfig;
-class BloodworksCheat;
+class BloodworksCheats;
 
 class Bloodworks : public cGame
 {

@@ -8,8 +8,20 @@
 
 #define blood_size 2048
 
+// #define USE_TEMP_BUFFER
+
 void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
+#ifdef USE_TEMP_BUFFER
+	glBindFramebuffer(GL_FRAMEBUFFER, coral.getTempFrameBuffer());
+
+	glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+#endif
+
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+		GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
 	bloodworks->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
 	cShaderShr shader = defaultShader;
@@ -32,92 +44,119 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	glDisable(GL_TEXTURE_2D);
 	bloodworks->lastShader = nullptr;
 
-	std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
-	while (bodyPart != bodyParts.end())
+	if (bodyParts.size() > 0)
 	{
-		if (bodyPart->toBeRemove)
+		std::vector<BodyPartData*> toRender;
+		std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
+		while (bodyPart != bodyParts.end())
 		{
-			bodyPart++;
-			continue;
-		}
-		float t = (timer.getRenderTime() - bodyPart->time) * 5.0f;
+			if (bodyPart->toBeRemove)
+			{
+				bodyPart++;
+				continue;
+			}
+			float t = (timer.getRenderTime() - bodyPart->time) * 5.0f;
 
-		if (bodyPart->isBlood)
-		{
-			if (t > 1.0f)
+			if (bodyPart->isBlood)
 			{
-				bodyPart->toBeRemove = true;
-			}
-		}
-		else
-		{
-			if (t > 6.1f)
-			{
-				bodyPart->toBeRemove = true;
-			}
-			else if (t > 0.6f)
-			{
-				if (bodyPart->addedBlood == false)
+				if (t > 1.0f)
 				{
-					bodyPart->addedBlood = true;
-					addBlood(bodyPart->pos + bodyPart->moveSpeed * 1.0f + Vec2::fromAngle(randFloat(pi_2)) * randFloat(3.0f), Vec2::zero(), 3.0f + randFloat(5.0f), &bodyPart);
+					bodyPart->toBeRemove = true;
 				}
 			}
+			else
+			{
+				if (t > 1.8f)
+				{
+					bodyPart->toBeRemove = true;
+				}
+				else if (t > 0.6f)
+				{
+					if (bodyPart->addedBlood == false)
+					{
+						bodyPart->addedBlood = true;
+						addBlood(bodyPart->pos + bodyPart->moveSpeed * 1.0f + Vec2::fromAngle(randFloat(pi_2)) * randFloat(3.0f), Vec2::zero(), 3.0f + randFloat(5.0f), &bodyPart);
+					}
+				}
+			}
+
+			if (t >= 1.0f)
+			{
+				t = 1.0;
+			}
+
+			if (bodyPart->isBlood)
+			{
+				float scaleFactor = 0.5f + t * 0.5f;
+				Mat3 mat = Mat3::scaleMatrix(scaleFactor * bodyPart->size.x, scaleFactor * bodyPart->size.y).rotateBy(bodyPart->rotation).translateBy(bodyPart->pos + bodyPart->moveSpeed * t);
+				bodyPart->renderable->setWorldMatrix(mat);
+			}
+			else
+			{
+				float rotateAngle = bodyPart->rotation + t * bodyPart->rotateSpeed;
+				Mat3 frame = Mat3::scaleMatrix(bodyPart->size * 1.0f)
+					.rotateBy(rotateAngle)
+					.translateBy(bodyPart->pos + bodyPart->moveSpeed * t);
+				bodyPart->renderable->setWorldMatrix(frame);
+			}
+
+			if (bodyPart->toBeRemove)
+			{
+				toRender.push_back(&(*bodyPart));
+			}
+
+			bodyPart->renderable->render(true, Mat3::identity(), crop);
+
+			bodyPart++;
 		}
 
-		if (t >= 1.0f)
-		{
-			t = 1.0;
-		}
-
-		if (bodyPart->isBlood)
-		{
-			float scaleFactor = 0.5f + t * 0.5f;
-			Mat3 mat = Mat3::scaleMatrix(scaleFactor * bodyPart->size.x, scaleFactor * bodyPart->size.y).rotateBy(bodyPart->rotation).translateBy(bodyPart->pos + bodyPart->moveSpeed * t);
-			bodyPart->renderable->setWorldMatrix(mat);
-		}
-		else
-		{
-			float rotateAngle = bodyPart->rotation + t * bodyPart->rotateSpeed;
-			Mat3 frame = Mat3::scaleMatrix(bodyPart->size * 1.0f)
-				.rotateBy(rotateAngle)
-				.translateBy(bodyPart->pos + bodyPart->moveSpeed * t);
-			bodyPart->renderable->setWorldMatrix(frame);
-		}
-
-		if (bodyPart->toBeRemove)
+		if (toRender.size())
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-			cShaderShr shader = bodyPart->renderable->getShader();
 
 			Vec2 windowSize = bloodworks->getScreenDimensions().toVec();
 			float halfWidth = windowSize.w * 0.5f;
 			float halfHeight = windowSize.h * 0.5f;
 
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-				GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			shader->begin();
-			shader->setViewMatrix(
-				Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
-				.scaleBy(1.0f / blood_size)
-				.translateBy(0.5f)
-				.scaleBy(2.0f));
-			bloodworks->lastShader = shader;
-			bloodworks->lastAllignment = bodyPart->renderable->getAlignment();
-
 			glViewport(0, 0, blood_size, blood_size);
-			bodyPart->renderable->render(true, Mat3::identity(), crop);
-			bloodworks->resetToBackBuffer();
-			bodyPart->renderable->setVisible(false);
+
+			for (auto& bodyPart : toRender)
+			{
+				bloodworks->lastShader = nullptr;
+				cShaderShr shader = bodyPart->renderable->getShader();
+				shader->begin();
+
+				shader->setViewMatrix(
+					Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
+					.scaleBy(1.0f / blood_size)
+					.translateBy(0.5f)
+					.scaleBy(2.0f));
+
+				bloodworks->lastShader = shader;
+				bloodworks->lastAllignment = bodyPart->renderable->getAlignment();
+
+				bodyPart->renderable->render(true, Mat3::identity(), crop);
+				bodyPart->renderable->setVisible(false);
+			}
 
 			glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			bloodworks->lastShader = nullptr;
 		}
-		bodyPart->renderable->render(true, Mat3::identity(), crop);
-		bodyPart++;
+		bloodworks->resetToBackBuffer();
 	}
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+#ifdef USE_TEMP_BUFFER
+	glBindTexture(GL_TEXTURE_2D, coral.getTempFrameBufferTexture());
+	defaultPostProcessShader->begin();
+	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+
+	defaultPostProcessShader->bindUV(0, 0);
+	defaultPostProcessShader->setTexture0(0);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#endif
+	bloodworks->lastShader = nullptr;
 }
 
 void BloodRenderable::tick()
@@ -127,27 +166,9 @@ void BloodRenderable::tick()
 	{
 		if (bodyPart->toBeRemove)
 		{
-			if (bodyPart->isBlood)
-			{
-				SAFE_DELETE(bodyPart->renderable);
-				bodyPart = bodyParts.erase(bodyPart);
-				continue;
-			}
-			else
-			{
-				Vec4 c = bodyPart->renderable->getColor();
-				c.a -= timer.getDt() * 1.0f;
-				if (c.a < 0.0f)
-				{
-					SAFE_DELETE(bodyPart->renderable);
-					bodyPart = bodyParts.erase(bodyPart);
-					continue;
-				}
-				else
-				{
-					bodyPart->renderable->setColor(c);
-				}
-			}
+			SAFE_DELETE(bodyPart->renderable);
+			bodyPart = bodyParts.erase(bodyPart);
+			continue;
 		}
 		bodyPart++;
 	}
@@ -165,8 +186,7 @@ void BloodRenderable::reset()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
-	Vec4 color = Vec4::fromColor(0xFF660000);
-	glClearColor(color.r, color.g, color.b, 0.0f);
+	glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	game->resetToBackBuffer();
@@ -175,6 +195,7 @@ void BloodRenderable::reset()
 BloodRenderable::BloodRenderable(Bloodworks *bloodworks) : cRenderable((cGame*)bloodworks)
 {
 	this->bloodworks = bloodworks;
+	bloodColor = Vec4::fromColor(0xFF660000);
 }
 
 BloodRenderable::~BloodRenderable()
@@ -188,6 +209,7 @@ BloodRenderable::~BloodRenderable()
 	bloodShader = nullptr;
 	defaultShader = nullptr;
 	bloodBg = nullptr;
+	glDeleteTextures(1, &frameBufferTexture);
 	glDeleteFramebuffers(1, &frameBuffer);
 }
 
@@ -204,6 +226,8 @@ void BloodRenderable::init()
 	
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
+	defaultPostProcessShader = resources.getShader("resources/post_process/default.vs", "resources/post_process/default.ps");
+
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
@@ -233,7 +257,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, cachedBloods[randInt((int)cachedBloods.size())]->getName(), "resources/blood/blood");
 	renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(8.0f, 14.0f)).translateBy(pos));
 	renderable->setTexture(1, "resources/blood/blood_bg.png");
-	renderable->setColor(Vec4::fromColor(0xFF660000));
+	renderable->setColor(bloodColor);
 
 	BodyPartData data;
 	data.isBlood = true;
@@ -250,7 +274,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 
 	if (insertPos)
 	{
-		bodyParts.insert(*insertPos, data);
+		bodyParts.insert(bodyParts.begin(), data);
 	}
 	else
 	{
