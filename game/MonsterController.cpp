@@ -7,13 +7,18 @@
 #include "Bullet.h"
 #include "cAnimatedRenderable.h"
 #include "MonsterTemplate.h"
-
+#include "Gun.h"
 
 MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
 	grid.init(bloodworks->getMapMin() - 500.0f, bloodworks->getMapSize() + 1000.0f, Vec2(50.0f));
+
+	customMonsterTick = lua["customMonsterOnTick"];
+	customMonsterOnHit = lua["customMonsterOnHit"];
+	customMonsterShouldHit = lua["customMonsterShouldHit"];
+	customMonsterOnKill = lua["customMonsterOnKill"];
 }
 
 void MonsterController::tick()
@@ -60,6 +65,7 @@ void MonsterController::tick()
 	{
 		Monster* monster = monsters[i];
 		monster->tick();
+		customMonsterTick(monster);
 		if (bloodworks->isCoorOutside(monster->position, -20.0f) == false)
 		{
 			grid.relocate(monster);
@@ -505,6 +511,21 @@ void MonsterController::relocateMonster(Monster* monster)
 void MonsterController::drawDebug()
 {
 	grid.drawDebug();
+}
+
+void MonsterController::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+{
+	customMonsterOnHit(monster, damage, dir, args);
+}
+
+bool MonsterController::shouldHit(Monster* monster, Gun* gun, Bullet *bullet)
+{
+	return customMonsterShouldHit(monster, gun, bullet);
+}
+
+void MonsterController::onMonsterDied(Monster* monster)
+{
+	customMonsterOnKill(monster);
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

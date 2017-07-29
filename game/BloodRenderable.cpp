@@ -35,6 +35,11 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
 	while (bodyPart != bodyParts.end())
 	{
+		if (bodyPart->toBeRemove)
+		{
+			bodyPart++;
+			continue;
+		}
 		float t = (timer.getRenderTime() - bodyPart->time) * 5.0f;
 
 		if (bodyPart->isBlood)
@@ -46,7 +51,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 		}
 		else
 		{
-			if (t > 2.1f)
+			if (t > 6.1f)
 			{
 				bodyPart->toBeRemove = true;
 			}
@@ -79,7 +84,6 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 				.translateBy(bodyPart->pos + bodyPart->moveSpeed * t);
 			bodyPart->renderable->setWorldMatrix(frame);
 		}
-
 
 		if (bodyPart->toBeRemove)
 		{

@@ -1,4 +1,4 @@
-#include "BloodworksDebug.h"
+#include "BloodworksCheat.h"
 #include "cGlobals.h"
 #include "Bloodworks.h"
 #include "MonsterController.h"
@@ -17,11 +17,11 @@
 #include "MissionController.h"
 #include <sstream>
 
-#ifdef HAS_BLOODWORKS_DEBUG
+#ifdef HAS_BLOODWORKS_CHEAT
 
-BloodworksDebug* BloodworksDebug::instance = nullptr;
+BloodworksCheat* BloodworksCheat::instance = nullptr;
 
-BloodworksDebug::BloodworksDebug(Bloodworks *bloodworks)
+BloodworksCheat::BloodworksCheat(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	instance = this;
@@ -30,6 +30,7 @@ BloodworksDebug::BloodworksDebug(Bloodworks *bloodworks)
 	lastSetTickTime = lastSetRenderTime = 0.0f;
 	tickCount = renderCount = 0;
 	moveMonsters = true;
+	slowdownBuff = bloodworks->getGlobalUniqueId();
 #ifdef DEBUG
 	showFPS = true;
 #else
@@ -37,7 +38,7 @@ BloodworksDebug::BloodworksDebug(Bloodworks *bloodworks)
 #endif
 }
 
-void BloodworksDebug::onTick()
+void BloodworksCheat::onTick()
 {
 	const std::vector<Perk*>& perks = bloodworks->getPerks();
 	const std::vector<Bonus*>& bonuses = bloodworks->getBonuses();
@@ -175,12 +176,17 @@ void BloodworksDebug::onTick()
 
 	if (input.isKeyPressed(key_z))
 	{
-		bloodworks->setSlowdown(0.1f);
+		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().addBuff(slowdownBuff, 0.1f, BuffFloat::multiply_buff);
 	}
 	if (input.isKeyPressed(key_x))
 	{
-		bloodworks->setSlowdown(1.0f);
+		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
 	}
+	if (input.isKeyPressed(key_c))
+	{
+		bloodworks->getBloodRenderable()->reset();
+	}
+
 
 	if (input.isKeyDown(key_f1))
 	{
@@ -213,7 +219,7 @@ void BloodworksDebug::onTick()
 	missionController->onDebugTick();
 }
 
-void BloodworksDebug::onMonsterTick(Monster *monster)
+void BloodworksCheat::onMonsterTick(Monster *monster)
 {
 	if (moveMonsters == false)
 	{
@@ -229,7 +235,7 @@ void BloodworksDebug::onMonsterTick(Monster *monster)
 	}
 }
 
-void BloodworksDebug::onRender()
+void BloodworksCheat::onRender()
 {
 	if (showFPS)
 	{
@@ -246,7 +252,7 @@ void BloodworksDebug::onRender()
 	}
 }
 
-void BloodworksDebug::onLoadMission()
+void BloodworksCheat::onLoadMission()
 {
 	const std::vector<Gun*>& guns = bloodworks->getGuns();
 	Player *player = bloodworks->getPlayer();
@@ -260,7 +266,7 @@ void BloodworksDebug::onLoadMission()
 	}
 }
 
-void BloodworksDebug::onMonsterPreTick(Monster* monster)
+void BloodworksCheat::onMonsterPreTick(Monster* monster)
 {
 	if (monster->getDebug())
 	{
@@ -279,7 +285,7 @@ void BloodworksDebug::onMonsterPreTick(Monster* monster)
 	}
 }
 
-void BloodworksDebug::onInit()
+void BloodworksCheat::onInit()
 {
 	const bool testGame = true;
 	if (coral.isDebuggerPresent())

@@ -41,6 +41,7 @@ Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& 
 	onPlayerDiedFunc = scriptTable["onPlayerDied"];
 	onPlayerPickedGunFunc = scriptTable["onPlayerPickedGun"];
 	onPlayerPickedBonusFunc = scriptTable["onPlayerPickedBonus"];
+	onMonsterDamagedFunc = scriptTable["onMonsterDamaged"];
 
 	reset();
 }
@@ -69,6 +70,14 @@ void Perk::reset()
 		scriptTable["reset"]();
 	}
 	level = 0;
+}
+
+void Perk::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+{
+	if (onMonsterDamagedFunc)
+	{
+		onMonsterDamagedFunc(monster, damage, dir, args);
+	}
 }
 
 void Perk::onTick()
