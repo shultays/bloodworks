@@ -21,9 +21,8 @@ class Coral
 	float lastUpdateTime;
 	bool tickedBeforeRender;
 
-	GLuint tempFrameBuffer[2];
-	GLuint tempFrameBufferTexture[2];
-	GLuint tempFrameBufferTextureRender[2];
+	GLuint tempFrameBuffer[3];
+	GLuint tempFrameBufferTexture[3];
 
 	bool fullScreen;
 	bool lastFullScreen;
@@ -59,5 +58,15 @@ public:
 	cSlaveController* getSlaveController() const
 	{
 		return slaveController;
+	}
+
+	GLuint getTempFrameBuffer() const
+	{
+		return tempFrameBuffer[2];
+	}
+
+	GLuint getTempFrameBufferTexture() const
+	{
+		return tempFrameBufferTexture[2];
 	}
 };

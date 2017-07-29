@@ -20,6 +20,7 @@ class BloodRenderable : public cRenderable
 		Vec2 size;
 		Vec2 moveSpeed;
 
+		Mat3 lastFrame;
 		float rotateSpeed;
 		bool addedBlood;
 		bool toBeRemove;
@@ -34,6 +35,9 @@ class BloodRenderable : public cRenderable
 
 	GLuint frameBuffer;
 	GLuint frameBufferTexture;
+	cShaderShr defaultPostProcessShader;
+
+	Vec4 bloodColor;
 public:
 	BloodRenderable(Bloodworks *bloodworks);
 	~BloodRenderable();
