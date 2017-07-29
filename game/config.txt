@@ -6,5 +6,5 @@ autoOpenLevelupPopup 1
 sensitivity     50
 volume          41
 musicVolume     100
-fullScreen      1
+fullScreen      0
 vSync           1
