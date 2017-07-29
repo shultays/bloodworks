@@ -31,9 +31,6 @@ function Egg.buffStats(monster, min)
 	monster.data.spawnInterval = monster.data.spawnInterval - clamp(min/10)
 end
 
-function Egg.onHit(monster, damage, args)
-end
-
 function Egg.onTick(monster)
     data = monster.data
 	

@@ -48,10 +48,9 @@ function Alien.makeBoss(monster, min)
 	makeBossDefault(monster)
 end
 
-function Alien.onHit(monster, damage, args)
-	StunController.onHit(monster, damage, args)
+function Alien.onHit(monster, damage, dir, args)
+	StunController.onHit(monster, damage, dir, args)
 end
-
 
 function Alien.onTick(monster)
     data = monster.data
