@@ -62,8 +62,8 @@ function Spider.makeBoss(monster, min)
 	makeBossDefault(monster)
 end
 
-function Spider.onHit(monster, damage, args)
-	StunController.onHit(monster, damage, args)
+function Spider.onHit(monster, damage, dir, args)
+	StunController.onHit(monster, damage, dir, args)
 end
 
 function Spider.onTick(monster)
