@@ -109,7 +109,7 @@ void BloodworksCheats::onTick()
 
 	if (input.isKeyPressed(key_3))
 	{
-		std::string s = "Invincibility";
+		std::string s = "CircleFire";
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
@@ -262,7 +262,7 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Pistol")
+		if (gun->getScriptName() == "FlareGun")
 		{
 			player->setGun(gun);
 		}
