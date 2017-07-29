@@ -33,6 +33,7 @@
 #include "cSlave.h"
 #include "BloodworksConfig.h"
 #include "BloodworksCheats.h"
+#include "cTimeProfiler.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -818,6 +819,7 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
+	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksDebug->onTick();
 #endif
