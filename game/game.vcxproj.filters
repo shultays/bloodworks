@@ -198,6 +198,9 @@
     <ClCompile Include="BloodworksCheats.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cTimeProfiler.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -424,6 +427,9 @@
     </ClInclude>
     <ClInclude Include="BloodworksCheats.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="cTimeProfiler.h">
+      <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
