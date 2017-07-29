@@ -12,7 +12,7 @@
 #include "Bullet.h"
 #include "Monster.h"
 #include "BloodworksConfig.h"
-
+#include "cTimeProfiler.h"
 
 MissionController::~MissionController()
 {
@@ -35,6 +35,7 @@ MissionController::MissionController(Bloodworks *bloodworks)
 
 void MissionController::tick()
 {
+	ADD_SCOPED_TIME_PROFILER("MissionController::tick");
 	if (loadedMission == -1)
 	{
 		return;
