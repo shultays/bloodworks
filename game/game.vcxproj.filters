@@ -195,7 +195,7 @@
     <ClCompile Include="BloodworksConfig.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="BloodworksCheat.cpp">
+    <ClCompile Include="BloodworksCheats.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
   </ItemGroup>
@@ -422,7 +422,7 @@
     <ClInclude Include="BloodworksConfig.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BloodworksCheat.h">
+    <ClInclude Include="BloodworksCheats.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

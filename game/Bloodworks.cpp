@@ -32,11 +32,11 @@
 #include "ModWindow.h"
 #include "cSlave.h"
 #include "BloodworksConfig.h"
-#include "BloodworksCheat.h"
+#include "BloodworksCheats.h"
 #include <sstream>
 
-#ifdef HAS_BLOODWORKS_CHEAT
-BloodworksCheat *bloodworksDebug;
+#ifdef HAS_BLOODWORKS_CHEATS
+BloodworksCheats *bloodworksDebug;
 #endif
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
@@ -214,8 +214,8 @@ void Bloodworks::init()
 	coral.setFullScreen(config->getFullScreen());
 	mainMenu->setVisible(true);
 
-#ifdef HAS_BLOODWORKS_CHEAT
-	bloodworksDebug = new BloodworksCheat(this);
+#ifdef HAS_BLOODWORKS_CHEATS
+	bloodworksDebug = new BloodworksCheats(this);
 	bloodworksDebug->onInit();
 #endif
 }
@@ -296,7 +296,7 @@ Bloodworks::~Bloodworks()
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
 
-#ifdef HAS_BLOODWORKS_CHEAT
+#ifdef HAS_BLOODWORKS_CHEATS
 	SAFE_DELETE(bloodworksDebug);
 #endif
 }
@@ -477,7 +477,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 	}
 	missionController->loadMission(mission);
 	player->setVisible(true);
-#ifdef HAS_BLOODWORKS_CHEAT
+#ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksDebug->onLoadMission();
 #endif 
 
@@ -818,7 +818,7 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
-#ifdef HAS_BLOODWORKS_CHEAT
+#ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksDebug->onTick();
 #endif
 
@@ -1013,7 +1013,7 @@ void Bloodworks::tickGameSlowdown()
 
 void Bloodworks::render()
 {
-#ifdef HAS_BLOODWORKS_CHEAT
+#ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksDebug->onRender();
 #endif
 
