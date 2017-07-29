@@ -134,21 +134,21 @@ void Coral::initFrameBuffers()
 {
 	if (tempFrameBuffer[0] != -1)
 	{
-		glDeleteTextures(2, tempFrameBufferTexture);
-		glDeleteFramebuffers(2, tempFrameBuffer);
+		glDeleteTextures(3, tempFrameBufferTexture);
+		glDeleteFramebuffers(3, tempFrameBuffer);
 	}
 
-	glGenFramebuffers(2, tempFrameBuffer);
-	glGenTextures(2, tempFrameBufferTexture);
+	glGenFramebuffers(3, tempFrameBuffer);
+	glGenTextures(3, tempFrameBufferTexture);
 
 	IntVec2 size = game->getScreenDimensions();
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, tempFrameBuffer[i]);
 
 		glBindTexture(GL_TEXTURE_2D, tempFrameBufferTexture[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.w, size.h, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, i < 2 ? GL_RGB : GL_RGBA, size.w, size.h, 0, i < 2 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -196,8 +196,8 @@ void Coral::init()
 
 void Coral::clear()
 {
-	glDeleteTextures(2, tempFrameBufferTexture);
-	glDeleteBuffers(2, tempFrameBuffer);
+	glDeleteTextures(3, tempFrameBufferTexture);
+	glDeleteFramebuffers(3, tempFrameBuffer);
 	glDeleteBuffers(1, &postProcessQuad);
 
 	SAFE_DELETE(soundManager);
