@@ -18,7 +18,6 @@ function CircleFire.onTick(gameObject)
 		local shift = math.floor(gameObject.data.lastShootIndex/10)*0.25
         
         local angle = math.pi * 2.0 * (gameObject.data.lastShootIndex + gameObject.data.i * 10 + shift) / 40
-        
         local bullet = addCustomBullet()
         bullet.damage = math.floor(math.random() * 30.0 + 30)
         bullet.position = gameObject.data.position
