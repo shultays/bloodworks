@@ -6,6 +6,8 @@
 class Monster;
 class Bloodworks;
 class MonsterTemplate;
+class Gun;
+class Bullet;
 
 #include "cGrid.h"
 #include "sol.h"
@@ -23,6 +25,11 @@ class MonsterController
 
 	std::vector<MonsterTemplate*> monsterTemplates;
 	std::unordered_map<std::string, int> monsterTemplateIndices;
+
+	sol::function customMonsterTick;
+	sol::function customMonsterOnHit;
+	sol::function customMonsterOnKill;
+	sol::function customMonsterShouldHit;
 
 	class MonsterHitResult
 	{
@@ -64,4 +71,7 @@ public:
 		return monsterTemplates;
 	}
 	void drawDebug();
+	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
+	bool shouldHit(Monster* monster, Gun* gun, Bullet *bullet);
+	void onMonsterDied(Monster* monster);
 };

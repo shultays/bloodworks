@@ -182,7 +182,7 @@
     <ClCompile Include="Bloodworks.cpp" />
     <ClCompile Include="BloodworksConfig.cpp" />
     <ClCompile Include="BloodworksControls.cpp" />
-    <ClCompile Include="BloodworksDebug.cpp" />
+    <ClCompile Include="BloodworksCheat.cpp" />
     <ClCompile Include="BloodworksLuaWorld.cpp" />
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -243,7 +243,7 @@
     <ClInclude Include="Bloodworks.h" />
     <ClInclude Include="BloodworksConfig.h" />
     <ClInclude Include="BloodworksControls.h" />
-    <ClInclude Include="BloodworksDebug.h" />
+    <ClInclude Include="BloodworksCheat.h" />
     <ClInclude Include="BloodworksLuaWorld.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="BuffFloat.h" />

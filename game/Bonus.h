@@ -35,6 +35,7 @@ class Bonus
 	sol::function onReloadFunc;
 	sol::function onPlayerPickedGunFunc;
 	sol::function onPlayerPickedBonusFunc;
+	sol::function onMonsterDamagedFunc;
 public:
 	Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	void spawnAt(const Vec2& pos);
@@ -67,4 +68,5 @@ public:
 	void setActive(bool active);
 	void onPlayerPickedGun(Gun *gun);
 	void onPlayerPickedBonus(Bonus *bonus, const Vec2& pos);
+	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 };

@@ -32,6 +32,7 @@ class Perk
 	sol::function onPlayerDiedFunc;
 	sol::function onPlayerPickedGunFunc;
 	sol::function onPlayerPickedBonusFunc;
+	sol::function onMonsterDamagedFunc;
 
 	Bloodworks* bloodworks;
 public:
@@ -89,4 +90,5 @@ public:
 	{
 		return hideLevelText == false && maxLevel > 1;
 	}
+	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 };
