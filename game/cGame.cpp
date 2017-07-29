@@ -20,28 +20,6 @@ public:
 
 void cGame::initInternal()
 {
-	cameraPos.setZero();
-	cameraZoom = 1.0f;
-	cameraAngle = 0.0f;
-
-	slowdown = 1.0f;
-
-	postProcessEndLevel = 0xFFFFFFF;
-
-	GLfloat vertexData[] =
-	{
-		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f,  -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-	};
-
-	glGenBuffers(1, &quad);
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-
-	first = new cRootRenderable();
-	first->level = -1;
 	init();
 }
 
@@ -158,6 +136,32 @@ void cGame::renderInternal()
 	debugRenderer.render();
 
 	render();
+}
+
+cGame::cGame()
+{
+	cameraPos.setZero();
+	cameraZoom = 1.0f;
+	cameraAngle = 0.0f;
+
+	slowdown = 1.0f;
+
+	postProcessEndLevel = 0xFFFFFFF;
+
+	GLfloat vertexData[] =
+	{
+		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f,  -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+	};
+
+	glGenBuffers(1, &quad);
+	glBindBuffer(GL_ARRAY_BUFFER, quad);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+	first = new cRootRenderable();
+	first->level = -1;
 }
 
 cGame::~cGame()

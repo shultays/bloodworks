@@ -61,6 +61,8 @@ end
 BurnMonsterObject = {}
 
 function BurnMonsterObject.init(gameobject)
+	gameobject.data.time = 0.3
+	gameobject.data.particletime = 0.01
 end
 
 function BurnMonsterObject.onTick(gameobject)
@@ -81,20 +83,24 @@ function BurnMonsterObject.onTick(gameobject)
 	if data.monster.isDead then
 		gameobject.toBeRemoved = true
 	else
-		local t = 0.0
-		
-		while t < data.monster.bulletRadius do
-			local pos = Vec2.new(0.0, 0.0)
-			local speed = Vec2.new(0.0, 0.0)
-			speed:setAngle(math.random() * math.pi * 2.0)
-			speed = speed * (math.random() * 3.0 + 3.0)
-			pos:setAngle(math.random() * math.pi * 2.0)
-			local r = math.random()
-			r = r * r
-			pos = pos * (data.monster.bulletRadius * r) 
+		gameobject.data.particletime = gameobject.data.particletime - dt
+		while gameobject.data.particletime < 0.0 do
+			gameobject.data.particletime = gameobject.data.particletime + 0.01
+			local t = 0.0
 			
-			data.monster.data.burnParticle:addParticle(data.monster.position + pos, {moveSpeed = data.monster.moveVelocity + speed})
-			t = t + 15
+			while t < data.monster.bulletRadius do
+				local pos = Vec2.new(0.0, 0.0)
+				local speed = Vec2.new(0.0, 0.0)
+				speed:setAngle(math.random() * math.pi * 2.0)
+				speed = speed * (math.random() * 3.0 + 3.0)
+				pos:setAngle(math.random() * math.pi * 2.0)
+				local r = math.random()
+				r = r * r
+				pos = pos * (data.monster.bulletRadius * r) 
+				
+				data.monster.data.burnParticle:addParticle(data.monster.position + pos, {moveSpeed = data.monster.moveVelocity + speed})
+				t = t + 15
+			end
 		end
 	end
 	
