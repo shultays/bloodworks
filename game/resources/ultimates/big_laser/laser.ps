@@ -1,0 +1,34 @@
+uniform sampler2D uTexture0;
+uniform float width1;
+uniform float width2;
+uniform float width3;
+
+varying vec4 vColor;
+varying vec2 vVertexUV;
+varying float curLength;
+uniform float maxRange;
+uniform float time;
+
+varying float xPos;
+
+void main(void) 
+{
+	float t = maxRange - curLength;
+	vec4 color = vColor;
+	if (t < 50.0f)
+	{
+		color.a *= ( t + 20.0) / 70.0;
+	}
+	color.a *= abs(sin((curLength - time * 100) * 0.1)) * 0.3 + 0.6;
+	gl_FragColor = texture2D(uTexture0, vVertexUV) * color;
+	
+	t = curLength - 20.0 + (0.5 - abs(vVertexUV.y - 0.5) * 30.0) * 10.0;
+	if (t < 10.0)
+	{
+		gl_FragColor.a = 0.0;
+	}
+	else if (t < 20)
+	{
+		gl_FragColor.a *= (t - 10.0) / 10.0;
+	}
+}

@@ -229,9 +229,14 @@ cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, 
 	particleData.spawnShift = shift;
 	particleData.lastSpawnPos = pos;
 	particleData.spawnDistance = spawnDistance;
-	bloodworks->addRenderable(particleData.particle, BULLETS - 1);
+	bloodworks->addRenderable(particleData.particle, renderable->getLevel() - 1);
 	particles.push_back(particleData);
 	return particleData.particle;
+}
+
+void Bullet::modifyDrawLevel(int level)
+{
+	renderable->setLevel(renderable->getLevel() + level);
 }
 
 void Bullet::setPosition(const Vec2& pos)
