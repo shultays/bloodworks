@@ -22,6 +22,7 @@
 #include "Bonus.h"
 #include "DropController.h"
 #include "Bonus.h"
+#include "cTimeProfiler.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -604,6 +605,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		}
 	});
 
+
 	lua.new_usertype<MonsterTemplate>("MonsterTemplate",
 		"name", sol::readonly(&MonsterTemplate::name),
 		"experience", sol::readonly(&MonsterTemplate::experience),
@@ -618,6 +620,28 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"scriptArgs", sol::readonly(&MonsterTemplate::scriptArgs)
 	);
 
+#ifdef SHOW_TIMINGS
+	lua.set_function("createSumProfiler",
+		[&](const std::string& name) -> cAccumulatedTimeProfiler&
+	{
+		return Coral::createAccumulatedTimeProfile(name.c_str());
+	});
+
+	lua.set_function("createProfiler",
+		[&](const std::string& name) -> cTimeProfiler
+	{
+		return cTimeProfiler(name.c_str());
+	});
+	lua.new_usertype<cAccumulatedTimeProfiler>("SumProfiler",
+		"start", &cAccumulatedTimeProfiler::start,
+		"stop", &cAccumulatedTimeProfiler::stop
+		);
+
+	lua.new_usertype<cTimeProfiler>("Profiler",
+		"start", &cTimeProfiler::start,
+		"stop", &cTimeProfiler::stop
+		);
+#endif
 
 	lua.new_usertype<Monster>("Monster",
 		"name", &Monster::name,
