@@ -239,6 +239,7 @@
     <ClCompile Include="StackWalker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cAnimationTemplate.h" />
     <ClInclude Include="Array2d.h" />
     <ClInclude Include="BloodRenderable.h" />
     <ClInclude Include="Bloodworks.h" />

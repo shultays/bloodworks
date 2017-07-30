@@ -4,6 +4,8 @@
 #include "json.h"
 #include "DirentHelper.h"
 
+class cAnimationTemplate;
+
 class cAnimatedTexturedQuadRenderable : public cRenderableWithShader
 {
 	struct FrameData
@@ -106,8 +108,7 @@ public:
 private:
 	std::vector<AnimationData> animations;
 
-public:
-	cAnimatedTexturedQuadRenderable(cGame *game, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
+	void init()
 	{
 		defaultAnimation = 0;
 		nextAnimation = 0;
@@ -116,6 +117,18 @@ public:
 		currentAnimationTime = 0.0f;
 		speedMultiplier = 1.0f;
 	}
+public:
+	cAnimatedTexturedQuadRenderable(cGame *game, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
+	{
+		init();
+	}
+
+	cAnimatedTexturedQuadRenderable(cGame *game, const cShaderShr& shader) : cRenderableWithShader(game, shader)
+	{
+		init();
+	}
+
+	void addAnimation(cAnimationTemplate *animationTemplate);
 
 	void setSpeedMultiplier(float speedMultiplier)
 	{
@@ -146,13 +159,14 @@ public:
 		}
 		return -1;
 	}
+
 	void addAnimation(const AnimationData& animation)
 	{
 		animations.push_back(animation);
 		animations[animations.size() - 1].index = (int) animations.size() - 1;
 	}
 
-	void addAnimation(std::vector<AnimationData> animations)
+	void addAnimation(const std::vector<AnimationData>& animations)
 	{
 		for (auto& animation : animations)
 		{
@@ -184,6 +198,11 @@ public:
 	void playAnimation(const AnimationData& animationData, float startTime = 0.0f, int nextAnimation = -1)
 	{
 		playAnimation(animationData.index, startTime, nextAnimation);
+	}
+
+	void playAnimationWithName(const std::string& animationName, float startTime, int nextAnimation)
+	{
+
 	}
 
 	void playAnimation(const std::string& animationName, float startTime = 0.0f, int nextAnimation = -1)
