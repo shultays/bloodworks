@@ -76,8 +76,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\libs\curl\include;C:\libs\soloud\include;C:\libs\luajit51\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\libs\curl\lib;C:\libs\soloud\lib;C:\libs\luajit51\lib;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>C:\libs\curl\include;C:\libs\soloud\include;C:\libs\lua53\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\libs\curl\lib;C:\libs\soloud\lib;C:\libs\lua53\lib;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CustomBuildBeforeTargets>PostBuildEvent</CustomBuildBeforeTargets>
     <TargetName>bloodworks_d</TargetName>
   </PropertyGroup>
@@ -88,8 +88,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\libs\curl\include;C:\libs\soloud\include;C:\libs\luajit51\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\libs\curl\lib;C:\libs\soloud\lib;C:\libs\luajit51\lib;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>C:\libs\curl\include;C:\libs\soloud\include;C:\libs\lua53\include;C:\libs\glew2\include;C:\libs\sdl2image\include;C:\libs\sdl22\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\libs\curl\lib;C:\libs\soloud\lib;C:\libs\lua53\lib;C:\libs\glew2\lib\Release\x64;C:\libs\sdl2image\lib\x64;C:\libs\sdl22\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CustomBuildBeforeTargets>PostBuildEvent</CustomBuildBeforeTargets>
     <TargetName>bloodworks</TargetName>
   </PropertyGroup>
@@ -121,7 +121,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libcurl_a.lib;soloud_static_x64.lib;lua51.lib;opengl32.lib;glew32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl_a.lib;soloud_static_x64.lib;lua.lib;opengl32.lib;glew32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <CustomBuildStep>
@@ -167,7 +167,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libcurl_a.lib;soloud_static_x64.lib;lua51.lib;opengl32.lib;glew32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl_a.lib;soloud_static_x64.lib;lua.lib;opengl32.lib;glew32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <CustomBuildStep>

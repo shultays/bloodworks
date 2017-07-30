@@ -57,7 +57,7 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	group->addRenderable(renderable);
 
 	cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	text->setTextAllignment(TextAlignment::center);
+	text->setTextAlignment(TextAlignment::center);
 	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
 	group->addRenderable(text);
 
@@ -96,7 +96,7 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	group->addRenderable(renderable);
 
 	cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.bonus->getName(), 11);
-	text->setTextAllignment(TextAlignment::center);
+	text->setTextAlignment(TextAlignment::center);
 	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
 	group->addRenderable(text);
 

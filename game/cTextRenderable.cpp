@@ -159,7 +159,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	glDisable(GL_TEXTURE_2D);
 }
 
-void cTextRenderable::setVerticalTextAllignment(VerticalTextAlignment verticalTextAlignment)
+void cTextRenderable::setVerticalTextAlignment(VerticalTextAlignment verticalTextAlignment)
 {
 	this->verticalTextAlignment = verticalTextAlignment;
 }
