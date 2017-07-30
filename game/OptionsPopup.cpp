@@ -47,7 +47,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gameplayTitle->setHoverSpeed(10.0f);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Game-Play", 24.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setTextAllignment(TextAlignment::center);
+	text->setTextAlignment(TextAlignment::center);
 	gameplayTitle->addRenderable(text);
 	optionsGroup->addRenderable(gameplayTitle);
 
@@ -65,8 +65,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	gameplayGroup->addRenderable(text);
 
 	gore = new cTickBox(bloodworks);
@@ -81,8 +81,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	gameplayGroup->addRenderable(text);
 
 	screenShake = new cTickBox(bloodworks);
@@ -97,8 +97,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Lock Crosshair", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	gameplayGroup->addRenderable(text);
 
 	lockCrosshair = new cTickBox(bloodworks);
@@ -113,8 +113,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Auto Open Perk PopUp", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	gameplayGroup->addRenderable(text);
 
 	autoLevelUp = new cTickBox(bloodworks);
@@ -138,7 +138,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	inputTitle->setHoverSpeed(10.0f);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Input", 24.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setTextAllignment(TextAlignment::center);
+	text->setTextAlignment(TextAlignment::center);
 	inputTitle->addRenderable(text);
 	optionsGroup->addRenderable(inputTitle);
 
@@ -153,8 +153,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Sensitivity", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	inputGroup->addRenderable(text);
 
 	sensitivity = new cSlider(bloodworks);
@@ -172,8 +172,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 		text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), key.keyName, fontSize);
 		text->setWorldMatrix(Mat3::translationMatrix(x, y));
-		text->setTextAllignment(TextAlignment::left);
-		text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+		text->setTextAlignment(TextAlignment::left);
+		text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 		inputGroup->addRenderable(text);
 
 		cKeyMapButton *k = new cKeyMapButton(bloodworks);
@@ -197,7 +197,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	audioVideoTitle->setHoverSpeed(10.0f);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Audio-Video", 24.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setTextAllignment(TextAlignment::center);
+	text->setTextAlignment(TextAlignment::center);
 	audioVideoTitle->addRenderable(text);
 	optionsGroup->addRenderable(audioVideoTitle);
 
@@ -211,16 +211,16 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	//text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Resolution", fontSize);
 	//text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	//text->setTextAllignment(TextAlignment::left);
-	//text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	//text->setTextAlignment(TextAlignment::left);
+	//text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	//audioVideoGroup->addRenderable(text);
 	//
 	//y -= rowShift;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Full Screen", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	audioVideoGroup->addRenderable(text);
 
 	fullScreen = new cTickBox(bloodworks);
@@ -235,8 +235,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "V-Sync", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	audioVideoGroup->addRenderable(text);
 
 	vsync = new cTickBox(bloodworks);
@@ -251,8 +251,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Volume", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	audioVideoGroup->addRenderable(text);
 
 	volume = new cSlider(bloodworks);
@@ -265,8 +265,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Music", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAllignment(TextAlignment::left);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	audioVideoGroup->addRenderable(text);
 
 	musicVolume = new cSlider(bloodworks);

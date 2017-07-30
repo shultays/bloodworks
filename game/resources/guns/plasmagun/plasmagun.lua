@@ -37,9 +37,8 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 		gameObject.data.fadeOutDuration = 0.3
 		gameObject:setLevel(RenderableLevel.monsters + 5)
 		gameObject.data.renderable = gameObject:addTexture(PlasmaGun.basePath .. "bullet.png", "~/resources/default")
-		gameObject.data.renderable.alignment = RenderableAlignment.world
-		gameObject.data.renderable.textureSize = Vec2.new(6.0, 6.0)
-		gameObject.data.renderable:update()
+		gameObject.data.renderable:setAlignment(RenderableAlignment.world)
+		gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(6.0, 6.0))
 		if oldGameObjectPos ~= nil then
 			gameObject:setPosition(m.position)
 			local gameObject2 = addGameObject("FadeOutImage")
@@ -49,12 +48,14 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 			gameObject2.data.fadeOutDuration = 0.3
 			gameObject2:setLevel(RenderableLevel.monsters + 4)
 			gameObject2.data.renderable = gameObject2:addTexture(PlasmaGun.basePath .. "line.png", "~/resources/default")
-			gameObject2.data.renderable.alignment = RenderableAlignment.world
-			gameObject2.data.renderable.textureSize = Vec2.new(1.0, 3.0)
-			gameObject2.data.renderable:update()
-			gameObject2:setPosition( (m.position + oldGameObjectPos) * 0.5)
-			gameObject2:setRotation( -(m.position - oldGameObjectPos):getAngle())
-			gameObject2:setScale( Vec2:new((m.position - oldGameObjectPos):length() * 0.5 - 3, 1.0))
+			
+			gameObject2.data.renderable:setAlignment(RenderableAlignment.world)
+			gameObject2.data.renderable:setWorldMatrix(Mat3.from(
+			(m.position + oldGameObjectPos) * 0.5,
+			Vec2:new((m.position - oldGameObjectPos):length() * 0.5 - 3, 3.0),
+			 -(m.position - oldGameObjectPos):getAngle()
+			))
+			
 			
 			local args = {doNotStun = true}
 			m:doDamageWithArgs(10 + math.floor(10 * math.random()), (m.position - oldGameObjectPos):normalized(), args)

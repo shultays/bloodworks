@@ -164,7 +164,7 @@ void cDebugRenderable::render()
 		textRenderable->setText(textData.text);
 		textRenderable->setTextColor(textData.color);
 		textRenderable->setTextSize(textData.size);
-		textRenderable->setTextAllignment(textData.textAlignment);
+		textRenderable->setTextAlignment(textData.textAlignment);
 		textRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(textData.pos.x, textData.pos.y)));
 		textRenderable->setAlignment((RenderableAlignment)textData.alignment);
 		textRenderable->render(true, Mat3::identity(), Rect::invalid());

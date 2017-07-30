@@ -68,8 +68,8 @@ public:
 	void removeText(int id);
 	void removeLine(int id);
 
-	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
-	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment allignment = (RenderableAlignment)0);
+	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
+	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
 
 	int addLine(int id, const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
 	int addLine(const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));

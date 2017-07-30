@@ -52,7 +52,7 @@ protected:
 public:
 	cGame();
 	cShaderShr lastShader;
-	RenderableAlignment lastAllignment;
+	RenderableAlignment lastAlignment;
 
 	virtual void init() {}
 	virtual void render() {}
