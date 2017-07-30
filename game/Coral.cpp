@@ -8,6 +8,7 @@
 #include "cSoundManager.h"
 #include "cSlave.h"
 #include "cPackHelper.h"
+#include "cTimeProfiler.h"
 
 #define CURL_STATICLIB 
 #include <curl/curl.h>
@@ -19,7 +20,10 @@ GLuint postProcessQuad;
 
 extern SDL_Window *mainWindow;
 
-#include "cTimeProfiler.h"
+#ifdef SHOW_TIMINGS
+cAccumulatedTimeProfiler profilers[512];
+int profilerCount = 0;
+#endif
 
 Coral::Coral()
 {
@@ -48,14 +52,21 @@ void Coral::tick()
 		}
 	}
 	{
-		ADD_SCOPED_TIME_PROFILER("frame");
+		ADD_SCOPED_TIME_PROFILER("======== frame ========");
 
 		float slowdown = game->getSlowdown();
 		float t;
 		int maxTick = 4;
 		while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval && maxTick --> 0)
 		{
-			ADD_SCOPED_TIME_PROFILER("tick");
+			ADD_SCOPED_TIME_PROFILER(">>>>  tick  <<<<");
+
+#ifdef SHOW_TIMINGS
+			for (int i = 0; i < profilerCount; i++)
+			{
+				profilers[i].reset();
+			}
+#endif
 			timer.currentTime = update_interval * slowdown + timer.currentTime;
 			timer.dt = update_interval * slowdown;
 			timer.realDt = update_interval;
@@ -74,11 +85,17 @@ void Coral::tick()
 			input.tick();
 			mapper.check();
 
+#ifdef SHOW_TIMINGS
+			for (int i = 0; i < profilerCount; i++)
+			{
+				profilers[i].printResult();
+			}
+#endif
 		}
 
 		if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
 		{
-			ADD_SCOPED_TIME_PROFILER("render");
+			ADD_SCOPED_TIME_PROFILER(">>>> render <<<<");
 			if (tickedBeforeRender)
 			{
 				tickedBeforeRender = false;
@@ -141,6 +158,17 @@ bool Coral::isDebuggerPresent()
 	return IsDebuggerPresent() != 0;
 #endif
 	return false;
+}
+
+cAccumulatedTimeProfiler& Coral::createAccumulatedTimeProfile(const char *name)
+{
+#ifdef SHOW_TIMINGS
+	profilers[profilerCount] = cAccumulatedTimeProfiler(name);
+	return profilers[profilerCount++];
+#else
+	static cAccumulatedTimeProfiler dummy;
+	return dummy;
+#endif
 }
 
 void Coral::initFrameBuffers()
