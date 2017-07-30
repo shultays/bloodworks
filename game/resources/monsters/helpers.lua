@@ -52,8 +52,8 @@ function MeleeHitImage.build(monster)
 	local gameObject =  addGameObject("MeleeHitImage")
 	gameObject.data.startTime = time
 	gameObject.data.renderable = gameObject:addTexture("~/resources/monsters/melee_hit.png", "~/resources/default")
+	gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(20.0, 20.0))
 	gameObject:setPosition(player.position)
-	gameObject:setScale(Vec2.new(0.35, 0.35))
 	gameObject:setRotation(-math.pi * 0.5 - monster.moveAngle)
 end
 
@@ -74,9 +74,7 @@ function MeleeHitImage.onTick(gameObject)
 			alpha = 1.0
 		end
 	end
-	local a =  math.floor(255 * alpha)
-	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
-	gameObject.data.renderable:update()
+	gameObject.data.renderable:setColor(Vec4.new(1.0, 1.0, 1.0, alpha))
 end
 
 function MeleeHitImage.clear(monster)

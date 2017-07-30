@@ -8,7 +8,7 @@
 
 #define blood_size 2048
 
-// #define USE_TEMP_BUFFER
+//#define USE_TEMP_BUFFER
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
@@ -133,7 +133,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 					.scaleBy(2.0f));
 
 				bloodworks->lastShader = shader;
-				bloodworks->lastAllignment = bodyPart->renderable->getAlignment();
+				bloodworks->lastAlignment = bodyPart->renderable->getAlignment();
 
 				bodyPart->renderable->render(true, Mat3::identity(), crop);
 				bodyPart->renderable->setVisible(false);
@@ -148,6 +148,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 #ifdef USE_TEMP_BUFFER
+	bloodworks->resetToBackBuffer();
 	glBindTexture(GL_TEXTURE_2D, coral.getTempFrameBufferTexture());
 	defaultPostProcessShader->begin();
 	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
@@ -220,9 +221,9 @@ void BloodRenderable::init()
 	{
 		std::stringstream ss;
 		ss << "resources/blood/blood" << i << ".png";
-		cachedBloods.push_back(resources.getTexture(ss.str()));
+		cachedBloods.push_back(resources.getTexture(ss.str(), true));
 	}
-	bloodBg = resources.getTexture("resources/blood/blood_bg.png");
+	bloodBg = resources.getTexture("resources/blood/blood_bg.png", true);
 	
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
@@ -254,9 +255,9 @@ void BloodRenderable::init()
 
 void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float size, std::list<BodyPartData>::iterator* insertPos)
 {
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, cachedBloods[randInt((int)cachedBloods.size())]->getName(), "resources/blood/blood");
+	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, cachedBloods[randInt((int)cachedBloods.size())], "resources/blood/blood");
 	renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(8.0f, 14.0f)).translateBy(pos));
-	renderable->setTexture(1, "resources/blood/blood_bg.png");
+	renderable->setTexture(1, bloodBg);
 	renderable->setColor(bloodColor);
 
 	BodyPartData data;

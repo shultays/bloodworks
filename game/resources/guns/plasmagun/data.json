@@ -6,7 +6,7 @@
   "bulletSize" : [6.0, 6.0],
   "bulletRadius" : 5.0,
   "bulletSpeed" : 550.0,
-  "bulletDamage" : [30, 70],
+  "bulletDamage" : [50, 70],
   
   "maxAmmo" : 12,
   "reloadTime" : 2.5,
