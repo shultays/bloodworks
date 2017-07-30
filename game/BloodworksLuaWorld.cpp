@@ -24,6 +24,8 @@
 #include "Bonus.h"
 #include "cTimeProfiler.h"
 #include "cAnimatedRenderable.h"
+#include "cTextRenderable.h"
+#include "cTexturedQuadRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -119,6 +121,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::division, [](const Vec4& a, float b) { return a / b; },
 		sol::meta_function::unary_minus, [](const Vec4& a) { return -a; },
 
+		"fromColor", [](unsigned int color) { return Vec4::fromColor(color); },
 
 		"normalize", [](Vec4& a) { a.normalize(); },
 		"normalized", [](const Vec4& a) { return a.normalized(); },
@@ -133,14 +136,19 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	);
 
 	lua.new_usertype<Mat3>("Mat3",
-		"fromPosition", [](const Vec2& pos) { return Mat3::translationMatrix(pos); },
+		sol::meta_function::multiplication, [](const Mat3& a, const Mat3& b) { return a * b; },
+		"fromScale", [](float x, float y) { return Mat3::scaleMatrix(x, y); },
+		"fromRotation", [](float rotation) { return Mat3::rotationMatrix(rotation); },
+		"fromPosition", [](float x, float y) { return Mat3::translationMatrix(x, y); },
 		"fromPositionAndScale", [](const Vec2& pos, const Vec2& scale) { return Mat3::scaleMatrix(scale).translateBy(pos); },
+		"fromScaleAndRotation", [](const Vec2& scale, float rotation) { return Mat3::scaleMatrix(scale).rotateBy(rotation); },
+		"fromPositionAndRotation", [](const Vec2& pos, float rotation) { return Mat3::rotationMatrix(rotation).translateBy(pos); },
 		"from", [](const Vec2& pos, const Vec2& scale, float rotation) { return Mat3::scaleMatrix(scale).rotateBy(rotation).translateBy(pos); }
 	);
 
 	lua.new_usertype<cRenderable>("Renderable",
 		"setLevel", &cRenderable::setLevel,
-		"setAllignment", &cRenderable::setAlignment,
+		"setAlignment", &cRenderable::setAlignment,
 		"setVisible", &cRenderable::setVisible,
 		"setColor", &cRenderable::setColor,
 		"setWorldMatrix", &cRenderable::setWorldMatrix
@@ -148,7 +156,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 	lua.new_usertype<LaserRenderable>("Laser",
 		"setLevel", &LaserRenderable::setLevel,
-		"setAllignment", &LaserRenderable::setAlignment,
+		"setAlignment", &LaserRenderable::setAlignment,
 		"setVisible", &LaserRenderable::setVisible,
 		"setColor", &LaserRenderable::setColor,
 		"setLaserData", &LaserRenderable::setLaserData,
@@ -163,9 +171,42 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addUniformVec4", &LaserRenderable::addUniformVec4
 		);
 
+
+	lua.new_usertype<cTextRenderable>("TextRenderable",
+		"setLevel", &cTextRenderable::setLevel,
+		"setAlignment", &cTextRenderable::setAlignment,
+		"setVisible", &cTextRenderable::setVisible,
+		"setColor", &cTextRenderable::setColor,
+		"setWorldMatrix", &cTextRenderable::setWorldMatrix,
+		"setText", &cTextRenderable::setText,
+		"setVerticalTextAlignment", &cTextRenderable::setVerticalTextAlignment,
+		"setTextAlignment", &cTextRenderable::setTextAlignment,
+		"setTextSize", &cTextRenderable::setTextSize,
+		"setMaxLength", &cTextRenderable::setMaxLength,
+		"setMaxLineCount", &cTextRenderable::setMaxLineCount
+		);
+
+	lua.new_usertype<cTexturedQuadRenderable>("TextureRenderable",
+		"setLevel", &cTexturedQuadRenderable::setLevel,
+		"setAlignment", &cTexturedQuadRenderable::setAlignment,
+		"setVisible", &cTexturedQuadRenderable::setVisible,
+		"setColor", &cTexturedQuadRenderable::setColor,
+		"setWorldMatrix", &cTexturedQuadRenderable::setWorldMatrix
+		);
+
+	lua.new_usertype<cAnimatedTexturedQuadRenderable>("Animation",
+		"setLevel", &cAnimatedTexturedQuadRenderable::setLevel,
+		"setAlignment", &cAnimatedTexturedQuadRenderable::setAlignment,
+		"setVisible", &cAnimatedTexturedQuadRenderable::setVisible,
+		"setColor", &cAnimatedTexturedQuadRenderable::setColor,
+		"setWorldMatrix", &cAnimatedTexturedQuadRenderable::setWorldMatrix,
+		"playAnimation", &cAnimatedTexturedQuadRenderable::playAnimationWithName
+		);
+
+
 	lua.new_usertype<cParticle>("Particle",
 		"setLevel", &cParticle::setLevel,
-		"setAllignment", &cParticle::setAlignment,
+		"setAlignment", &cParticle::setAlignment,
 		"setVisible", &cParticle::setVisible,
 		"setColor", &cParticle::setColor,
 		"setWorldMatrix", &cParticle::setWorldMatrix,
@@ -725,14 +766,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 
-	lua.new_usertype<cAnimatedTexturedQuadRenderable>("Animation",
-		"setLevel", &cAnimatedTexturedQuadRenderable::setLevel,
-		"setAllignment", &cAnimatedTexturedQuadRenderable::setAlignment,
-		"setVisible", &cAnimatedTexturedQuadRenderable::setVisible,
-		"setColor", &cAnimatedTexturedQuadRenderable::setColor,
-		"setWorldMatrix", &cAnimatedTexturedQuadRenderable::setWorldMatrix,
-		"playAnimation", &cAnimatedTexturedQuadRenderable::playAnimationWithName
-		);
 	lua.new_usertype<GameObject>("GameObject",
 		"id", sol::readonly(&GameObject::id),
 
@@ -744,8 +777,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addParticle", &GameObject::addParticle,
 		"addAnimation", &GameObject::addAnimation,
 
-		"removeRenderable", &GameObject::removeRenderable, 
-		"getRenderable", &GameObject::getRenderable,
+		"removeAnimation", &GameObject::removeAnimation,
+		"removeParticle", &GameObject::removeParticle,
+		"removeText", &GameObject::removeText,
+		"removeTexture", &GameObject::removeTexture,
+
 
 		"setPosition", &GameObject::setPosition,
 		"setRotation", &GameObject::setRotation,
@@ -759,18 +795,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setAlignment", &GameObject::setAlignment
 		);
 
-
-	lua.new_usertype<GameObject::RenderableData>("RenderableData",
-		"id", &GameObject::RenderableData::id,
-		"position", &GameObject::RenderableData::pos,
-		"rotation", &GameObject::RenderableData::rotation,
-		"textureSize", &GameObject::RenderableData::textureSize,
-		"textSize", &GameObject::RenderableData::textSize,
-		"color", &GameObject::RenderableData::color,
-		"update", &GameObject::RenderableData::update,
-		"alignment", &GameObject::RenderableData::alignment,
-		"textAlignment", &GameObject::RenderableData::textAlignment
-		);
 
 	lua.new_usertype<Player>("Player",
 		"position", &Player::pos,
