@@ -34,6 +34,7 @@
 #include "BloodworksConfig.h"
 #include "BloodworksCheats.h"
 #include "cTimeProfiler.h"
+#include "cAnimationTemplate.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -91,15 +92,17 @@ void Bloodworks::init()
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
 
-	bg = new cTexturedQuadRenderable(this, "resources/bg.png", "resources/default");
+	bg = new cTexturedQuadRenderable(this, "", "resources/default");
+	bg->setTexture(resources.getTexture("resources/bg.png", true));
 	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
 	bg->setShader(shader);
 	bg->setUniform(uvBegin, Vec2(0.0f));
 	bg->setUniform(uvSize, Vec2(4.0f));
 	addRenderable(bg, BACKGROUND);
 
+	cTextureShr fgBlack = resources.getTexture("resources/fg_black.png", true);
 	cTexturedQuadRenderable *fg;
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapBegin.x, 0.0f));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.0f, 0.5f));
@@ -108,7 +111,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, mapSize.y * 0.5f - 40.0f).translateBy(mapEnd.x, 0.0f));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.8f, 0.5f));
@@ -117,7 +120,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapBegin.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.5f, 0.8f));
@@ -125,7 +128,7 @@ void Bloodworks::init()
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(mapSize.x * 0.5f - 40.0f, 40.0f).translateBy(0.0f, mapEnd.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.5f, 0.0f));
@@ -134,7 +137,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapBegin.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.0f, 0.8f));
@@ -143,7 +146,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapBegin.x, mapEnd.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.0f, 0.0f));
@@ -152,7 +155,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapBegin.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.8f, 0.8f));
@@ -161,7 +164,7 @@ void Bloodworks::init()
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/fg_black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, fgBlack, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(40.0f, 40.0f).translateBy(mapEnd.x, mapEnd.y));
 	fg->setShader(shader);
 	fg->setUniform(uvBegin, Vec2(0.8f, 0.0f));
@@ -169,23 +172,25 @@ void Bloodworks::init()
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
-	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	cTextureShr black = resources.getTexture("resources/black.png", true);
+
+	fg = new cTexturedQuadRenderable(this, black, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f, 600.0f + mapSize.y).translateBy(mapBegin.x - 640.0f, 0.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
-	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, black, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f, 600.0f + mapSize.y).translateBy(mapEnd.x + 640.0f, 0.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
 
-	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, black, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f + mapSize.x, 600.0f).translateBy(0.0f, mapBegin.y - 640.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
 
-	fg = new cTexturedQuadRenderable(this, "resources/black.png", "resources/default");
+	fg = new cTexturedQuadRenderable(this, black, "resources/default");
 	fg->setWorldMatrix(Mat3::scaleMatrix(600.0f + mapSize.x, 600.0f).translateBy(0.0f, mapEnd.y + 640.0f));
 	addRenderable(fg, FOREGROUND);
 	fgs.push_back(fg);
@@ -243,6 +248,11 @@ Bloodworks::Bloodworks()
 
 Bloodworks::~Bloodworks()
 {
+	for (auto& animation : animationTemplates)
+	{
+		SAFE_DELETE(animation.second);
+	}
+	animationTemplates.clear();
 	for (auto& particle : particles)
 	{
 		SAFE_DELETE(particle.second);
@@ -711,6 +721,11 @@ void Bloodworks::loadMod(const std::string& path)
 			else if (type == "mission")
 			{
 				missionController->addMission(j, f);
+			}
+			else if (type == "animation_template")
+			{
+				cAnimationTemplate *animation = new cAnimationTemplate(j, f);
+				animationTemplates[animation->getName()] = animation;
 			}
 		}
 	}

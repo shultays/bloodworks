@@ -74,3 +74,12 @@ cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const std::string&
 	}
 }
 
+cTexturedQuadRenderable::cTexturedQuadRenderable(cGame *game, const cTextureShr& texture, const std::string& shaderPath) : cRenderableWithShader(game, shaderPath)
+{
+	setTexture(texture);
+	if (this->texture[0] != nullptr)
+	{
+		setWorldMatrix(Mat3::translationMatrix(this->texture[0]->getDimensions().toVec()));
+	}
+}
+

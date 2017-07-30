@@ -1,0 +1,15 @@
+{
+  "type" : "gun",
+  "name": "Banana Bomb",
+  "icon" : "icon.png",
+  
+  "scriptFile" : "banana_bomb.lua",
+  "scriptName" : "BananaBomb",
+  
+  "maxAmmo" : 1,
+  "reloadTime" : 4.5,
+  
+  "ultimate" : true,
+  
+  "showShootAnimation" : false
+}
