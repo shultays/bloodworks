@@ -1,6 +1,6 @@
 {
   "type" : "gun",
-  "name": "Big Laser",
+  "name": "Gluon Gun",
   "icon" : "icon.png",
   "bulletTexture" : "laser.png",
   "bulletSize" : [15.0, 15.0],
@@ -17,8 +17,9 @@
   "firingSoundContinuous" : true,
   "firingSound" : {
 	"path" : "~/resources/sounds/laser.ogg",
-	"volume" : 0.35
+	"volume" : 0.65
   },
+  "firingSoundFadein" : 0.3,
   
   "ultimate" : true,
   
