@@ -262,9 +262,18 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "FlareGun")
+		if (gun->getScriptName() == "Laser")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
+		}
+
+		if (gun->getScriptName() == "RocketBarrage")
+		{
+			player->setSecondaryGun(gun);
+		}
+		if (gun->getScriptName() == "BigLaser")
+		{
+			//player->setSecondaryGun(gun);
 		}
 	}
 }

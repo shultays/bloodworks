@@ -1,0 +1,20 @@
+{
+  "type" : "gun",
+  "name": "Rocket Barrage",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [4.0, 4.0],
+  "bulletRadius" : 2.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [40, 70],
+  
+  "maxAmmo" : 1,
+  "reloadTime" : 4.5,
+  
+  "firingSound" : "~/resources/sounds/rocket.ogg",
+  
+  "ultimate" : true,
+  
+  "scriptFile" : "rocket_barrage.lua",
+  "scriptName" : "RocketBarrage"
+}
