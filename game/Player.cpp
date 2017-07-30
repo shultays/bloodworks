@@ -169,6 +169,7 @@ void Player::tick()
 	}
 
 	maxSpeed.tick();
+	maxRotateSpeed.tick();
 	damageMultiplier.tick();
 	shootSpeedMultiplier.tick();
 	bulletSpeedMultiplier.tick();
@@ -188,7 +189,6 @@ void Player::tick()
 	const float decceleration = 1000.0f;
 
 	float dt = timer.getDt();
-	maxSpeed.setBaseValue(150.0f);
 	float currentMaxSpeed = maxSpeed.getBuffedValue();
 
 	float minRotation = pi * 2.0f;
@@ -329,9 +329,10 @@ void Player::tick()
 
 	if (crosshairPos.lengthSquared() > 0.01f)
 	{
-		aimDir = crosshairPos;
-		crosshairDistance = aimDir.normalize();
-		aimAngle = aimDir.toAngle();
+		float newAngle = crosshairPos.toAngle();
+		aimAngle = approachAngle(aimAngle, newAngle, maxRotateSpeed.getBuffedValue() * timer.getDt());
+		aimDir = Vec2::fromAngle(aimAngle);
+		crosshairDistance = crosshairPos.length();
 	}
 	if (gun && gun->getMaxAmmo() > 0)
 	{
@@ -421,19 +422,17 @@ void Player::tick()
 	{
 		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack);
 		gun->setTriggered(trigerred);
-		if (trigerred && gun->isLaser())
-		{
-			gun->updateLaser(gunPos, -aimAngle);
-		}
 		gun->tick(dt);
+		gun->updateLaser(gunPos, -aimAngle);
 	}
 
 	if (secondaryGun)
 	{
-		secondaryGun->setTriggered(mapper.isKeyDown(GameKey::Attack2));
+		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack2);
+		secondaryGun->setTriggered(trigerred);
 		secondaryGun->tick(dt);
+		secondaryGun->updateLaser(gunPos, -aimAngle);
 	}
-
 }
 
 void Player::setGun(Gun *gun)
@@ -615,6 +614,9 @@ void Player::reset()
 	globalMonsterSpeedMultiplier.clear();
 	clipCountMultiplier.clear();
 	gunSpreadMultiplier.clear();
+
+	maxSpeed.setBaseValue(150.0f);
+	maxRotateSpeed.setBaseValue(pi * 6.0f);
 
 	isDead = false;
 

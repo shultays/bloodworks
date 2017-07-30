@@ -60,7 +60,7 @@ function GiftBox.onTick(monster)
 end
 
 function GiftBox.onKilled(monster)
-	if data.spawnType == "gun" then
+	if monster.data.spawnType == "gun" then
 		spawnRandomGun(monster.position)
 	else
 		spawnRandomBonus(monster.position)
