@@ -351,6 +351,7 @@ public:
 		prevMousePos = mousePos;
 		mouseShown = true;
 		SDL_SetRelativeMouseMode(SDL_FALSE);
+		SDL_ShowCursor(SDL_TRUE);
 	}
 
 	void hideMouse()
@@ -359,6 +360,7 @@ public:
 		prevMousePos = mousePos;
 		mouseShown = false;
 		SDL_SetRelativeMouseMode(SDL_TRUE);
+		SDL_ShowCursor(SDL_FALSE);
 	}
 
 	const Vec2& getMousePos() const

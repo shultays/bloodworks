@@ -128,6 +128,30 @@ public:
 		}
 	}
 
+	void drawDebug(const IntVec2& index, int color)
+	{
+		Vec2 pos = index.toVec();
+		debugRenderer.addLine(
+			gridStart + nodeSize * Vec2(pos.x, pos.y),
+			gridStart + nodeSize * Vec2(pos.x + 1, pos.y),
+			0.0f, Vec4::fromColor(color));
+
+		debugRenderer.addLine(
+			gridStart + nodeSize * Vec2(pos.x, pos.y),
+			gridStart + nodeSize * Vec2(pos.x, pos.y + 1),
+			0.0f, Vec4::fromColor(color));
+
+		debugRenderer.addLine(
+			gridStart + nodeSize * Vec2(pos.x + 1, pos.y + 1),
+			gridStart + nodeSize * Vec2(pos.x + 1, pos.y),
+			0.0f, Vec4::fromColor(color));
+
+		debugRenderer.addLine(
+			gridStart + nodeSize * Vec2(pos.x + 1, pos.y + 1),
+			gridStart + nodeSize * Vec2(pos.x, pos.y + 1),
+			0.0f, Vec4::fromColor(color));
+	}
+
 	void drawDebug()
 	{
 		for (int x = 0; x < nodeCount.y; x++)
@@ -191,4 +215,15 @@ public:
 	{
 		return data[pos];
 	}
+
+	const Vec2& getNodeSize() const
+	{
+		return nodeSize;
+	}
+
+	const Vec2& getStartPos() const
+	{
+		return gridStart;
+	}
+
 };
