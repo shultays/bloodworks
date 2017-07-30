@@ -1,0 +1,35 @@
+{
+  "type" : "animation_template",
+  "name": "BananaAnimation",
+  "size" : [12.5, 8.0],
+  
+  "animations" : 
+  {
+	"stand" : 
+	{
+		"looped" : true,
+		"frameDuration" : 0.5,
+		"frames":
+		[
+			"b0.png"
+		]
+	},
+	
+	"rotate" : 
+	{
+		"looped" : true,
+		"frameDuration" : 0.1,
+		"frames":
+		[
+			"b0.png",
+			"b1.png",
+			"b2.png",
+			"b3.png",
+			"b4.png",
+			"b3.png",
+			"b2.png",
+			"b1.png"
+		]
+	}
+  }
+}

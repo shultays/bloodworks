@@ -87,10 +87,21 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		bulletSize.h = j["bulletSize"].at(1).get<float>();
 	}
 
-	bulletRadius = j["bulletRadius"].get<float>();
-	bulletSpeed = j["bulletSpeed"].get<float>();
-
-	damage = IntVec2(j["bulletDamage"].at(0).get<int>(), j["bulletDamage"].at(1).get<int>());
+	bulletRadius = 4.0f;
+	if (j.count("bulletRadius"))
+	{
+		bulletRadius = j["bulletRadius"].get<float>();
+	}
+	bulletSpeed = 150.0f;
+	if (j.count("bulletSpeed"))
+	{
+		bulletSpeed = j["bulletSpeed"].get<float>();
+	}
+	damage = IntVec2(10, 20);
+	if (j.count("bulletDamage"))
+	{
+		damage = IntVec2(j["bulletDamage"].at(0).get<int>(), j["bulletDamage"].at(1).get<int>());
+	}
 
 	std::string scriptFilePath = file.folder + j["scriptFile"].get<std::string>();
 	fixFilePath(scriptFilePath);
