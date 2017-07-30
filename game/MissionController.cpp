@@ -14,11 +14,6 @@
 #include "BloodworksConfig.h"
 #include "cTimeProfiler.h"
 
-MissionController::~MissionController()
-{
-	reset();
-}
-
 MissionController::MissionController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
@@ -30,6 +25,11 @@ MissionController::MissionController(Bloodworks *bloodworks)
 	soundSpeed = 1.0f;
 	musicVolume = 1.0f;
 	gameSpeedMultiplier.setBaseValue(1.0f);
+	reset();
+}
+
+MissionController::~MissionController()
+{
 	reset();
 }
 

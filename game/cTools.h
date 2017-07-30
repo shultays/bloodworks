@@ -5,7 +5,7 @@
 #include "cRect.h"
 #include <stdlib.h>
 #include <string>
-#include <assert.h>
+#include <cassert>
 #include <algorithm>
 #include <fstream>
 
