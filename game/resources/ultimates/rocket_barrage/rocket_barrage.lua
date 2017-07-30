@@ -38,9 +38,9 @@ function RocketBarrage.onTick(gun)
 			end
 			bullet.moveAngle = bullet.moveAngle + spread * (math.random() * 2.0 - 1.0)
 			
-			if DEBUG ~= true then
+			--if DEBUG ~= true then
 				bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 4.0, {})
-			end
+			--end
 			local c = math.random() * 0.3 + 0.7
 		end
 	end
