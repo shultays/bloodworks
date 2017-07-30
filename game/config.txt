@@ -4,7 +4,7 @@ screenShake     1
 lockCrosshair   1
 autoOpenLevelupPopup 0
 sensitivity     50
-volume          80
+volume          12
 musicVolume     100
 fullScreen      0
 vSync           1
