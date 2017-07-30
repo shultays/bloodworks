@@ -133,7 +133,14 @@ void DropController::tick()
 		{
 			if (drop.gun)
 			{
-				bloodworks->getPlayer()->setGun(drop.gun);
+				if (drop.gun->isUltimate())
+				{
+					bloodworks->getPlayer()->setSecondaryGun(drop.gun);
+				}
+				else
+				{
+					bloodworks->getPlayer()->setGun(drop.gun);
+				}
 				bloodworks->onPlayerPickedGun(drop.gun);
 			}
 			else

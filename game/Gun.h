@@ -79,6 +79,8 @@ class Gun
 	bool playGunShootSound;
 	float gunShootSoundCurVolume;
 	bool gunShootSoundContinuous;
+	bool showShootAnimation;
+	bool ultimate;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	~Gun();
@@ -129,4 +131,8 @@ public:
 	float getSpawnChance();
 	float getBulletLifeTime() const;
 	const std::string& getScriptName() const;
+	bool isUltimate() const
+	{
+		return ultimate;
+	}
 };

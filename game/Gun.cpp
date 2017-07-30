@@ -27,6 +27,14 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	{
 		hideSpread = false;
 	}
+	if (j.count("ultimate"))
+	{
+		isUltimate = j["ultimate"].get<bool>();
+	}
+	else
+	{
+		isUltimate = false;
+	}
 
 	if (j.count("spawnChance"))
 	{
@@ -36,7 +44,11 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	{
 		spawnChance = 1.0f;
 	}
-
+	showShootAnimation = false;
+	if (j.count("showShootAnimation"))
+	{
+		showShootAnimation = j["showShootAnimation"].get<bool>();
+	}
 	if (j.count("shootParticleColor"))
 	{
 		Vec4 color(1.0);
@@ -357,7 +369,10 @@ const Vec4& Gun::getShootingParticleColor() const
 
 void Gun::updateLaser(const Vec2& pos, float angle)
 {
-	laser->setPositionAndAngle(pos, angle);
+	if (laser)
+	{
+		laser->setPositionAndAngle(pos, angle);
+	}
 }
 
 void Gun::reset()
