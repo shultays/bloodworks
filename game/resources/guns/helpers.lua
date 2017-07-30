@@ -17,7 +17,9 @@ end
 
 function ShootTimer.checkGun(gun)
 	if gun.data.timeToNextShoot < time and dt > 0.0 then
-		player:playShootAnimation()
+		if gun.showShootAnimation then
+			player:playShootAnimation()
+		end
 		gun.data.timeToNextShoot = time + gun.data.shootInterval * player.shootSpeedMultiplier:getBuffedValue()
 		return true
 	end

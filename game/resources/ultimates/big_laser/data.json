@@ -1,0 +1,37 @@
+{
+  "type" : "gun",
+  "name": "Big Laser",
+  "icon" : "icon.png",
+  "bulletTexture" : "laser.png",
+  "bulletSize" : [15.0, 15.0],
+  "bulletRadius" : 4.0,
+  "bulletSpeed" : 350.0,
+  "bulletDamage" : [30, 45],
+  
+  "scriptFile" : "big_laser.lua",
+  "scriptName" : "BigLaser",
+  
+  "maxAmmo" : 1,
+  "reloadTime" : 4.5,
+  
+  "firingSoundContinuous" : true,
+  "firingSound" : {
+	"path" : "~/resources/sounds/laser.ogg",
+	"volume" : 0.35
+  },
+  
+  "ultimate" : true,
+  
+  "isLaser" : true,
+  "laserTexture" : "laser.png",
+  "laserShader" : "laser",
+  
+  "laserThickness" : 480.0,
+  
+  "laserBeginShift" : 10.0,
+  "laserBeginWidth" : 40.0,
+  
+  "laserEndShift" : 0.0,
+  "laserEndWidth" : 10.0,
+  "showShootAnimation" : false
+}

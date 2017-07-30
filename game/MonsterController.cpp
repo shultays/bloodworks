@@ -10,11 +10,13 @@
 #include "Gun.h"
 #include "cTimeProfiler.h"
 
+#define NODE_SIZE 50.0f
+
 MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 500.0f, bloodworks->getMapSize() + 1000.0f, Vec2(50.0f));
+	grid.init(bloodworks->getMapMin() - 500.0f, bloodworks->getMapSize() + 1000.0f, Vec2(NODE_SIZE));
 
 	customMonsterTick = lua["customMonsterOnTick"];
 	customMonsterOnHit = lua["customMonsterOnHit"];
@@ -96,51 +98,355 @@ const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  c
 	return grid.getNodeAtPos(pos);
 }
 
-MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, int ignoreId, sol::table& args)
+bool checkMonster(Monster* monster, Gun* gun, Bullet* bullet, int searchId, std::vector<int>& ignoreIds)
 {
-	MonsterHitResult result;
-	result.distance = FLT_MAX;
-	result.monster = nullptr;
-
-	Gun *gun = nullptr;
-	Bullet *bullet = nullptr;
-	if (args)
+	if (monster->hasIgnoreId(searchId))
 	{
-		if (args["gun"])
+		return false;
+	}
+	monster->addIgnoreId(searchId);
+	for (int ignoreId : ignoreIds)
+	{
+		if (monster->hasIgnoreId(ignoreId))
 		{
-			gun = args["gun"];
+			return false;
 		}
-		if (args["bullet"])
+	}
+	if (bullet)
+	{
+		if (monster->hasIgnoreId(bullet->getId()) || monster->shouldHit(bullet) == false)
 		{
-			bullet = args["bullet"];
+			return false;
+		}
+	}
+	if (gun)
+	{
+		if (monster->shouldHit(gun) == false)
+		{
+			return false;
 		}
 	}
 
-	for (auto & monster : monsters)
+	return true;
+}
+
+MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, float radius, sol::table& args)
+{
+	MonsterHitResult result;
+	result.distance = 100000000.0f;
+	result.monster = nullptr;
+
+	std::function<bool(Monster*)> func = [&](Monster* monster)
 	{
-		if (bullet)
-		{
-			if (monster->hasIgnoreId(bullet->getId()) || monster->shouldHit(bullet) == false)
-			{
-				continue;
-			}
-		}
-		if (gun)
-		{
-			if (monster->shouldHit(gun) == false)
-			{
-				continue;
-			}
-		}
-		float distance = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius());
+		float distance = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius() + radius);
 		if (distance >= 0.0f && distance < result.distance)
 		{
 			result.distance = distance;
 			result.monster = monster;
 		}
-	}
+		return false;
+	};
+
+	std::function<bool(const Vec2&)> func2 = [&](const Vec2& pos)
+	{
+		float maxDistance = result.distance + NODE_SIZE * 2.0f + radius;
+		if (pos.distanceSquared(begin) > maxDistance * maxDistance)
+		{
+			return true;
+		}
+		return false;
+	};
+
+	runForRay(begin, ray, radius, args, func, &func2);
 
 	return result;
+}
+
+bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, std::vector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+{
+	Vec2 curPos = grid.getStartPos() + grid.getNodeSize() * (index.toVec() + 0.5f);
+	if (ignoreFunc && (*ignoreFunc)(curPos))
+	{
+		return true;
+	}
+	bool renderDebug = input.isKeyDown(key_f);
+	if (renderDebug)
+	{
+		grid.drawDebug(index, 0xFF0000FF);
+	}
+
+	const std::vector<Monster*> node = grid.getNodeAtIndex(index);
+	for (Monster* monster : node)
+	{
+		if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
+		{
+			continue;
+		}
+		if (func(monster))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+{
+	Gun *gun = nullptr;
+	Bullet *bullet = nullptr;
+	std::vector<int> ignoreIds;
+	if (args)
+	{
+		gun = args["gun"];
+		bullet = args["bullet"];
+
+		if (auto argIgnoreIds = args["ignoreIds"])
+		{
+			int t = 1;
+			while (argIgnoreIds[t])
+			{
+				ignoreIds.push_back(argIgnoreIds[t].get<int>());
+				t++;
+			}
+		}
+	}
+
+	bool renderDebug = input.isKeyDown(key_f);
+
+	int searchId = bloodworks->getUniqueId();
+
+	if (radius > NODE_SIZE)
+	{
+		for (Monster* monster : monsters)
+		{
+			if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
+			{
+				continue;
+			}
+			monster->addIgnoreId(searchId);
+			if (func(monster))
+			{
+				return true;
+			}
+		}
+	}
+	else
+	{
+		IntVec2 start = grid.getNodeIndex(begin);
+		IntVec2 end = grid.getNodeIndex(begin + ray);
+
+		IntVec2 dirInt(ray.x > 0.0f ? 1 : -1, ray.y > 0.0f ? 1 : -1);
+		IntVec2 posShift(ray.x > 0.0f ? 1 : 0, ray.y > 0.0f ? 1 : 0);
+
+		Vec2 currentPos = begin;
+		IntVec2 current = start;
+
+		int checkVal = abs(ray.x) < abs(ray.y) ? 1 : 0;
+
+		int maxText = 20;
+		bool alwaysHorizontal = abs(ray.y) < 0.0001f;
+		bool alwaysVertical = abs(ray.x) < 0.0001f;
+
+		bool checked[3][3];
+		memset(checked, 0, sizeof(checked));
+
+
+		bool hasRadius = radius > 0.01f;
+		while(maxText --> 0)
+		{
+			if (checked[1][1] == false || hasRadius == false)
+			{
+				checked[1][1] = true;
+				if (runForNode(current, gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+				{
+					return true;
+				}
+			}
+		
+			Vec2 nextPos = grid.getStartPos() + grid.getNodeSize() * (current + posShift).toVec();
+			if (renderDebug)
+			{
+				debugRenderer.addCircle(currentPos, 3.0f, 0.0f, Vec4::fromColor(0xFF00FFFF));
+			}
+			if (hasRadius)
+			{
+				Vec2 curPos = grid.getStartPos() + grid.getNodeSize() * (current).toVec();
+				Vec2 endPos = grid.getStartPos() + grid.getNodeSize() * (current + 1).toVec();
+
+				if (currentPos.x - radius < curPos.x)
+				{
+					if (checked[0][1] == false)
+					{
+						checked[0][1] = true;
+						if (runForNode(current + IntVec2(-1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+					if (checked[0][0] == false && currentPos.y - radius < curPos.y)
+					{
+						checked[0][0] = true;
+						if (runForNode(current + IntVec2(-1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+					if (checked[0][2] == false && currentPos.y + radius > endPos.y)
+					{
+						checked[0][2] = true;
+						if(runForNode(current + IntVec2(-1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+				}
+
+				if (checked[1][0] == false && currentPos.y - radius < curPos.y)
+				{
+					checked[1][0] = true;
+					if (runForNode(current + IntVec2(0, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+					{
+						return true;
+					}
+				}
+				if (checked[1][2] == false && currentPos.y + radius > endPos.y)
+				{
+					checked[1][2] = true;
+					if (runForNode(current + IntVec2(0, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+					{
+						return true;
+					}
+				}
+
+				if (currentPos.x + radius > endPos.x)
+				{
+					if (checked[2][1] == false)
+					{
+						checked[2][1] = true;
+						if(runForNode(current + IntVec2(+1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+					if (checked[2][0] == false && currentPos.y - radius < curPos.y)
+					{
+						checked[2][0] = true;
+						if(runForNode(current + IntVec2(+1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+					if (checked[2][2] == false && currentPos.y + radius > endPos.y)
+					{
+						checked[2][2] = true;
+						if(runForNode(current + IntVec2(+1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						{
+							return true;
+						}
+					}
+				}
+			}
+
+
+			Vec2 d = (nextPos - begin) / ray;
+			if (d[0] > 1.0f && d[1] > 1.0f)
+			{
+				break;
+			}
+
+			bool v = false;
+
+			if (alwaysHorizontal)
+			{
+				current.x += dirInt.x;
+				currentPos.x = nextPos.x;
+				currentPos.y = begin.y + ((currentPos.x - begin.x) / ray.x) * ray.y;
+			}
+			else if (alwaysVertical)
+			{
+				current.y += dirInt.y;
+				currentPos.y = nextPos.y;
+				currentPos.x = begin.x + ((currentPos.y - begin.y) / ray.y) * ray.x;
+				v = true;
+			}
+			else
+			{
+				Vec2 diff = (nextPos - currentPos);
+				float dx = diff.x / ray.x;
+				float dy = diff.y / ray.y;
+				if (dx < dy)
+				{
+					current.x += dirInt.x;
+					currentPos.x = nextPos.x;
+					currentPos.y = begin.y + ((currentPos.x - begin.x) / ray.x) * ray.y;
+				}
+				else
+				{
+					current.y += dirInt.y;
+					currentPos.y = nextPos.y;
+					currentPos.x = begin.x + ((currentPos.y - begin.y) / ray.y) * ray.x;
+					v = true;
+				}
+			}
+
+			if (hasRadius)
+			{
+				if (v)
+				{
+					if (dirInt.y < 0)
+					{
+						for (int i = 0; i < 3; i++)
+						{
+							checked[i][2] = checked[i][1];
+							checked[i][1] = checked[i][0];
+							checked[i][0] = false;
+						}
+					}
+					else
+					{
+						for (int i = 0; i < 3; i++)
+						{
+							checked[i][0] = checked[i][1];
+							checked[i][1] = checked[i][2];
+							checked[i][2] = false;
+						}
+					}
+				}
+				else
+				{
+					if (dirInt.x < 0)
+					{
+						for (int i = 0; i < 3; i++)
+						{
+							checked[2][i] = checked[1][i];
+							checked[1][i] = checked[0][i];
+							checked[0][i] = false;
+						}
+					}
+					else
+					{
+						for (int i = 0; i < 3; i++)
+						{
+							checked[0][i] = checked[1][i];
+							checked[1][i] = checked[2][i];
+							checked[2][i] = false;
+						}
+					}
+				}
+			}
+		}
+		if (renderDebug)
+		{
+			Vec2 perp = ray.normalized().sideVec();
+			//debugRenderer.addLine(begin, begin + ray, 0.0f, 0xFFFF0000);
+			debugRenderer.addCircle(begin, radius, 0.0f, 0xFFFF0000);
+			debugRenderer.addCircle(begin + ray, radius, 0.0f, 0xFFFF0000);
+			debugRenderer.addLine(begin + perp * radius, begin + perp * radius + ray, 0.0f, 0xFFFF0000);
+			debugRenderer.addLine(begin - perp * radius, begin - perp * radius + ray, 0.0f, 0xFFFF0000);
+		}
+	}
+	return false;
 }
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)
