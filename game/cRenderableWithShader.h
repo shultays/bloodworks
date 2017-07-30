@@ -78,7 +78,7 @@ public:
 
 	cRenderableWithShader(cGame *game, const std::string& shaderPath);
 
-	cRenderableWithShader(cGame *game, cShaderShr shader) : cRenderable(game)
+	cRenderableWithShader(cGame *game, const cShaderShr& shader) : cRenderable(game)
 	{
 		this->shader = shader;
 	}
