@@ -139,3 +139,18 @@ end
 function FadeOutImage.clear(gameObjectId)
 
 end
+DummyProfiler = {}
+DummyProfiler.start = function()
+end
+DummyProfiler.stop = function()
+end
+if createSumProfiler == nil then
+	createSumProfiler = function()
+		return DummyProfiler
+	end
+end
+if createProfiler == nil then
+	createProfiler = function()
+		return DummyProfiler
+	end
+end

@@ -10,6 +10,7 @@ extern GLuint postProcessQuad;
 class cSoundManager;
 class StackWalkerToConsole;
 class cSlaveController;
+class cAccumulatedTimeProfiler;
 
 class Coral 
 {
@@ -69,4 +70,6 @@ public:
 	{
 		return tempFrameBufferTexture[2];
 	}
+
+	static cAccumulatedTimeProfiler& createAccumulatedTimeProfile(const char *name);
 };
