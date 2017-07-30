@@ -19,7 +19,7 @@ void cResources::objectFreed(cFont* object)
 
 void cResources::objectFreed(cTexture* object)
 {
-	std::string ID = textureID(object->getName());
+	std::string ID = textureID(object->getName(), object->isRepeat());
 	std::unordered_map<std::string, cTextureShr>::iterator got = textures.find(ID);
 	assert(got != textures.end());
 	got->second.setCustomDeallocator(nullptr);
@@ -51,9 +51,13 @@ std::string cResources::shaderID(const std::string& vertexShaderFile, const std:
 	return ID;
 }
 
-std::string cResources::textureID(const std::string& textureName) const
+std::string cResources::textureID(const std::string& textureName, bool repeat) const
 {
 	std::string ID = textureName;
+	if (repeat)
+	{
+		ID += "repeat";
+	}
 	return ID;
 }
 
@@ -126,18 +130,18 @@ cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std:
 	return shader;
 }
 
-cTextureShr cResources::getTexture(const std::string& textureName)
+cTextureShr cResources::getTexture(const std::string& textureName, bool repeat)
 {
 	std::string path = textureName;
 	fixFilePath(path);
-	std::string ID = textureID(path);
+	std::string ID = textureID(path, repeat);
 	std::unordered_map<std::string, cTextureShr>::iterator got = textures.find(ID);
 	if (got != textures.end())
 	{
 		return got->second;
 	}
 
-	cTextureShr texture = new cTexture(path);
+	cTextureShr texture = new cTexture(path, repeat);
 	texture.setCustomDeallocator(this);
 
 	textures[ID] = texture;
@@ -169,7 +173,7 @@ cFontShr cResources::getFont(const std::string& fontDataPath)
 	std::string path = fontDataPath;
 	fixFilePath(path);
 
-	std::string ID = textureID(path);
+	std::string ID = textureID(path, false);
 	std::unordered_map<std::string, cFontShr>::iterator got = fonts.find(ID);
 	if (got != fonts.end())
 	{

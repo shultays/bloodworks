@@ -3,6 +3,7 @@
 #include "cTexture.h"
 #include "cGlobals.h"
 #include "DirentHelper.h"
+#include "cAnimationTemplate.h"
 
 void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
@@ -35,6 +36,11 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, c
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
+}
+
+void cAnimatedTexturedQuadRenderable::addAnimation(cAnimationTemplate *animationTemplate)
+{
+	addAnimation(animationTemplate->getAnimations());
 }
 
 const IntVec2& cAnimatedTexturedQuadRenderable::getTextureSize() const

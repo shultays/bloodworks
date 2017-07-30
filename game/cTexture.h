@@ -10,13 +10,14 @@ class cTexture
 	std::string name;
 
 	IntVec2 dimensions;
+	bool repeat;
 public:
 	cTexture() 
 	{
 		gTexture = -1;
 	};
 
-	cTexture(const std::string& fileName)
+	cTexture(const std::string& fileName, bool repeat)
 	{
 		SDL_Surface* surf = IMG_Load(fileName.c_str());
 		if (surf == NULL)
@@ -33,16 +34,22 @@ public:
 		dimensions = IntVec2(surf->w, surf->h);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 		SDL_FreeSurface(surf);
 
 		name = fileName;
+		this->repeat = repeat;
 
 		printf("loading %s\n", name.c_str());
+	}
+
+	bool isRepeat() const
+	{
+		return repeat;
 	}
 
 	~cTexture()

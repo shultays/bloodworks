@@ -267,9 +267,13 @@ void BloodworksCheats::onLoadMission()
 			//player->setGun(gun);
 		}
 
-		if (gun->getScriptName() == "RocketBarrage")
+		if (gun->getScriptName() == "BananaBomb")
 		{
 			player->setSecondaryGun(gun);
+		}
+		if (gun->getScriptName() == "RocketBarrage")
+		{
+			//player->setSecondaryGun(gun);
 		}
 		if (gun->getScriptName() == "BigLaser")
 		{
