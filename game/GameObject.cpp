@@ -7,6 +7,8 @@
 #include "Bloodworks.h"
 #include "cFont.h"
 #include "cParticle.h"
+#include "cAnimatedRenderable.h"
+#include "cAnimationTemplate.h"
 
 void GameObject::updateMatrix()
 {
@@ -116,6 +118,17 @@ cParticle* GameObject::addParticle(const std::string& particleTemplate, const so
 	renderableGroup->addRenderable(p);
 	particles.push_back(p);
 	return p;
+}
+
+cAnimatedTexturedQuadRenderable* GameObject::addAnimation(const std::string& name)
+{
+	checkRenderable();
+	cAnimationTemplate *animationTemplate = bloodworks->getAnimationTemplate(name);
+	cAnimatedTexturedQuadRenderable* animatedQuadRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, animationTemplate->getShader());
+	animatedQuadRenderable->addAnimation(animationTemplate);
+	animatedQuadRenderable->setWorldMatrix(Mat3::scaleMatrix(animationTemplate->getSize()));
+	renderableGroup->addRenderable(animatedQuadRenderable);
+	return animatedQuadRenderable;
 }
 
 void GameObject::removeRenderable(int id)

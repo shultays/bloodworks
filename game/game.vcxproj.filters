@@ -431,5 +431,8 @@
     <ClInclude Include="cTimeProfiler.h">
       <Filter>Coral</Filter>
     </ClInclude>
+    <ClInclude Include="cAnimationTemplate.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

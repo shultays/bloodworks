@@ -109,12 +109,12 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 	{
 		for (auto& t : j["textures"])
 		{
-			textures.push_back(resources.getTexture(file.folder + t.get<std::string>()));
+			textures.push_back(resources.getTexture(file.folder + t.get<std::string>(), true));
 		}
 	}
 	else
 	{
-		textures.push_back(resources.getTexture(file.folder + j["textures"].get<std::string>()));
+		textures.push_back(resources.getTexture(file.folder + j["textures"].get<std::string>(), true));
 	}
 	scriptTable["initSystem"]();
 }
@@ -138,7 +138,7 @@ cParticle::cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol
 
 void cParticle::setTexture(const std::string& path)
 {
-	cTextureShr texture = resources.getTexture(path);
+	cTextureShr texture = resources.getTexture(path, true);
 	if (textures.size() == 0)
 	{
 		textures.push_back(texture);
@@ -151,7 +151,7 @@ void cParticle::setTexture(const std::string& path)
 
 void cParticle::addTexture(const std::string& path)
 {
-	cTextureShr texture = resources.getTexture(path);
+	cTextureShr texture = resources.getTexture(path, true);
 	textures.push_back(texture);
 }
 

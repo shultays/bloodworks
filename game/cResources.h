@@ -30,7 +30,7 @@ class cResources : public cCustomDeallocator<cShader>, public cCustomDeallocator
 
 	std::string shaderID(const std::string& vertexShaderFile, const std::string& pixelShaderFile) const;
 
-	std::string textureID(const std::string& textureName) const;
+	std::string textureID(const std::string& textureName, bool repeat) const;
 
 	std::string fontID(const std::string& textureName) const;
 
@@ -45,7 +45,7 @@ public:
 
 	cShaderShr getShader(const std::string& vertexShaderFile, const std::string& pixelShaderFile);
 
-	cTextureShr getTexture(const std::string& textureName);
+	cTextureShr getTexture(const std::string& textureName, bool repeat = false);
 
 	cFontShr getFont(const std::string& fontDataPath);
 
