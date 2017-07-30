@@ -108,10 +108,9 @@ function Survival.onPlayerDied()
 	gameObject.data.fadeInDuration = 1.0
 	gameObject:setLevel(RenderableLevel.GUI + 5)
 	gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 120
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
+	gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+	gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+	gameObject.data.renderable:setTextSize(120.0)
 	gameObject:setPosition(Vec2.new(0, 50))
 	
 	gameObject = addGameObject("FadeOutImage")
@@ -120,10 +119,9 @@ function Survival.onPlayerDied()
 	gameObject.data.fadeInDuration = 1.0
 	gameObject:setLevel(RenderableLevel.GUI + 5)
 	gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 32
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
+	gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+	gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+	gameObject.data.renderable:setTextSize(32.0)
 	gameObject:setPosition(Vec2.new(0, -40))
 	
 	gameObject = addGameObject("FadeOutImage")
@@ -132,10 +130,9 @@ function Survival.onPlayerDied()
 	gameObject.data.fadeInDuration = 1.0
 	gameObject:setLevel(RenderableLevel.GUI + 5)
 	gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
-	gameObject.data.renderable.alignment = RenderableAlignment.center
-	gameObject.data.renderable.textSize = 32
-	gameObject.data.renderable.color = 0
-	gameObject.data.renderable:update()
+	gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+	gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+	gameObject.data.renderable:setTextSize(32.0)
 	gameObject:setPosition(Vec2.new(0, -80))
 	
 end

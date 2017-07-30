@@ -20,8 +20,8 @@ cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableContainer(game)
 
 	text = new cTextRenderable(game, resources.getFont("resources/fontData.txt"), "", 18.0f);
 	text->setWorldMatrix(Mat3::translationMatrix(0.0f, bgSize.h * 0.7f));
-	text->setTextAllignment(TextAlignment::center);
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setTextAlignment(TextAlignment::center);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	addRenderable(text);
 
 	changed = false;

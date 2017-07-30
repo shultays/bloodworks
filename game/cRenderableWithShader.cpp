@@ -10,12 +10,12 @@ void cRenderableWithShader::render(bool isIdentity, const Mat3& mat, const Rect&
 		game->lastShader = shader;
 		shader->begin();
 		shader->setViewMatrix(game->getViewMatrix(alignment));
-		game->lastAllignment = alignment;
+		game->lastAlignment = alignment;
 	}
-	else if (game->lastAllignment != alignment)
+	else if (game->lastAlignment != alignment)
 	{
 		shader->setViewMatrix(game->getViewMatrix(alignment));
-		game->lastAllignment = alignment;
+		game->lastAlignment = alignment;
 	}
 
 	shader->setCrop(crop);

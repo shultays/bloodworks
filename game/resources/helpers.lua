@@ -10,7 +10,17 @@ RenderableAlignment = {
 	bottom = 8,
 	bottomRight = 9
 }
-
+TextAlignment = {
+	left = 0,
+	center = 1,
+	right = 2,
+	fit = 3
+}
+VerticalTextAlignment = {
+	top = 0,
+	mid = 1,
+	bottom = 2
+}
 RenderableLevel = {
 	background = -1000,
 	monsters = 1000,
@@ -130,10 +140,7 @@ function FadeOutImage.onTick(gameObject)
 			alpha = 1.0
 		end
 	end
-	local a =  math.floor(255 * alpha * gameObject.data.startAlpha)
-    
-	gameObject.data.renderable.color = (a * 2 ^ 24) + 0x00FFFFFF 
-	gameObject.data.renderable:update()
+	gameObject.data.renderable:setColor(Vec4.new(1.0, 1.0, 1.0, alpha * gameObject.data.startAlpha))
 end
 
 function FadeOutImage.clear(gameObjectId)
