@@ -194,6 +194,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"position", sol::property(&Bullet::getPosition, &Bullet::setPosition),
 		"moveSpeed", &Bullet::moveSpeed,
 		"moveAngle", &Bullet::moveAngle,
+		"lifeTime", &Bullet::lifeTime,
+		"startTime", &Bullet::startTime,
 		"meshRotation", &Bullet::meshRotation,
 
 		"meshScale", &Bullet::meshScale,
@@ -230,6 +232,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"setColor", &Bullet::setColor,
 
+		"modifyDrawLevel", &Bullet::modifyDrawLevel,
 		"addTrailParticle", &Bullet::addTrailParticle,
 
 		"updateDrawable", &Bullet::updateDrawable,
@@ -356,7 +359,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"bulletSpeed", &Gun::bulletSpeed,
 		"scriptTable", &Gun::scriptTable,
 		"bulletLifeTime", &Gun::bulletLifeTime,
-
+		"showShootAnimation", &Gun::showShootAnimation,
+		"shootParticleColor", &Gun::shootParticleColor,
 		"firingSoundFadein", &Gun::gunShootSoundFadein,
 		"firingSoundFadeout", &Gun::gunShootSoundFadeout,
 		"firingCurVolume", &Gun::gunShootSoundCurVolume,
@@ -511,9 +515,20 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 	lua.set_function("getClosestMonsterOnLine",
-		[&](const Vec2& pos, const Vec2& ray, int ignoreId, sol::table args)
+		[&](const Vec2& pos, const Vec2& ray, float radius, sol::table& args)
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, ignoreId, args);
+		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, radius, args);
+	});
+
+
+	lua.set_function("runForEachMonsterOnLine",
+		[&](const Vec2& pos, const Vec2& ray, float radius, sol::table& args, sol::function& func)
+	{
+		std::function<bool(Monster*)> func2 = [&func](Monster* monster)
+		{
+			return func(monster);
+		};
+		bloodworks->getMonsterController()->runForRay(pos, ray, radius, args, func2);
 	});
 
 	lua.set_function("spawnRandomBonus",
@@ -705,10 +720,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"spawnParticle", &Monster::spawnParticle,
 		"spawnParticleShifted", &Monster::spawnParticleShifted,
 
-		"modifyDrawLevel", [&](Monster* monster, int level)
-	{
-		monster->modifyDrawLevel(level);
-	},
+		"modifyDrawLevel", &Monster::modifyDrawLevel,
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 
@@ -747,7 +759,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 	lua.new_usertype<Player>("Player",
 		"position", &Player::pos,
-		"moveSpeed", &Player::moveSpeed,
+		"moveSpeed", sol::readonly(&Player::moveSpeed),
 		"crosshairPos", sol::readonly(&Player::crosshairPos),
 		"crosshairDistance", sol::readonly(&Player::crosshairDistance),
 		"gunPos", sol::readonly(&Player::gunPos),
@@ -760,6 +772,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
 		"maxSpeed", &Player::maxSpeed,
+		"maxRotateSpeed", &Player::maxRotateSpeed,
 		"doDamage", &Player::doDamage,
 		"doDamageWithArgs", &Player::doDamageWithArgs,
 		"doHeal", &Player::doHeal,

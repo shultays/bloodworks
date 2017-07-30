@@ -45,6 +45,7 @@ class Player
 	cAnimatedTexturedQuadRenderable *shootRenderable;
 
 	BuffFloat maxSpeed;
+	BuffFloat maxRotateSpeed;
 	BuffFloat monsterExperienceMultiplier;
 	BuffFloat damageMultiplier;
 	BuffFloat shootSpeedMultiplier;
