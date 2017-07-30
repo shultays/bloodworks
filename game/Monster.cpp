@@ -18,6 +18,7 @@
 #include "BloodworksControls.h"
 #include "MonsterTemplate.h"
 #include "BloodworksCheats.h"
+#include "cTimeProfiler.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -102,6 +103,10 @@ Monster::~Monster()
 
 void Monster::tick()
 {
+
+	static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("Monster::tickSum");
+	p.start();
+
 #ifdef HAS_BLOODWORKS_CHEATS
 	BloodworksCheats::instance->onMonsterPreTick(this);
 #endif
@@ -115,7 +120,10 @@ void Monster::tick()
 	}
 	if (luaTick && timer.getDt() > 0.0f)
 	{
+		static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("Monster::luaTick");
+		p.start();
 		luaTick(this);
+		p.stop();
 	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
@@ -184,7 +192,7 @@ void Monster::tick()
 	renderable->setWorldMatrix(mat);
 
 	firstTick = false;
-	//debugRenderer.addLine(position, position + Vec2::fromAngle(moveAngle) * 50);
+	p.stop();
 }
 
 

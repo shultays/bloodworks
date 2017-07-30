@@ -90,7 +90,10 @@ function MonsterGroupHelper.init(monster)
 	monster.data.playerIgnoreDistance = 0.0
 end
 
+fixAngleProfiler = createSumProfiler("MonsterGroupHelper.fixAngle")
+
 function MonsterGroupHelper.fixAngle(monster, angle) 
+	fixAngleProfiler:start()
 	local closestMonster = nil
 	if data.closestMonsterIndex ~= -1 then
 		closestMonster = getMonster(data.closestMonsterIndex)
@@ -129,6 +132,7 @@ function MonsterGroupHelper.fixAngle(monster, angle)
 			angle = angle - 0.6 * c * cPlayer
 		end
 	end
+	fixAngleProfiler:stop()
 	return angle
 end
 
