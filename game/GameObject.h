@@ -11,6 +11,8 @@ enum class RenderableAlignment;
 enum class TextAlignment;
 class cParticle;
 class cAnimatedTexturedQuadRenderable;
+class cTexturedQuadRenderable;
+class cTextRenderable;
 
 class GameObject
 {
@@ -22,24 +24,6 @@ class GameObject
 	{
 		texture,
 		text
-	};
-
-	struct RenderableData // todo is this necessary? we can just return instances of texture/text
-	{
-		int id;
-		GameObject *gameObject;
-		RenderableDataType type;
-		cRenderable *renderable;
-		int color;
-		Vec2 pos;
-		Vec2 textureSize;
-		float rotation;
-
-		float textSize;
-		TextAlignment textAlignment;
-		RenderableAlignment alignment;
-
-		void update();
 	};
 
 	int id;
@@ -54,7 +38,9 @@ class GameObject
 	sol::table data;
 
 	cRenderableContainer *renderableGroup;
-	std::vector<RenderableData> renderables;
+
+	std::vector<cTexturedQuadRenderable*> textureRenderables;
+	std::vector<cTextRenderable*> textRenderables;
 	std::vector<cParticle*> particles;
 	std::vector<cAnimatedTexturedQuadRenderable*> animations;
 	int level;
@@ -104,11 +90,13 @@ public:
 
 	~GameObject();
 
-	RenderableData& addTexture(const std::string& texture, const std::string& shader);
-	RenderableData& addText(const std::string& text, const std::string& font);
+	cTexturedQuadRenderable* addTexture(const std::string& texture, const std::string& shader);
+	cTextRenderable* addText(const std::string& text, const std::string& font);
 	cParticle* addParticle(const std::string& particleTemplate, const sol::table& args);
 	cAnimatedTexturedQuadRenderable* addAnimation(const std::string& name);
-	void removeRenderable(int id);
 
-	RenderableData& getRenderable(int id);
+	void removeTexture(cTexturedQuadRenderable *texture);
+	void removeText(cTextRenderable *text);
+	void removeParticle(cParticle *particle);
+	void removeAnimation(cAnimatedTexturedQuadRenderable *animation);
 };

@@ -41,7 +41,7 @@ Player::Player(Bloodworks *bloodworks)
 	renderable->addRenderable(hands);
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
-	healthRenderable->setTextAllignment(TextAlignment::center);
+	healthRenderable->setTextAlignment(TextAlignment::center);
 	healthRenderable->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
@@ -96,7 +96,7 @@ Player::Player(Bloodworks *bloodworks)
 
 	scoreText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Score : 0", 22.0f);
 	scoreText->setAlignment(RenderableAlignment::topRight);
-	scoreText->setTextAllignment(TextAlignment::right);
+	scoreText->setTextAlignment(TextAlignment::right);
 	scoreText->setWorldMatrix(Mat3::translationMatrix(-20, -50));
 	bloodworks->addRenderable(scoreText, GUI + 13);
 

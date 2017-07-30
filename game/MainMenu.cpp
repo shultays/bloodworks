@@ -26,7 +26,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	newGame->setAlignment(RenderableAlignment::topLeft);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "New Game", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	newGame->addRenderable(text);
 	newGame->setHoverSpeed(10.0f);
 	newGame->setSounds(click, hover);
@@ -36,7 +36,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	mods->setAlignment(RenderableAlignment::topLeft);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	mods->addRenderable(text);
 	mods->setHoverSpeed(10.0f);
 	mods->setSounds(click, hover);
@@ -46,7 +46,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	options->setAlignment(RenderableAlignment::topLeft);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Options", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	options->addRenderable(text);
 	options->setHoverSpeed(10.0f);
 	options->setSounds(click, hover);
@@ -56,7 +56,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	credits->setAlignment(RenderableAlignment::topLeft);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Credits", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::identity());
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	credits->addRenderable(text);
 	credits->setHoverSpeed(10.0f);
 	credits->setSounds(click, hover);
@@ -66,7 +66,7 @@ MainMenu::MainMenu(Bloodworks *b)
 	quit->setAlignment(RenderableAlignment::topLeft);
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Quit Game", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
-	text->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	quit->addRenderable(text);
 	quit->setHoverSpeed(10.0f);
 	quit->setSounds(click, hover);

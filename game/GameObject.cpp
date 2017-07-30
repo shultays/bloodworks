@@ -56,59 +56,25 @@ GameObject::~GameObject()
 	SAFE_DELETE(renderableGroup);
 }
 
-GameObject::RenderableData& GameObject::addTexture(const std::string& texture, const std::string& shader)
+cTexturedQuadRenderable* GameObject::addTexture(const std::string& texture, const std::string& shader)
 {
 	checkRenderable();
-
-	RenderableData renderableData;
-	renderableData.id = bloodworks->getUniqueId();
-
-	renderableData.type = RenderableDataType::texture;
 
 	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable((cGame*)bloodworks, texture, shader.length() > 0 ? shader : "resources/default");
 	renderable->setWorldMatrix(Mat3::identity());
-	renderableData.renderable = renderable;
-	renderableData.pos = Vec2::zero();
-	renderableData.textureSize = renderable->getTexture()->getDimensions().toVec();
-	renderableData.rotation = 0.0f;
-	renderableData.color = 0xFFFFFFFF;
-	renderableData.textSize = 0.0f;
-	renderableData.alignment = alignment;
-	renderableData.textAlignment = TextAlignment::center;
-	renderableData.gameObject = this;
-
 	renderableGroup->addRenderable(renderable);
 
-	renderables.push_back(renderableData);
-
-	renderableData.update();
-	return renderables[(int)renderables.size() - 1];
+	return renderable;
 }
 
-GameObject::RenderableData& GameObject::addText(const std::string& text, const std::string& font)
+cTextRenderable* GameObject::addText(const std::string& text, const std::string& font)
 {
 	checkRenderable();
 
-	RenderableData renderableData;
-	renderableData.id = bloodworks->getUniqueId();
-	renderableData.type = RenderableDataType::text;
-	renderableData.pos = Vec2::zero();
-	renderableData.textureSize = Vec2(10.0f);
-	renderableData.rotation = 0.0f;
-	renderableData.color = 0xFFFFFFFF;
-	renderableData.textSize = 32.0f;
-	renderableData.alignment = alignment;
-	renderableData.textAlignment = TextAlignment::center;
-	renderableData.gameObject = this;
-
 	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font : "resources/fontData.txt"), text);
-	renderableData.renderable = renderable;
 	renderableGroup->addRenderable(renderable);
-	updateMatrix();
-	renderables.push_back(renderableData);
 
-	renderableData.update();
-	return renderables[(int)renderables.size() - 1];
+	return renderable;
 }
 
 cParticle* GameObject::addParticle(const std::string& particleTemplate, const sol::table& args)
@@ -131,31 +97,32 @@ cAnimatedTexturedQuadRenderable* GameObject::addAnimation(const std::string& nam
 	return animatedQuadRenderable;
 }
 
-void GameObject::removeRenderable(int id)
+void GameObject::removeTexture(cTexturedQuadRenderable *texture)
 {
-	for (int i = 0; i < renderables.size(); i++)
-	{
-		if (renderables[i].id == id)
-		{
-			renderableGroup->removeRenderable(renderables[i].renderable);
-			SAFE_DELETE(renderables[i].renderable);
-			renderables[i] = renderables[renderables.size() - 1];
-			renderables.resize(renderables.size() - 1);
-			return;
-		}
-	}
+	textureRenderables.erase(std::remove(textureRenderables.begin(), textureRenderables.end(), texture), textureRenderables.end());
+	renderableGroup->removeRenderable(texture);
+	SAFE_DELETE(texture);
 }
 
-GameObject::RenderableData& GameObject::getRenderable(int id)
+void GameObject::removeText(cTextRenderable *text)
 {
-	for (int i = 0; i < renderables.size(); i++)
-	{
-		if (renderables[i].id == id)
-		{
-			return renderables[i];
-		}
-	}
-	return renderables[0];
+	textRenderables.erase(std::remove(textRenderables.begin(), textRenderables.end(), text), textRenderables.end());
+	renderableGroup->removeRenderable(text);
+	SAFE_DELETE(text);
+}
+
+void GameObject::removeParticle(cParticle *particle)
+{
+	particles.erase(std::remove(particles.begin(), particles.end(), particle), particles.end());
+	renderableGroup->removeRenderable(particle);
+	SAFE_DELETE(particle);
+}
+
+void GameObject::removeAnimation(cAnimatedTexturedQuadRenderable *animation)
+{
+	animations.erase(std::remove(animations.begin(), animations.end(), animation), animations.end());
+	renderableGroup->removeRenderable(animation);
+	SAFE_DELETE(animation);
 }
 
 void GameObject::checkRenderable()
@@ -167,28 +134,6 @@ void GameObject::checkRenderable()
 		bloodworks->addRenderable(renderableGroup, level);
 		renderableGroup->setAlignment(alignment);
 		updateMatrix();
-	}
-}
-
-
-void GameObject::RenderableData::update()
-{
-	if (type == RenderableDataType::texture)
-	{
-		cTexturedQuadRenderable *quadRenderable = (cTexturedQuadRenderable*)renderable;
-		quadRenderable->setColor(Vec4::fromColor(color));
-		Mat3 mat = Mat3::scaleMatrix(textureSize).rotateBy(rotation).translateBy(pos);
-		renderable->setWorldMatrix(mat);
-		renderable->setAlignment(alignment);
-	}
-	else if (type == RenderableDataType::text)
-	{
-		cTextRenderable *textRenderable = (cTextRenderable*)renderable;
-		textRenderable->setWorldMatrix(Mat3::translationMatrix(pos));
-		textRenderable->setTextColor(Vec4::fromColor(color));
-		textRenderable->setTextSize(textSize);
-		textRenderable->setTextAllignment(textAlignment);
-		textRenderable->setAlignment(alignment);
 	}
 }
 

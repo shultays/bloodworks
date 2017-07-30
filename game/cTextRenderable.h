@@ -33,8 +33,8 @@ public:
 		setText(text);
 		this->textSize = textSize;
 		this->color = textColor;
-		setTextAllignment(TextAlignment::left);
-		setVerticalTextAllignment(VerticalTextAlignment::bottom);
+		setTextAlignment(TextAlignment::left);
+		setVerticalTextAlignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
 		maxLength = FLT_MAX;
 		maxLine = INT_MAX;
@@ -56,7 +56,7 @@ public:
 		return maxLength;
 	}
 
-	void setTextAllignment(TextAlignment alignment)
+	void setTextAlignment(TextAlignment alignment)
 	{
 		this->textAlignment = alignment;
 	}
@@ -80,7 +80,7 @@ public:
 	{
 		this->color = color;
 	}
-	void setVerticalTextAllignment(VerticalTextAlignment param1);
+	void setVerticalTextAlignment(VerticalTextAlignment param1);
 	const std::string& getText() const;
 	void setMaxLineCount(int maxLine)
 	{
