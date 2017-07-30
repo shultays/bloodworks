@@ -38,8 +38,7 @@ function RocketBarrage.onTick(gun)
 			end
 			bullet.moveAngle = bullet.moveAngle + spread * (math.random() * 2.0 - 1.0)
 			
-			bullet.data.addedParticle = true
-			if bullet.data.addedParticle then
+			if DEBUG ~= true then
 				bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 4.0, {})
 			end
 			local c = math.random() * 0.3 + 0.7
@@ -54,10 +53,5 @@ end
 function RocketBarrage.onBulletTick(gun, bullet)
 	bullet.moveAngle = bullet.moveAngle + bullet.data.rotateSpeed * dt
 	local a = 1.0 - (time - bullet.startTime - bullet.lifeTime + 0.1) / 0.1
-	
 	bullet:setColor(Vec4:new(1.0, 1.0, 1.0, a))
-	if bullet.data.addedParticle ~= true and bullet.startTime < time - 0.15 then
-		bullet.data.addedParticle = true
-		bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 4.0, {})
-	end
 end

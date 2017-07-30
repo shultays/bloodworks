@@ -29,11 +29,11 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	}
 	if (j.count("ultimate"))
 	{
-		isUltimate = j["ultimate"].get<bool>();
+		ultimate = j["ultimate"].get<bool>();
 	}
 	else
 	{
-		isUltimate = false;
+		ultimate = false;
 	}
 
 	if (j.count("spawnChance"))
