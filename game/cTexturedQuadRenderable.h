@@ -9,6 +9,7 @@ protected:
 	cTextureShr texture[4];
 
 public:
+	cTexturedQuadRenderable(cGame *game, const cTextureShr& texture, const std::string& shaderPath);
 	cTexturedQuadRenderable(cGame *game, const std::string& texturePath, const std::string& shaderPath);
 
 	virtual ~cTexturedQuadRenderable()
@@ -26,14 +27,23 @@ public:
 		setTexture(0, texturePath);
 	}
 
-	void setTexture(int i, const std::string& texturePath);
+	void setTexture(const cTextureShr& texture)
+	{
+		setTexture(0, texture);
+	}
 
-	cTextureShr& getTexture()
+	void setTexture(int i, const std::string& texturePath);
+	void setTexture(int i, const cTextureShr& texture)
+	{
+		this->texture[i] = texture;
+	}
+
+	const cTextureShr& getTexture()
 	{
 		return getTexture(0);
 	}
 
-	cTextureShr& cTexturedQuadRenderable::getTexture(int i)
+	const cTextureShr& cTexturedQuadRenderable::getTexture(int i)
 	{
 		return texture[i];
 	}
