@@ -23,6 +23,7 @@
 #include "DropController.h"
 #include "Bonus.h"
 #include "cTimeProfiler.h"
+#include "cAnimatedRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -724,6 +725,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 
+	lua.new_usertype<cAnimatedTexturedQuadRenderable>("Animation",
+		"setLevel", &cAnimatedTexturedQuadRenderable::setLevel,
+		"setAllignment", &cAnimatedTexturedQuadRenderable::setAlignment,
+		"setVisible", &cAnimatedTexturedQuadRenderable::setVisible,
+		"setColor", &cAnimatedTexturedQuadRenderable::setColor,
+		"setWorldMatrix", &cAnimatedTexturedQuadRenderable::setWorldMatrix,
+		"playAnimation", &cAnimatedTexturedQuadRenderable::playAnimationWithName
+		);
 	lua.new_usertype<GameObject>("GameObject",
 		"id", sol::readonly(&GameObject::id),
 
@@ -733,6 +742,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addText", &GameObject::addText,
 		"addTexture", &GameObject::addTexture,
 		"addParticle", &GameObject::addParticle,
+		"addAnimation", &GameObject::addAnimation,
 
 		"removeRenderable", &GameObject::removeRenderable, 
 		"getRenderable", &GameObject::getRenderable,
@@ -740,6 +750,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setPosition", &GameObject::setPosition,
 		"setRotation", &GameObject::setRotation,
 		"setScale", &GameObject::setScale,
+
+		"getPosition", &GameObject::getPosition,
+		"getRotation", &GameObject::getRotation,
+		"getScale", &GameObject::getScale,
+
 		"setLevel", &GameObject::setLevel,
 		"setAlignment", &GameObject::setAlignment
 		);

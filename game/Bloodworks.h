@@ -45,6 +45,7 @@ class ModWindow;
 class cSlaveWork;
 class BloodworksConfig;
 class BloodworksCheats;
+class cAnimationTemplate;
 
 class Bloodworks : public cGame
 {
@@ -98,6 +99,9 @@ class Bloodworks : public cGame
 
 	std::vector<cSoundHandle> gameSounds;
 	std::vector<cParticle*> orphanParticles;
+
+	std::map<std::string, cAnimationTemplate*> animationTemplates;
+
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -154,6 +158,11 @@ public:
 	cParticleTemplate* getParticleTemplate(const std::string& name) const
 	{
 		return particles.at(name);
+	}
+
+	cAnimationTemplate* getAnimationTemplate(const std::string& name) const
+	{
+		return animationTemplates.at(name);
 	}
 
 	void addDrop(const Vec2& position);

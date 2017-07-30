@@ -10,6 +10,7 @@ class cRenderableContainer;
 enum class RenderableAlignment;
 enum class TextAlignment;
 class cParticle;
+class cAnimatedTexturedQuadRenderable;
 
 class GameObject
 {
@@ -55,6 +56,7 @@ class GameObject
 	cRenderableContainer *renderableGroup;
 	std::vector<RenderableData> renderables;
 	std::vector<cParticle*> particles;
+	std::vector<cAnimatedTexturedQuadRenderable*> animations;
 	int level;
 	RenderableAlignment alignment;
 
@@ -78,6 +80,21 @@ class GameObject
 		updateMatrix();
 	}
 
+	const Vec2& getPosition() const
+	{
+		return pos;
+	}
+
+	float getRotation() const
+	{
+		return rotation;
+	}
+
+	const Vec2& getScale() const
+	{
+		return scale;
+	}
+
 	void setLevel(int level);
 	void setAlignment(RenderableAlignment alignment);
 	void updateMatrix();
@@ -90,6 +107,7 @@ public:
 	RenderableData& addTexture(const std::string& texture, const std::string& shader);
 	RenderableData& addText(const std::string& text, const std::string& font);
 	cParticle* addParticle(const std::string& particleTemplate, const sol::table& args);
+	cAnimatedTexturedQuadRenderable* addAnimation(const std::string& name);
 	void removeRenderable(int id);
 
 	RenderableData& getRenderable(int id);
