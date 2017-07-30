@@ -20,7 +20,7 @@
 	"volume" : 0.65
   },
   "firingSoundFadein" : 0.3,
-  
+
   "ultimate" : true,
   
   "isLaser" : true,
