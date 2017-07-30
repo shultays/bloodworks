@@ -282,7 +282,7 @@ end
 function removeBuffIcon(name, dontUpdate)
 	local buffData = missionData.buffs[name] 
 	if buffData ~= nil then
-		missionData.buffObject:removeRenderable(buffData.renderable)
+		missionData.buffObject:removeTexture(buffData.renderable)
 		missionData.buffs[name] = nil
 		missionData.buffCount = missionData.buffCount - 1
 		
@@ -306,13 +306,10 @@ function addBuffIcon(name, path)
 	
 	local buffObject = missionData.buffObject
 	local renderable = buffObject:addTexture(path, "~/resources/default")
-	renderable.textureSize = Vec2:new(15.0, 15.0)
-	renderable.position = Vec2:new(0, 0)
-	renderable.alignment = RenderableAlignment.top
-	renderable:update()
+	renderable:setAlignment(RenderableAlignment.top)
 	
 	local buffData = {}
-	buffData.renderable = renderable.id
+	buffData.renderable = renderable
 	buffData.name = name
 	buffData.id = getUniqueId()
 	missionData.buffs[name] = buffData
@@ -326,9 +323,7 @@ function updateBuffPositions()
 	local shift = (missionData.buffCount - 1) * 34.0 / 2
 	
 	for key,value in pairs(missionData.buffs) do
-		local renderable = missionData.buffObject:getRenderable(value.renderable)
-		renderable.position = Vec2:new(p * 34 - shift, 0)
-		renderable:update()
+		value.renderable:setWorldMatrix(Mat3.fromPositionAndScale(Vec2.new(p * 34 - shift, 0), Vec2.new(15.0, 15.0)))
 		p = p + 1
 	end
 end

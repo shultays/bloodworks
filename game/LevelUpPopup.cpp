@@ -25,30 +25,30 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 
 	levelupGroupTitle = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 24.0f);
 	levelupGroupTitle->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 110.0f)));
-	levelupGroupTitle->setTextAllignment(TextAlignment::center);
+	levelupGroupTitle->setTextAlignment(TextAlignment::center);
 	levelupGroup->addRenderable(levelupGroupTitle);
 
 	levelupGroupSubTitle = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "asd", 18.0f);
 	levelupGroupSubTitle->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 83.0f)));
-	levelupGroupSubTitle->setTextAllignment(TextAlignment::center);
+	levelupGroupSubTitle->setTextAlignment(TextAlignment::center);
 	levelupGroup->addRenderable(levelupGroupSubTitle);
 
 	currentPerkName = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 18.0f);
 	currentPerkName->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -80.0f)));
-	currentPerkName->setTextAllignment(TextAlignment::center);
+	currentPerkName->setTextAlignment(TextAlignment::center);
 	levelupGroup->addRenderable(currentPerkName);
 
 	currentPerkExplanation = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 14.0f, Vec4::fromColor(0xFFAAAAAA));
 	currentPerkExplanation->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -117.0f)));
-	currentPerkExplanation->setTextAllignment(TextAlignment::center);
-	currentPerkExplanation->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	currentPerkExplanation->setTextAlignment(TextAlignment::center);
+	currentPerkExplanation->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	currentPerkExplanation->setMaxLength(500.0f);
 	levelupGroup->addRenderable(currentPerkExplanation);
 
 	levelUpText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Tab to Level Up", 24.0f);
 	levelUpText->setWorldMatrix(Mat3::translationMatrix(Vec2(145.0f, 40.0f)));
-	levelUpText->setTextAllignment(TextAlignment::center);
-	levelUpText->setVerticalTextAllignment(VerticalTextAlignment::mid);
+	levelUpText->setTextAlignment(TextAlignment::center);
+	levelUpText->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	levelUpText->setAlignment(RenderableAlignment::bottomLeft);
 	bloodworks->addRenderable(levelUpText, GUI + 151);
 	levelUpText->setVisible(false);

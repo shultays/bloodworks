@@ -116,9 +116,9 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 
 		detailName = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 24.0f);
 		detailName->setMaxLength(550.0f);
-		detailName->setVerticalTextAllignment(VerticalTextAlignment::mid);
+		detailName->setVerticalTextAlignment(VerticalTextAlignment::mid);
 		detailName->setWorldMatrix(Mat3::translationMatrix(Vec2(10.0f, 130.0f)));
-		detailName->setTextAllignment(TextAlignment::center);
+		detailName->setTextAlignment(TextAlignment::center);
 		modDetailWindow->addRenderable(detailName);
 
 		detailIcon = new cTexturedQuadRenderable(bloodworks, "", "resources/default");
@@ -127,25 +127,25 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 
 		detailVersion = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 14.0f);
 		detailVersion->setWorldMatrix(Mat3::translationMatrix(Vec2(190.0f, -40.0f)));
-		detailVersion->setTextAllignment(TextAlignment::center);
+		detailVersion->setTextAlignment(TextAlignment::center);
 		modDetailWindow->addRenderable(detailVersion);
 
 		detailCreator = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 14.0f);
 		detailCreator->setMaxLength(170.0f);
 		detailCreator->setWorldMatrix(Mat3::translationMatrix(Vec2(190.0f, -60.0f)));
-		detailCreator->setTextAllignment(TextAlignment::center);
+		detailCreator->setTextAlignment(TextAlignment::center);
 		modDetailWindow->addRenderable(detailCreator);
 
 		detailDescription = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 15.0f);
 		detailDescription->setMaxLength(350.0f);
 		detailDescription->setWorldMatrix(Mat3::translationMatrix(Vec2(-265.0f, 80.0f)));
-		detailDescription->setTextAllignment(TextAlignment::fit);
+		detailDescription->setTextAlignment(TextAlignment::fit);
 		detailDescription->setMaxLineCount(12);
 		modDetailWindow->addRenderable(detailDescription);
 
 		detailInstallText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 18.0f);
 		detailInstallText->setWorldMatrix(Mat3::translationMatrix(190.0f, -140.0f));
-		detailInstallText->setTextAllignment(TextAlignment::center);
+		detailInstallText->setTextAlignment(TextAlignment::center);
 		modDetailWindow->addRenderable(detailInstallText);
 
 
@@ -163,7 +163,7 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 
 		cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Install", 18.0f);
 		text->setWorldMatrix(Mat3::translationMatrix(-3.0f, -3.0f));
-		text->setTextAllignment(TextAlignment::center);
+		text->setTextAlignment(TextAlignment::center);
 		detailInstallButton->addRenderable(text);
 
 		modDetailWindow->addRenderable(detailInstallButton);
