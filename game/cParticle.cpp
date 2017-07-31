@@ -3,6 +3,7 @@
 #include "cShader.h"
 #include "cGame.h"
 #include "cTexture.h"
+#include "cTools.h"
 
 cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
@@ -20,10 +21,6 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 
 	auto addAtribute = [&](const std::string& attributeName, const std::string& attributeType)
 	{
-		if (attributeName == "uv")
-		{
-			uvIndex = (int)attributes.size();
-		}
 		Attribute attribute;
 		attribute.name = attributeName;
 
@@ -55,15 +52,19 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 		attributeSize += attribute.size;
 
 		attributes.push_back(attribute);
+		attributesMap[attributeName] = (int)attributes.size() - 1;
 	};
 	addAtribute("pos", "vec2");
 	addAtribute("uv", "vec2");
 	addAtribute("time", "float");
 
+	posIndex = attributesMap["pos"];
+	uvIndex = attributesMap["uv"];
+	timeIndex = attributesMap["time"];
+
 	uCurrentTime = shader->addUniform("uCurrentTime", TypeFloat).index;
 
 	lua.set_function("addAttribute", addAtribute);
-
 
 	auto addUniform = [&](const std::string& uniformName, const std::string& uniformType)
 	{
@@ -105,18 +106,176 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 		isStrip = false;
 	}
 
-	if (j["textures"].is_array())
+	if (j.count("textures"))
 	{
-		for (auto& t : j["textures"])
+		if (j["textures"].is_array())
 		{
-			textures.push_back(resources.getTexture(file.folder + t.get<std::string>(), true));
+			for (auto& t : j["textures"])
+			{
+				std::string name = t.get<std::string>();
+				textures.push_back(resources.getTexture(file.folder + name, true));
+				texturesMap[name] = (int)textures.size() - 1;
+			}
+		}
+		else
+		{
+			std::string name = j["textures"].get<std::string>();
+			textures.push_back(resources.getTexture(file.folder + name, true));
+			texturesMap[name] = 0;
 		}
 	}
-	else
+
+	needsLuaRandoms = true;
+	if (j.count("needsLuaRandoms"))
 	{
-		textures.push_back(resources.getTexture(file.folder + j["textures"].get<std::string>(), true));
+		needsLuaRandoms = j["needsLuaRandoms"].get<bool>();
 	}
 	scriptTable["initSystem"]();
+
+	if (j.count("uniformRandoms"))
+	{
+		for (auto& r : j["uniformRandoms"])
+		{
+			std::string t = r["type"].get<std::string>();
+			if (t == "linear")
+			{
+				cParticleRandomizer::LinearRandomData random;
+				random.attributeIndex = attributesMap[r["name"].get<std::string>()];
+				if (r.count("min"))
+				{
+					random.min = r["min"].get<float>();
+					random.max = r["max"].get<float>();
+				}
+				else
+				{
+					random.min = 0.0f;
+					random.max = 1.0f;
+				}
+				randomizer.linearRandoms.push_back(random);
+			}
+			else if (t == "angular")
+			{
+				cParticleRandomizer::AngularRandomData random;
+				random.attributeIndex = attributesMap[r["name"].get<std::string>()];
+				if (r.count("min"))
+				{
+					random.min = r["min"].get<float>();
+					random.max = r["max"].get<float>();
+				}
+				else
+				{
+					random.min = 0.0f;
+					random.max = 1.0f;
+				}
+				if (r.count("minAngle"))
+				{
+					random.minAngle = r["minAngle"].get<float>() * pi_2;
+					random.maxAngle = r["maxAngle"].get<float>() * pi_2;
+				}
+				else
+				{
+					random.minAngle = 0.0f;
+					random.maxAngle = pi_2;
+				}
+				randomizer.angularRandoms.push_back(random);
+			}
+			else if (t == "texture")
+			{
+				cParticleRandomizer::TextureRandomData random;
+				random.attributeIndex = attributesMap[r["name"].get<std::string>()];
+				if (r.count("path"))
+				{
+					random.textureIndexMin = random.textureIndexMax = texturesMap[r["path"].get<std::string>()];
+				}
+				else
+				{
+					random.textureIndexMin = r["min"].get<int>();
+					random.textureIndexMax = r["max"].get<int>();
+				}
+				randomizer.textureRandoms.push_back(random);
+			}
+			else if (t == "vector")
+			{
+				cParticleRandomizer::VectorRandomData random;
+				random.attributeIndex = attributesMap[r["name"].get<std::string>()];
+				auto& minColor = r["min"];
+				auto& maxColor = r["max"];
+				for (int i = 0; i < 4; i++)
+				{
+					if (i < minColor.size())
+					{
+						random.min[i] = minColor.at(i).get<float>();
+						random.max[i] = maxColor.at(i).get<float>();
+					}
+					else
+					{
+						random.min[i] = random.max[i] = 1.0f;
+					}
+				}
+				randomizer.vectorRandoms.push_back(random);
+			}
+			else if (t == "uvRandom")
+			{
+				cParticleRandomizer::UVRandomData random;
+				random.attributeIndexStart = attributesMap[r["start"].get<std::string>()];
+				random.attributeIndexSize = attributesMap[r["size"].get<std::string>()];
+				if (r["min"].is_array())
+				{
+					random.min[0] = r["min"].at(0).get<float>();
+					random.min[1] = r["min"].at(1).get<float>();
+					random.max[0] = r["max"].at(0).get<float>();
+					random.max[1] = r["max"].at(1).get<float>();
+				}
+				else
+				{
+					random.min[0] = random.min[1] = r["min"].get<float>();
+					random.max[0] = random.max[1] = r["max"].get<float>();
+				}
+				randomizer.uvRandoms.push_back(random);
+			}
+			else if (t == "positionShift")
+			{
+				randomizer.positionRandom.isValid = true;
+				if (r.count("isLinear"))
+				{
+					randomizer.positionRandom.isLinear = r["isLinear"].get<bool>();
+				}
+				else
+				{
+					randomizer.positionRandom.isLinear = false;
+				}
+				if (r.count("min"))
+				{
+					randomizer.positionRandom.min = r["min"].get<float>();
+					randomizer.positionRandom.max = r["max"].get<float>();
+				}
+				else
+				{
+					randomizer.positionRandom.min = 0.0f;
+					randomizer.positionRandom.max = 1.0f;
+				}
+				if (r.count("minAngle"))
+				{
+					randomizer.positionRandom.minAngle = r["minAngle"].get<float>() * pi_2;
+					randomizer.positionRandom.maxAngle = r["maxAngle"].get<float>() * pi_2;
+				}
+				else
+				{
+					randomizer.positionRandom.minAngle = 0.0f;
+					randomizer.positionRandom.maxAngle = pi_2;
+				}
+			}
+			else
+			{
+				assert(false);
+			}
+		}
+	}
+}
+
+bool cParticleTemplate::needsLuaCall() const
+{
+	return needsLuaRandoms;
 }
 
 cParticle::cParticle(cGame* game, cParticleTemplate *particleTemplate, const sol::table& args) : cRenderableWithShader(game, particleTemplate->shader)
@@ -155,8 +314,9 @@ void cParticle::addTexture(const std::string& path)
 	textures.push_back(texture);
 }
 
-void cParticle::addParticle(const Vec2& pos, sol::table& params)
+void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, cParticleRandomizer* randomizer)
 {
+	Vec2 pos = posInput;
 	if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD * 4)
 	{
 		QuadBufferData bufferData;
@@ -179,67 +339,106 @@ void cParticle::addParticle(const Vec2& pos, sol::table& params)
 	}
 
 	QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
-	params["particleBeginTime"] = time;
-	particleTemplate->scriptTable["addParticle"](params, pos, args);
 
+	if (particleTemplate->needsLuaRandoms && paramsP)
+	{
+		(*paramsP)["particleBeginTime"] = time;
+		particleTemplate->scriptTable["addParticle"](*paramsP, pos, args);
+
+	}
 	int particleNumToAdd = particleTemplate->isStrip ? 2 : 4;
 
 	memset(buff, 0, particleTemplate->attributeSize * particleNumToAdd);
 
 	int vertexSize = particleTemplate->attributeSize;
 
-	for (auto& uniform : particleTemplate->uniforms)
+	std::vector<int> setAttributes;
+	setAttributes.resize(shader->getAttributeCount());
+	for (int i=0; i<setAttributes.size(); i++)
 	{
-		if (params[uniform.name])
+		setAttributes[i] = shader->getAttributeAtIndex(i).location == -1 ? 1 : 0;
+	}
+
+	if (paramsP)
+	{
+		sol::table& params = *paramsP;
+
+		for (auto& uniform : particleTemplate->uniforms)
 		{
-			switch (uniform.type)
+			if (params[uniform.name])
 			{
-			case TypeFloat:
-				setUniform(uniform.index, params[uniform.name].get<float>());
-				break;
-			case TypeVec2:
-				setUniform(uniform.index, params[uniform.name].get<Vec2>());
-				break;
-			case TypeVec3:
-				setUniform(uniform.index, params[uniform.name].get<Vec3>());
-				break;
-			case TypeVec4:
-				setUniform(uniform.index, params[uniform.name].get<Vec4>());
-				break;
+				switch (uniform.type)
+				{
+				case TypeFloat:
+					setUniform(uniform.index, params[uniform.name].get<float>());
+					break;
+				case TypeVec2:
+					setUniform(uniform.index, params[uniform.name].get<Vec2>());
+					break;
+				case TypeVec3:
+					setUniform(uniform.index, params[uniform.name].get<Vec3>());
+					break;
+				case TypeVec4:
+					setUniform(uniform.index, params[uniform.name].get<Vec4>());
+					break;
+				}
+			}
+		}
+
+		for (auto& attribute : particleTemplate->attributes)
+		{
+			if (params[attribute.name])
+			{
+				switch (attribute.type)
+				{
+				case TypeFloat:
+					*(float*)(buff + attribute.begin) = params[attribute.name].get<float>();
+					break;
+				case TypeVec2:
+					*(Vec2*)(buff + attribute.begin) = params[attribute.name].get<Vec2>();
+					break;
+				case TypeVec3:
+					*(Vec3*)(buff + attribute.begin) = params[attribute.name].get<Vec3>();
+					break;
+				case TypeVec4:
+					*(Vec4*)(buff + attribute.begin) = params[attribute.name].get<Vec4>();
+					break;
+				}
+
+				setAttributes[attribute.index] = 1;
+			}
+			else if (attribute.name == "time")
+			{
+			}
+			else if (attribute.name == "uv")
+			{
+			}
+			else
+			{
+				//assert(!"attribute is not set");
 			}
 		}
 	}
 
-	for (auto& attribute : particleTemplate->attributes)
+	setAttributes[particleTemplate->attributes[particleTemplate->posIndex].index] = 1;
+	*(Vec2*)(buff + particleTemplate->attributes[particleTemplate->posIndex].begin) = pos;
+	setAttributes[particleTemplate->attributes[particleTemplate->timeIndex].index] = 1;
+	*(float*)(buff + particleTemplate->attributes[particleTemplate->timeIndex].begin) = timer.getTime() - time;
+
+	setAttributes[particleTemplate->attributes[particleTemplate->uvIndex].index] = 1;
+
+	particleTemplate->randomizeAttributes(particleTemplate->randomizer, this, pos, buff, setAttributes);
+	particleTemplate->randomizeAttributes(this->randomizer, this, pos, buff, setAttributes);
+	if (randomizer)
 	{
-		if (params[attribute.name])
+		particleTemplate->randomizeAttributes(*randomizer, this, pos, buff, setAttributes);
+	}
+
+	for (int i = 0; i < setAttributes.size(); i++)
+	{
+		if (setAttributes[i] == 0)
 		{
-			switch (attribute.type)
-			{
-			case TypeFloat:
-				*(float*)(buff + attribute.begin) = params[attribute.name].get<float>();
-				break;
-			case TypeVec2:
-				*(Vec2*)(buff + attribute.begin) = params[attribute.name].get<Vec2>();
-				break;
-			case TypeVec3:
-				*(Vec3*)(buff + attribute.begin) = params[attribute.name].get<Vec3>();
-				break;
-			case TypeVec4:
-				*(Vec4*)(buff + attribute.begin) = params[attribute.name].get<Vec4>();
-				break;
-			}
-		}
-		else if (attribute.name == "time")
-		{
-			*(float*)(buff + attribute.begin) = timer.getTime() - time;
-		}
-		else if (attribute.name == "uv")
-		{
-		}
-		else
-		{
-			assert(!"attribute is not set");
+			printf("Attribute not set : %s\n", shader->getAttributeAtIndex(i).name.c_str());
 		}
 	}
 
@@ -248,7 +447,6 @@ void cParticle::addParticle(const Vec2& pos, sol::table& params)
 		memcpy(buff + vertexSize * 1, buff, vertexSize);
 		memcpy(buff + vertexSize * 2, buff, vertexSize);
 		memcpy(buff + vertexSize * 3, buff, vertexSize);
-
 
 		*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
 		*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
@@ -283,6 +481,8 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {
 	if (quadBuffers.size() > 0)
 	{
+		particleTemplate->setShaderUniforms();
+
 		for (int i = 0; i < quadBuffers.size(); i++)
 		{
 			if (quadBuffers[i].timeToDie < timer.getTime())
@@ -339,5 +539,85 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 
 		glDisable(GL_TEXTURE_2D);
 		game->lastShader = nullptr;
+	}
+}
+
+void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, std::vector<int>& setAttributes) const
+{
+	for (auto& r : randomizer.linearRandoms)
+	{
+		assert(attributes[r.attributeIndex].type == TypeFloat);
+		*(float*)(buff + attributes[r.attributeIndex].begin) = randFloat(r.min, r.max);
+		setAttributes[attributes[r.attributeIndex].index] = 1;
+	}
+
+	for (auto& r : randomizer.angularRandoms)
+	{
+		assert(attributes[r.attributeIndex].type == TypeVec2);
+		*(Vec2*)(buff + attributes[r.attributeIndex].begin) = Vec2::fromAngle(randFloat(r.minAngle, r.maxAngle)) * randFloat(r.min, r.max);
+		setAttributes[attributes[r.attributeIndex].index] = 1;
+	}
+
+	for (auto& r : randomizer.textureRandoms)
+	{
+		assert(0);
+	}
+
+	for (auto& r : randomizer.vectorRandoms)
+	{
+		assert(attributes[r.attributeIndex].type == TypeVec3 || attributes[r.attributeIndex].type == TypeVec4);
+		Vec4 color;
+		color[0] = randFloat(r.min[0], r.max[0]);
+		color[1] = randFloat(r.min[1], r.max[1]);
+		color[2] = randFloat(r.min[2], r.max[2]);
+		color[3] = randFloat(r.min[3], r.max[3]);
+
+		if (attributes[r.attributeIndex].type == TypeVec3)
+		{
+			*(Vec3*)(buff + attributes[r.attributeIndex].begin) = color.vec3;
+		}
+		else
+		{
+			*(Vec4*)(buff + attributes[r.attributeIndex].begin) = color;
+		}
+		setAttributes[attributes[r.attributeIndex].index] = 1;
+	}
+
+	for (auto& r : randomizer.uvRandoms)
+	{
+		assert(attributes[r.attributeIndexStart].type == TypeVec2);
+		assert(attributes[r.attributeIndexSize].type == TypeVec2);
+
+		Vec2 size;
+
+		size[0] = randFloat(r.min[0], r.max[0]);
+		size[1] = randFloat(r.min[1], r.max[1]);
+		Vec2 start;
+
+		start[0] = randFloat(1.0f - size[0]);
+		start[1] = randFloat(1.0f - size[1]);
+
+		*(Vec2*)(buff + attributes[r.attributeIndexStart].begin) = start;
+		*(Vec2*)(buff + attributes[r.attributeIndexSize].begin) = size;
+
+		setAttributes[attributes[r.attributeIndexStart].index] = 1;
+		setAttributes[attributes[r.attributeIndexSize].index] = 1;
+	}
+
+	if (randomizer.positionRandom.isValid)
+	{
+		if (randomizer.positionRandom.isLinear)
+		{
+			pos[0] += randFloat(randomizer.positionRandom.min, randomizer.positionRandom.max);
+			pos[1] += randFloat(randomizer.positionRandom.min, randomizer.positionRandom.max);
+		}
+		else
+		{
+
+			pos += Vec2::fromAngle(randFloat(randomizer.positionRandom.minAngle, randomizer.positionRandom.maxAngle)) * randFloat(randomizer.positionRandom.min, randomizer.positionRandom.max);
+		}
+		*(Vec2*)(buff + attributes[posIndex].begin) = pos;
+
+		setAttributes[attributes[posIndex].index] = 1;
 	}
 }
