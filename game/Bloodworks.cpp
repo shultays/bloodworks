@@ -43,10 +43,10 @@ BloodworksCheats *bloodworksDebug;
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
+	printf("loading json %s\n", fileName.c_str());
 	std::string jsonFile2;
 	textFileRead(fileName, jsonFile2);
 	nlohmann::json j2 = nlohmann::json::parse(jsonFile2.c_str());
-
 	if (j2.count("baseFile"))
 	{
 		appendJson(j, j2["baseFile"].get<std::string>());

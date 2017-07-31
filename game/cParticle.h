@@ -8,17 +8,170 @@
 
 #define MAX_QUAD 256
 
-class cParticleTemplate
+class cParticleRandomizer
 {
 	friend class cParticle;
+	friend class cParticleTemplate;
 
+	struct LinearRandomData
+	{
+		int attributeIndex;
+		float min;
+		float max;
+	};
+
+	struct VectorRandomData
+	{
+		int attributeIndex;
+		Vec4 min;
+		Vec4 max;
+	};
+
+	struct AngularRandomData
+	{
+		int attributeIndex;
+		float minAngle;
+		float maxAngle;
+		float min;
+		float max;
+	};
+
+	struct PositionRandom
+	{
+		bool isValid;
+		bool isLinear;
+		float minAngle;
+		float maxAngle;
+		float min;
+		float max;
+	};
+
+	struct TextureRandomData
+	{
+		int attributeIndex;
+		int textureIndexMin;
+		int textureIndexMax;
+	};
+
+	struct UVRandomData
+	{
+		int attributeIndexStart;
+		int attributeIndexSize;
+		Vec2 min;
+		Vec2 max;
+	};
+
+	PositionRandom positionRandom;
+	std::vector<LinearRandomData> linearRandoms;
+	std::vector<AngularRandomData> angularRandoms;
+	std::vector<TextureRandomData> textureRandoms;
+	std::vector<VectorRandomData> vectorRandoms;
+	std::vector<UVRandomData> uvRandoms;
+
+public:
+	cParticleRandomizer()
+	{
+		positionRandom.isValid = false;
+	}
+
+	void addLinear(int index, float min, float max)
+	{
+		LinearRandomData random;
+		random.attributeIndex = index;
+		random.min = min;
+		random.max = max;
+		for (auto& r : linearRandoms)
+		{
+			if (r.attributeIndex == index)
+			{
+				r = random;
+				return;
+			}
+		}
+		linearRandoms.push_back(random);
+	}
+	void addAngular(int index, float min, float max, float minAngle, float maxAngle)
+	{
+		AngularRandomData random;
+		random.attributeIndex = index;
+		random.min = min;
+		random.max = max;
+		random.minAngle = minAngle;
+		random.maxAngle = maxAngle;
+		for (auto& r : angularRandoms)
+		{
+			if (r.attributeIndex == index)
+			{
+				r = random;
+				return;
+			}
+		}
+		angularRandoms.push_back(random);
+	}
+
+	void addVector(int index, const Vec4& min, const Vec4& max)
+	{
+		VectorRandomData random;
+		random.attributeIndex = index;
+		random.min = min;
+		random.max = max;
+		for (auto& r : vectorRandoms)
+		{
+			if (r.attributeIndex == index)
+			{
+				r = random;
+				return;
+			}
+		}
+		vectorRandoms.push_back(random);
+	}
+
+	void addUVRandom(int indexStart, int indexSize, const Vec2& min, const Vec2& max)
+	{
+		UVRandomData random;
+		random.attributeIndexStart = indexStart;
+		random.attributeIndexSize = indexSize;
+		random.min = min;
+		random.max = max;
+		for (auto& r : uvRandoms)
+		{
+			if (r.attributeIndexStart == indexStart)
+			{
+				r = random;
+				return;
+			}
+		}
+		uvRandoms.push_back(random);
+	}
+
+	void setPosShiftLinear(float min, float max)
+	{
+		positionRandom.isValid = true;
+		positionRandom.isLinear = true;
+		positionRandom.min = min;
+		positionRandom.max = max;
+	}
+
+	void setPosShiftAngular(float min, float max, float minAngle, float maxAngle)
+	{
+		positionRandom.isValid = true;
+		positionRandom.isLinear = false;
+		positionRandom.min = min;
+		positionRandom.max = max;
+		positionRandom.minAngle = minAngle;
+		positionRandom.maxAngle = maxAngle;
+	}
+};
+
+class cParticleTemplate : public cUniformDataWithShader
+{
+	friend class cParticle;
+	cParticleRandomizer randomizer;
 	float maxLifeTime;
-	cShaderShr shader;
 	std::string scriptName;
 	sol::table scriptTable;
 
 	int attributeSize;
-	int uvIndex;
 
 	bool isStrip;
 
@@ -32,8 +185,14 @@ class cParticleTemplate
 	};
 
 	std::vector<Attribute> attributes;
+	std::unordered_map<std::string, int> attributesMap;
 	std::vector<cTextureShr> textures;
+	std::unordered_map<std::string, int> texturesMap;
 	std::vector<GLuint> emptyBuffers;
+
+	int posIndex;
+	int timeIndex;
+	int uvIndex;
 
 	struct Uniform
 	{
@@ -44,8 +203,10 @@ class cParticleTemplate
 	std::vector<Uniform> uniforms;
 
 	int uCurrentTime;
-public:
+	bool needsLuaRandoms;
+	void randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, std::vector<int>& setAttributes) const;
 
+public:
 	cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file);
 
 	~cParticleTemplate()
@@ -66,6 +227,12 @@ public:
 	{
 		return scriptName;
 	}
+
+	int getAttributeIndex(const std::string& name)
+	{
+		return attributesMap[name];
+	}
+	bool needsLuaCall() const;
 };
 
 
@@ -87,7 +254,9 @@ class cParticle : public cRenderableWithShader
 
 	bool nextIsStripBegining;
 	std::vector<cTextureShr> textures;
+	cUniformDataWithShader uniformData;
 
+	cParticleRandomizer randomizer;
 public:
 	sol::table args; // todo move to private
 
@@ -104,7 +273,15 @@ public:
 		clear();
 	}
 
-	void addParticle(const Vec2& pos, sol::table& params);
+	void addParticleInternal(const Vec2& pos, sol::table* params, cParticleRandomizer* randomizer = nullptr);
+	void addParticle(const Vec2& pos, sol::table& params)
+	{
+		addParticleInternal(pos, &params, nullptr);
+	}
+	void addParticleWithoutArgs(const Vec2& pos, cParticleRandomizer* randomizer = nullptr)
+	{
+		addParticleInternal(pos, nullptr, randomizer);
+	}
 
 	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop);
 
@@ -127,5 +304,60 @@ public:
 			}
 		}
 		quadBuffers.clear();
+	}
+
+	cParticleTemplate* getParticleTemplate() const
+	{
+		return particleTemplate;
+	}
+
+	void addLinearRandomizerWithName(const std::string& name, float min, float max)
+	{
+		randomizer.addLinear(particleTemplate->attributesMap[name], min, max);
+	}
+
+	void addAngularRandomizerWithName(const std::string& name, float min, float max, float minAngle, float maxAngle)
+	{
+		randomizer.addAngular(particleTemplate->attributesMap[name], min, max, minAngle, maxAngle);
+	}
+
+	void addVectorRandomizerWithName(const std::string& name, const Vec4& min, const Vec4& max)
+	{
+		randomizer.addVector(particleTemplate->attributesMap[name], min, max);
+	}
+
+	void addUVRandomizerWithName(const std::string& start, const std::string& size, const Vec2& min, const Vec2& max)
+	{
+		randomizer.addUVRandom(particleTemplate->attributesMap[start], particleTemplate->attributesMap[size], min, max);
+	}
+
+	void addLinearRandomizer(int index, float min, float max)
+	{
+		randomizer.addLinear(index, min, max);
+	}
+
+	void addAngularRandomizer(int index, float min, float max, float minAngle, float maxAngle)
+	{
+		randomizer.addAngular(index, min, max, minAngle, maxAngle);
+	}
+
+	void addVectorRandomizer(int index, const Vec4& min, const Vec4& max)
+	{
+		randomizer.addVector(index, min, max);
+	}
+
+	void addUVRandomRandomizer(int indexStart, int indexSize, const Vec2& min, const Vec2& max)
+	{
+		randomizer.addUVRandom(indexStart, indexSize, min, max);
+	}
+
+	void setPosShiftLinear(float min, float max)
+	{
+		randomizer.setPosShiftLinear(min, max);
+	}
+
+	void setPosShiftAngular(float min, float max, float minAngle, float maxAngle)
+	{
+		randomizer.setPosShiftAngular(min, max, minAngle, maxAngle);
 	}
 };

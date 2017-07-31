@@ -76,28 +76,28 @@ void cUniformDataWithShader::setShaderUniforms()
 	}
 }
 
-int cUniformDataWithShader::addUniformFloat(const std::string uniform, float val)
+int cUniformDataWithShader::addUniformFloat(const std::string& uniform, float val)
 {
 	int index = shader->addUniform(uniform, TypeFloat).index;
 	setUniform(index, val);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformVec2(const std::string uniform, const Vec2& data)
+int cUniformDataWithShader::addUniformVec2(const std::string& uniform, const Vec2& data)
 {
 	int index = shader->addUniform(uniform, TypeVec2).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformVec3(const std::string uniform, const Vec3& data)
+int cUniformDataWithShader::addUniformVec3(const std::string& uniform, const Vec3& data)
 {
 	int index = shader->addUniform(uniform, TypeVec3).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformVec4(const std::string uniform, const Vec4& data)
+int cUniformDataWithShader::addUniformVec4(const std::string& uniform, const Vec4& data)
 {
 	int index = shader->addUniform(uniform, TypeVec4).index;
 	setUniform(index, data);
@@ -136,28 +136,28 @@ void cUniformDataWithShader::setUniform(int index, const Vec4& data)
 	uniforms[index] = uniform;
 }
 
-int cUniformDataWithShader::addUniformInt(const std::string uniform, int val)
+int cUniformDataWithShader::addUniformInt(const std::string& uniform, int val)
 {
 	int index = shader->addUniform(uniform, TypeInt).index;
 	setUniform(index, val);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformIntVec2(const std::string uniform, const IntVec2& data)
+int cUniformDataWithShader::addUniformIntVec2(const std::string& uniform, const IntVec2& data)
 {
 	int index = shader->addUniform(uniform, TypeIntVec2).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformIntVec3(const std::string uniform, const IntVec3& data)
+int cUniformDataWithShader::addUniformIntVec3(const std::string& uniform, const IntVec3& data)
 {
 	int index = shader->addUniform(uniform, TypeIntVec3).index;
 	setUniform(index, data);
 	return index;
 }
 
-int cUniformDataWithShader::addUniformIntVec4(const std::string uniform, const IntVec4& data)
+int cUniformDataWithShader::addUniformIntVec4(const std::string& uniform, const IntVec4& data)
 {
 	int index = shader->addUniform(uniform, TypeIntVec4).index;
 	setUniform(index, data);
