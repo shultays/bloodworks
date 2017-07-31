@@ -90,6 +90,7 @@ public:
 	class Attribute 
 	{
 	public:
+		std::string name;
 		int index;
 		int attributeType;
 		bool normalized;
@@ -395,7 +396,7 @@ public:
 	}
 
 
-	Attribute addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
+	const Attribute& addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
 	{
 		if (attributeIndices.count(name))
 		{
@@ -403,6 +404,7 @@ public:
 		}
 
 		Attribute attribute(attributeType, normalized);
+		attribute.name = name;
 		if (attributeLocation == -1) 
 		{
 			attribute.location = glGetAttribLocation(shaderProgram, name.c_str());
@@ -415,6 +417,11 @@ public:
 		attribute.index = attributeIndices[name] = (int)attributes.size();
 		attributes.push_back(attribute);
 		return attributes[attribute.index];
+	}
+
+	const Attribute& getAttributeAtIndex(int index)
+	{
+		return attributes[index];
 	}
 
 	int getTotalAttributeSize()
@@ -656,6 +663,12 @@ public:
 	{
 		glDisableVertexAttribArray(attributes[index].location);
 		attributes[index].setData((void*)&data);
+	}
+
+
+	int getAttributeCount() const
+	{
+		return (int)attributes.size();
 	}
 
 	void deleteSelf()

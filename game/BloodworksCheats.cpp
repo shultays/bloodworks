@@ -177,6 +177,11 @@ void BloodworksCheats::onTick()
 		}
 	}
 
+	if (input.isKeyPressed(key_0))
+	{
+		bloodworks->getBloodRenderable()->reset();
+	}
+
 	if (input.isKeyPressed(key_z))
 	{
 		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().addBuff(slowdownBuff, 0.1f, BuffFloat::multiply_buff);
@@ -185,11 +190,6 @@ void BloodworksCheats::onTick()
 	{
 		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
 	}
-	if (input.isKeyPressed(key_c))
-	{
-		bloodworks->getBloodRenderable()->reset();
-	}
-
 
 	if (input.isKeyDown(key_f1))
 	{
@@ -219,6 +219,27 @@ void BloodworksCheats::onTick()
 		player->killSelf();
 	}
 
+	static int z = 0;
+	if (input.isKeyPressed(key_c))
+	{
+		z = (z + 1) % 3;
+
+		for (auto& gun : guns)
+		{
+			if (gun->getScriptName() == "BananaBomb" && z == 0)
+			{
+				player->setSecondaryGun(gun);
+			}
+			if (gun->getScriptName() == "RocketBarrage" && z == 1)
+			{
+				player->setSecondaryGun(gun);
+			}
+			if (gun->getScriptName() == "BigLaser"&& z == 2)
+			{
+				player->setSecondaryGun(gun);
+			}
+		}
+	}
 	missionController->onDebugTick();
 }
 
@@ -262,7 +283,7 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Laser")
+		if (gun->getScriptName() == "RocketLauncher")
 		{
 			//player->setGun(gun);
 		}

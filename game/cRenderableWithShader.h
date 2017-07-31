@@ -52,19 +52,20 @@ public:
 
 	void setShaderUniforms();
 
-	int addUniformFloat(const std::string uniform, float val);
-	int addUniformVec2(const std::string uniform, const Vec2& data);
-	int addUniformVec3(const std::string uniform, const Vec3& data);
-	int addUniformVec4(const std::string uniform, const Vec4& data);
+	int addUniformFloat(const std::string& uniform, float val);
+	int addUniformVec2(const std::string& uniform, const Vec2& data);
+	int addUniformVec3(const std::string& uniform, const Vec3& data);
+	int addUniformVec4(const std::string& uniform, const Vec4& data);
+
 	void setUniform(int index, float data);
 	void setUniform(int index, const Vec2& data);
 	void setUniform(int index, const Vec3& data);
 	void setUniform(int index, const Vec4& data);
 
-	int addUniformInt(const std::string uniform, int val);
-	int addUniformIntVec2(const std::string uniform, const IntVec2& data);
-	int addUniformIntVec3(const std::string uniform, const IntVec3& data);
-	int addUniformIntVec4(const std::string uniform, const IntVec4& data);
+	int addUniformInt(const std::string& uniform, int val);
+	int addUniformIntVec2(const std::string& uniform, const IntVec2& data);
+	int addUniformIntVec3(const std::string& uniform, const IntVec3& data);
+	int addUniformIntVec4(const std::string& uniform, const IntVec4& data);
 	void setUniform(int index, int data);
 	void setUniform(int index, const IntVec2& data);
 	void setUniform(int index, const IntVec3& data);
