@@ -139,8 +139,17 @@ public:
 	bool shouldHit(Bullet *bullet);
 	bool shouldHit(Gun *gun);
 	cParticle* addParticleSpawner(const std::string& name, sol::table& args);
+
+
 	void spawnParticle(cParticle *particle, sol::table& params);
 	void spawnParticleShifted(const Vec2& shift, cParticle *particle, sol::table& params);
+
+	void spawnParticleInternal(cParticle *particle, sol::table* params);
+	void spawnParticleShiftedInternal(const Vec2& shift, cParticle *particle, sol::table* params);
+
+	void spawnParticleWithoutArgs(cParticle *particle);
+	void spawnParticleShiftedWithoutArgs(const Vec2& shift, cParticle *particle);
+
 	void addKnockback(const Vec2& speed, float duration);
 	void modifyDrawLevel(int level);
 	void spawnBodyParts(const Vec2& blowDir);

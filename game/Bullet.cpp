@@ -101,7 +101,14 @@ void Bullet::tick()
 				particleData.lastSpawnPos = finalPos;
 			}
 
-			particleData.particle->addParticle(particleData.lastSpawnPos, particleArgs);
+			if (particleData.particle->getParticleTemplate()->needsLuaCall())
+			{
+				particleData.particle->addParticle(particleData.lastSpawnPos, particleArgs);
+			}
+			else
+			{
+				particleData.particle->addParticleInternal(particleData.lastSpawnPos, nullptr, nullptr);
+			}
 		}
 	}
 	

@@ -45,5 +45,5 @@ function ReflexBoost.onTick(bonus)
 	if remaining < 0.25 then
 		a = remaining * 4.0
 	end
-	ReflexBoost.data.postProcess:setShaderWeight(a)
+	ReflexBoost.data.postProcess:setShaderWeight(a * 0.60)
 end

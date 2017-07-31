@@ -1,12 +1,63 @@
 {
-  "type" : "particle",
-  "maxLifeTime" : 5.0,
-  
-  "vertexShader" : "shader.vs",
-  "pixelShader" : "shader.ps",
-  
-  "textures" : ["fire.png", "clouds.png"],
-  
-  "scriptFile" : "script.lua",
-  "scriptName" : "ExplosionFireParticle"
+	"type" : "particle",
+	"maxLifeTime" : 5.0,
+	
+	"vertexShader" : "shader.vs",
+	"pixelShader" : "shader.ps",
+	
+	"textures" : ["fire.png", "clouds.png"],
+	
+	"scriptFile" : "script.lua",
+	"scriptName" : "ExplosionFireParticle",
+	
+	"needsLuaRandoms" : false,
+	
+	"uniformRandoms" : [
+		{
+			"type" : "positionShift",
+			"min"  : 3.0,
+			"max"  : 13.0
+		},
+		
+		{
+			"name" : "color",
+			"type" : "vector",
+			"min"  : [0.6, 0.2, 0.0],
+			"max"  : [0.9, 0.5, 0.0]
+		},
+		
+		{
+			"name" : "moveSpeed",
+			"type" : "angular",
+			"min"  : 0.0,
+			"max"  : 12.0
+		},
+		
+		{
+			"name" : "initialScale",
+			"type" : "linear",
+			"min"  : 12.0,
+			"max"  : 20.0
+		},
+		{
+			"name" : "initialAlpha",
+			"type" : "linear",
+			"min"  : 0.5,
+			"max"  : 1.0
+		},
+		{
+			"name" : "explosionEffect",
+			"type" : "linear",
+			"min"  : 0.001,
+			"max"  : 0.004
+		},
+		{
+			"start" : "uvSize",
+			"size" : "uvStart",
+			"type" : "uvRandom",
+			"min"  : [0.2, 0.2],
+			"max"  : [0.4, 0.4]
+		}
+	]
+
 }
