@@ -203,6 +203,42 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"playAnimation", &cAnimatedTexturedQuadRenderable::playAnimationWithName
 		);
 
+	lua.new_usertype<cParticleTemplate>("ParticleTemplate",
+
+		"setUniformFloat", [](cParticleTemplate* particle, const std::string& name, float val)
+	{
+		particle->addUniformFloat(name, val);
+	},
+		"setUniformVec2", [](cParticleTemplate* particle, const std::string& name, const Vec2& val)
+	{
+		particle->addUniformVec2(name, val);
+	},
+		"setUniformVec3", [](cParticleTemplate* particle, const std::string& name, const Vec3& val)
+	{
+		particle->addUniformVec3(name, val);
+	},
+		"setUniformVec4", [](cParticleTemplate* particle, const std::string& name, const Vec4& val)
+	{
+		particle->addUniformVec4(name, val);
+	},
+
+		"setUniformInt", [](cParticleTemplate* particle, const std::string& name, int val)
+	{
+		particle->addUniformInt(name, val);
+	},
+		"setUniformIntVec2", [](cParticleTemplate* particle, const std::string& name, const IntVec2& val)
+	{
+		particle->addUniformIntVec2(name, val);
+	},
+		"setUniformIntVec3", [](cParticleTemplate* particle, const std::string& name, const IntVec3& val)
+	{
+		particle->addUniformIntVec3(name, val);
+	},
+		"setUniformIntVec4", [](cParticleTemplate* particle, const std::string& name, const IntVec4& val)
+	{
+		particle->addUniformIntVec4(name, val);
+	}
+		);
 
 	lua.new_usertype<cParticle>("Particle",
 		"setLevel", &cParticle::setLevel,
@@ -211,13 +247,53 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setColor", &cParticle::setColor,
 		"setWorldMatrix", &cParticle::setWorldMatrix,
 		"addParticle", &cParticle::addParticle,
+		"addParticleWithoutArgs", &cParticle::addParticleWithoutArgs,
 		"args", &cParticle::args,
+
+		"addLinearRandom", &cParticle::addLinearRandomizerWithName,
+		"addAngularRandom", &cParticle::addAngularRandomizerWithName,
+		"addUVRandom", &cParticle::addUVRandomizerWithName,
+		"addVectorRandomWithName", &cParticle::addVectorRandomizerWithName,
+		"setPosShiftAngular", &cParticle::setPosShiftAngular,
+		"setPosShiftLinear", &cParticle::setPosShiftLinear,
+
+		"setUniformFloat", [](cParticle* particle, const std::string& name, float val)
+	{
+		particle->addUniformFloat(name, val);
+	},
+		"setUniformVec2", [](cParticle* particle, const std::string& name, const Vec2& val)
+	{
+		particle->addUniformVec2(name, val);
+	},
+		"setUniformVec3", [](cParticle* particle, const std::string& name, const Vec3& val)
+	{
+		particle->addUniformVec3(name, val);
+	},
+		"setUniformVec4", [](cParticle* particle, const std::string& name, const Vec4& val)
+	{
+		particle->addUniformVec4(name, val);
+	},
+
+		"setUniformInt", [](cParticle* particle, const std::string& name, int val)
+	{
+		particle->addUniformInt(name, val);
+	},
+		"setUniformIntVec2", [](cParticle* particle, const std::string& name, const IntVec2& val)
+	{
+		particle->addUniformIntVec2(name, val);
+	},
+		"setUniformIntVec3", [](cParticle* particle, const std::string& name, const IntVec3& val)
+	{
+		particle->addUniformIntVec3(name, val);
+	},
+		"setUniformIntVec4", [](cParticle* particle, const std::string& name, const IntVec4& val)
+	{
+		particle->addUniformIntVec4(name, val);
+	},
 
 		"setTexture", &cParticle::setTexture,
 		"addTexture", &cParticle::addTexture
 		);
-
-
 
 	lua.new_usertype<cPostProcess>("PostProcess",
 		"isEnabled", &cPostProcess::isEnabled,
@@ -759,8 +835,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"copyIgnoreId", &Monster::copyIgnoreId,
 
 		"addParticleSpawner", &Monster::addParticleSpawner,
+
 		"spawnParticle", &Monster::spawnParticle,
 		"spawnParticleShifted", &Monster::spawnParticleShifted,
+
+		"spawnParticleWithoutArgs", &Monster::spawnParticleWithoutArgs,
+		"spawnParticleShiftedWithoutArgs", &Monster::spawnParticleShiftedWithoutArgs,
 
 		"modifyDrawLevel", &Monster::modifyDrawLevel,
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
