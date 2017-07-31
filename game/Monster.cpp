@@ -345,24 +345,46 @@ cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args
 	return particle;
 }
 
-void Monster::spawnParticle(cParticle *particleToSpawn, sol::table& params)
+
+void Monster::spawnParticleInternal(cParticle *particleToSpawn, sol::table* params)
 {
-	spawnParticleShifted(Vec2::zero(), particleToSpawn, params);
+	spawnParticleShiftedInternal(Vec2::zero(), particleToSpawn, params);
 }
 
-void Monster::spawnParticleShifted(const Vec2& shift, cParticle *particleToSpawn, sol::table& params)
+void Monster::spawnParticleShiftedInternal(const Vec2& shift, cParticle *particleToSpawn, sol::table* params)
 {
 	if (particleToSpawn)
 	{
-		particleToSpawn->addParticle(position + shift, params);
+		particleToSpawn->addParticleInternal(position + shift, params);
 	}
 	else
 	{
 		for (auto& particle : particles)
 		{
-			particle->addParticle(position + shift, params);
+			particle->addParticleInternal(position + shift, params);
 		}
 	}
+}
+
+
+void Monster::spawnParticle(cParticle *particle, sol::table& params)
+{
+	spawnParticleInternal(particle, &params);
+}
+
+void Monster::spawnParticleShifted(const Vec2& shift, cParticle *particle, sol::table& params) // todo remove this
+{
+	spawnParticleShiftedInternal(shift, particle, &params);
+}
+
+void Monster::spawnParticleWithoutArgs(cParticle *particle)
+{
+	spawnParticleInternal(particle, nullptr);
+}
+
+void Monster::spawnParticleShiftedWithoutArgs(const Vec2& shift, cParticle *particle)
+{
+	spawnParticleShiftedInternal(shift, particle, nullptr);
 }
 
 void Monster::addKnockback(const Vec2& speed, float duration)

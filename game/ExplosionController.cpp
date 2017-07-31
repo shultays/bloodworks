@@ -75,13 +75,18 @@ void ExplosionController::tick()
 
 void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
 {
-	sol::table params = lua.create_table();
 	float particleScale = maxScale * 0.67f;
-	params["size"] = particleScale;
-	params["duration"] = maxScale / scaleSpeed;
+	float duration = maxScale / scaleSpeed;
+
+	static int fadeoutTimeIndex = explosionParticles->getParticleTemplate()->getAttributeIndex("fadeoutTime");
+	static int scaleSpeedIndex = explosionParticles->getParticleTemplate()->getAttributeIndex("scaleSpeed");
+	cParticleRandomizer r;
+	r.addLinear(fadeoutTimeIndex, duration - 0.2f, duration + 0.2f);
+	r.addLinear(scaleSpeedIndex, particleScale / duration, particleScale / duration + 6.0f);
+
 	for (int i = 0; i < 15; i++)
 	{
-		explosionParticles->addParticle(pos, params);
+		explosionParticles->addParticleInternal(pos, nullptr, &r);
 	}
 	ExplosionData explosionData;
 	explosionData.ringRenderable = new cTexturedQuadRenderable(bloodworks, "resources/particles/explosionFire/ring.png", "resources/default");
