@@ -46,6 +46,7 @@ class cSlaveWork;
 class BloodworksConfig;
 class BloodworksCheats;
 class cAnimationTemplate;
+class GroundRenderable;
 
 class Bloodworks : public cGame
 {
@@ -71,7 +72,7 @@ class Bloodworks : public cGame
 	std::vector<Perk*> perks;
 	std::vector<Perk*> usedPerks;
 
-	cTexturedQuadRenderable *bg;
+	GroundRenderable *bg;
 	std::vector<cTexturedQuadRenderable*> fgs;
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
