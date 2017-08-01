@@ -29,16 +29,16 @@ Player::Player(Bloodworks *bloodworks)
 	this->bloodworks = bloodworks;
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(15.7f, 22.9f);
-	mat.translateBy(0.0f, 5.0f);
+	mat.translateBy(0.0f, 14.0f);
 
 	renderable = new cRenderableContainer(bloodworks);
 	cTexturedQuadRenderable *body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
 	body->setWorldMatrix(mat);
 	renderable->addRenderable(body);
 
-	cTexturedQuadRenderable *hands = new cTexturedQuadRenderable(bloodworks, "resources/assault/hands.png", "resources/default");
-	hands->setWorldMatrix(mat);
-	renderable->addRenderable(hands);
+	//cTexturedQuadRenderable *hands = new cTexturedQuadRenderable(bloodworks, "resources/assault/hands.png", "resources/default");
+	//hands->setWorldMatrix(mat);
+	//renderable->addRenderable(hands);
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setTextAlignment(TextAlignment::center);
@@ -167,7 +167,6 @@ void Player::tick()
 	{
 		return;
 	}
-
 	maxSpeed.tick();
 	maxRotateSpeed.tick();
 	damageMultiplier.tick();
@@ -411,7 +410,7 @@ void Player::tick()
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
 	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
-	gunPos = pos + aimDir * 22.0f - aimDir.sideVec() * 4.0f;
+	gunPos = pos + aimDir * 24.0f - aimDir.sideVec() * 6.0f;
 
 	Mat3 mat = Mat3::identity();
 	mat.rotateBy(pi_d2 - aimAngle);

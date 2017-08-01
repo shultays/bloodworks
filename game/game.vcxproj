@@ -202,6 +202,7 @@
     <ClCompile Include="cSlave.cpp" />
     <ClCompile Include="cSlaveWindows.cpp" />
     <ClCompile Include="cTimeProfiler.cpp" />
+    <ClCompile Include="GroundRenderable.cpp" />
     <ClCompile Include="ModWindow.cpp" />
     <ClCompile Include="MonsterTemplate.cpp" />
     <ClCompile Include="Coral.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="DropController.h" />
     <ClInclude Include="ExplosionController.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GroundRenderable.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="KeyMapper.h" />

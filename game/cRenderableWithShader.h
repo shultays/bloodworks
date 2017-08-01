@@ -35,7 +35,7 @@ protected:
 	std::unordered_map<int, UniformData> uniforms;
 public:
 
-	cShaderShr getShader() const
+	const cShaderShr& getShader() const
 	{
 		return shader;
 	}

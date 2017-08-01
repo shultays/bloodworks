@@ -30,11 +30,14 @@ void cRenderableWithShader::setShader(const cShaderShr& shader)
 
 cRenderableWithShader::cRenderableWithShader(cGame *game, const std::string& shaderPath) : cRenderable(game)
 {
-	std::string vs = shaderPath;
-	vs.append(".vs");
-	std::string ps = shaderPath;
-	ps.append(".ps");
-	shader = resources.getShader(vs, ps);
+	if (shaderPath.size() > 0)
+	{
+		std::string vs = shaderPath;
+		vs.append(".vs");
+		std::string ps = shaderPath;
+		ps.append(".ps");
+		shader = resources.getShader(vs, ps);
+	}
 }
 
 cRenderableWithShader::cRenderableWithShader(cGame *game, const std::string& vs, const std::string& ps) : cRenderable(game)
