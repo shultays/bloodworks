@@ -201,6 +201,9 @@
     <ClCompile Include="cTimeProfiler.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
+    <ClCompile Include="GroundRenderable.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -432,6 +435,9 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="cAnimationTemplate.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

@@ -180,7 +180,7 @@ function Survival.onDebugTick()
 	end
 	
 	if isKeyReleased(keys.Insert) then
-		local t = missionData.maxMonster - getMonsterCount()
+		local t = missionData.maxMonster * 0.5 - getMonsterCount()
 		for i = 1, t - 10 do
 			local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
 			local monster = addRandomMonster()
