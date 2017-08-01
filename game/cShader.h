@@ -396,7 +396,7 @@ public:
 	}
 
 
-	const Attribute& addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)
+	Attribute addAttribute(const std::string& name, int attributeType, bool normalized = false, int attributeLocation = -1)  // todo Attribute shouldn't be public
 	{
 		if (attributeIndices.count(name))
 		{
@@ -446,7 +446,7 @@ public:
 		uCrop = addUniform("uCrop", TypeVec4).index;
 	}
 
-	Uniform addUniform(const std::string& name, int uniformType) 
+	Uniform addUniform(const std::string& name, int uniformType) // todo Uniform shouldn't be public
 	{
 		if (uniformIndices.count(name))
 		{

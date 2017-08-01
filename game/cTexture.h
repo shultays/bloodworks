@@ -25,10 +25,26 @@ public:
 			printf("%s Error: \"%s\"\n", fileName.c_str(), SDL_GetError()); return;
 		}
 
-		GLenum data_fmt = GL_RGBA;
+		GLenum data_fmt;
+		if (surf->format->BytesPerPixel == 4)
+		{
+			data_fmt = GL_RGBA;
+		}
+		else if (surf->format->BytesPerPixel == 3)
+		{
+			data_fmt = GL_RGB;
+		}
+		else if (surf->format->BytesPerPixel == 1)
+		{
+			data_fmt = GL_RED;
+		}
+		else
+		{
+			assert(false);
+		}
 		glGenTextures(1, &gTexture);
 		glBindTexture(GL_TEXTURE_2D, gTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, data_fmt, GL_UNSIGNED_BYTE, surf->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, data_fmt, surf->w, surf->h, 0, data_fmt, GL_UNSIGNED_BYTE, surf->pixels);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		dimensions = IntVec2(surf->w, surf->h);
