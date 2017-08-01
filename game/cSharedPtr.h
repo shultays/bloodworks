@@ -157,6 +157,7 @@ public:
 
 	cSharedPtr<T>& operator=(cSharedPtr<T>&& other) 
 	{
+		reset();
 		object = other.object;
 		counter = other.counter;
 		deallocator = other.deallocator;

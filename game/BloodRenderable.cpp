@@ -6,9 +6,10 @@
 #include "cGlobals.h"
 #include <sstream>
 
-#define blood_size 2048
+#define blood_size (2048)
 
 //#define USE_TEMP_BUFFER
+// todo USE_TEMP_BUFFER should render things to a blood texture and then draw it all
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
 {

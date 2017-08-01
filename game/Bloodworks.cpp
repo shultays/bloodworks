@@ -35,6 +35,7 @@
 #include "BloodworksCheats.h"
 #include "cTimeProfiler.h"
 #include "cAnimationTemplate.h"
+#include "GroundRenderable.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -88,17 +89,12 @@ void Bloodworks::init()
 
 	loadMod("resources");
 
+	bg = new GroundRenderable(this);
+	addRenderable(bg, BACKGROUND);
+
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
-
-	bg = new cTexturedQuadRenderable(this, "", "resources/default");
-	bg->setTexture(resources.getTexture("resources/bg.png", true));
-	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
-	bg->setShader(shader);
-	bg->setUniform(uvBegin, Vec2(0.0f));
-	bg->setUniform(uvSize, Vec2(4.0f));
-	addRenderable(bg, BACKGROUND);
 
 	cTextureShr fgBlack = resources.getTexture("resources/fg_black.png", true);
 	cTexturedQuadRenderable *fg;
@@ -919,6 +915,8 @@ void Bloodworks::tick()
 		}
 	}
 
+	//debugRenderer.addCircle(player->getPosition(), 3.0f, 0.0f);
+	//debugRenderer.addCircle(player->getGunPos(), 3.0f, 0.0f);
 	config->check();
 }
 

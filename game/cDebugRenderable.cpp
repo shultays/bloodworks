@@ -77,7 +77,7 @@ void cDebugRenderable::init()
 {
 	textRenderable = new cTextRenderable(nullptr, resources.getFont("resources/fontData.txt"));
 	lineShader = resources.getShader("resources/default.vs", "resources/default.ps");
-	whiteTexture = resources.getTexture("resources/white.png");
+	whiteTexture = resources.getTexture("resources/white.png", true);
 
 	glGenBuffers(1, &lineGPUBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, lineGPUBuffer);
@@ -187,7 +187,6 @@ void cDebugRenderable::render()
 		lineShader->bindColor(sizeof(float) * 6, sizeof(float) * 2);
 
 		lineShader->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
 		whiteTexture->bindTexture();
 		lineShader->setWorldMatrix(Mat3::identity());
 		lineShader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
