@@ -1,0 +1,25 @@
+uniform sampler2D uTexture0;
+uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
+
+varying vec4 vColor;
+varying vec2 vVertexUV;
+
+uniform mat3 uPerlinMat;
+uniform vec2 uPerlinLevels;
+uniform mat3 uImageMat;
+
+void main(void) 
+{
+	float brush = texture2D(uTexture0, vVertexUV).r;
+	float perlin = texture2D(uTexture1, (uPerlinMat * vec3(vVertexUV, 1.0)).xy).r;
+	perlin = (perlin - uPerlinLevels[0]) / (uPerlinLevels[1] - uPerlinLevels[0]);
+	//perlin = clamp(perlin, 0.0, 1.0);
+	vec4 color = texture2D(uTexture2, (uImageMat * vec3(vVertexUV, 1.0)).xy);
+	
+	float total = brush * perlin;
+	gl_FragColor = color * vColor;
+	gl_FragColor.a *= total;
+	//gl_FragColor.rgb = total;
+	//gl_FragColor.a = 1.0;
+}
