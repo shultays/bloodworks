@@ -20,7 +20,7 @@ public:
 		}
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 
 	void setTexture(const std::string& texturePath)
 	{

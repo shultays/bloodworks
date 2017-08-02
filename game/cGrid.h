@@ -28,6 +28,11 @@ public:
 	{
 	}
 
+	void init(const AARect& rect, const Vec2& nodeSize)
+	{
+		init(rect.getMin(), rect.getSize(), nodeSize);
+	}
+
 	void init(const Vec2& gridStart, const Vec2& gridSize, const Vec2& nodeSize)
 	{
 		this->gridStart = gridStart;

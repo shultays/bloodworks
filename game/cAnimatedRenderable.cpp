@@ -5,7 +5,7 @@
 #include "DirentHelper.h"
 #include "cAnimationTemplate.h"
 
-void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (animations[currentAnimation].frames.size() > 0)
 	{

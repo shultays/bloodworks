@@ -104,4 +104,6 @@ public:
 	}
 	virtual void windowResized(int width, int height);
 	Vec2 getRelativeMousePos(const Vec2& mousePos, RenderableAlignment alignment) const;
+
+	AARect getScreenRect() const;
 };
