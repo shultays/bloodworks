@@ -58,7 +58,7 @@ class Monster
 		std::string func;
 		sol::table args;
 	};
-	std::vector<Timer> timers;
+	cVector<Timer> timers;
 
 	sol::function luaTick;
 	sol::function luaHit;
@@ -68,7 +68,7 @@ class Monster
 	float scale;
 	//~lua
 
-	std::vector<int> ignoreIds;
+	cVector<int> ignoreIds;
 
 	float experienceMultiplier;
 	float scoreMultiplier;
@@ -85,14 +85,14 @@ class Monster
 	BuffVec4 colorMultiplier;
 	float dropChance;
 
-	std::vector<cParticle*> particles;
+	cVector<cParticle*> particles;
 
 	struct Knockback 
 	{
 		Vec2 speed;
 		float duration;
 	};
-	std::vector<Knockback> knockbacks;
+	cVector<Knockback> knockbacks;
 
 	void clampPos();
 	int debugVal;

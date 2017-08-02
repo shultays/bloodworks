@@ -128,8 +128,8 @@ void Monster::tick()
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
 	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
-	std::vector<int> toTrigger;
-	for (int i = (int)timers.size() - 1; i >= 0; i--)
+	cVector<int> toTrigger;
+	for (int i = timers.size() - 1; i >= 0; i--)
 	{
 		if (timers[i].time < timer.getTime())
 		{
@@ -139,10 +139,11 @@ void Monster::tick()
 
 	for (auto& i : toTrigger)
 	{
-		Timer t = timers[i];
-		timers[i] = timers[(int)timers.size() - 1];
-		timers.resize(timers.size() - 1);
+		Timer& t = timers[i];
 		scriptTable[t.func](t.args);
+		
+		timers[i] = timers[timers.size() - 1]; // todo is this correct?
+		timers.resize(timers.size() - 1);
 	}
 	moveVelocity = Vec2::fromAngle(moveAngle) * moveSpeed * moveSpeedMultiplier.getBuffedValue() * bloodworks->getPlayer()->getGlobalMonsterSpeedMultiplier();
 	prevPosition = position;
@@ -166,8 +167,7 @@ void Monster::tick()
 
 		if (k.duration <= 0.0f)
 		{
-			knockbacks[i] = knockbacks[knockbacks.size() - 1];
-			knockbacks.resize(knockbacks.size() - 1);
+			knockbacks.swapToTailRemove(i);
 			i--;
 		}
 	}
@@ -262,7 +262,7 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime() && (damage > 15 || randFloat() < 0.3f))
 			{
 				lastHitSoundPlayTime = timer.getTime();
-				cSoundSampleShr s = monsterTemplate->hitSounds[randInt((int)monsterTemplate->hitSounds.size())];
+				cSoundSampleShr s = monsterTemplate->hitSounds[randInt(monsterTemplate->hitSounds.size())];
 				bloodworks->playSoundAtMap(position, s, 0.7f);
 			}
 		}
@@ -284,7 +284,7 @@ void Monster::addIgnoreId(int id)
 	else
 	{
 		ignoreIds.push_back(INT_MAX);
-		int i = (int)ignoreIds.size() - 1;
+		int i = ignoreIds.size() - 1;
 		while (i > 0 && ignoreIds[i - 1] > id)
 		{
 			ignoreIds[i] = ignoreIds[i - 1];
@@ -409,8 +409,8 @@ void Monster::spawnBodyParts(const Vec2& blowDir)
 			bloodworks->getBloodRenderable()->addBlood(position, blowDir * (1.0f + randFloat() * 0.5f), 15.0f + randFloat() * 5.0f);
 		}
 
-		std::vector<int> parts;
-		int maxCount = (int)monsterTemplate->bodyParts.size();
+		cVector<int> parts;
+		int maxCount = monsterTemplate->bodyParts.size();
 		if (maxCount > 0)
 		{
 			int partCount = randInt(2, maxCount);
@@ -476,7 +476,7 @@ void Monster::spawnBits(const Vec2& blowDir, int extraBits)
 		Vec2 dir = Vec2::fromAngle(blowAngle - 0.1f + 0.2f * randFloat());
 		float r = randFloat() * 0.5f + 0.5f;
 		r = sqrtf(r);
-		int t = randInt((int)monsterTemplate->bodyPartBits.size());
+		int t = randInt(monsterTemplate->bodyPartBits.size());
 		cTextureShr s = monsterTemplate->bodyPartBits[t];
 		cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
 		partRenderable->setColor(renderable->getColor());
@@ -518,7 +518,7 @@ void Monster::killSelf(const Vec2& blowDir)
 	if (monsterTemplate->killSounds.size() && timer.getTime() - lastSoundTime > 0.1f)
 	{
 		lastSoundTime = timer.getTime();
-		cSoundSampleShr s = monsterTemplate->killSounds[randInt((int)monsterTemplate->killSounds.size())];
+		cSoundSampleShr s = monsterTemplate->killSounds[randInt(monsterTemplate->killSounds.size())];
 		bloodworks->playSoundAtMap(position, s, 0.7f);
 	}
 }

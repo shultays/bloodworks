@@ -45,7 +45,7 @@ void MissionController::tick()
 	lua["missionLoadTime"] = missionLoadTime;
 	scriptTable["onTick"]();
 
-	std::vector<int> toBeRemoved;
+	cVector<int> toBeRemoved;
 	for (auto& g : gameObjects)
 	{
 		auto& gameObject = g.second;

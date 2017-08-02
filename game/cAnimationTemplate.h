@@ -10,7 +10,7 @@ class cAnimationTemplate
 	std::string name;
 	cShaderShr shader;
 	Vec2 size;
-	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
+	cVector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
 public:
 	cAnimationTemplate(nlohmann::json& j, const DirentHelper::File& file)
 	{
@@ -42,7 +42,7 @@ public:
 		return size;
 	}
 
-	const std::vector<cAnimatedTexturedQuadRenderable::AnimationData>& getAnimations() const
+	const cVector<cAnimatedTexturedQuadRenderable::AnimationData>& getAnimations() const
 	{
 		return animationData;
 	}

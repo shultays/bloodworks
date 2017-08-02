@@ -13,7 +13,7 @@ class Rect
 	Mat2 rotationMat;
 
 public:
-
+	Rect(){}
 	Rect(const Vec2& center, const Vec2& halfSize, float angle)
 	{
 		this->center = center;
@@ -149,4 +149,14 @@ public:
 		debugRenderer.addLine(corners[3], corners[0], time, color);
 		
 	}
+
+	AARect getAABB() const
+	{
+		Mat2 inverted = rotationMat.inverse();
+		Vec2 rotateHalfSize = halfSize * inverted;
+		AARect r(center - rotateHalfSize, center + rotateHalfSize);
+		return r;
+	}
+
+
 };

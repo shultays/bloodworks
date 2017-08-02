@@ -3,6 +3,7 @@
 #include "cMat.h"
 #include "cVec.h"
 #include "sol.h"
+#include "cVector.h"
 
 class cRenderableContainer;
 class Bloodworks;
@@ -60,7 +61,7 @@ class Bullet
 		Vec2 lastSpawnPos;
 	};
 
-	std::vector<Particledata> particles;
+	cVector<Particledata> particles;
 
 	void clampPos();
 public:

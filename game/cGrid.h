@@ -12,13 +12,12 @@ class cGrid
 	Vec2 nodeSize;
 	IntVec2 nodeCount;
 
-	Array2d<std::vector<T*>> data;
+	Array2d<cVector<T*>> data;
 
 	int arrayIndexForNodeIndex(const IntVec2& nodeIndex)
 	{
 		return nodeIndex.y * nodeCount.x + nodeIndex.x;
 	}
-
 public:
 	cGrid() 
 	{
@@ -108,8 +107,7 @@ public:
 						{
 							if (v[i] == object)
 							{
-								v[i] = v[v.size() - 1];
-								v.resize(v.size() - 1);
+								v.swapToTailRemove(i);
 								break;
 							}
 						}
@@ -200,7 +198,7 @@ public:
 		}
 	}
 
-	const std::vector<T*>& getNodeAtPos(const Vec2& pos) const
+	const cVector<T*>& getNodeAtPos(const Vec2& pos) const
 	{
 		return data[getNodeIndex(pos)];
 	}
@@ -210,12 +208,12 @@ public:
 		return nodeCount;
 	}
 
-	const std::vector<T*>& getNodeAtIndex(int i, int j) const
+	const cVector<T*>& getNodeAtIndex(int i, int j) const
 	{
 		return data[i][j];
 	}
 
-	const std::vector<T*>& getNodeAtIndex(const IntVec2& pos) const
+	const cVector<T*>& getNodeAtIndex(const IntVec2& pos) const
 	{
 		return data[pos];
 	}

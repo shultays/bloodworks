@@ -3,6 +3,7 @@
 #include "Sol.h"
 #include "cMat.h"
 #include "cVec.h"
+#include "cVector.h"
 
 class Bloodworks;
 class cRenderable;
@@ -39,10 +40,10 @@ class GameObject
 
 	cRenderableContainer *renderableGroup;
 
-	std::vector<cTexturedQuadRenderable*> textureRenderables;
-	std::vector<cTextRenderable*> textRenderables;
-	std::vector<cParticle*> particles;
-	std::vector<cAnimatedTexturedQuadRenderable*> animations;
+	cVector<cTexturedQuadRenderable*> textureRenderables;
+	cVector<cTextRenderable*> textRenderables;
+	cVector<cParticle*> particles;
+	cVector<cAnimatedTexturedQuadRenderable*> animations;
 	int level;
 	RenderableAlignment alignment;
 
