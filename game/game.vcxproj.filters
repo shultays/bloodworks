@@ -22,6 +22,9 @@
     <Filter Include="Coral\StackWalker">
       <UniqueIdentifier>{2c8966e1-e8ec-40f3-b672-e654df732611}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Coral\Math\shapes">
+      <UniqueIdentifier>{f7ee0061-2630-45d2-9253-aa40d1293bcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cMat.cpp">
@@ -204,6 +207,9 @@
     <ClCompile Include="GroundRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cAARect.cpp">
+      <Filter>Coral\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -383,9 +389,6 @@
     <ClInclude Include="cKeyMapButton.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cRect.h">
-      <Filter>Coral\Math</Filter>
-    </ClInclude>
     <ClInclude Include="cScrollContainer.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
@@ -439,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="GroundRenderable.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="cAARect.h">
+      <Filter>Coral\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

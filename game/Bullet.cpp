@@ -214,11 +214,9 @@ Gun* Bullet::getGun() const
 
 void Bullet::clampPos()
 {
-	Vec2 old = pos;
-	pos.x = max(pos.x, bloodworks->getMapMin().x - 100.0f);
-	pos.y = max(pos.y, bloodworks->getMapMin().y - 100.0f);
-	pos.x = min(pos.x, bloodworks->getMapMax().x + 100.0f);
-	pos.y = min(pos.y, bloodworks->getMapMax().y + 100.0f);
+	AARect rect = bloodworks->getMapLimits();
+	rect.addThreshold(100.0f);
+	rect.clampPos(pos);
 }
 
 void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, const Vec2& pos, const Vec2& dimensions)

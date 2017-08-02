@@ -15,7 +15,7 @@ public:
 	cRootRenderable() : cRenderable(nullptr)
 	{
 	}
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& rect) override {}
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& rect) override {}
 };
 
 void cGame::initInternal()
@@ -275,4 +275,12 @@ Vec2 cGame::getRelativeMousePos(const Vec2& mousePos, RenderableAlignment alignm
 	}
 	assert(false);
 	return Vec2::zero();
+}
+
+AARect cGame::getScreenRect() const
+{
+	Vec2 screenMin = getCameraPos() - getScreenDimensions().toVec() * 0.5f * getCameraZoom();
+	Vec2 screenMax = getCameraPos() + getScreenDimensions().toVec() * 0.5f * getCameraZoom();
+
+	return AARect(screenMin, screenMax);
 }

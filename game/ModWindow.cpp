@@ -92,7 +92,7 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 		mainWindow->addRenderable(modListWindow);
 
 		modList = new cScrollContainer(bloodworks);
-		modList->setRect(Rect(-300.0f, -150.0f, 275.0f, 90.0f));
+		modList->setRect(AARect(-300.0f, -150.0f, 275.0f, 90.0f));
 		modListWindow->addRenderable(modList);
 
 		cTextRenderable *text;

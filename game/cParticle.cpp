@@ -477,7 +477,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 	bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 }
 
-void cParticle::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (quadBuffers.size() > 0)
 	{
