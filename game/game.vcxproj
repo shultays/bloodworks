@@ -255,6 +255,7 @@
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
     <ClInclude Include="cButton.h" />
+    <ClInclude Include="cCircle.h" />
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cKeyMapButton.h" />
