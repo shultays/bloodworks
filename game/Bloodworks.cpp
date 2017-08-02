@@ -36,10 +36,11 @@
 #include "cTimeProfiler.h"
 #include "cAnimationTemplate.h"
 #include "GroundRenderable.h"
+#include "CollisionController.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
-BloodworksCheats *bloodworksDebug;
+BloodworksCheats *bloodworksCheats;
 #endif
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
@@ -59,12 +60,8 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 	}
 }
 
-#include "cBodyGrid.h"
-
 void Bloodworks::init()
 {
-	cBodyGrid g;
-
 	nextGlobalUniqueId = 0;
 
 	config = new BloodworksConfig();
@@ -85,6 +82,7 @@ void Bloodworks::init()
 	dropController = new DropController(this);
 	monsterController = new MonsterController(this);
 	bulletController = new BulletController(this);
+	collisionController = new CollisionController(this);
 	missionController = new MissionController(this);
 	oneShotSoundManager = new OneShotSoundManager(this);
 	modWindow = new ModWindow(this);
@@ -224,8 +222,8 @@ void Bloodworks::init()
 	mainMenu->setVisible(true);
 
 #ifdef HAS_BLOODWORKS_CHEATS
-	bloodworksDebug = new BloodworksCheats(this);
-	bloodworksDebug->onInit();
+	bloodworksCheats = new BloodworksCheats(this);
+	bloodworksCheats->onInit();
 #endif
 }
 
@@ -304,13 +302,14 @@ Bloodworks::~Bloodworks()
 
 	SAFE_DELETE(monsterController);
 	SAFE_DELETE(bulletController);
+	SAFE_DELETE(collisionController);
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
 
 #ifdef HAS_BLOODWORKS_CHEATS
-	SAFE_DELETE(bloodworksDebug);
+	SAFE_DELETE(bloodworksCheats);
 #endif
 }
 
@@ -491,7 +490,7 @@ bool Bloodworks::loadMission(const std::string& mission)
 	missionController->loadMission(mission);
 	player->setVisible(true);
 #ifdef HAS_BLOODWORKS_CHEATS
-	bloodworksDebug->onLoadMission();
+	bloodworksCheats->onLoadMission();
 #endif 
 
 	return true;
@@ -838,7 +837,7 @@ void Bloodworks::tick()
 {
 	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
 #ifdef HAS_BLOODWORKS_CHEATS
-	bloodworksDebug->onTick();
+	bloodworksCheats->onTick();
 #endif
 
 	lua["dt"] = timer.getDt();
@@ -1018,7 +1017,7 @@ void Bloodworks::tickGameSlowdown()
 void Bloodworks::render()
 {
 #ifdef HAS_BLOODWORKS_CHEATS
-	bloodworksDebug->onRender();
+	bloodworksCheats->onRender();
 #endif
 
 }
