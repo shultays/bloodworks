@@ -247,28 +247,31 @@ void cGame::windowResized(int width, int height)
 
 Vec2 cGame::getRelativeMousePos(const Vec2& mousePos, RenderableAlignment alignment) const
 {
+	// todo most of these ignores camera pos
+
+	IntVec2 screenSize = getScreenDimensions();
 	switch (alignment)
 	{
 	case RenderableAlignment::world:
-		return mousePos - Vec2(game->getScreenDimensions().w * 0.5f, game->getScreenDimensions().h * 0.5f) + game->getCameraPos();
+		return mousePos - Vec2(screenSize.w * 0.5f, screenSize.h * 0.5f) + getCameraPos();
 	case RenderableAlignment::topLeft:
-		return mousePos - Vec2(0.0f, (float)getScreenDimensions().h);
+		return mousePos - Vec2(0.0f, (float)screenSize.h);
 	case RenderableAlignment::top:
-		return mousePos - Vec2((float)getScreenDimensions().w * 0.5f, (float)getScreenDimensions().h);
+		return mousePos - Vec2((float)screenSize.w * 0.5f, (float)screenSize.h);
 	case RenderableAlignment::topRight:
-		return mousePos - Vec2((float)getScreenDimensions().w, (float)getScreenDimensions().h);
+		return mousePos - Vec2((float)screenSize.w, (float)screenSize.h);
 	case RenderableAlignment::left:
-		return mousePos - Vec2(0.0f, (float)getScreenDimensions().h * 0.5f);
+		return mousePos - Vec2(0.0f, (float)screenSize.h * 0.5f);
 	case RenderableAlignment::center:
-		return mousePos - Vec2(game->getScreenDimensions().w * 0.5f, game->getScreenDimensions().h * 0.5f);
+		return (mousePos - Vec2(screenSize.w * 0.5f, screenSize.h * 0.5f)) * getCameraZoom();
 	case RenderableAlignment::right:
-		return mousePos - Vec2((float)getScreenDimensions().w, (float)getScreenDimensions().h * 0.5f);
+		return mousePos - Vec2((float)screenSize.w, (float)screenSize.h * 0.5f);
 	case RenderableAlignment::bottomLeft:
 		return mousePos;
 	case RenderableAlignment::bottom:
-		return mousePos - Vec2(game->getScreenDimensions().w * 0.5f, 0.0f);
+		return mousePos - Vec2(screenSize.w * 0.5f, 0.0f);
 	case RenderableAlignment::bottomRight:
-		return mousePos - Vec2((float)game->getScreenDimensions().w, 0.0f);
+		return mousePos - Vec2((float)screenSize.w, 0.0f);
 	}
 	assert(false);
 	return Vec2::zero();
