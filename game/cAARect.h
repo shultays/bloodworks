@@ -53,6 +53,11 @@ public:
 		return minPoint.x <= maxPoint.x;
 	}
 
+	bool isOutside(float x, float y, float threshold) const
+	{
+		return x < minPoint.x - threshold || y < minPoint.y - threshold || x > maxPoint.x  + threshold || y > maxPoint.y + threshold;
+	}
+
 	bool isOutside(float x, float y) const
 	{
 		return x < minPoint.x || y < minPoint.y || x > maxPoint.x || y > maxPoint.y;
@@ -63,9 +68,19 @@ public:
 		return isOutside(pos.x, pos.y);
 	}
 
+	bool isOutside(const Vec2& pos, float threshold) const
+	{
+		return isOutside(pos.x, pos.y, threshold);
+	}
+
 	bool isInside(const Vec2& pos) const
 	{
 		return !isOutside(pos);
+	}
+
+	bool isInside(const Vec2& pos, float threshold) const
+	{
+		return !isOutside(pos, threshold);
 	}
 
 	bool operator==(const AARect& other) const
