@@ -30,7 +30,7 @@ void main(void)
 	
 	
 	float t = dt;
-	float whiteDuration = 0.1 * fadeOutSpeed;
+	float whiteDuration = 0.1 / fadeOutSpeed;
 	if (t < whiteDuration)
 	{
 		float l = t / whiteDuration;
@@ -41,7 +41,7 @@ void main(void)
 	else 
 	{
 		t -= whiteDuration;
-		float yellowDuration = 0.2 * fadeOutSpeed;
+		float yellowDuration = 0.2 / fadeOutSpeed;
 		if (t < yellowDuration)
 		{
 			float l = t / yellowDuration;

@@ -200,7 +200,7 @@ public:
 		playAnimation(animationData.index, startTime, nextAnimation);
 	}
 
-	void playAnimationWithName(const std::string& animationName, float startTime, int nextAnimation)
+	void playAnimationWithName(const std::string& animationName, float startTime = 0.0f, int nextAnimation = -1)
 	{
 
 	}
