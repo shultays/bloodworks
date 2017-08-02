@@ -3,7 +3,7 @@
 #include "cShader.h"
 #include "cGlobals.h"
 
-void cRenderableWithShader::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cRenderableWithShader::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (game->lastShader != shader)
 	{

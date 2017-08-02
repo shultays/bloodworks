@@ -244,26 +244,27 @@ void Player::tick()
 	Vec2 moveAmount = moveVelocity * dt;
 	Vec2 newPos = pos + moveAmount;
 	oldMoveAmount = moveAmount;
-	Vec2 boundaryMin = bloodworks->getMapMin() + 20.0f;
-	Vec2 boundaryMax = bloodworks->getMapMax() - 20.0f;
+	AARect boundaries = bloodworks->getMapLimits();
+	boundaries.addThreshold(20.0f);
+
 	float boundaryAmount = 40.0f;
 
-	if (newPos.x < boundaryMin.x && moveAmount.x < 0.0f)
+	if (newPos.x < boundaries.getMin().x && moveAmount.x < 0.0f)
 	{
-		moveAmount.x = moveAmount.x * max(0.0f, (newPos.x + boundaryAmount - boundaryMin.x) / boundaryAmount);
+		moveAmount.x = moveAmount.x * max(0.0f, (newPos.x + boundaryAmount - boundaries.getMin().x) / boundaryAmount);
 	}
-	else if (newPos.x > boundaryMax.x && moveAmount.x > 0.0f)
+	else if (newPos.x > boundaries.getMax().x && moveAmount.x > 0.0f)
 	{
-		moveAmount.x = moveAmount.x * max(0.0f, (boundaryMax.x + boundaryAmount - newPos.x) / boundaryAmount);
+		moveAmount.x = moveAmount.x * max(0.0f, (boundaries.getMax().x + boundaryAmount - newPos.x) / boundaryAmount);
 	}
 
-	if (newPos.y < boundaryMin.y && moveAmount.y < 0.0f)
+	if (newPos.y < boundaries.getMin().y && moveAmount.y < 0.0f)
 	{
-		moveAmount.y = moveAmount.y * max(0.0f, (newPos.y + boundaryAmount - boundaryMin.y) / boundaryAmount);
+		moveAmount.y = moveAmount.y * max(0.0f, (newPos.y + boundaryAmount - boundaries.getMin().y) / boundaryAmount);
 	}
-	else if (newPos.y > boundaryMax.y && moveAmount.y > 0.0f)
+	else if (newPos.y > boundaries.getMax().y && moveAmount.y > 0.0f)
 	{
-		moveAmount.y = moveAmount.y * max(0.0f, (boundaryMax.y + boundaryAmount - newPos.y) / boundaryAmount);
+		moveAmount.y = moveAmount.y * max(0.0f, (boundaries.getMax().y + boundaryAmount - newPos.y) / boundaryAmount);
 	}
 
 	pos = pos + moveAmount;

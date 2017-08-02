@@ -18,7 +18,7 @@ protected:
 	cGame *game;
 	virtual void render()
 	{
-		render(true, Mat3::identity(), Rect::invalid());
+		render(true, Mat3::identity(), AARect::invalid());
 	}
 	Mat3 worldMatrix;
 	Vec4 color;
@@ -33,7 +33,7 @@ public:
 	cRenderable(cGame *game);
 	virtual ~cRenderable();
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop = Rect::invalid()) = 0;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop = AARect::invalid()) = 0;
 
 	bool isVisible() const
 	{

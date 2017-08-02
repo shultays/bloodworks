@@ -59,5 +59,5 @@ public:
 	void setPosition(const Vec2& pos);
 	void setAngle(float angle);
 	void setLength(float length);
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 };

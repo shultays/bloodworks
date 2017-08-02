@@ -283,7 +283,7 @@ public:
 		addParticleInternal(pos, nullptr, randomizer);
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop);
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop);
 
 	bool hasParticle()
 	{
