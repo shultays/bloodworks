@@ -13,7 +13,7 @@ class cPriorityVector
 		T item;
 	};
 
-	std::vector<struct Element> elements;
+	cVector<struct Element> elements;
 
 	void fixInsert(int i) 
 	{
@@ -96,9 +96,9 @@ public:
 		elements.resize(elements.size() - 1);
 	}
 
-	int getPriorityAt(int i) 
+	int getPriorityAt(int i)
 	{
-		return elements[i].p;
+		return elements.at(i).p;
 	}
 
 	void changePriority(T item, int newPriority) 
@@ -118,13 +118,13 @@ public:
 		fix(i);
 	}
 
-	inline T& operator[](int i) 
+	inline T& operator[](int i)
 	{
-		return elements[i].item;
+		return elements.at(i).item;
 	}
 
-	int size()
+	int size() const
 	{
-		return (int)elements.size();
+		return elements.size();
 	}
 };
