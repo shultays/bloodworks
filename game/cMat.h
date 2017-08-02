@@ -939,6 +939,17 @@ public:
 		_11 = 1.0f;
 	}
 
+	Mat2 inverse() const
+	{
+		Mat2 r;
+		r._00 = _11;
+		r._11 = _00;
+
+		r._10 = -_10;
+		r._01 = -_01;
+
+		return r;
+	}
 
 	static Mat2 rotation(float angle) 
 	{
