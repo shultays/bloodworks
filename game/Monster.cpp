@@ -472,10 +472,10 @@ void Monster::spawnBits(const Vec2& blowDir, int extraBits)
 	lastBitTime = timer.getTime();
 
 	int bitCount = randInt(0, 1) + extraBits;
-
+	float blowAngle = blowDir.toAngle();
 	for (int i = 0; i < bitCount; i++)
 	{
-		Vec2 dir = Vec2::fromAngle(blowDir.toAngle() - 0.2f + 0.4f * randFloat());
+		Vec2 dir = Vec2::fromAngle(blowAngle - 0.1f + 0.2f * randFloat());
 		float r = randFloat() * 0.5f + 0.5f;
 		r = sqrtf(r);
 		int t = randInt((int)monsterTemplate->bodyPartBits.size());
