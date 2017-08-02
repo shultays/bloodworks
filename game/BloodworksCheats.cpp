@@ -40,9 +40,9 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 
 void BloodworksCheats::onTick()
 {
-	const std::vector<Perk*>& perks = bloodworks->getPerks();
-	const std::vector<Bonus*>& bonuses = bloodworks->getBonuses();
-	const std::vector<Gun*>& guns = bloodworks->getGuns();
+	const cVector<Perk*>& perks = bloodworks->getPerks();
+	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
+	const cVector<Gun*>& guns = bloodworks->getGuns();
 	Player *player = bloodworks->getPlayer();
 	DropController *dropController = bloodworks->getDropController();
 	MonsterController *monsterController = bloodworks->getMonsterController();
@@ -277,7 +277,7 @@ void BloodworksCheats::onRender()
 
 void BloodworksCheats::onLoadMission()
 {
-	const std::vector<Gun*>& guns = bloodworks->getGuns();
+	const cVector<Gun*>& guns = bloodworks->getGuns();
 	Player *player = bloodworks->getPlayer();
 
 	for (auto& gun : guns)

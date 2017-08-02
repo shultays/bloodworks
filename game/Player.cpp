@@ -507,11 +507,11 @@ int Player::doDamageWithArgs(int damage, float angle, sol::table& params)
 		{
 			hitPoints = 0;
 			killSelf();
-			killSounds[randInt((int)killSounds.size())]->play();
+			killSounds[randInt(killSounds.size())]->play();
 		}
 		else
 		{
-			hitSounds[randInt((int)hitSounds.size())]->play();
+			hitSounds[randInt(hitSounds.size())]->play();
 		}
 		updateHitPoints();
 	}

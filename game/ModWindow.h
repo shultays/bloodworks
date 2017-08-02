@@ -24,15 +24,15 @@ class ModWindow
 
 	bool loginning;
 	bool fetchingResults;
-	std::vector<cButton*> modSelectButtons;
+	cVector<cButton*> modSelectButtons;
 
 	struct ModData
 	{
 		nlohmann::json jsonData;
 		DirentHelper::File filePath;
 	};
-	std::vector<struct ModData> loadedMods;
-	std::vector<struct ModData> installedMods;
+	cVector<struct ModData> loadedMods;
+	cVector<struct ModData> installedMods;
 	std::unordered_map<std::string, int> installedModIndices;
 
 	void showModDetails(struct ModData& modData);

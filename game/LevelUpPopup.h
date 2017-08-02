@@ -19,8 +19,8 @@ class LevelUpPopup
 	cTextRenderable *levelupGroupSubTitle;
 	cTextRenderable *currentPerkName;
 	cTextRenderable *currentPerkExplanation;
-	std::vector<cButton*> levelupPerksRenderables;
-	std::vector<Perk*> levelupPerks;
+	cVector<cButton*> levelupPerksRenderables;
+	cVector<Perk*> levelupPerks;
 	int hoverLevelupPerkIndex;
 	cSoundSampleShr levelUpSound;
 
