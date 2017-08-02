@@ -452,5 +452,11 @@
     <ClInclude Include="cRect.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
+    <ClInclude Include="cBodyGrid.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="cVector.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

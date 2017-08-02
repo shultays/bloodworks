@@ -190,7 +190,7 @@ void cDebugRenderable::render()
 		whiteTexture->bindTexture();
 		lineShader->setWorldMatrix(Mat3::identity());
 		lineShader->setViewMatrix(game->getViewMatrix(RenderableAlignment::world));
-		glDrawArrays(GL_LINES, 0, (int)lineData.size() * 2);
+		glDrawArrays(GL_LINES, 0, lineData.size() * 2);
 
 	}
 	textRenderable->game = nullptr;
@@ -207,8 +207,7 @@ void cDebugRenderable::tick(float dt)
 
 		if (textData[i].time <= 0.0f)
 		{
-			textData[i] = textData[textData.size() - 1];
-			textData.resize(textData.size() - 1);
+			textData.swapToTailRemove(i);
 			i--;
 		}
 	}
@@ -221,8 +220,7 @@ void cDebugRenderable::tick(float dt)
 
 		if (lineData[i].time <= 0.0f)
 		{
-			lineData[i] = lineData[lineData.size() - 1];
-			lineData.resize(lineData.size() - 1);
+			lineData.swapToTailRemove(i);
 			i--;
 		}
 	}
@@ -234,8 +232,7 @@ void cDebugRenderable::removeText(int id)
 	{
 		if (textData[i].id == id)
 		{
-			textData[i] = textData[textData.size() - 1];
-			textData.resize(textData.size() - 1);
+			textData.swapToTailRemove(i);
 			return;
 		}
 	}
@@ -247,8 +244,7 @@ void cDebugRenderable::removeLine(int id)
 	{
 		if (lineData[i].id == id)
 		{
-			lineData[i] = lineData[lineData.size() - 1];
-			lineData.resize(lineData.size() - 1);
+			lineData.swapToTailRemove(i);;
 			return;
 		}
 	}

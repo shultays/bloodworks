@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include "cVector.h"
 
 class Bloodworks;
 class cRenderableContainer;
@@ -45,7 +45,7 @@ class OptionsPopup
 	cSlider *sensitivity;
 
 	cKeyMapButton *inUseKey;
-	std::vector<cKeyMapButton*> keyMapButtons;
+	cVector<cKeyMapButton*> keyMapButtons;
 
 	//
 	cButton *lastClickedTitle;

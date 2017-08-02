@@ -65,7 +65,7 @@ public:
 		friend class cAnimatedTexturedQuadRenderable;
 		std::string name;
 		bool looping;
-		std::vector<FrameData> frames;
+		cVector<FrameData> frames;
 		int index;
 
 		float animationDuration;
@@ -106,7 +106,7 @@ public:
 	};
 
 private:
-	std::vector<AnimationData> animations;
+	cVector<AnimationData> animations;
 
 	void init()
 	{
@@ -163,10 +163,10 @@ public:
 	void addAnimation(const AnimationData& animation)
 	{
 		animations.push_back(animation);
-		animations[animations.size() - 1].index = (int) animations.size() - 1;
+		animations[animations.size() - 1].index = animations.size() - 1;
 	}
 
-	void addAnimation(const std::vector<AnimationData>& animations)
+	void addAnimation(const cVector<AnimationData>& animations)
 	{
 		for (auto& animation : animations)
 		{
@@ -181,7 +181,7 @@ public:
 		AnimationData animationData;
 		animationData.name = name;
 		animationData.looping = looping;
-		animationData.index = (int)animations.size();
+		animationData.index = animations.size();
 		animations.push_back(animationData);
 		return animations[animations.size()-1];
 	}

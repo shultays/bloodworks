@@ -9,6 +9,7 @@ class Circle
 	float radius;
 
 public:
+	Circle(){}
 	Circle(const Vec2& origin, float radius)
 	{
 		this->origin = origin;

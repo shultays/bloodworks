@@ -75,8 +75,8 @@ class Player
 	int calculateExperienceForLevel(int level);
 	void updateHitPoints();
 
-	std::vector<cSoundSampleShr> hitSounds;
-	std::vector<cSoundSampleShr> killSounds;
+	cVector<cSoundSampleShr> hitSounds;
+	cVector<cSoundSampleShr> killSounds;
 
 	int currentAmmoUniformIndex;
 	int maxAmmoUniformIndex;

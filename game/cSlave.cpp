@@ -49,7 +49,7 @@ void cSlaveController::freeSlaves()
 
 void cSlaveController::update() 
 {
-	std::vector<cSlaveWork*> works;
+	cVector<cSlaveWork*> works;
 	controllerMutex.waitAndGetMutex();
 	while (workForMainQueue.size() > 0) 
 	{
@@ -59,7 +59,7 @@ void cSlaveController::update()
 	}
 	controllerMutex.releaseMutex();
 
-	for (unsigned i = 0; i < works.size(); i++) 
+	for (int i = 0; i < works.size(); i++) 
 	{
 		assert(works[i]->isCancelled() == false);
 		works[i]->runOnMain();

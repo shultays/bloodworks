@@ -41,8 +41,7 @@ void MonsterController::tick()
 			grid.removeFromGrid(monster);
 			monstersMap.erase(monster->getId());
 			SAFE_DELETE(monster);
-			monster = monsters[monsters.size() - 1];
-			monsters.resize(monsters.size() - 1);
+			monsters.swapToTailRemove(i);
 			i--;
 		}
 		else
@@ -96,12 +95,12 @@ MonsterController::~MonsterController()
 	monsterTemplateIndices.clear();
 }
 
-const std::vector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  const
+const cVector<Monster*>& MonsterController::getMonsterAt(const Vec2& pos)  const
 {
 	return grid.getNodeAtPos(pos);
 }
 
-bool checkMonster(Monster* monster, Gun* gun, Bullet* bullet, int searchId, std::vector<int>& ignoreIds)
+bool checkMonster(Monster* monster, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds)
 {
 	if (monster->hasIgnoreId(searchId))
 	{
@@ -165,7 +164,7 @@ MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(c
 	return result;
 }
 
-bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, std::vector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
 {
 	Vec2 curPos = grid.getStartPos() + grid.getNodeSize() * (index.toVec() + 0.5f);
 	if (ignoreFunc && (*ignoreFunc)(curPos))
@@ -178,7 +177,7 @@ bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bulle
 		grid.drawDebug(index, 0xFF0000FF);
 	}
 
-	const std::vector<Monster*> node = grid.getNodeAtIndex(index);
+	const cVector<Monster*> node = grid.getNodeAtIndex(index);
 	for (Monster* monster : node)
 	{
 		if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
@@ -198,7 +197,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 {
 	Gun *gun = nullptr;
 	Bullet *bullet = nullptr;
-	std::vector<int> ignoreIds;
+	cVector<int> ignoreIds;
 	if (args)
 	{
 		gun = args["gun"];
@@ -529,7 +528,7 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 	return closestMonster;
 }
 
-void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, std::vector<Monster*>& foundMonsters)
+void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, cVector<Monster*>& foundMonsters)
 {
 	float maxDistanceSquared = range * range;
 
@@ -591,7 +590,7 @@ void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, std:
 
 void MonsterController::damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId)
 {
-	std::vector<Monster*> found;
+	cVector<Monster*> found;
 	getAllMonstersInRange(pos, range, found);
 	for (Monster* monster : found)
 	{
@@ -620,7 +619,7 @@ Monster* MonsterController::addMonster(const std::string& monsterTemplateName)
 
 int MonsterController::getMonsterCount() const
 {
-	return (int)monsters.size();
+	return monsters.size();
 }
 
 Monster* MonsterController::getMonsterAtIndex(int index) const
@@ -638,7 +637,7 @@ void MonsterController::addMonsterTemplate(nlohmann::json& j, const DirentHelper
 {
 	MonsterTemplate *t = new MonsterTemplate(j, file);
 	monsterTemplates.push_back(t);
-	monsterTemplateIndices[t->getScriptName()] = (int)monsterTemplates.size() - 1;
+	monsterTemplateIndices[t->getScriptName()] = monsterTemplates.size() - 1;
 }
 
 Vec2 MonsterController::getRandomPos(sol::table& args)
@@ -697,7 +696,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 
 		if (notNearMonsters)
 		{
-			std::vector<Monster*> monstersInrange;
+			cVector<Monster*> monstersInrange;
 			getAllMonstersInRange(pos, 100.0f, monstersInrange);
 			for (auto& m : monstersInrange)
 			{
