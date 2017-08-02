@@ -67,7 +67,7 @@ void BloodworksCheats::onTick()
 			lastSetTickTime += 1.0f;
 			std::stringstream ss;
 			ss << "FPS " << tickCount << " Monster " << bloodworks->getMonsterController()->getMonsterCount();
-			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, 0xFFFFFFFF, 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 			tickCount = 0;
 		}
@@ -253,7 +253,7 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 	{
 		if (input.isKeyDown(key_f2) || moveMonsters == false || monster->getDebug() != -1)
 		{
-			debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, Vec4::fromColor(monster->getDebug() == -1 ? 0xFFFFFF00 : 0xFF00FFFF));
+			debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, monster->getDebug() == -1 ? 0xFFFFFF00 : 0xFF00FFFF);
 		}
 	}
 }
@@ -268,7 +268,7 @@ void BloodworksCheats::onRender()
 			lastSetRenderTime += 1.0f;
 			std::stringstream ss;
 			ss << "Render " << renderCount;
-			debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, Vec4(1.0f), 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+			debugRenderer.addText(1, ss.str(), 5.0f, -24.0f * 2.0f, FLT_MAX, 0xFFFFFFFF, 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 			renderCount = 0;
 		}
