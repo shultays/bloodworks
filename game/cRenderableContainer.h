@@ -24,7 +24,7 @@ public:
 	void addRenderable(cRenderable *child);
 	void removeRenderable(cRenderable *child);
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 	virtual void setAlignment(RenderableAlignment alignment) override
 	{
 		cRenderable::setAlignment(alignment);

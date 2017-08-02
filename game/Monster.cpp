@@ -455,11 +455,9 @@ void Monster::spawnBodyParts(const Vec2& blowDir)
 
 void Monster::clampPos()
 {
-	Vec2 old = position;
-	position.x = max(position.x, bloodworks->getMapMin().x - 300.0f);
-	position.y = max(position.y, bloodworks->getMapMin().y - 300.0f);
-	position.x = min(position.x, bloodworks->getMapMax().x + 300.0f);
-	position.y = min(position.y, bloodworks->getMapMax().y + 300.0f);
+	AARect clampRect = bloodworks->getMapLimits();
+	clampRect.addThreshold(300.0f);
+	clampRect.clampPos(position);
 }
 
 void Monster::spawnBits(const Vec2& blowDir, int extraBits)

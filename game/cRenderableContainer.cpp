@@ -5,7 +5,7 @@ cRenderableContainer::cRenderableContainer(cGame *game, int initialCapacity /*= 
 	renderables.reserve(initialCapacity);
 }
 
-void cRenderableContainer::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cRenderableContainer::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	for (auto& childData : renderables)
 	{

@@ -7,7 +7,7 @@ cScrollContainer::cScrollContainer(cGame* game) : cRenderable(game)
 {
 	slider = new cSlider(game, true);
 	slider->setValue(1.0f);
-	crop = Rect(-100, -100, 100, 100);
+	crop = AARect(-100, -100, 100, 100);
 	maxScroll = 100.0f;
 	content = new cRenderableContainer(game);
 }
@@ -18,7 +18,7 @@ cScrollContainer::~cScrollContainer()
 	SAFE_DELETE(content);
 }
 
-void cScrollContainer::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cScrollContainer::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	content->render(isIdentity, mat, this->crop);
 	slider->render(false, isIdentity ? worldMatrix : worldMatrix * mat, crop);
@@ -66,7 +66,7 @@ void cScrollContainer::removeRenderable(cRenderable *child)
 	content->removeRenderable(child);
 }
 
-void cScrollContainer::setRect(const Rect& rect)
+void cScrollContainer::setRect(const AARect& rect)
 {
 	this->crop = rect;
 	Vec2 pos, size;
