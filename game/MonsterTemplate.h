@@ -28,18 +28,18 @@ class MonsterTemplate
 	sol::table scriptTable;
 	sol::table scriptArgs;
 
-	std::vector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
+	cVector<cAnimatedTexturedQuadRenderable::AnimationData> animationData;
 
 	struct BodyPartData
 	{
 		cTextureShr texture;
 		Vec2 shift;
 	};
-	std::vector<BodyPartData> bodyParts;
-	std::vector<cTextureShr> bodyPartBits;
+	cVector<BodyPartData> bodyParts;
+	cVector<cTextureShr> bodyPartBits;
 
-	std::vector<cSoundSampleShr> hitSounds;
-	std::vector<cSoundSampleShr> killSounds;
+	cVector<cSoundSampleShr> hitSounds;
+	cVector<cSoundSampleShr> killSounds;
 
 	float bitSpeed;
 public:

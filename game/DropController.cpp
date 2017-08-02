@@ -31,7 +31,7 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 		int t = 10;
 		do
 		{
-			drop.gun = guns[randInt((int)guns.size())];
+			drop.gun = guns[randInt(guns.size())];
 		} while (drop.gun == bloodworks->getPlayer()->getGun() && t-- > 0);
 	}
 	else
@@ -82,7 +82,7 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	}
 	else
 	{
-		drop.bonus = bonuses[randInt((int)bonuses.size())];
+		drop.bonus = bonuses[randInt(bonuses.size())];
 	}
 	drop.gun = nullptr;
 	drop.pos = position;
@@ -168,8 +168,7 @@ void DropController::tick()
 		if (remove)
 		{
 			SAFE_DELETE(drop.renderable);
-			drops[i] = drops[(int)drops.size() - 1];
-			drops.resize((int)drops.size() - 1);
+			drops.swapToTailRemove(i);
 			i--;
 		}
 	}
@@ -177,9 +176,9 @@ void DropController::tick()
 
 void DropController::spawnDrop(const Vec2& position)
 {
-	std::vector<float> bonusChances;
+	cVector<float> bonusChances;
 	bonusChances.resize(bloodworks->getBonuses().size());
-	std::vector<float> gunChances;
+	cVector<float> gunChances;
 	gunChances.resize(bloodworks->getGuns().size());
 	float totalChance = 0.0f;
 	for (int i = 0; i < bloodworks->getBonuses().size(); i++)
@@ -206,7 +205,7 @@ void DropController::spawnDrop(const Vec2& position)
 				return;
 			}
 		}
-		spawnBonus(position, (int)bloodworks->getBonuses().size() - 1);
+		spawnBonus(position, bloodworks->getBonuses().size() - 1);
 	}
 	else
 	{
@@ -221,7 +220,7 @@ void DropController::spawnDrop(const Vec2& position)
 				return;
 			}
 		}
-		spawnGun(position, (int)bloodworks->getGuns().size() - 1);
+		spawnGun(position, bloodworks->getGuns().size() - 1);
 	}
 }
 

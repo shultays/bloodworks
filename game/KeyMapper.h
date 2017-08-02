@@ -18,7 +18,7 @@ class KeyMapper
 	};
 
 	std::unordered_map<std::string, int> mappedIndices;
-	std::vector<struct KeyInfo> mappedKeys;
+	cVector<struct KeyInfo> mappedKeys;
 	cPersistent persistent;
 public:
 	KeyMapper()
