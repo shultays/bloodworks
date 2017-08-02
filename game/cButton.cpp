@@ -3,7 +3,7 @@
 #include "cGame.h"
 #include "cGlobals.h"
 
-void cButton::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cButton::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (isDirty)
 	{
@@ -29,7 +29,7 @@ void cButton::check(const Vec2& mousePos, bool ignoreClick)
 	Vec2 diff = transformedMousePos - defaultShift;
 
 	if (enforceHovering == enforce_hovering 
-		|| (enforceHovering != enforce_not_hovering && diff.x > beginRange.x && diff.x < endRange.x && diff.y > beginRange.y && diff.y < endRange.y))
+		|| (enforceHovering != enforce_not_hovering && hitRect.isInside(diff)))
 	{
 		hovering = true;
 		down = hovering && ignoreClick == false && input.isKeyDown(mouse_button_left);

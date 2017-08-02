@@ -148,8 +148,7 @@ void BloodworksCheats::onTick()
 			Vec2 v;
 			do
 			{
-				v.x = bloodworks->getMapMin().x + randFloat(bloodworks->getMapSize().x);
-				v.y = bloodworks->getMapMin().y + randFloat(bloodworks->getMapSize().y);
+				v = bloodworks->getMapLimits().getRandomPos();
 			} while (v.distanceSquared(bloodworks->getPlayer()->getPosition()) < 20.0f);
 			dropController->spawnDrop(v);
 		}

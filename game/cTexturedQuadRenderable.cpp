@@ -3,7 +3,7 @@
 #include "cTexture.h"
 #include "cGlobals.h"
 
-void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (texture[0] == nullptr)
 	{

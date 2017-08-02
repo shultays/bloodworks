@@ -84,8 +84,8 @@ class Bloodworks : public cGame
 	int nextGlobalUniqueId;
 
 	Vec2 mapSize;
-	Vec2 mapBegin;
-	Vec2 mapEnd;
+
+	AARect mapRect;
 
 	Vec2 cameraCenterPos;
 
@@ -188,14 +188,20 @@ public:
 	{
 		return mapSize;
 	}
-	const Vec2& getMapMin() const
+
+	const AARect& getMapLimits() const
 	{
-		return mapBegin;
+		return mapRect;
 	}
-	const Vec2& getMapMax() const
-	{
-		return mapEnd;
-	}
+
+	//const Vec2& getMapMin() const
+	//{
+	//	return mapBegin;
+	//}
+	//const Vec2& getMapMax() const
+	//{
+	//	return mapEnd;
+	//}
 	bool isCoorOutside(const Vec2& pos, float radius) const;
 	bool isCoorOutside(const Vec2& pos) const;
 
