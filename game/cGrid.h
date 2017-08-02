@@ -75,15 +75,7 @@ public:
 			for (int y = object->gridStart.y; y <= object->gridEnd.y; y++)
 			{
 				auto& v = data[x][y];
-				for (int i = 0; i < v.size(); i++)
-				{
-					if (v[i] == object)
-					{
-						v[i] = v[v.size() - 1];
-						v.resize(v.size() - 1);
-						break;
-					}
-				}
+				v.swapToTailRemoveElement(object);
 			}
 		}
 	}
@@ -103,14 +95,7 @@ public:
 					if (x < gridStart.x || x > gridEnd.x || y < gridStart.y || y > gridEnd.y)
 					{
 						auto& v = data[x][y];
-						for (int i = 0; i < v.size(); i++)
-						{
-							if (v[i] == object)
-							{
-								v.swapToTailRemove(i);
-								break;
-							}
-						}
+						v.swapToTailRemoveElement(object);
 					}
 				}
 			}
