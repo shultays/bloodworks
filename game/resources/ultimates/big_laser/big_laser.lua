@@ -24,7 +24,7 @@ function BigLaser.onTick(gun)
 	end
 
 	if isKeyDown(keys.F) and data.shooting > 0 then
-		runForEachMonsterOnLine(player.gunPos, player.aimDir * 450.0, 15, {}, function(monster)
+		runForEachMonsterOnLine(player.gunPos, player.aimDir * 410.0, 15, {}, function(monster)
 		end)
 	end
 	
@@ -38,7 +38,7 @@ function BigLaser.onTick(gun)
 		gun.laser:setLength(range)
 		gun.laser:addUniformFloat("time", time)
 		if ShootTimer.checkGun(gun) then
-			runForEachMonsterOnLine(player.gunPos, player.aimDir * 450.0, 15, {}, function(monster)
+			runForEachMonsterOnLine(player.gunPos, player.aimDir * 410.0, 15, {}, function(monster)
 				local args = {doNotStun = true}
 				monster:doDamageWithArgs(gun:getRandomDamage(), player.aimDir, args)
 			end)
