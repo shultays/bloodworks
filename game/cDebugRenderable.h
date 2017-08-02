@@ -55,7 +55,7 @@ class cDebugRenderable
 	std::vector<LineData> lineData;
 	GLuint lineGPUBuffer;
 
-	int addTextInternal(int id, const std::string &string, float x, float y, float time, Vec4 color, float size, TextAlignment textAlignment, RenderableAlignment alignment);
+	int addTextInternal(int id, const std::string &string, float x, float y, float time, int color, float size, TextAlignment textAlignment, RenderableAlignment alignment);
 public:
 
 	const float infinite = FLT_MAX;
@@ -68,13 +68,13 @@ public:
 	void removeText(int id);
 	void removeLine(int id);
 
-	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
-	int addText(const std::string &string, float x, float y, float time = 0.0f, Vec4 color = Vec4(1.0f), float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
+	int addText(int id, const std::string &string, float x, float y, float time = 0.0f, int color = 0xFFFFFFFF, float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
+	int addText(const std::string &string, float x, float y, float time = 0.0f, int color = 0xFFFFFFFF, float size = 24.0f, TextAlignment textAlignment = (TextAlignment)0, RenderableAlignment alignment = (RenderableAlignment)0);
 
-	int addLine(int id, const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
-	int addLine(const Vec2& pos0, const Vec2& pos1, float time = 0.0f, Vec4 color = Vec4(1.0f));
+	int addLine(int id, const Vec2& pos0, const Vec2& pos1, float time = 0.0f, int color = 0xFFFFFFFF);
+	int addLine(const Vec2& pos0, const Vec2& pos1, float time = 0.0f, int color = 0xFFFFFFFF);
 
-	void addCircle(const Vec2& center, float radius, float time = 0.0f, Vec4 color = Vec4(1.0f));
+	void addCircle(const Vec2& center, float radius, float time = 0.0f, int color = 0xFFFFFFFF);
 
 	void render();
 	void tick(float dt);

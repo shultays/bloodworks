@@ -16,7 +16,10 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	grid.init(bloodworks->getMapMin() - 500.0f, bloodworks->getMapSize() + 1000.0f, Vec2(NODE_SIZE));
+	AARect boundaries = bloodworks->getMapLimits();
+	boundaries.addThreshold(500.0f);
+
+	grid.init(boundaries, Vec2(NODE_SIZE));
 
 	customMonsterTick = lua["customMonsterOnTick"];
 	customMonsterOnHit = lua["customMonsterOnHit"];
@@ -267,7 +270,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 			Vec2 nextPos = grid.getStartPos() + grid.getNodeSize() * (current + posShift).toVec();
 			if (renderDebug)
 			{
-				debugRenderer.addCircle(currentPos, 3.0f, 0.0f, Vec4::fromColor(0xFF00FFFF));
+				debugRenderer.addCircle(currentPos, 3.0f, 0.0f, 0xFF00FFFF);
 			}
 			if (hasRadius)
 			{
@@ -640,8 +643,9 @@ void MonsterController::addMonsterTemplate(nlohmann::json& j, const DirentHelper
 
 Vec2 MonsterController::getRandomPos(sol::table& args)
 {
-	const Vec2& mapMin = bloodworks->getMapMin();
-	const Vec2& mapMax = bloodworks->getMapMax();
+	const AARect& mapLimits = bloodworks->getMapLimits();
+	const Vec2& mapMin = mapLimits.getMin();
+	const Vec2& mapMax = mapLimits.getMax();
 
 	bool canGoEdge = args["canBeEdge"];
 	bool onEdges = args["onEdges"];
@@ -657,16 +661,15 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	Vec2 bestPos;
 	int tryCount = outsideScreen ? 20 : 10;
 
-	Vec2 screenMin = bloodworks->getCameraPos() - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 50;
-	Vec2 screenMax = bloodworks->getCameraPos() + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 50;
-
+	AARect screenRect = bloodworks->getScreenRect();
+	screenRect.addThreshold(-50.0f);
 	while (tryCount --> 0)
 	{
 		float score = 0.0f;
 		Vec2 pos;
 		if (onScreen)
 		{
-			pos = Vec2(randFloat(screenMin.x, screenMax.x), randFloat(screenMin.y, screenMax.y));
+			pos = screenRect.getRandomPos();
 		}
 		else if (nearPlayer)
 		{
@@ -674,8 +677,6 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 		}
 		else if (onEdges || (canGoEdge && randFloat() < 0.2f))
 		{
-			const Vec2& mapMin = bloodworks->getMapMin();
-			const Vec2& mapMax = bloodworks->getMapMax();
 			int r = randInt(4);
 			switch (r)
 			{
@@ -716,7 +717,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 
 		if (outsideScreen)
 		{
-			if (pos.x > screenMin.x && pos.x < screenMax.x && pos.y > screenMin.y && pos.y < screenMax.y)
+			if (pos.x > screenRect.getMin().x && pos.x < screenRect.getMax().x && pos.y > screenRect.getMin().y && pos.y < screenRect.getMax().y)
 			{
 				score += 100.0f * 100.0f;
 			}
