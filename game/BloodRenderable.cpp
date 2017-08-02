@@ -10,7 +10,7 @@
 
 
 
-void BloodRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
 		GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

@@ -61,7 +61,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		bloodworks->lastShader = shader;
 		bloodworks->lastAlignment = bg->getAlignment();
 		bg->setColor(Vec4(0.6f, 0.6f, 0.6f, 1.0f));
-		bg->render(true, Mat3::identity(), Rect::invalid());
+		bg->render(true, Mat3::identity(), AARect::invalid());
 	}
 
 	SAFE_DELETE(bg);
@@ -96,6 +96,8 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 
 	float totalChance = stoneChance;
 
+	const AARect& rect = bloodworks->getMapLimits();
+
 	for (int i = 0; i < max; i++)
 	{
 		float size = 0.4f;
@@ -128,9 +130,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		float renderSize = randFloat(160.0) + 160.0f;
 		brushRenderable->setWorldMatrix(
 			Mat3::scaleMatrix(renderSize, renderSize)
-			.translateBy(
-				randFloat(bloodworks->getMapMin().x, bloodworks->getMapMax().x),
-				randFloat(bloodworks->getMapMin().y, bloodworks->getMapMax().y))
+			.translateBy(rect.getRandomPos())
 			.rotateBy(randFloat(pi_2))
 		);
 
@@ -147,7 +147,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		bloodworks->lastShader = shader;
 		bloodworks->lastAlignment = brushRenderable->getAlignment();
 
-		brushRenderable->render(true, Mat3::identity(), Rect::invalid());
+		brushRenderable->render(true, Mat3::identity(), AARect::invalid());
 
 	}
 
@@ -165,7 +165,7 @@ GroundRenderable::~GroundRenderable()
 	glDeleteFramebuffers(1, &frameBuffer);
 }
 
-void GroundRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 
 	bloodworks->lastShader = nullptr;

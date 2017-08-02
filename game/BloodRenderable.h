@@ -53,7 +53,7 @@ public:
 	void addBlood(const Vec2& pos, const Vec2& moveSpeed, float size = 17.5f, std::list<BodyPartData>::iterator* insertPos = nullptr);
 	void addBodyPart(cRenderableWithShader *partRenderable, const Vec2& pos, const Vec2& size, float angle, const Vec2& blowDir);
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 	void tick();
 	void reset();
 };

@@ -91,10 +91,13 @@ void Bloodworks::init()
 
 	bg = new GroundRenderable(this);
 	addRenderable(bg, BACKGROUND);
-
+	
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
+
+	const Vec2& mapBegin = mapRect.getMin();
+	const Vec2& mapEnd = mapRect.getMax();
 
 	cTextureShr fgBlack = resources.getTexture("resources/fg_black.png", true);
 	cTexturedQuadRenderable *fg;
@@ -228,8 +231,7 @@ Bloodworks::Bloodworks()
 	nextGlobalUniqueId = 1;
 
 	mapSize = 2000.0f;
-	mapBegin = -mapSize*0.5f;
-	mapEnd = mapBegin + mapSize;
+	mapRect.set(-mapSize * 0.5f, +mapSize * 0.5f);
 
 	postProcessEndLevel = (GUI + FOREGROUND) / 2;
 
@@ -809,12 +811,12 @@ BloodRenderable* Bloodworks::getBloodRenderable()
 
 bool Bloodworks::isCoorOutside(const Vec2& pos, float radius) const
 {
-	return pos.x - radius < mapBegin.x || pos.y - radius < mapBegin.x || pos.x + radius> mapEnd.x || pos.y + radius> mapEnd.y;
+	return pos.x - radius < mapRect.getMin().x || pos.y - radius <  mapRect.getMin().x || pos.x + radius > mapRect.getMax().x || pos.y + radius > mapRect.getMax().y;
 }
 
 bool Bloodworks::isCoorOutside(const Vec2& pos) const
 {
-	return pos.x < mapBegin.x || pos.y < mapBegin.x || pos.x > mapEnd.x || pos.y > mapEnd.y;
+	return mapRect.isOutside(pos);
 }
 
 
@@ -959,24 +961,9 @@ void Bloodworks::tickCamera()
 	horizontalMaxMove *= cameraZoom;
 	verticalMaxMove *= cameraZoom;
 
-	if (cameraPos.x < mapBegin.x + horizontalMaxMove)
-	{
-		cameraPos.x = mapBegin.x + horizontalMaxMove;
-	}
-	else if (cameraPos.x > mapEnd.x - horizontalMaxMove)
-	{
-		cameraPos.x = mapEnd.x - horizontalMaxMove;
-	}
-
-	if (cameraPos.y < mapBegin.y + verticalMaxMove)
-	{
-		cameraPos.y = mapBegin.y + verticalMaxMove;
-	}
-	else if (cameraPos.y > mapEnd.y - verticalMaxMove)
-	{
-		cameraPos.y = mapEnd.y - verticalMaxMove;
-	}
-
+	AARect cameraRect = mapRect;
+	cameraRect.addThreshold(horizontalMaxMove, verticalMaxMove);
+	cameraRect.clampPos(cameraPos);
 }
 
 void Bloodworks::tickGameSlowdown()

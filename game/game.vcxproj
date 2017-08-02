@@ -187,6 +187,7 @@
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletController.cpp" />
+    <ClCompile Include="cAARect.cpp" />
     <ClCompile Include="cAnimatedRenderable.cpp" />
     <ClCompile Include="cButton.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
@@ -268,7 +269,7 @@
     <ClInclude Include="cPersistent.h" />
     <ClInclude Include="cPostProcess.h" />
     <ClInclude Include="cPriorityVector.h" />
-    <ClInclude Include="cRect.h" />
+    <ClInclude Include="cAARect.h" />
     <ClInclude Include="cRenderable.h" />
     <ClInclude Include="cRenderableContainer.h" />
     <ClInclude Include="cRenderableWithShader.h" />
