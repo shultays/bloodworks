@@ -271,6 +271,7 @@
     <ClInclude Include="cPostProcess.h" />
     <ClInclude Include="cPriorityVector.h" />
     <ClInclude Include="cAARect.h" />
+    <ClInclude Include="cRect.h" />
     <ClInclude Include="cRenderable.h" />
     <ClInclude Include="cRenderableContainer.h" />
     <ClInclude Include="cRenderableWithShader.h" />
