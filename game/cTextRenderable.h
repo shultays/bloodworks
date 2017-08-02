@@ -15,7 +15,7 @@ private:
 	TextAlignment textAlignment;
 	VerticalTextAlignment verticalTextAlignment;
 	float maxLength;
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 	int maxLine;
 	void strReplace(std::string& str, const std::string& oldStr, const std::string& newStr)
 	{
