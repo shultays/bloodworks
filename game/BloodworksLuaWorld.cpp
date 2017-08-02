@@ -249,7 +249,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addParticle", &cParticle::addParticle,
 		"addParticleWithoutArgs", &cParticle::addParticleWithoutArgs,
 		"args", &cParticle::args,
-
 		"addLinearRandom", &cParticle::addLinearRandomizerWithName,
 		"addAngularRandom", &cParticle::addAngularRandomizerWithName,
 		"addUVRandom", &cParticle::addUVRandomizerWithName,

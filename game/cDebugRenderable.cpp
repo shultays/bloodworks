@@ -13,13 +13,13 @@
 #define MAX_LINE 2048
 
 
-int cDebugRenderable::addTextInternal(int id, const std::string &string, float x, float y, float time, Vec4 color, float size, TextAlignment textAlignment, RenderableAlignment alignment)
+int cDebugRenderable::addTextInternal(int id, const std::string &string, float x, float y, float time, int color, float size, TextAlignment textAlignment, RenderableAlignment alignment)
 {
 	TextData data;
 	data.text = string;
 	data.pos = Vec2(x, y);
 	data.time = time;
-	data.color = color;
+	data.color = Vec4::fromColor(color);
 	data.size = size;
 	data.alignment = alignment;
 	data.textAlignment = textAlignment;
@@ -84,23 +84,23 @@ void cDebugRenderable::init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(LinetGPUData) * MAX_LINE, NULL, GL_DYNAMIC_DRAW);
 }
 
-int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
+int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, int color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
 {
 	return addTextInternal(-1, string, x, y, time, color, size, textAlignment, alignment);
 }
 
-int cDebugRenderable::addText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, Vec4 color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
+int cDebugRenderable::addText(int id, const std::string &string, float x, float y, float time /*= FLT_MAX*/, int color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)
 {
 	return addTextInternal(id, string, x, y, time, color, size, textAlignment, alignment);
 }
 
-int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, int color /*= Vec4(1.0f)*/)
 {
 	LineData data;
 	data.pos0 = pos0;
 	data.pos1 = pos1;
 	data.time = time;
-	data.color = color;
+	data.color = Vec4::fromColor(color);
 
 	if (id == -1)
 	{
@@ -133,12 +133,12 @@ int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float 
 	return id;
 }
 
-int cDebugRenderable::addLine(const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+int cDebugRenderable::addLine(const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, int color /*= Vec4(1.0f)*/)
 {
 	return addLine(-1, pos0, pos1, time, color);
 }
 
-void cDebugRenderable::addCircle(const Vec2& center, float radius, float time /*= 0.0f*/, Vec4 color /*= Vec4(1.0f)*/)
+void cDebugRenderable::addCircle(const Vec2& center, float radius, float time /*= 0.0f*/, int color /*= Vec4(1.0f)*/)
 {
 	int lineCount = 7 + (int)round(radius / 8);
 

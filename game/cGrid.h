@@ -139,22 +139,22 @@ public:
 		debugRenderer.addLine(
 			gridStart + nodeSize * Vec2(pos.x, pos.y),
 			gridStart + nodeSize * Vec2(pos.x + 1, pos.y),
-			0.0f, Vec4::fromColor(color));
+			0.0f, color);
 
 		debugRenderer.addLine(
 			gridStart + nodeSize * Vec2(pos.x, pos.y),
 			gridStart + nodeSize * Vec2(pos.x, pos.y + 1),
-			0.0f, Vec4::fromColor(color));
+			0.0f, color);
 
 		debugRenderer.addLine(
 			gridStart + nodeSize * Vec2(pos.x + 1, pos.y + 1),
 			gridStart + nodeSize * Vec2(pos.x + 1, pos.y),
-			0.0f, Vec4::fromColor(color));
+			0.0f, color);
 
 		debugRenderer.addLine(
 			gridStart + nodeSize * Vec2(pos.x + 1, pos.y + 1),
 			gridStart + nodeSize * Vec2(pos.x, pos.y + 1),
-			0.0f, Vec4::fromColor(color));
+			0.0f, color);
 	}
 
 	void drawDebug()
@@ -164,14 +164,14 @@ public:
 			debugRenderer.addLine(
 				Vec2(gridStart.x, gridStart.y + x * nodeSize.y),
 				Vec2(gridStart.x + gridSize.w, gridStart.y + x * nodeSize.y),
-				0.0f, Vec4::fromColor(0x550000FF));
+				0.0f, 0x550000FF);
 		}
 		for (int y = 0; y < nodeCount.x; y++)
 		{
 			debugRenderer.addLine(
 				Vec2(gridStart.x + y * nodeSize.x, gridStart.y),
 				Vec2(gridStart.x + y * nodeSize.x, gridStart.y + gridSize.h),
-				0.0f, Vec4::fromColor(0x550000FF));
+				0.0f, 0x550000FF);
 		}
 
 
@@ -183,16 +183,16 @@ public:
 
 				if (v.size())
 				{
-					debugRenderer.addLine(gridStart + Vec2((float)x, (float)y) * nodeSize, gridStart + Vec2((float)x + 1, (float)y) * nodeSize, 0.0f, Vec4::fromColor(0xFFFF0000));
-					debugRenderer.addLine(gridStart + Vec2((float)x, (float)y) * nodeSize, gridStart + Vec2((float)x, (float)y + 1) * nodeSize, 0.0f, Vec4::fromColor(0xFFFF0000));
-					debugRenderer.addLine(gridStart + Vec2((float)x + 1, (float)y + 1) * nodeSize, gridStart + Vec2((float)x + 1, (float)y) * nodeSize, 0.0f, Vec4::fromColor(0xFFFF0000));
-					debugRenderer.addLine(gridStart + Vec2((float)x + 1, (float)y + 1) * nodeSize, gridStart + Vec2((float)x, (float)y + 1) * nodeSize, 0.0f, Vec4::fromColor(0xFFFF0000));
+					debugRenderer.addLine(gridStart + Vec2((float)x, (float)y) * nodeSize, gridStart + Vec2((float)x + 1, (float)y) * nodeSize, 0.0f, 0xFFFF0000);
+					debugRenderer.addLine(gridStart + Vec2((float)x, (float)y) * nodeSize, gridStart + Vec2((float)x, (float)y + 1) * nodeSize, 0.0f, 0xFFFF0000);
+					debugRenderer.addLine(gridStart + Vec2((float)x + 1, (float)y + 1) * nodeSize, gridStart + Vec2((float)x + 1, (float)y) * nodeSize, 0.0f, 0xFFFF0000);
+					debugRenderer.addLine(gridStart + Vec2((float)x + 1, (float)y + 1) * nodeSize, gridStart + Vec2((float)x, (float)y + 1) * nodeSize, 0.0f, 0xFFFF0000);
 				
 					for (auto& o : v)
 					{
 						if (o->gridEnd == IntVec2(x, y))
 						{
-							debugRenderer.addCircle(o->getPosition(), o->getRadius(), 0.0f, Vec4::fromColor(0xFFFF0000));
+							debugRenderer.addCircle(o->getPosition(), o->getRadius(), 0.0f, 0xFFFF0000);
 						}
 					}
 				}
