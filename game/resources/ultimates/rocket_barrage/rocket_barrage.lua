@@ -39,7 +39,8 @@ function RocketBarrage.onTick(gun)
 			bullet.moveAngle = bullet.moveAngle + spread * (math.random() * 2.0 - 1.0)
 			
 			--if DEBUG ~= true then
-				bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 4.0, {})
+				local particle = bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 4.0, {})
+				particle:addLinearRandom("fadeOutSpeed", 1.0, 1.4)
 			--end
 			local c = math.random() * 0.3 + 0.7
 		end
