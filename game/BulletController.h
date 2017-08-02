@@ -11,7 +11,7 @@ class Bullet;
 class BulletController
 {
 	Bloodworks *bloodworks;
-	std::vector<Bullet*> bullets;
+	cVector<Bullet*> bullets;
 	std::unordered_map<int, Bullet*> bulletMap;
 	cGrid<Bullet> grid;
 public:

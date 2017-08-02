@@ -59,8 +59,12 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 	}
 }
 
+#include "cBodyGrid.h"
+
 void Bloodworks::init()
 {
+	cBodyGrid g;
+
 	nextGlobalUniqueId = 0;
 
 	config = new BloodworksConfig();
@@ -341,9 +345,9 @@ void Bloodworks::doUnpause()
 	paused = false;
 }
 
-std::vector<Perk*> Bloodworks::getAvailablePerks() const
+cVector<Perk*> Bloodworks::getAvailablePerks() const
 {
-	std::vector<Perk*> availablePerks;
+	cVector<Perk*> availablePerks;
 	for (auto& perk : perks)
 	{
 		if (perk->isTakenFully() == false)
@@ -416,7 +420,7 @@ void Bloodworks::clearMission()
 	levelUpPopup->reset();
 	luaWorld->reset();
 
-	std::vector<cPostProcess*> toRemove;
+	cVector<cPostProcess*> toRemove;
 
 	for (int i = 0; i<postProcesses.size(); i++)
 	{
@@ -671,7 +675,7 @@ void Bloodworks::showMods()
 void Bloodworks::loadMod(const std::string& path)
 {
 	DirentHelper::Folder folder(path);
-	std::vector<DirentHelper::File> files = folder.getAllFiles(true);
+	cVector<DirentHelper::File> files = folder.getAllFiles(true);
 	for (auto& f : files)
 	{
 		if (f.isTypeOf("json"))
@@ -856,8 +860,7 @@ void Bloodworks::tick()
 	{
 		if (gameSounds[i].isFinished())
 		{
-			gameSounds[i] = gameSounds[gameSounds.size() - 1];
-			gameSounds.resize((int)gameSounds.size() - 1);
+			gameSounds.swapToTailRemove(i);
 			i--;
 		}
 	}
@@ -871,16 +874,15 @@ void Bloodworks::tick()
 		if (orphanParticles[i]->hasParticle() == false)
 		{
 			SAFE_DELETE(orphanParticles[i]);
-			orphanParticles[i] = orphanParticles[orphanParticles.size() - 1];
-			orphanParticles.resize(orphanParticles.size() - 1);
+			orphanParticles.swapToTailRemove(i);
+			i--;
 		}
 	}
 	for (int i = 0; i < activeBonuses.size(); i++)
 	{
 		if (activeBonuses[i]->isActive() == false)
 		{
-			activeBonuses[i] = activeBonuses[activeBonuses.size() - 1];
-			activeBonuses.resize(activeBonuses.size() - 1);
+			activeBonuses.swapToTailRemove(i);
 			i--;
 		}
 	}

@@ -7,7 +7,7 @@ void KeyMapper::setSavePath(const std::string& file)
 {
 	for (auto& data : mappedKeys)
 	{
-		std::vector<std::string> keyNames;
+		cVector<std::string> keyNames;
 		for (int i = 0; i < data.num; i++)
 		{
 			keyNames.push_back(input.getKeyName(data.keys[i]));
@@ -18,7 +18,7 @@ void KeyMapper::setSavePath(const std::string& file)
 	for (int i = 0; i < persistent.size(); i++)
 	{
 		const std::string name = persistent.getName(i);
-		std::vector<std::string>& values = persistent.getStringList(i);
+		cVector<std::string>& values = persistent.getStringList(i);
 		Key keys[4] = { key_invalid, key_invalid, key_invalid, key_invalid };
 		for (int j = 0; j < values.size(); j++)
 		{
@@ -32,7 +32,7 @@ void KeyMapper::setSavePath(const std::string& file)
 		}
 		else
 		{
-			mappedKeys[index].num = (int)values.size();
+			mappedKeys[index].num = values.size();
 			for (int j = 0; j < values.size(); j++)
 			{
 				mappedKeys[index].keys[j] = keys[j];
@@ -55,7 +55,7 @@ MappedKey KeyMapper::addKeyMap(const std::string& name, Key defaultKey0, Key def
 	keyInfo.keys[2] = defaultKey2;
 	keyInfo.keys[3] = defaultKey3;
 	keyInfo.num = (keyInfo.keys[0] > 0) + (keyInfo.keys[1] > 0) + (keyInfo.keys[2] > 0) + (keyInfo.keys[3] > 0);
-	std::vector<std::string> keyNames;
+	cVector<std::string> keyNames;
 	for (int i = 0; i < keyInfo.num; i++)
 	{
 		keyNames.push_back(input.getKeyName(keyInfo.keys[i]));
@@ -63,8 +63,8 @@ MappedKey KeyMapper::addKeyMap(const std::string& name, Key defaultKey0, Key def
 	mappedKeys.push_back(keyInfo);
 	persistent.setDataIfNotExist(name, keyNames);
 	persistent.set(name, keyNames);
-	mappedIndices[name] = (int)mappedKeys.size() - 1;
-	return (int)mappedKeys.size() - 1;
+	mappedIndices[name] = mappedKeys.size() - 1;
+	return mappedKeys.size() - 1;
 }
 
 
@@ -82,7 +82,7 @@ void KeyMapper::setKeyMap(MappedKey key, Key defaultKey0, Key defaultKey1 /*= (K
 	keyInfo.keys[2] = defaultKey2;
 	keyInfo.keys[3] = defaultKey3;
 	keyInfo.num = (keyInfo.keys[0] > 0) + (keyInfo.keys[1] > 0) + (keyInfo.keys[2] > 0) + (keyInfo.keys[3] > 0);
-	std::vector<std::string> keyNames;
+	cVector<std::string> keyNames;
 	for (int i = 0; i < keyInfo.num; i++)
 	{
 		keyNames.push_back(input.getKeyName(keyInfo.keys[i]));

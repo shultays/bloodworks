@@ -3,6 +3,7 @@
 #include "cVec.h"
 #include "cMat.h"
 #include "cAARect.h"
+#include "cVector.h"
 #include <stdlib.h>
 #include <string>
 #include <cassert>

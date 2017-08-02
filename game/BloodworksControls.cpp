@@ -2,7 +2,7 @@
 #include "cGlobals.h"
 
 
-std::vector<struct BloodworksControls::KeyData> BloodworksControls::keys;
+cVector<struct BloodworksControls::KeyData> BloodworksControls::keys;
 
 void BloodworksControls::init()
 {

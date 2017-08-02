@@ -509,7 +509,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("getGunCount",
 		[&]() -> int
 	{
-		return (int)bloodworks->getGuns().size();
+		return bloodworks->getGuns().size();
 	});
 
 	lua.set_function("getGunAtIndex",
@@ -551,7 +551,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("getAllMonsterTypeCount",
 		[&]() -> int
 	{
-		return (int)bloodworks->getMonsterController()->getTemplates().size();
+		return bloodworks->getMonsterController()->getTemplates().size();
 	});
 
 	lua.set_function("getMonsterTypeAt",
