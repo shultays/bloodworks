@@ -36,12 +36,12 @@ public:
 		Key defaults[4];
 	};
 
-	static const std::vector<struct KeyData>& getKeyData()
+	static const cVector<struct KeyData>& getKeyData()
 	{
 		return keys;
 	}
 private:
-	static std::vector<struct KeyData> keys;
+	static cVector<struct KeyData> keys;
 };
 
 #endif // BloodworksControls_h__

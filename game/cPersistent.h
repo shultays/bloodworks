@@ -17,7 +17,7 @@ class cPersistent
 		Vec2 vec2Value;
 		IntVec2 intVec2Value;
 		int type;
-		std::vector<std::string> strList;
+		cVector<std::string> strList;
 
 		std::string betweenString;
 		std::string beforeString;
@@ -33,7 +33,7 @@ class cPersistent
 		TypeStringList
 	};
 	std::unordered_map<std::string, int> dataIndices;
-	std::vector<Data> persistentData;
+	cVector<Data> persistentData;
 
 	std::string endString;
 	std::string filePath;
@@ -84,7 +84,7 @@ class cPersistent
 		data.type = TypeString;
 		isDirty = true;
 	}
-	void setValue(Data& data, const std::vector<std::string>& value)
+	void setValue(Data& data, const cVector<std::string>& value)
 	{
 		data.strList = value;
 		data.type = TypeStringList;
@@ -107,7 +107,7 @@ class cPersistent
 			data.beforeString = "\n";
 			clearData(data);
 			setValue(data, value);
-			return (int)persistentData.size() - 1;
+			return persistentData.size() - 1;
 		}
 		return index;
 	}
@@ -158,7 +158,7 @@ public:
 		int index = getDataIndex(name);
 		Data& data = index == -1 ? getEmptyData(name) : persistentData[index];
 		setValue(data, value);
-		return index == -1 ? (int)persistentData.size() - 1 : index;
+		return index == -1 ? persistentData.size() - 1 : index;
 	}
 
 	int getInt(const std::string& name, int defaultValue = 0)
@@ -281,7 +281,7 @@ public:
 		return persistentData[index].strValue;
 	}
 
-	std::vector<std::string>& getStringList(int index)
+	cVector<std::string>& getStringList(int index)
 	{
 		return persistentData[index].strList;
 	}
@@ -303,7 +303,7 @@ public:
 
 	int size() const
 	{
-		return (int)persistentData.size();
+		return persistentData.size();
 	}
 
 	const std::string& getName(int index)

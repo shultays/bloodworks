@@ -40,7 +40,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 	if (bodyParts.size() > 0)
 	{
 #ifndef USE_TEMP_BUFFER
-		std::vector<BodyPartData*> toRender;
+		cVector<BodyPartData*> toRender;
 #endif
 		std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
 		while (bodyPart != bodyParts.end())

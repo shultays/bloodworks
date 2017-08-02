@@ -23,7 +23,7 @@ class ExplosionController
 		float scaleSpeed;
 		Vec2 pos;
 	};
-	std::vector<ExplosionData> explosions;
+	cVector<ExplosionData> explosions;
 	cParticle *explosionParticles;
 
 public:

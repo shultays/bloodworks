@@ -282,7 +282,7 @@ private:
 			return false;
 		}
 
-		std::vector<int> toRemove;
+		cVector<int> toRemove;
 		toRemove.reserve(10);
 		float time = getTime();
 		for (auto& b : buffs)

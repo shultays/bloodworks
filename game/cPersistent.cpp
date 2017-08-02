@@ -12,9 +12,9 @@ int cPersistent::getDataIndex(const std::string& name)
 
 cPersistent::Data& cPersistent::addData(const std::string& name)
 {
-	dataIndices[name] = (int)persistentData.size();
+	dataIndices[name] = persistentData.size();
 	persistentData.resize(persistentData.size() + 1);
-	int index = (int)persistentData.size() - 1;
+	int index = persistentData.size() - 1;
 	persistentData[index].name = name;
 	return persistentData[index];
 }

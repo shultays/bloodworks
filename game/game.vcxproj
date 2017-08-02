@@ -254,6 +254,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="cAnimatedRenderable.h" />
+    <ClInclude Include="cBodyGrid.h" />
     <ClInclude Include="cButton.h" />
     <ClInclude Include="cCircle.h" />
     <ClInclude Include="cDebugRenderable.h" />
@@ -296,6 +297,7 @@
     <ClInclude Include="cVecImp.h" />
     <ClInclude Include="cFont.h" />
     <ClInclude Include="cLuaWorld.h" />
+    <ClInclude Include="cVector.h" />
     <ClInclude Include="dirent.h" />
     <ClInclude Include="DirentHelper.h" />
     <ClInclude Include="DropController.h" />

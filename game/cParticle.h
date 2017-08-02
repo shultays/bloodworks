@@ -62,11 +62,11 @@ class cParticleRandomizer
 	};
 
 	PositionRandom positionRandom;
-	std::vector<LinearRandomData> linearRandoms;
-	std::vector<AngularRandomData> angularRandoms;
-	std::vector<TextureRandomData> textureRandoms;
-	std::vector<VectorRandomData> vectorRandoms;
-	std::vector<UVRandomData> uvRandoms;
+	cVector<LinearRandomData> linearRandoms;
+	cVector<AngularRandomData> angularRandoms;
+	cVector<TextureRandomData> textureRandoms;
+	cVector<VectorRandomData> vectorRandoms;
+	cVector<UVRandomData> uvRandoms;
 
 public:
 	cParticleRandomizer()
@@ -184,11 +184,11 @@ class cParticleTemplate : public cUniformDataWithShader
 		int begin;
 	};
 
-	std::vector<Attribute> attributes;
+	cVector<Attribute> attributes;
 	std::unordered_map<std::string, int> attributesMap;
-	std::vector<cTextureShr> textures;
+	cVector<cTextureShr> textures;
 	std::unordered_map<std::string, int> texturesMap;
-	std::vector<GLuint> emptyBuffers;
+	cVector<GLuint> emptyBuffers;
 
 	int posIndex;
 	int timeIndex;
@@ -200,11 +200,11 @@ class cParticleTemplate : public cUniformDataWithShader
 		std::string name;
 		int type;
 	};
-	std::vector<Uniform> uniforms;
+	cVector<Uniform> uniforms;
 
 	int uCurrentTime;
 	bool needsLuaRandoms;
-	void randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, std::vector<int>& setAttributes) const;
+	void randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, cVector<int>& setAttributes) const;
 
 public:
 	cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file);
@@ -250,10 +250,10 @@ class cParticle : public cRenderableWithShader
 	};
 
 	int maxBufferSize;
-	std::vector<QuadBufferData> quadBuffers;
+	cVector<QuadBufferData> quadBuffers;
 
 	bool nextIsStripBegining;
-	std::vector<cTextureShr> textures;
+	cVector<cTextureShr> textures;
 	cUniformDataWithShader uniformData;
 
 	cParticleRandomizer randomizer;

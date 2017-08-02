@@ -79,9 +79,9 @@ namespace DirentHelper
 			return name;
 		}
 
-		std::vector<Folder> getSubFolders()
+		cVector<Folder> getSubFolders()
 		{
-			std::vector<Folder> folders;
+			cVector<Folder> folders;
 			struct dirent *ent;
 			DIR *dir = openDir();
 			while ((ent = readdir(dir)) != NULL)
@@ -103,14 +103,14 @@ namespace DirentHelper
 			return folders;
 		}
 
-		std::vector<File> getAllFiles(bool recursive = false)
+		cVector<File> getAllFiles(bool recursive = false)
 		{
-			std::vector<File> files;
+			cVector<File> files;
 			appendAllFiles(files, recursive);
 			return files;
 		}
 
-		void appendAllFiles(std::vector<File>& files, bool recursive = false)
+		void appendAllFiles(cVector<File>& files, bool recursive = false)
 		{
 			std::function<void(File&)> func = [&](File &file) {files.push_back(file); };
 			runOnEachFile(func, recursive);
