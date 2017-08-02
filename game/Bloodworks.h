@@ -47,6 +47,7 @@ class BloodworksConfig;
 class BloodworksCheats;
 class cAnimationTemplate;
 class GroundRenderable;
+class CollisionController;
 
 class Bloodworks : public cGame
 {
@@ -55,6 +56,7 @@ class Bloodworks : public cGame
 	MissionController *missionController;
 	MonsterController *monsterController;
 	BulletController *bulletController;
+	CollisionController *collisionController;
 	ExplosionController *explosionController;
 	DropController *dropController;
 	BloodworksLuaWorld *luaWorld;
