@@ -72,7 +72,6 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	cTextureShr brush = resources.getTexture("resources/ground/brush.png", true);
 	cTextureShr grass = resources.getTexture("resources/ground/grass.png", true);
 	cTextureShr grass2 = resources.getTexture("resources/ground/grass2.png", true);
-	cTextureShr earth = resources.getTexture("resources/ground/earth.png", true);
 	cTextureShr stone = resources.getTexture("resources/ground/stone.png", true);
 
 	int uPerlinMat = brushShader->addUniform("uPerlinMat", TypeMat3).index;
@@ -89,7 +88,13 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	shader->begin();
 
 
-	int max = 100;
+	int max = 40;
+
+	float grassChance = 0.3f;
+	float grass2Chance = 0.5f + grassChance;
+	float stoneChance = 0.1f + grass2Chance;
+
+	float totalChance = stoneChance;
 
 	for (int i = 0; i < max; i++)
 	{
@@ -99,26 +104,21 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		float colorMin = 0.6f;
 		float colorMax = 0.9f;
 
-		if (i < max * 0.1f)
+		if (i < max * grassChance / totalChance)
 		{
 			brushRenderable->setTexture(2, grass);
 			imageSize = 0.7f;
 		}
-		else if (i < max * 0.16f)
+		else if (i < max * grass2Chance / totalChance)
 		{
 			brushRenderable->setTexture(2, grass2);
 			imageSize = 2.0f;
 		}
-		else if (i < max * 0.22)
+		else if (i < max * stoneChance / totalChance)
 		{
 			brushRenderable->setTexture(2, stone);
 			imageSize = 5.0f;
 			colorMin = 0.9f;
-		}
-		else
-		{
-			imageSize = 1.0f;
-			brushRenderable->setTexture(2, grass2);
 		}
 
 		brushShader->setUniform(uPerlinMat, Mat3::scaleMatrix(size).translateBy(randFloat(), randFloat()));

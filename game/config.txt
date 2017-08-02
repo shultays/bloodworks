@@ -1,7 +1,7 @@
 
 gore            1
 screenShake     1
-lockCrosshair   1
+lockCrosshair   0
 autoOpenLevelupPopup 0
 sensitivity     50
 volume          94
