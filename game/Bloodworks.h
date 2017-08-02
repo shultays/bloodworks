@@ -66,14 +66,14 @@ class Bloodworks : public cGame
 	OptionsPopup *optionsPopup;
 	ModWindow *modWindow;
 
-	std::vector<Gun*> guns;
-	std::vector<Bonus*> bonuses;
-	std::vector<Bonus*> activeBonuses;
-	std::vector<Perk*> perks;
-	std::vector<Perk*> usedPerks;
+	cVector<Gun*> guns;
+	cVector<Bonus*> bonuses;
+	cVector<Bonus*> activeBonuses;
+	cVector<Perk*> perks;
+	cVector<Perk*> usedPerks;
 
 	GroundRenderable *bg;
-	std::vector<cTexturedQuadRenderable*> fgs;
+	cVector<cTexturedQuadRenderable*> fgs;
 
 	std::unordered_map<std::string, cParticleTemplate*> particles;
 	std::unordered_map<std::string, LaserTemplate*> laserTemplates;
@@ -98,8 +98,8 @@ class Bloodworks : public cGame
 	float soundSpeed;
 	bool soundPaused;
 
-	std::vector<cSoundHandle> gameSounds;
-	std::vector<cParticle*> orphanParticles;
+	cVector<cSoundHandle> gameSounds;
+	cVector<cParticle*> orphanParticles;
 
 	std::map<std::string, cAnimationTemplate*> animationTemplates;
 
@@ -134,17 +134,17 @@ public:
 		return missionController;
 	}
 
-	const std::vector<Gun*>& Bloodworks::getGuns() const
+	const cVector<Gun*>& Bloodworks::getGuns() const
 	{
 		return guns;
 	}
 
-	const std::vector<Bonus*>& Bloodworks::getBonuses() const
+	const cVector<Bonus*>& Bloodworks::getBonuses() const
 	{
 		return bonuses;
 	}
 
-	const std::vector<Perk*>& Bloodworks::getPerks() const
+	const cVector<Perk*>& Bloodworks::getPerks() const
 	{
 		return perks;
 	}
@@ -215,7 +215,7 @@ public:
 	void openLevelupPopup();
 	void doPause();
 	void doUnpause();
-	std::vector<Perk*> getAvailablePerks() const;
+	cVector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
 	int onPlayerDamaged(int damage, float dir, sol::table& params);
 	void addLaserTemplate(LaserTemplate * laserTemplate);
@@ -247,7 +247,7 @@ public:
 	void onMonsterDied(Monster* monster, float dropChance);
 	void showOptions();
 
-	void addOrphanParticle(const std::vector<cParticle*> particles)
+	void addOrphanParticle(const cVector<cParticle*> particles)
 	{
 		orphanParticles.insert(orphanParticles.end(), particles.begin(), particles.end());
 	}	

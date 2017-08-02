@@ -30,7 +30,7 @@ class cDebugRenderable
 		RenderableAlignment alignment;
 	};
 
-	std::vector<TextData> textData;
+	cVector<TextData> textData;
 	int nextId;
 
 	struct LineData
@@ -52,7 +52,7 @@ class cDebugRenderable
 
 	LinetGPUData *lineGPUData;
 
-	std::vector<LineData> lineData;
+	cVector<LineData> lineData;
 	GLuint lineGPUBuffer;
 
 	int addTextInternal(int id, const std::string &string, float x, float y, float time, int color, float size, TextAlignment textAlignment, RenderableAlignment alignment);

@@ -15,7 +15,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		bool useSurplus;
 	};
 
-	std::vector<struct LineData> lineData;
+	cVector<struct LineData> lineData;
 	lineData.reserve(4);
 
 	{

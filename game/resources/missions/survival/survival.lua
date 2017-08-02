@@ -13,7 +13,7 @@ function Survival.init()
 	missionData.spawnWeaponOnFirstKill = true
 	missionData.timeToCalcSpawn = -0.1
 	if DEBUG then
-		missionData.maxMonster = 20
+		missionData.maxMonster = 50
 	else
 		missionData.maxMonster = 650
 		spawn = 50

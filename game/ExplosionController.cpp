@@ -41,8 +41,7 @@ void ExplosionController::tick()
 		if (newScale > explosionData.maxScale)
 		{
 			SAFE_DELETE(explosions[i].ringRenderable);
-			explosions[i] = explosions[(int)explosions.size() - 1];
-			explosions.resize(explosions.size() - 1);
+			explosions.swapToTailRemove(i);
 			i--;
 			continue;
 		}

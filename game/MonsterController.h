@@ -17,13 +17,13 @@ class Bullet;
 class MonsterController
 {
 	friend class BloodworksLuaWorld;
-	std::vector<Monster*> monsters;
+	cVector<Monster*> monsters;
 	std::unordered_map<int, Monster*> monstersMap;
 	Bloodworks *bloodworks;
 
 	cGrid<Monster> grid;
 
-	std::vector<MonsterTemplate*> monsterTemplates;
+	cVector<MonsterTemplate*> monsterTemplates;
 	std::unordered_map<std::string, int> monsterTemplateIndices;
 
 	sol::function customMonsterTick;
@@ -41,17 +41,17 @@ public:
 	MonsterController(Bloodworks *bloodworks);
 	~MonsterController();
 	void tick();
-	const std::vector<Monster*>& getMonsterAt(const Vec2& pos) const;
+	const cVector<Monster*>& getMonsterAt(const Vec2& pos) const;
 
 	MonsterHitResult getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, float radius, sol::table& args);
 	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc = nullptr);
-	bool runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, std::vector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc);
+	bool runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc);
 
 	Monster* getClosestMonster(const Vec2& pos);
 	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
 	Monster* getClosestMonsterInRange(const Vec2& pos, float range);
 	Monster* getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId);
-	void getAllMonstersInRange(const Vec2& pos, float range, std::vector<Monster*>& foundMonsters);
+	void getAllMonstersInRange(const Vec2& pos, float range, cVector<Monster*>& foundMonsters);
 
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);
 	void damageMonstersInRangeWithIgnoreId(const Vec2& pos, float range, int minRange, int maxRange, bool mark, int ignoreId);
@@ -68,7 +68,7 @@ public:
 	void runForEachMonsterInPie(const Vec2& pos, float radius, float angle, float angleWidth, std::function<bool(Monster *monster) >& func) const;
 	void relocateMonster(Monster* monster);
 
-	const std::vector<MonsterTemplate*>& getTemplates() const
+	const cVector<MonsterTemplate*>& getTemplates() const
 	{
 		return monsterTemplates;
 	}

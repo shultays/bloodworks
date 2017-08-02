@@ -23,7 +23,7 @@ class DropController
 		bool canFadeout;
 	};
 
-	std::vector<Drop> drops;
+	cVector<Drop> drops;
 
 	float lastDropSpawn;
 public:

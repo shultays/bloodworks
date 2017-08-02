@@ -31,7 +31,7 @@ class MissionController
 		std::string scriptFile;
 	};
 
-	std::vector<MissionData> missions;
+	cVector<MissionData> missions;
 	float missionLoadTime;
 	int loadedMission;
 

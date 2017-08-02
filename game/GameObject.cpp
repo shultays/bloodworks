@@ -99,28 +99,28 @@ cAnimatedTexturedQuadRenderable* GameObject::addAnimation(const std::string& nam
 
 void GameObject::removeTexture(cTexturedQuadRenderable *texture)
 {
-	textureRenderables.erase(std::remove(textureRenderables.begin(), textureRenderables.end(), texture), textureRenderables.end());
+	textureRenderables.swapToTailRemoveElement(texture);
 	renderableGroup->removeRenderable(texture);
 	SAFE_DELETE(texture);
 }
 
 void GameObject::removeText(cTextRenderable *text)
 {
-	textRenderables.erase(std::remove(textRenderables.begin(), textRenderables.end(), text), textRenderables.end());
+	textRenderables.swapToTailRemoveElement(text);
 	renderableGroup->removeRenderable(text);
 	SAFE_DELETE(text);
 }
 
 void GameObject::removeParticle(cParticle *particle)
 {
-	particles.erase(std::remove(particles.begin(), particles.end(), particle), particles.end());
+	particles.swapToTailRemoveElement(particle);
 	renderableGroup->removeRenderable(particle);
 	SAFE_DELETE(particle);
 }
 
 void GameObject::removeAnimation(cAnimatedTexturedQuadRenderable *animation)
 {
-	animations.erase(std::remove(animations.begin(), animations.end(), animation), animations.end());
+	animations.swapToTailRemoveElement(animation);
 	renderableGroup->removeRenderable(animation);
 	SAFE_DELETE(animation);
 }

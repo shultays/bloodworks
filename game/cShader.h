@@ -263,8 +263,8 @@ public:
 	std::unordered_map<std::string, int> uniformIndices;
 	std::unordered_map<std::string, int> attributeIndices;
 
-	std::vector<Uniform> uniforms;
-	std::vector<Attribute> attributes;
+	cVector<Uniform> uniforms;
+	cVector<Attribute> attributes;
 
 	int aVertexPosition;
 	int aVertexColor;
@@ -414,7 +414,7 @@ public:
 			attribute.location = attributeLocation;
 			glBindAttribLocation(shaderProgram, attributeLocation, name.c_str());
 		}
-		attribute.index = attributeIndices[name] = (int)attributes.size();
+		attribute.index = attributeIndices[name] = attributes.size();
 		attributes.push_back(attribute);
 		return attributes[attribute.index];
 	}
@@ -454,7 +454,7 @@ public:
 		}
 
 		Uniform uniform(uniformType);
-		uniform.index = uniformIndices[name] = (int)uniforms.size();
+		uniform.index = uniformIndices[name] = uniforms.size();
 		uniform.location = glGetUniformLocation(shaderProgram, name.c_str());
 		uniforms.push_back(uniform);
 		return uniforms[uniform.index];
@@ -668,7 +668,7 @@ public:
 
 	int getAttributeCount() const
 	{
-		return (int)attributes.size();
+		return attributes.size();
 	}
 
 	void deleteSelf()
