@@ -8,22 +8,30 @@ class Bloodworks;
 class cTexturedQuadRenderable;
 class cRenderableWithShader;
 
+#define USE_TEMP_BUFFER
+#ifdef USE_TEMP_BUFFER
+#define BUFFER_COUNT 2
+#else
+#define BUFFER_COUNT 1
+#endif
+
 class BloodRenderable : public cRenderable
 {
 	struct BodyPartData
 	{
 		cRenderableWithShader *renderable;
 		bool isBlood;
+		bool addedBlood;
+		int toBeRemove;
+
 		float time;
 		Vec2 pos;
 		float rotation;
 		Vec2 size;
 		Vec2 moveSpeed;
 
-		Mat3 lastFrame;
 		float rotateSpeed;
-		bool addedBlood;
-		bool toBeRemove;
+		float initialScale;
 	};
 
 	std::list<BodyPartData> bodyParts;
@@ -33,8 +41,8 @@ class BloodRenderable : public cRenderable
 	cShaderShr defaultShader;
 	Bloodworks *bloodworks;
 
-	GLuint frameBuffer;
-	GLuint frameBufferTexture;
+	GLuint frameBuffer[BUFFER_COUNT];
+	GLuint frameBufferTexture[BUFFER_COUNT];
 	cShaderShr defaultPostProcessShader;
 
 	Vec4 bloodColor;
