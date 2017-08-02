@@ -210,6 +210,9 @@
     <ClCompile Include="cAARect.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionController.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="cVector.h">
       <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionController.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
