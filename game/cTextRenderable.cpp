@@ -2,7 +2,7 @@
 #include "cTexture.h"
 #include "cShader.h"
 
-void cTextRenderable::render(bool isIdentity, const Mat3& mat, const Rect& crop)
+void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	cRenderableWithShader::render(isIdentity, mat, crop);
 	font->texture->bindTexture();

@@ -7,13 +7,13 @@ class cScrollContainer : public cRenderable
 {
 	cSlider* slider;
 	cRenderableContainer* content;
-	Rect crop;
+	AARect crop;
 	float maxScroll;
 public:
 	cScrollContainer(cGame* game);
 	~cScrollContainer();
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 	virtual void setAlignment(RenderableAlignment alignment) override;
 
 	virtual void setColor(const Vec4& color) override;
@@ -22,10 +22,10 @@ public:
 	void addRenderable(cRenderable *child);
 	void removeRenderable(cRenderable *child);
 
-	void setRect(const Rect& rect);
+	void setRect(const AARect& rect);
 	void setMaxScroll(float maxScroll);
 	const Mat3& getScrollMatrix() const;
-	const Rect& getRect() const 
+	const AARect& getRect() const 
 	{
 		return crop;
 	}

@@ -460,7 +460,7 @@ public:
 		return uniforms[uniform.index];
 	}
 
-	void setCrop(const Rect& crop)
+	void setCrop(const AARect& crop)
 	{
 		setUniform(uniforms[uCrop], crop.toVec());
 	}

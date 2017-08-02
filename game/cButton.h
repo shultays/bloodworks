@@ -10,9 +10,8 @@ class cButton : public cRenderableContainer
 	bool down;
 	bool prevDown;
 
-	Vec2 beginRange; // todo change rect
-	Vec2 endRange;
-
+	AARect hitRect;
+	
 	Vec2 hoverShift;
 	Vec2 hoverScale;
 	float hoverRotation;
@@ -30,7 +29,7 @@ class cButton : public cRenderableContainer
 
 	int enforceHovering;
 
-	Rect lastRenderCrop;
+	AARect lastRenderCrop;
 	void *userData;
 	bool isDirty = false;
 public:
@@ -45,8 +44,8 @@ public:
 		down = prevDown = false;
 		hovering = prevHovering = false;
 
-		beginRange = Vec2(-100.0f);
-		endRange = Vec2(100.0f);
+		hitRect.setMin(-100.0f);
+		hitRect.setMax(100.0f);
 
 		pressedInside = false;
 
@@ -60,7 +59,7 @@ public:
 		hoverSpeed = 1.0f;
 
 		enforceHovering = no_enforce;
-		lastRenderCrop = Rect::invalid();
+		lastRenderCrop = AARect::invalid();
 		userData = nullptr;
 		isDirty = true;
 	}
@@ -75,7 +74,7 @@ public:
 		return userData;
 	}
 
-	virtual void render(bool isIdentity, const Mat3& mat, const Rect& crop) override;
+	virtual void render(bool isIdentity, const Mat3& mat, const AARect& crop) override;
 
 	void setEnforcedHovering(int enforceHovering)
 	{
@@ -84,8 +83,7 @@ public:
 	
 	void setHitArea(const Vec2& beginRange, const Vec2& endRange)
 	{
-		this->beginRange = beginRange;
-		this->endRange = endRange;
+		hitRect.set(beginRange, endRange);
 	}
 
 	void check(const Vec2& mousePos, bool ignoreClick = false);

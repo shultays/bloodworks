@@ -184,7 +184,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 		y -= rowShift * 0.7f;
 	}
-	inputGroup->setRect(Rect(-300.0f, -180.0f, 300.0f, 110.0f));
+	inputGroup->setRect(AARect(-300.0f, -180.0f, 300.0f, 110.0f));
 	inputGroup->setMaxScroll(startY - y + 20.0f);
 
 	// audio video

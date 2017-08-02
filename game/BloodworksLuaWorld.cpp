@@ -605,7 +605,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("getRandomMapPosition",
 		[&]() -> Vec2
 	{
-		return Vec2(randFloat(bloodworks->getMapMin().x + 50, bloodworks->getMapMax().x - 50.0f), randFloat(bloodworks->getMapMin().y + 50.0f, bloodworks->getMapMax().y - 50));
+		return Vec2(randFloat(bloodworks->getMapLimits().getMin().x + 50, bloodworks->getMapLimits().getMax().x - 50.0f), randFloat(bloodworks->getMapLimits().getMin().y + 50.0f, bloodworks->getMapLimits().getMax().y - 50));
 	});
 
 
