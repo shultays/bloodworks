@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cTools.h"
+#include "cGlobals.h"
 
 class Circle
 {
@@ -31,14 +32,32 @@ public:
 
 	bool doesIntersect(const Vec2& point) const
 	{
-		return point.lengthSquared(origin) < radius * radius;
+		return point.distanceSquared(origin) < radius * radius;
 	}
 
 	bool doesIntersect(const Circle& circle) const
 	{
 		float r = radius + circle.radius;
-		return circle.origin.lengthSquared(origin) < r * r;
+		return circle.origin.distanceSquared(origin) < r * r;
+	}
+
+	void drawDebug(int color = 0xFFFFFFFF, float time = 0.0f)
+	{
+		debugRenderer.addCircle(origin, radius, time, color);
 	}
 
 
+	Vec2 getSolver(const Circle& circle) const
+	{
+
+		float r = radius + circle.radius;
+		float t = r * r - circle.origin.distanceSquared(origin);
+		if (t > 0.0f)
+		{
+			Vec2 toCircle = circle.origin - origin;
+			float d = toCircle.normalize();
+			return toCircle * (r - d);
+		}
+		return Vec2::zero();
+	}
 };

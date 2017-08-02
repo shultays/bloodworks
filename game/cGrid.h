@@ -210,7 +210,6 @@ public:
 		return nodeCount;
 	}
 
-
 	const std::vector<T*>& getNodeAtIndex(int i, int j) const
 	{
 		return data[i][j];
@@ -230,5 +229,4 @@ public:
 	{
 		return gridStart;
 	}
-
 };

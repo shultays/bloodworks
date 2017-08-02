@@ -449,5 +449,8 @@
     <ClInclude Include="cCircle.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
+    <ClInclude Include="cRect.h">
+      <Filter>Coral\Math\shapes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
