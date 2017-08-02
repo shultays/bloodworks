@@ -198,6 +198,7 @@
     <ClCompile Include="cLuaWorld.cpp" />
     <ClCompile Include="cMath.cpp" />
     <ClCompile Include="cMutexWindows.cpp" />
+    <ClCompile Include="CollisionController.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cPostProcess.cpp" />
     <ClCompile Include="cSlave.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="cMat.h" />
     <ClInclude Include="cMath.h" />
     <ClInclude Include="cMutex.h" />
+    <ClInclude Include="CollisionController.h" />
     <ClInclude Include="Coral.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="cInput.h" />
