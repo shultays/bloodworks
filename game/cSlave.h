@@ -60,7 +60,7 @@ class cSlaveController
 {
 	int slaveCount;
 	cSlave* slaves;
-	std::priority_queue<cSlaveWork*, std::vector<cSlaveWork*>, Compare> workForSlavesQueue;
+	std::priority_queue<cSlaveWork*, cVector<cSlaveWork*>, Compare> workForSlavesQueue;
 
 	std::queue<cSlaveWork*> workForMainQueue;
 	gMutex controllerMutex;

@@ -25,7 +25,7 @@ class cPackHelper
 	static std::string getStr(FILE *fin)
 	{
 		int n = getInt(fin);
-		std::vector<char> buff(n);
+		cVector<char> buff(n);
 		fread(&buff[0], sizeof(char), n, fin);
 		return std::string(&buff[0], n);
 	}
@@ -47,7 +47,7 @@ public:
 		std::string folderPath = pathUnfixed;
 		fixFolderPath(folderPath);
 		DirentHelper::Folder folder(folderPath);
-		std::vector<DirentHelper::File> files = folder.getAllFiles(true);
+		cVector<DirentHelper::File> files = folder.getAllFiles(true);
 
 		if (files.size() > 0)
 		{
@@ -68,11 +68,11 @@ public:
 			{
 				FILE *fout;
 				fopen_s(&fout, file.c_str(), "wb");
-				std::vector<long> pos;
+				cVector<long> pos;
 				pos.resize(files.size());
 				putInt(fout, 0);
 				putInt(fout, 0);
-				putInt(fout, (int)files.size());
+				putInt(fout, files.size());
 				for (int i = 0; i < files.size(); i++)
 				{
 					auto& f = files[i];
@@ -128,8 +128,8 @@ public:
 
 	static void cPackHelper::unpackFile(const std::string& f, const std::string& folder)
 	{
-		std::vector<std::string> names;
-		std::vector<int> sizes;
+		cVector<std::string> names;
+		cVector<int> sizes;
 		FILE *fin;
 		fopen_s(&fin, f.c_str(), "rb");
 		int totalSize = getInt(fin);

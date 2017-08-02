@@ -281,7 +281,7 @@ void ModWindow::addInstalledMod(nlohmann::json& j, DirentHelper::File& f)
 	m.filePath = f;
 	m.jsonData = j;
 	installedMods.push_back(m);
-	installedModIndices[m.jsonData["name"].get<std::string>()] = (int)installedMods.size() - 1;
+	installedModIndices[m.jsonData["name"].get<std::string>()] = installedMods.size() - 1;
 }
 
 void ModWindow::updateList()

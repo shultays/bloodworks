@@ -9,7 +9,7 @@ class cRenderableContainer : public cRenderable
 	{
 		cRenderable *child;
 	};
-	std::vector<ChildData> renderables;
+	cVector<ChildData> renderables;
 
 public:
 	cRenderableContainer(cGame *game, int initialCapacity = 2);

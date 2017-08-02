@@ -129,14 +129,13 @@ void LevelUpPopup::show(bool levelAdded)
 	auto& missionData = bloodworks->getMissionController()->getMissionData();
 	int selectCount = missionData["perkPerLevel"] ? missionData["perkPerLevel"].get<int>() : 3;
 
-	selectCount = min(selectCount, (int)availablePerks.size());
+	selectCount = min(selectCount, availablePerks.size());
 	levelupPerks.clear();
 	while (selectCount-- > 0)
 	{
-		int r = randInt((int)availablePerks.size());
+		int r = randInt(availablePerks.size());
 		levelupPerks.push_back(availablePerks[r]);
-		availablePerks[r] = availablePerks[availablePerks.size() - 1];
-		availablePerks.resize(availablePerks.size() - 1);
+		availablePerks.swapToTailRemove(r);
 	}
 	assert(levelupPerksRenderables.size() == 0);
 
@@ -220,7 +219,7 @@ void LevelUpPopup::tick()
 			indexToSet--;
 			if (indexToSet < 0)
 			{
-				indexToSet += (int)levelupPerks.size();
+				indexToSet += levelupPerks.size();
 			}
 			joyPadFree = false;
 		}
@@ -229,7 +228,7 @@ void LevelUpPopup::tick()
 			indexToSet++;
 			if (indexToSet >= levelupPerks.size())
 			{
-				indexToSet -= (int)levelupPerks.size();
+				indexToSet -= levelupPerks.size();
 			}
 			joyPadFree = false;
 		}

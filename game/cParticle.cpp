@@ -52,7 +52,7 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 		attributeSize += attribute.size;
 
 		attributes.push_back(attribute);
-		attributesMap[attributeName] = (int)attributes.size() - 1;
+		attributesMap[attributeName] = attributes.size() - 1;
 	};
 	addAtribute("pos", "vec2");
 	addAtribute("uv", "vec2");
@@ -114,7 +114,7 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 			{
 				std::string name = t.get<std::string>();
 				textures.push_back(resources.getTexture(file.folder + name, true));
-				texturesMap[name] = (int)textures.size() - 1;
+				texturesMap[name] = textures.size() - 1;
 			}
 		}
 		else
@@ -330,7 +330,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		}
 		else
 		{
-			bufferData.quadBuffer = particleTemplate->emptyBuffers[(int)particleTemplate->emptyBuffers.size() - 1];
+			bufferData.quadBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1];
 			particleTemplate->emptyBuffers.resize(particleTemplate->emptyBuffers.size() - 1);
 		}
 
@@ -352,7 +352,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 
 	int vertexSize = particleTemplate->attributeSize;
 
-	std::vector<int> setAttributes;
+	cVector<int> setAttributes;
 	setAttributes.resize(shader->getAttributeCount());
 	for (int i=0; i<setAttributes.size(); i++)
 	{
@@ -504,7 +504,7 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 		cRenderableWithShader::render(isIdentity, mat, crop);
 		glActiveTexture(GL_TEXTURE0);
 
-		for (int i = (int)textures.size() - 1; i >= 0; i--)
+		for (int i = textures.size() - 1; i >= 0; i--)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			textures[i]->bindTexture();
@@ -542,7 +542,7 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 	}
 }
 
-void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, std::vector<int>& setAttributes) const
+void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, cVector<int>& setAttributes) const
 {
 	for (auto& r : randomizer.linearRandoms)
 	{
