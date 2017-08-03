@@ -10,7 +10,7 @@ CollisionController::CollisionController(Bloodworks *bloodworks)
 	boundaries.addThreshold(200.0f);
 
 	bodyGrid.init(boundaries, 90.0f);
-
+	return;
 	const AARect& rect = bloodworks->getMapLimits();
 
 	Circle playerCircle(Vec2::zero(), 40.0f);
@@ -49,6 +49,11 @@ CollisionController::CollisionController(Bloodworks *bloodworks)
 		}
 		bodyGrid.insertBody(c, nullptr);
 	}
+}
+
+void CollisionController::reset()
+{
+	bodyGrid.reset();
 }
 
 void CollisionController::drawDebug(bool drawGrid)

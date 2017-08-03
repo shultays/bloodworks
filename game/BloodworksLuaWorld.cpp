@@ -26,6 +26,7 @@
 #include "cAnimatedRenderable.h"
 #include "cTextRenderable.h"
 #include "cTexturedQuadRenderable.h"
+#include "GameObjectTemplate.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -537,9 +538,15 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addGameObject",
-		[&](const std::string& script) -> GameObject*
+		[&](const std::string& script, const sol::table& params) -> GameObject*
 	{
-		return bloodworks->getMissionController()->addGameObject(script);
+		return bloodworks->getMissionController()->addGameObject(script, nullptr, params);
+	});
+
+	lua.set_function("addGameObjectUsingTemplate",
+		[&](const std::string& templateName, const sol::table& params) -> GameObject*
+	{
+		return bloodworks->getMissionController()->addGameObjectUsingTemplate(templateName, params);
 	});
 
 	lua.set_function("addCustomBullet",
@@ -738,6 +745,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 
+	lua.new_usertype<GameObjectTemplate>("GameObjectTemplate",
+		"name", sol::readonly(&GameObjectTemplate::name),
+		"scriptName", sol::readonly(&GameObjectTemplate::scriptName),
+		"jsonTable", sol::readonly(&GameObjectTemplate::jsonTable)
+		);
+
+
 	lua.new_usertype<MonsterTemplate>("MonsterTemplate",
 		"name", sol::readonly(&MonsterTemplate::name),
 		"experience", sol::readonly(&MonsterTemplate::experience),
@@ -870,8 +884,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getRotation", &GameObject::getRotation,
 		"getScale", &GameObject::getScale,
 
+		"addCircleCollider", &GameObject::addCircleCollider,
+		"addRectCollider", &GameObject::addRectCollider,
+		"addCapsuleCollider", &GameObject::addCapsuleCollider,
+
 		"setLevel", &GameObject::setLevel,
 		"setAlignment", &GameObject::setAlignment
+
 		);
 
 
