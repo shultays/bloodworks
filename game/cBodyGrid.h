@@ -78,7 +78,7 @@ class cBodyGrid
 	cVector<BodyUnion> bodies;
 	cVector<int> removedBodyIndices;
 
-
+	Vec2 initialGridSize;
 	Vec2 gridStart;
 	Vec2 gridSize;
 	Vec2 nodeSize;
@@ -127,6 +127,7 @@ public:
 	{
 		this->gridStart = gridStart;
 		this->nodeSize = nodeSize;
+		this->initialGridSize = gridSize;
 
 		nodeCount.x = (int)ceil(gridSize.x / nodeSize.x);
 		nodeCount.y = (int)ceil(gridSize.y / nodeSize.y);
@@ -184,10 +185,11 @@ public:
 		return index;
 	}
 
-	void relocateBody(int index)
+	template<class T>
+	void relocateBody(int index, const T& body)
 	{
 		BodyUnion& obj = bodies[index];
-
+		obj.set(body);
 		AARect aabb = obj.getAABB();
 		IntVec2 minGrid = getNodeIndex(aabb.getMin());
 		IntVec2 maxGrid = getNodeIndex(aabb.getMax());
@@ -322,4 +324,13 @@ public:
 
 		return r;
 	}
+
+	void reset()
+	{
+		init(gridStart, initialGridSize, nodeSize);
+		bodies.clear();
+		removedBodyIndices.clear();
+	}
+
+
 };

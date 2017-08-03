@@ -1,0 +1,21 @@
+{
+	"type" : "json_list",
+	"elements" : [
+	
+		{
+			  "type" : "game_object_template",
+			  "name" : "Collider",
+			  
+			  "scriptFile" : "collider.lua",
+			  "scriptName" : "Collider"
+		},
+		
+		{
+			  "type" : "game_object_template",
+			  "name" : "Collider2",
+			  
+			  "scriptFile" : "collider.lua",
+			  "scriptName" : "Collider"
+		}
+	]
+}
