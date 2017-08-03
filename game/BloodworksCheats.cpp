@@ -15,6 +15,7 @@
 #include "BulletController.h"
 #include "Gun.h"
 #include "MissionController.h"
+#include "CollisionController.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -198,6 +199,10 @@ void BloodworksCheats::onTick()
 	{
 		monsterController->drawDebug();
 	}
+	//if (input.isKeyDown(key_f3))
+	{
+		bloodworks->getCollisionController()->drawDebug(input.isKeyDown(key_f3));
+	}
 
 	if (input.isKeyPressed(key_g))
 	{
@@ -306,15 +311,15 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 {
 	if (monster->getDebug())
 	{
-		if (input.isKeyPressed(key_f3))
+		if (input.isKeyPressed(key_f5))
 		{
 			monster->setDebug(1);
 		}
-		if (input.isKeyPressed(key_f4))
+		if (input.isKeyPressed(key_f6))
 		{
 			monster->setDebug(0);
 		}
-		if (input.isKeyPressed(key_f5))
+		if (input.isKeyPressed(key_f7))
 		{
 			doBreak();
 		}

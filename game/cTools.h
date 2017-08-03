@@ -67,7 +67,7 @@ inline const T& clamp(T& a, const T& min, const T& max)
 template <class T>
 inline const T& saturate(T& a)
 {
-	return clamp(a, 0.0f, 1.0f);
+	return a = clamp(a, 0.0f, 1.0f);
 }
 
 template <class T>

@@ -12,6 +12,7 @@
 #include "BloodworksControls.h"
 #include "BloodRenderable.h"
 #include "BloodworksConfig.h"
+#include "CollisionController.h"
 
 #include <sstream>
 
@@ -268,6 +269,42 @@ void Player::tick()
 	}
 
 	pos = pos + moveAmount;
+	Vec2 afterPos = pos;
+
+	Circle c(pos, 20.0f);
+	c.drawDebug(0xFFFF0000);
+
+	bool solved = false;
+	for(int i=0; i<5; i++)
+	{
+		Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, 20.0f));
+		if (solver.lengthSquared() < 0.0001f)
+		{
+			solved = true;
+			break;
+		}
+		else
+		{
+			pos += solver;
+		}
+	}
+
+	if (solved == false)
+	{
+		for (int i = 1; i < 10; i++)
+		{
+			pos = (oldPos - afterPos) * ((float)i) / 9.0f + afterPos;
+			if (i == 9)
+			{
+				pos = oldPos;
+			}
+			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, 20.0f));
+			if (solver.lengthSquared() == 0.0f)
+			{
+				break;
+			}
+		}
+	}
 
 	float sensitivityMult = bloodworks->getConfig()->getSensitivity();
 	sensitivityMult = 0.5f * sensitivityMult * sensitivityMult + 0.5f;
