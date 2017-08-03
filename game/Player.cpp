@@ -271,13 +271,12 @@ void Player::tick()
 	pos = pos + moveAmount;
 	Vec2 afterPos = pos;
 
-	Circle c(pos, 20.0f);
-	c.drawDebug(0xFFFF0000);
+	float collisionRadius = getCollisionRadius();
 
 	bool solved = false;
 	for(int i=0; i<5; i++)
 	{
-		Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, 20.0f));
+		Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius));
 		if (solver.lengthSquared() < 0.0001f)
 		{
 			solved = true;
@@ -298,7 +297,7 @@ void Player::tick()
 			{
 				pos = oldPos;
 			}
-			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, 20.0f));
+			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius));
 			if (solver.lengthSquared() == 0.0f)
 			{
 				break;
@@ -807,4 +806,14 @@ void Player::killSelf()
 	isDead = true;
 	setVisible(false);
 	bloodworks->onPlayerDied();
+}
+
+float Player::getBulletRadius() const
+{
+	return 10.0f;
+}
+
+float Player::getCollisionRadius() const
+{
+	return 15.0f;
 }
