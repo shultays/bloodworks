@@ -86,6 +86,23 @@ class GameObject
 	void setAlignment(RenderableAlignment alignment);
 	void updateMatrix();
 	void checkRenderable();
+
+	struct ColliderData
+	{
+		enum 
+		{
+			type_circle,
+			type_rect,
+			type_capsule
+		};
+		int id;
+		int t;
+		Vec2 v0;
+		Vec2 v1;
+		float f;
+	};
+
+	cVector<ColliderData> colliders;
 public:
 	GameObject(Bloodworks *bloodworks);
 
@@ -100,4 +117,8 @@ public:
 	void removeText(cTextRenderable *text);
 	void removeParticle(cParticle *particle);
 	void removeAnimation(cAnimatedTexturedQuadRenderable *animation);
+
+	int addCircleCollider(const Vec2& shift, float radius);
+	int addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius);
+	int addRectCollider(const Vec2& shift, const Vec2& size, float rotation);
 };
