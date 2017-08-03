@@ -20,7 +20,7 @@ function Survival.init()
 	end
 	missionData.curMaxMonster = missionData.maxMonster
 	
-	
+	--addGameObjectUsingTemplate("Collider")
 end
 
 function Survival.onTick()

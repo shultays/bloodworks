@@ -306,6 +306,7 @@
     <ClInclude Include="DropController.h" />
     <ClInclude Include="ExplosionController.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectTemplate.h" />
     <ClInclude Include="GroundRenderable.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="json.h" />

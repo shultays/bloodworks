@@ -467,5 +467,8 @@
     <ClInclude Include="cCapsule.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectTemplate.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
