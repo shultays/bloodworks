@@ -807,6 +807,11 @@ void Bloodworks::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir,
 	monsterController->onMonsterDamaged(monster, damage, dir, args);
 }
 
+CollisionController* Bloodworks::getCollisionController() const
+{
+	return collisionController;
+}
+
 BloodRenderable* Bloodworks::getBloodRenderable()
 {
 	return bloodRenderable;

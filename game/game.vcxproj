@@ -257,6 +257,7 @@
     <ClInclude Include="cAnimatedRenderable.h" />
     <ClInclude Include="cBodyGrid.h" />
     <ClInclude Include="cButton.h" />
+    <ClInclude Include="cCapsule.h" />
     <ClInclude Include="cCircle.h" />
     <ClInclude Include="cDebugRenderable.h" />
     <ClInclude Include="cGrid.h" />
