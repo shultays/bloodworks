@@ -136,12 +136,12 @@ public:
 	{
 		Vec2 corners[4];
 
-		Mat2 rotationMat = Mat2::rotation(angle);
+		Mat2 inverse = Mat2::rotation(angle);
 
-		corners[0] = center + Vec2(halfSize.x, halfSize.y) * rotationMat;
-		corners[1] = center + Vec2(halfSize.x, -halfSize.y) * rotationMat;
-		corners[2] = center + Vec2(-halfSize.x, -halfSize.y) * rotationMat;
-		corners[3] = center + Vec2(-halfSize.x, halfSize.y) * rotationMat;
+		corners[0] = center + Vec2(halfSize.x, halfSize.y) * inverse;
+		corners[1] = center + Vec2(halfSize.x, -halfSize.y) * inverse;
+		corners[2] = center + Vec2(-halfSize.x, -halfSize.y) * inverse;
+		corners[3] = center + Vec2(-halfSize.x, halfSize.y) * inverse;
 
 		debugRenderer.addLine(corners[0], corners[1], time, color);
 		debugRenderer.addLine(corners[1], corners[2], time, color);
@@ -152,11 +152,26 @@ public:
 
 	AARect getAABB() const
 	{
-		Mat2 inverted = rotationMat.inverse();
-		Vec2 rotateHalfSize = halfSize * inverted;
-		AARect r(center - rotateHalfSize, center + rotateHalfSize);
-		return r;
+		Vec2 corners[4];
+
+		Mat2 inverse = this->rotationMat.inverse();
+
+		corners[0] = center + Vec2(halfSize.x, halfSize.y) * inverse;
+		corners[1] = center + Vec2(halfSize.x, -halfSize.y) * inverse;
+		corners[2] = center + Vec2(-halfSize.x, -halfSize.y) * inverse;
+		corners[3] = center + Vec2(-halfSize.x, halfSize.y) * inverse;
+
+
+		Vec2 minPoint = corners[0];
+		Vec2 maxPoint = corners[0];
+		for (int i = 1; i < 4; i++)
+		{
+			minPoint.x = min(minPoint.x, corners[i].x);
+			minPoint.y = min(minPoint.y, corners[i].y);
+			maxPoint.x = max(maxPoint.x, corners[i].x);
+			maxPoint.y = max(maxPoint.y, corners[i].y);
+		}
+
+		return AARect(minPoint, maxPoint);
 	}
-
-
 };
