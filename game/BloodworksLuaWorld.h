@@ -9,6 +9,7 @@ class BloodworksLuaWorld
 	LuaBuffController *buffController;
 public:
 	BloodworksLuaWorld(Bloodworks *bloodworks);
+	
 	void reset();
 	void clear();
 	void tick();

@@ -37,6 +37,7 @@
 #include "cAnimationTemplate.h"
 #include "GroundRenderable.h"
 #include "CollisionController.h"
+#include "GameObjectTemplate.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -409,6 +410,7 @@ void Bloodworks::clearMission()
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
+	collisionController->reset();
 	missionController->reset();
 	player->reset();
 	monsterController->reset();
@@ -681,53 +683,7 @@ void Bloodworks::loadMod(const std::string& path)
 		{
 			nlohmann::json j;
 			appendJson(j, f.folder + f.file);
-			if (j.count("disabled") && j["disabled"].get<bool>() == true)
-			{
-				continue;
-			}
-
-			if (j.count("type") == 0)
-			{
-				continue;
-			}
-			std::string type = j["type"].get<std::string>();
-			if (type == "mod")
-			{
-				modWindow->addInstalledMod(j, f);
-			}
-			else if (type == "gun")
-			{
-				Gun *gun = new Gun(this, j, f);
-				guns.push_back(gun);
-			}
-			else if (type == "bonus")
-			{
-				Bonus *bonus = new Bonus(this, j, f);
-				bonuses.push_back(bonus);
-			}
-			else if (type == "particle")
-			{
-				cParticleTemplate *particleTemplate = new cParticleTemplate(j, f);
-				particles[particleTemplate->getName()] = particleTemplate;
-			}
-			else if (type == "perk")
-			{
-				Perk *perk = new Perk(this, j, f);
-				perks.push_back(perk);
-			}
-			else if (type == "monster")
-			{
-				monsterController->addMonsterTemplate(j, f);
-			}
-			else if (type == "mission")
-			{
-				missionController->addMission(j, f);
-			}
-			else if (type == "animation_template")
-			{
-				cAnimationTemplate *animation = new cAnimationTemplate(j, f);
-				animationTemplates[animation->getName()] = animation;
-			}
+			parseJson(j, f);
 		}
 	}
 }
@@ -810,6 +766,75 @@ void Bloodworks::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir,
 CollisionController* Bloodworks::getCollisionController() const
 {
 	return collisionController;
+}
+
+GameObjectTemplate* Bloodworks::getGameObjectTemplate(const std::string& templateName)
+{
+	return gameObjectTemplates[templateName];
+}
+
+void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f)
+{
+	if (j.count("disabled") && j["disabled"].get<bool>() == true)
+	{
+		return;
+	}
+
+	if (j.count("type") == 0)
+	{
+		return;
+	}
+	std::string type = j["type"].get<std::string>();
+	if (type == "mod")
+	{
+		modWindow->addInstalledMod(j, f);
+	}
+	else if (type == "gun")
+	{
+		Gun *gun = new Gun(this, j, f);
+		guns.push_back(gun);
+	}
+	else if (type == "bonus")
+	{
+		Bonus *bonus = new Bonus(this, j, f);
+		bonuses.push_back(bonus);
+	}
+	else if (type == "particle")
+	{
+		cParticleTemplate *particleTemplate = new cParticleTemplate(j, f);
+		particles[particleTemplate->getName()] = particleTemplate;
+	}
+	else if (type == "perk")
+	{
+		Perk *perk = new Perk(this, j, f);
+		perks.push_back(perk);
+	}
+	else if (type == "monster")
+	{
+		monsterController->addMonsterTemplate(j, f);
+	}
+	else if (type == "mission")
+	{
+		missionController->addMission(j, f);
+	}
+	else if (type == "animation_template")
+	{
+		cAnimationTemplate *animation = new cAnimationTemplate(j, f);
+		animationTemplates[animation->getName()] = animation;
+	}
+	else if (type == "game_object_template")
+	{
+		GameObjectTemplate *gameObjectTemplate = new GameObjectTemplate(j, f);
+		gameObjectTemplates[gameObjectTemplate->getName()] = gameObjectTemplate;
+	}
+	else if (type == "json_list")
+	{
+		auto& elements = j["elements"];
+		for (int i = 0; i < elements.size(); i++)
+		{
+			parseJson(elements.at(i), f);
+		}
+	}
 }
 
 BloodRenderable* Bloodworks::getBloodRenderable()
