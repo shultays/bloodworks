@@ -464,5 +464,8 @@
     <ClInclude Include="CollisionController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="cCapsule.h">
+      <Filter>Coral\Math\shapes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
