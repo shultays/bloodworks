@@ -14,6 +14,7 @@ class cRenderable;
 class Bullet;
 class GameObject;
 class Monster;
+class GameObjectTemplate;
 
 #include "json.h"
 
@@ -45,7 +46,8 @@ public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
 	void tick();
-	GameObject* addGameObject(const std::string& script);
+	GameObject* addGameObject(const std::string& script, GameObjectTemplate *gameObjectTemplate, const sol::table& params);
+	GameObject* addGameObjectUsingTemplate(const std::string& templateName, const sol::table& params);
 	void removeGameObject(int id);
 	void addMission(nlohmann::json& j, const DirentHelper::File& file);
 

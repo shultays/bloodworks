@@ -48,6 +48,7 @@ class BloodworksCheats;
 class cAnimationTemplate;
 class GroundRenderable;
 class CollisionController;
+class GameObjectTemplate;
 
 class Bloodworks : public cGame
 {
@@ -104,7 +105,9 @@ class Bloodworks : public cGame
 	cVector<cParticle*> orphanParticles;
 
 	std::map<std::string, cAnimationTemplate*> animationTemplates;
+	std::map<std::string, GameObjectTemplate*> gameObjectTemplates;
 
+	void parseJson(nlohmann::json& j, DirentHelper::File& f);
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -271,4 +274,5 @@ public:
 	void onPlayerPickedBonus(Bonus * bonus, const Vec2& pos);
 	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 	CollisionController* getCollisionController() const;
+	GameObjectTemplate* getGameObjectTemplate(const std::string& templateName);
 };

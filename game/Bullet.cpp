@@ -114,7 +114,7 @@ void Bullet::tick()
 	
 	if (monsterBullet)
 	{
-		float checkRadius = radius + 10.0f;
+		float checkRadius = radius + bloodworks->getPlayer()->getBulletRadius();
 		if (bloodworks->getPlayer()->getPosition().distanceSquared(pos) < checkRadius * checkRadius)
 		{
 			bloodworks->getPlayer()->doDamageWithArgs(damage, moveAngle, onDamageArgs);

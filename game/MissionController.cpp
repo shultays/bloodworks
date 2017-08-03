@@ -13,6 +13,7 @@
 #include "Monster.h"
 #include "BloodworksConfig.h"
 #include "cTimeProfiler.h"
+#include "GameObjectTemplate.h"
 
 MissionController::MissionController(Bloodworks *bloodworks)
 {
@@ -104,7 +105,7 @@ void MissionController::tick()
 	}
 }
 
-GameObject* MissionController::addGameObject(const std::string& script)
+GameObject* MissionController::addGameObject(const std::string& script, GameObjectTemplate *gameObjectTemplate, const sol::table& params)
 {
 	GameObject *object = new GameObject(bloodworks);
 	sol::table gameObject = lua["gameObjects"][object->id] = lua.create_table();
@@ -123,10 +124,17 @@ GameObject* MissionController::addGameObject(const std::string& script)
 
 		if (lua[script]["init"])
 		{
-			lua[script]["init"](object);
+			lua[script]["init"](object, params, gameObjectTemplate);
 		}
 	}
 
+	return object;
+}
+
+GameObject* MissionController::addGameObjectUsingTemplate(const std::string& templateName, const sol::table& params)
+{
+	GameObjectTemplate *gameObjectTemplate = bloodworks->getGameObjectTemplate(templateName);
+	GameObject* object = addGameObject(gameObjectTemplate->getScriptName(), gameObjectTemplate, params);
 	return object;
 }
 
