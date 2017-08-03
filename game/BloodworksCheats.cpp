@@ -201,6 +201,11 @@ void BloodworksCheats::onTick()
 	}
 	//if (input.isKeyDown(key_f3))
 	{
+		if (input.isKeyDown(key_f3))
+		{
+			Circle c(player->getPosition(), player->getCollisionRadius());
+			c.drawDebug(0xFFFF0000);
+		}
 		bloodworks->getCollisionController()->drawDebug(input.isKeyDown(key_f3));
 	}
 

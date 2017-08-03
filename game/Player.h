@@ -177,4 +177,6 @@ public:
 		updateHitPoints();
 	}
 	void killSelf();
+	float getBulletRadius() const;
+	float getCollisionRadius() const;
 };
