@@ -10,5 +10,6 @@ class CollisionController
 
 public:
 	CollisionController(Bloodworks *bloodworks);
-
+	void drawDebug(bool drawGrid = true);
+	Vec2 getLongestSolver(const Circle& c);
 };
