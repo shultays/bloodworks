@@ -96,6 +96,27 @@ int cDebugRenderable::addText(int id, const std::string &string, float x, float 
 
 int cDebugRenderable::addLine(int id, const Vec2& pos0, const Vec2& pos1, float time /*= 0.0f*/, int color /*= Vec4(1.0f)*/)
 {
+	if (time == 0.0f)
+	{
+		AARect rect = game->getScreenRect();
+		if (pos0.x < rect.getMin().x && pos1.x < rect.getMin().x)
+		{
+			return 0;
+		}
+		if (pos0.y < rect.getMin().y && pos1.y < rect.getMin().y)
+		{
+			return 0;
+		}
+		if (pos0.x > rect.getMax().x && pos1.x > rect.getMax().x)
+		{
+			return 0;
+		}
+		if (pos0.y > rect.getMax().y && pos1.y > rect.getMax().y)
+		{
+			return 0;
+		}
+	}
+
 	LineData data;
 	data.pos0 = pos0;
 	data.pos1 = pos1;
