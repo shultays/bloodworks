@@ -80,17 +80,35 @@ class cBodyGrid
 
 	Vec2 initialGridSize;
 	Vec2 gridStart;
+	Vec2 gridEnd;
 	Vec2 gridSize;
 	Vec2 nodeSize;
 	IntVec2 nodeCount;
 
 	Array2d<cVector<int>> data;
 
+	void clampIndex(IntVec2& index) const
+	{
+		index.x = max(0, index.x);
+		index.y = max(0, index.y);
+
+		index.x = min(nodeCount.x - 1, index.x);
+		index.y = min(nodeCount.y - 1, index.y);
+	}
 
 	IntVec2 getNodeIndex(const Vec2& pos) const
 	{
 		Vec2 diff = pos - gridStart;
-		return IntVec2((int)floor(diff.x / nodeSize.x), (int)floor(diff.y / nodeSize.y));
+		IntVec2 v((int)floor(diff.x / nodeSize.x), (int)floor(diff.y / nodeSize.y));
+		clampIndex(v);
+		return v;
+	}
+
+	IntVec2 getNodeIndexUnSafe(const Vec2& pos) const
+	{
+		Vec2 diff = pos - gridStart;
+		IntVec2 v((int)floor(diff.x / nodeSize.x), (int)floor(diff.y / nodeSize.y));
+		return v;
 	}
 
 	int arrayIndexForNodeIndex(const IntVec2& nodeIndex)
@@ -183,6 +201,52 @@ public:
 
 		obj.userData = userData;
 		return index;
+	}
+
+	template<class T>
+	bool hasCollision(const T& testBody)
+	{
+		AARect aabb = testBody.getAABB();
+		IntVec2 minGrid = getNodeIndex(aabb.getMin());
+		IntVec2 maxGrid = getNodeIndex(aabb.getMax());
+		int searchIndex = getSearchIndex();
+		for (int x = minGrid.x; x <= maxGrid.x; x++)
+		{
+			for (int y = minGrid.y; y <= maxGrid.y; y++)
+			{
+				for (auto i : data[x][y])
+				{
+					BodyUnion& body = bodies[i];
+					if (body.lastSearchIndex == searchIndex)
+					{
+						continue;
+					}
+					body.lastSearchIndex = searchIndex;
+					if (body.bodyType == BodyUnion::type_circle)
+					{
+						if (body.circle.doesIntersect(testBody))
+						{
+							return true;
+						}
+					}
+					else if (body.bodyType == BodyUnion::type_capsule)
+					{
+						if (body.capsule.doesIntersect(testBody))
+						{
+							return true;
+						}
+					}
+					else if (body.bodyType == BodyUnion::type_rect)
+					{
+						if (body.rect.doesIntersect(testBody))
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	template<class T>
@@ -331,6 +395,313 @@ public:
 		bodies.clear();
 		removedBodyIndices.clear();
 	}
+
+
+	float getRayDistance(const Vec2& begin, const Vec2& ray, float radius)
+	{
+		float distance = ray.length();
+
+		std::function<bool(int)> func = [&](int index)
+		{
+			float r = -1.0f;
+			BodyUnion& body = bodies[index];
+			if (body.bodyType == BodyUnion::type_circle)
+			{
+				r = body.circle.doesHit(begin, ray, radius);
+			}
+			else if (body.bodyType == BodyUnion::type_rect)
+			{
+				r = body.rect.doesHit(begin, ray, radius);
+			}
+			else if (body.bodyType == BodyUnion::type_capsule)
+			{
+				r = body.capsule.doesHit(begin, ray, radius);
+			}
+
+			if (r >= 0.0f && r < distance)
+			{
+				distance = r;
+			}
+			return false;
+		};
+
+		runForRay(begin, ray, radius, func);
+
+		return distance;
+	}
+
+	bool runForNode(const IntVec2& index, int searchId, std::function<bool(int)>& func)
+	{
+		if (data.isValid(index) == false)
+		{
+			return false;
+		}
+		auto& node = data[index];
+		for (int i : node)
+		{
+			if (bodies[i].lastSearchIndex == searchId)
+			{
+				continue;
+			}
+			bodies[i].lastSearchIndex = searchId;
+
+			if (func(i))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, std::function<bool(int)>& func)
+	{
+		bool renderDebug = input.isKeyDown(key_g);
+
+		if (radius * radius > nodeSize.lengthSquared())
+		{
+			for (int i=0; i<bodies.size(); i++)
+			{
+				if (bodies[i].bodyType != BodyUnion::type_invalid)
+				{
+					if (func(i))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		else
+		{
+			int searchId = getSearchIndex();
+
+			IntVec2 start = getNodeIndexUnSafe(begin);
+			IntVec2 end = getNodeIndexUnSafe(begin + ray);
+
+			IntVec2 dirInt(ray.x > 0.0f ? 1 : -1, ray.y > 0.0f ? 1 : -1);
+			IntVec2 posShift(ray.x > 0.0f ? 1 : 0, ray.y > 0.0f ? 1 : 0);
+
+			Vec2 currentPos = begin;
+			IntVec2 current = start;
+
+			int checkVal = abs(ray.x) < abs(ray.y) ? 1 : 0;
+
+			bool alwaysHorizontal = abs(ray.y) < 0.0001f;
+			bool alwaysVertical = abs(ray.x) < 0.0001f;
+
+			bool checked[3][3];
+			memset(checked, 0, sizeof(checked));
+
+			int maxTry = 200;
+			bool hasRadius = radius > 0.01f;
+			bool finished = false;
+			while (finished == false)
+			{
+				if (current == end)
+				{
+					finished = true;
+				}
+				if (checked[1][1] == false || hasRadius == false)
+				{
+					checked[1][1] = true;
+					if (runForNode(current, searchId, func))
+					{
+						return true;
+					}
+				}
+
+				Vec2 nextPos = gridStart + nodeSize * (current + posShift).toVec();
+				if (renderDebug)
+				{
+					debugRenderer.addCircle(currentPos, 3.0f, 0.0f, 0xFF00FFFF);
+				}
+				if (hasRadius)
+				{
+					Vec2 curPos = gridStart + nodeSize * (current).toVec();
+					Vec2 endPos = gridStart + nodeSize * (current + 1).toVec();
+
+					if (currentPos.x - radius < curPos.x)
+					{
+						if (checked[0][1] == false)
+						{
+							checked[0][1] = true;
+							if (runForNode(current + IntVec2(-1, 0), searchId, func))
+							{
+								return true;
+							}
+						}
+						if (checked[0][0] == false && currentPos.y - radius < curPos.y)
+						{
+							checked[0][0] = true;
+							if (runForNode(current + IntVec2(-1, -1), searchId, func))
+							{
+								return true;
+							}
+						}
+						if (checked[0][2] == false && currentPos.y + radius > endPos.y)
+						{
+							checked[0][2] = true;
+							if (runForNode(current + IntVec2(-1, +1), searchId, func))
+							{
+								return true;
+							}
+						}
+					}
+
+					if (checked[1][0] == false && currentPos.y - radius < curPos.y)
+					{
+						checked[1][0] = true;
+						if (runForNode(current + IntVec2(0, -1), searchId, func))
+						{
+							return true;
+						}
+					}
+					if (checked[1][2] == false && currentPos.y + radius > endPos.y)
+					{
+						checked[1][2] = true;
+						if (runForNode(current + IntVec2(0, +1), searchId, func))
+						{
+							return true;
+						}
+					}
+
+					if (currentPos.x + radius > endPos.x)
+					{
+						if (checked[2][1] == false)
+						{
+							checked[2][1] = true;
+							if (runForNode(current + IntVec2(+1, 0), searchId, func))
+							{
+								return true;
+							}
+						}
+						if (checked[2][0] == false && currentPos.y - radius < curPos.y)
+						{
+							checked[2][0] = true;
+							if (runForNode(current + IntVec2(+1, -1), searchId, func))
+							{
+								return true;
+							}
+						}
+						if (checked[2][2] == false && currentPos.y + radius > endPos.y)
+						{
+							checked[2][2] = true;
+							if (runForNode(current + IntVec2(+1, +1), searchId, func))
+							{
+								return true;
+							}
+						}
+					}
+				}
+
+
+				Vec2 d = (nextPos - begin) / ray;
+				if (d[0] > 1.0f && d[1] > 1.0f)
+				{
+					break;
+				}
+
+				bool v = false;
+
+				if (alwaysHorizontal)
+				{
+					current.x += dirInt.x;
+					currentPos.x = nextPos.x;
+					currentPos.y = begin.y + ((currentPos.x - begin.x) / ray.x) * ray.y;
+				}
+				else if (alwaysVertical)
+				{
+					current.y += dirInt.y;
+					currentPos.y = nextPos.y;
+					currentPos.x = begin.x + ((currentPos.y - begin.y) / ray.y) * ray.x;
+					v = true;
+				}
+				else
+				{
+					Vec2 diff = (nextPos - currentPos);
+					float dx = diff.x / ray.x;
+					float dy = diff.y / ray.y;
+					if (dx < dy)
+					{
+						current.x += dirInt.x;
+						currentPos.x = nextPos.x;
+						currentPos.y = begin.y + ((currentPos.x - begin.x) / ray.x) * ray.y;
+					}
+					else
+					{
+						current.y += dirInt.y;
+						currentPos.y = nextPos.y;
+						currentPos.x = begin.x + ((currentPos.y - begin.y) / ray.y) * ray.x;
+						v = true;
+					}
+				}
+
+				if (hasRadius)
+				{
+					if (v)
+					{
+						if (dirInt.y < 0)
+						{
+							for (int i = 0; i < 3; i++)
+							{
+								checked[i][2] = checked[i][1];
+								checked[i][1] = checked[i][0];
+								checked[i][0] = false;
+							}
+						}
+						else
+						{
+							for (int i = 0; i < 3; i++)
+							{
+								checked[i][0] = checked[i][1];
+								checked[i][1] = checked[i][2];
+								checked[i][2] = false;
+							}
+						}
+					}
+					else
+					{
+						if (dirInt.x < 0)
+						{
+							for (int i = 0; i < 3; i++)
+							{
+								checked[2][i] = checked[1][i];
+								checked[1][i] = checked[0][i];
+								checked[0][i] = false;
+							}
+						}
+						else
+						{
+							for (int i = 0; i < 3; i++)
+							{
+								checked[0][i] = checked[1][i];
+								checked[1][i] = checked[2][i];
+								checked[2][i] = false;
+							}
+						}
+					}
+				}
+			}
+
+			if (maxTry <= 0)
+			{
+				printf("Reached maxtry on ray cast, error?\n");
+			}
+			if (renderDebug)
+			{
+				Vec2 perp = ray.normalized().sideVec();
+				//debugRenderer.addLine(begin, begin + ray, 0.0f, 0xFFFF0000);
+				debugRenderer.addCircle(begin, radius, 0.0f, 0xFFFF0000);
+				debugRenderer.addCircle(begin + ray, radius, 0.0f, 0xFFFF0000);
+				debugRenderer.addLine(begin + perp * radius, begin + perp * radius + ray, 0.0f, 0xFFFF0000);
+				debugRenderer.addLine(begin - perp * radius, begin - perp * radius + ray, 0.0f, 0xFFFF0000);
+			}
+		}
+		return false;
+	}
+
+
+
 
 
 };
