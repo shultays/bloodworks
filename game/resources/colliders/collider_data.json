@@ -4,7 +4,7 @@
 		{
 			"type" : "game_object_template",
 			"name" : "house1",
-			"chance" : 1.5,
+			"chance" : 0.7,
 			
 			"scriptFile" : "collider.lua",
 			"scriptName" : "Collider",
@@ -28,7 +28,7 @@
 		,{
 			"type" : "game_object_template",
 			"name" : "house2",
-			"chance" : 1.5,
+			"chance" : 0.7,
 			"scriptFile" : "collider.lua",
 			"scriptName" : "Collider",
 			
@@ -51,7 +51,7 @@
 		,{
 			"type" : "game_object_template",
 			"name" : "house3",
-			"chance" : 1.5,
+			"chance" : 0.7,
 			
 			"scriptFile" : "collider.lua",
 			"scriptName" : "Collider",
@@ -75,7 +75,7 @@
 		,{
 			"type" : "game_object_template",
 			"name" : "house4",
-			"chance" : 1.5,
+			"chance" : 0.7,
 			
 			"scriptFile" : "collider.lua",
 			"scriptName" : "Collider",
@@ -99,7 +99,7 @@
 		,{
 			"type" : "game_object_template",
 			"name" : "house5",
-			"chance" : 1.5,
+			"chance" : 0.7,
 			
 			"scriptFile" : "collider.lua",
 			"scriptName" : "Collider",
