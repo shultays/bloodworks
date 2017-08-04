@@ -292,9 +292,8 @@ void BloodworksCheats::onLoadMission()
 	{
 		if (gun->getScriptName() == "Laser")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
-
 		if (gun->getScriptName() == "BananaBomb")
 		{
 			//player->setSecondaryGun(gun);
@@ -305,7 +304,7 @@ void BloodworksCheats::onLoadMission()
 		}
 		if (gun->getScriptName() == "BigLaser")
 		{
-			player->setSecondaryGun(gun);
+			//player->setSecondaryGun(gun);
 		}
 	}
 }
