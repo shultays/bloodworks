@@ -23,9 +23,9 @@ VerticalTextAlignment = {
 }
 RenderableLevel = {
 	background = -1000,
-	monsters = 1000,
-	player = 2000,
-	gameObjects = 3000,
+	gameObjects = 1000,
+	monsters = 2000,
+	player = 3000,
 	bullets = 4000,
 	objectGUI = 5000,
 	foreground = 6000,

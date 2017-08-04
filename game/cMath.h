@@ -43,4 +43,48 @@ public:
 			return -1.0f;
 		}
 	}
+
+	static float distSegmentToSegment(const Vec2& p0, const Vec2& s1, const Vec2& p2, const Vec2& s2)
+	{
+		float s, t;
+		s = (-s1.y * (p0.x - p2.x) + s1.x * (p0.y - p2.y)) / (-s2.x * s1.y + s1.x * s2.y);
+		t = (s2.x * (p0.y - p2.y) - s2.y * (p0.x - p2.x)) / (-s2.x * s1.y + s1.x * s2.y);
+
+		if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+		{
+			return t;
+		}
+
+		return -1.0f;
+	}
+
+	static float rayCapsuleIntersection(const Vec2& pos, const Vec2& ray, const Vec2& capsuleA, const Vec2& capsuleB, float radius)
+	{
+		Vec2 toCapsule = capsuleB - capsuleA;
+
+		Vec2 dir = toCapsule;
+		float length = dir.normalize();
+		dir = dir.sideVec();
+
+		float r = FLT_MAX;
+		float s[4];
+		float rayLength = ray.length();
+		s[0] = distSegmentToSegment(pos, ray, capsuleA + dir * radius, toCapsule) * rayLength;
+		s[1] = distSegmentToSegment(pos, ray, capsuleA - dir * radius, toCapsule) * rayLength;
+		s[2] = rayCircleIntersection(pos, ray, capsuleA, radius);
+		s[3] = rayCircleIntersection(pos, ray, capsuleB, radius);
+		for (int i = 0; i < 4; i++)
+		{
+			if (s[i] >= 0.0f && s[i] < r)
+			{
+				r = s[i];
+			}
+		}
+
+		if (r >= 0.0f && r <= FLT_MAX - 5.0f)
+		{
+			return r;
+		}
+		return -1.0f;
+	}
 };

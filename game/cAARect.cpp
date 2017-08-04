@@ -22,3 +22,11 @@ Vec2 AARect::getRandomPos() const
 	return p;
 }
 
+bool AARect::doesIntersect(const AARect& rect) const
+{
+	return !(minPoint.x > rect.maxPoint.x
+		|| maxPoint.x < rect.minPoint.x
+		|| minPoint.y > rect.maxPoint.y
+		|| maxPoint.y < rect.minPoint.y);
+}
+

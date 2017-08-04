@@ -303,8 +303,8 @@ Bloodworks::~Bloodworks()
 
 	SAFE_DELETE(monsterController);
 	SAFE_DELETE(bulletController);
-	SAFE_DELETE(collisionController);
 	SAFE_DELETE(missionController);
+	SAFE_DELETE(collisionController);
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(config);
@@ -410,8 +410,8 @@ void Bloodworks::clearMission()
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
-	collisionController->reset();
 	missionController->reset();
+	collisionController->reset();
 	player->reset();
 	monsterController->reset();
 	bloodRenderable->reset();

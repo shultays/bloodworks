@@ -28,8 +28,18 @@ public:
 		bodyGrid.relocateBody(id, body);
 	}
 
+	template<typename T>
+	bool hasCollision(const T& body)
+	{
+		return bodyGrid.hasCollision(body);
+	}
+
 	void removeCollider(int id)
 	{
 		bodyGrid.removeBody(id);
 	}
+
+	Vec2 getFreePosition(float radius);
+
+	float getRayDistance(const Vec2& begin, const Vec2& ray, float radius);
 };
