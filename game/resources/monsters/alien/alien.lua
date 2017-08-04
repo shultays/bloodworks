@@ -84,13 +84,18 @@ function Alien.onTick(monster)
 			posToMove = posToMove * c + player.position * (1.0 - c) 
 		end
 		
+		local oldPosToMove = posToMove
 		posToMove = monster:getPathPos(posToMove)
 		
 		--data.p = posToMove
 		diffToMovePos = posToMove - monster.position
 		distanceToMovePos = diffToMovePos:length()
 		angleToMovePos = diffToMovePos:getAngle()
-		data.moveAngle = MonsterGroupHelper.fixAngle(monster, angleToMovePos)
+		if oldPosToMove:distanceSquared(posToMove) > 1.0 then
+			data.moveAngle = angleToMovePos
+		else
+			data.moveAngle = MonsterGroupHelper.fixAngle(monster, angleToMovePos)
+		end
 		
 	end
 
