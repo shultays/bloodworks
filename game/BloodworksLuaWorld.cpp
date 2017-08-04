@@ -27,6 +27,10 @@
 #include "cTextRenderable.h"
 #include "cTexturedQuadRenderable.h"
 #include "GameObjectTemplate.h"
+#include "CollisionController.h"
+#include "cCircle.h"
+#include "cRect.h"
+#include "cCapsule.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -460,6 +464,36 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		bloodworks->playOneShotSound(args);
 	});
 
+	lua.set_function("getFreePosition",
+		[&](float radius)
+	{
+		return bloodworks->getCollisionController()->getFreePosition(radius);
+	});
+
+	lua.set_function("hasCircleCollision",
+		[&](const Vec2& pos, float radius)
+	{
+		return bloodworks->getCollisionController()->hasCollision(Circle(pos, radius));
+	});
+
+	lua.set_function("hasCapsuleCollision",
+		[&](const Vec2& pos, const Vec2& pos2, float radius)
+	{
+		return bloodworks->getCollisionController()->hasCollision(Capsule(pos, pos2, radius));
+	});
+
+	lua.set_function("hasRectCollision",
+		[&](const Vec2& pos, const Vec2& size, float rotation, float radius)
+	{
+		return bloodworks->getCollisionController()->hasCollision(Rect(pos, size, rotation, radius));
+	});
+
+	lua.set_function("getCollisionForRay",
+		[&](const Vec2& pos, const Vec2& ray, float radius)
+	{
+		return bloodworks->getCollisionController()->getRayDistance(pos, ray, radius);
+	});
+
 	lua.new_usertype<Bonus>("Bonus",
 		"name", sol::readonly(&Bonus::name),
 		"scriptName", sol::readonly(&Bonus::scriptName),
@@ -748,6 +782,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.new_usertype<GameObjectTemplate>("GameObjectTemplate",
 		"name", sol::readonly(&GameObjectTemplate::name),
 		"scriptName", sol::readonly(&GameObjectTemplate::scriptName),
+		"basePath", sol::readonly(&GameObjectTemplate::basePath),
 		"jsonTable", sol::readonly(&GameObjectTemplate::jsonTable)
 		);
 

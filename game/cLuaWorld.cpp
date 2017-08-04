@@ -63,7 +63,7 @@ void cLuaWorld::fillTableWithJson(nlohmann::json& root, sol::table& table)
 					else if (j2.is_object())
 					{
 						sol::table table2 = table[name][i] = create_table();
-						fillTableWithJson(j, table2);
+						fillTableWithJson(j2, table2);
 					}
 					else
 					{

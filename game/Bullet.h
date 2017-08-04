@@ -18,7 +18,7 @@ class Bullet
 
 	Bloodworks *bloodworks;
 	Gun *gun;
-
+	bool hasCollision;
 	bool isDead;
 	Vec2 pos;
 	float moveAngle;

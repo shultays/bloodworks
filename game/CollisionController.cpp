@@ -10,6 +10,7 @@ CollisionController::CollisionController(Bloodworks *bloodworks)
 	boundaries.addThreshold(200.0f);
 
 	bodyGrid.init(boundaries, 90.0f);
+
 	return;
 	const AARect& rect = bloodworks->getMapLimits();
 
@@ -64,4 +65,24 @@ void CollisionController::drawDebug(bool drawGrid)
 Vec2 CollisionController::getLongestSolver(const Circle& c)
 {
 	return bodyGrid.getLongestSolver(c);
+}
+
+Vec2 CollisionController::getFreePosition(float radius)
+{
+	const AARect rect = bloodworks->getMapLimits();
+	for (int i = 0; i < 16; i++)
+	{
+		Vec2 pos = rect.getRandomPos();
+		if (bodyGrid.hasCollision(Circle(pos, radius)))
+		{
+			continue;
+		}
+		return pos;
+	}
+	return rect.getRandomPos();
+}
+
+float CollisionController::getRayDistance(const Vec2& begin, const Vec2& ray, float radius)
+{
+	return bodyGrid.getRayDistance(begin, ray, radius);
 }
