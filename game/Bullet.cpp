@@ -10,6 +10,8 @@
 #include "MonsterController.h"
 #include "BulletController.h"
 #include "Player.h"
+#include "CollisionController.h"
+#include "cCircle.h"
 
 Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 {
@@ -30,6 +32,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	onDamageArgs["gun"] = gun;
 	meshRotation = -1500;
 	monsterBullet = false;
+	hasCollision = true;
 	if (gun)
 	{
 		lifeTime = gun->getBulletLifeTime();
@@ -78,6 +81,11 @@ void Bullet::tick()
 	updateDrawable();
 
 	if (bloodworks->isCoorOutside(pos, -20.0f) || (lifeTime > 0.0f && timer.getTime() - startTime > lifeTime))
+	{
+		removeSelf();
+	}
+
+	if (bloodworks->getCollisionController()->hasCollision(Circle(pos, radius)))
 	{
 		removeSelf();
 	}

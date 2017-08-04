@@ -9,6 +9,8 @@
 #include "MonsterTemplate.h"
 #include "Gun.h"
 #include "cTimeProfiler.h"
+#include "CollisionController.h"
+#include "cCircle.h"
 
 #define NODE_SIZE 50.0f
 
@@ -132,11 +134,22 @@ bool checkMonster(Monster* monster, Gun* gun, Bullet* bullet, int searchId, cVec
 	return true;
 }
 
-MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, float radius, sol::table& args)
+MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(const Vec2& begin, const Vec2& initialRay, float radius, sol::table& args)
 {
 	MonsterHitResult result;
-	result.distance = 100000000.0f;
+	result.distance = initialRay.length();
 	result.monster = nullptr;
+	Vec2 ray = initialRay;
+	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius);
+	if (d >= 0.0f)
+	{
+		result.distance = (d + radius * 2.0f);
+		ray = initialRay.normalized() * result.distance;
+	}
+	else
+	{
+		result.distance = initialRay.length();
+	}
 
 	std::function<bool(Monster*)> func = [&](Monster* monster)
 	{
@@ -164,8 +177,12 @@ MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(c
 	return result;
 }
 
-bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+bool MonsterController::runForNode(const Vec2& begin, const Vec2& ray, float radius, const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
 {
+	if (grid.isValidIndex(index) == false)
+	{
+		return false;
+	}
 	Vec2 curPos = grid.getStartPos() + grid.getNodeSize() * (index.toVec() + 0.5f);
 	if (ignoreFunc && (*ignoreFunc)(curPos))
 	{
@@ -177,23 +194,29 @@ bool MonsterController::runForNode(const IntVec2& index, Gun* gun, Bullet* bulle
 		grid.drawDebug(index, 0xFF0000FF);
 	}
 
-	const cVector<Monster*> node = grid.getNodeAtIndex(index);
+	cVector<Monster*> node2 = grid.getNodeAtIndex(index);
+	const cVector<Monster*>& node = grid.getNodeAtIndex(index);
 	for (Monster* monster : node)
 	{
 		if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
 		{
 			continue;
 		}
-		if (func(monster))
+
+		float distance = cMath::rayCircleIntersection(begin, ray, monster->getPosition(), monster->getRadius() + radius);
+		if (distance >= 0.0f)
 		{
-			return true;
+			if (func(monster))
+			{
+				return true;
+			}
 		}
 	}
 
 	return false;
 }
 
-bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
 {
 	Gun *gun = nullptr;
 	Bullet *bullet = nullptr;
@@ -246,26 +269,30 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 
 		int checkVal = abs(ray.x) < abs(ray.y) ? 1 : 0;
 
-		int maxText = 20;
 		bool alwaysHorizontal = abs(ray.y) < 0.0001f;
 		bool alwaysVertical = abs(ray.x) < 0.0001f;
 
 		bool checked[3][3];
 		memset(checked, 0, sizeof(checked));
 
-
+		int maxTry = 200;
 		bool hasRadius = radius > 0.01f;
-		while(maxText --> 0)
+		bool finished = false;
+		while (maxTry-- > 0 && finished == false)
 		{
+			if (current == end)
+			{
+				finished = true;
+			}
 			if (checked[1][1] == false || hasRadius == false)
 			{
 				checked[1][1] = true;
-				if (runForNode(current, gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+				if (runForNode(begin, ray, radius, current, gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 				{
 					return true;
 				}
 			}
-		
+
 			Vec2 nextPos = grid.getStartPos() + grid.getNodeSize() * (current + posShift).toVec();
 			if (renderDebug)
 			{
@@ -281,7 +308,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[0][1] == false)
 					{
 						checked[0][1] = true;
-						if (runForNode(current + IntVec2(-1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(-1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -289,7 +316,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[0][0] == false && currentPos.y - radius < curPos.y)
 					{
 						checked[0][0] = true;
-						if (runForNode(current + IntVec2(-1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(-1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -297,7 +324,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[0][2] == false && currentPos.y + radius > endPos.y)
 					{
 						checked[0][2] = true;
-						if(runForNode(current + IntVec2(-1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(-1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -307,7 +334,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 				if (checked[1][0] == false && currentPos.y - radius < curPos.y)
 				{
 					checked[1][0] = true;
-					if (runForNode(current + IntVec2(0, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+					if (runForNode(begin, ray, radius, current + IntVec2(0, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 					{
 						return true;
 					}
@@ -315,7 +342,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 				if (checked[1][2] == false && currentPos.y + radius > endPos.y)
 				{
 					checked[1][2] = true;
-					if (runForNode(current + IntVec2(0, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+					if (runForNode(begin, ray, radius, current + IntVec2(0, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 					{
 						return true;
 					}
@@ -326,7 +353,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[2][1] == false)
 					{
 						checked[2][1] = true;
-						if(runForNode(current + IntVec2(+1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(+1, 0), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -334,7 +361,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[2][0] == false && currentPos.y - radius < curPos.y)
 					{
 						checked[2][0] = true;
-						if(runForNode(current + IntVec2(+1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(+1, -1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -342,7 +369,7 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 					if (checked[2][2] == false && currentPos.y + radius > endPos.y)
 					{
 						checked[2][2] = true;
-						if(runForNode(current + IntVec2(+1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
+						if (runForNode(begin, ray, radius, current + IntVec2(+1, +1), gun, bullet, searchId, ignoreIds, func, ignoreFunc))
 						{
 							return true;
 						}
@@ -447,8 +474,23 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& ray, float radi
 			debugRenderer.addLine(begin + perp * radius, begin + perp * radius + ray, 0.0f, 0xFFFF0000);
 			debugRenderer.addLine(begin - perp * radius, begin - perp * radius + ray, 0.0f, 0xFFFF0000);
 		}
+		if (maxTry <= 0)
+		{
+			printf("Reached maxtry on ray cast, error?\n");
+		}
 	}
 	return false;
+}
+
+bool MonsterController::runForRay(const Vec2& begin, const Vec2& initialRay, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
+{
+	Vec2 ray = initialRay;
+	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius);
+	if (d >= 0.0f)
+	{
+		ray = initialRay.normalized() * (d + radius * 2.0f);
+	}
+	return runForRayWithoutCollision(begin, ray, radius, args, func, ignoreFunc);
 }
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)
@@ -646,6 +688,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	const Vec2& mapMin = mapLimits.getMin();
 	const Vec2& mapMax = mapLimits.getMax();
 
+	bool dontCheckCollision = args["dontCheckCollision"];
 	bool canGoEdge = args["canBeEdge"];
 	bool onEdges = args["onEdges"];
 	bool onScreen = args["onScreen"];
@@ -692,6 +735,15 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 		else
 		{
 			pos = Vec2(randFloat(mapMin.x + 50.0f, mapMax.x - 50.0f), randFloat(mapMin.y + 50.0f, mapMax.y - 50.0f));
+		}
+
+		if (dontCheckCollision == false)
+		{
+			bool hasCollision = bloodworks->getCollisionController()->hasCollision(Circle(pos, 20.0f));
+			if (hasCollision)
+			{
+				score += 10000.0f;
+			}
 		}
 
 		if (notNearMonsters)
@@ -755,7 +807,7 @@ void MonsterController::runForEachMonsterInRadius(const Vec2& pos, float radius,
 	{
 		for (int j = start.y; j <= end.y; j++)
 		{
-			auto node = grid.getNodeAtIndex(IntVec2(i, j));
+			auto& node = grid.getNodeAtIndex(IntVec2(i, j));
 			for (Monster *monster : node)
 			{
 				if (monster->lastRunCheck != runIndex)
@@ -782,7 +834,7 @@ void MonsterController::runForEachMonsterInPie(const Vec2& pos, float radius, fl
 	{
 		for (int j = start.y; j <= end.y; j++)
 		{
-			auto node = grid.getNodeAtIndex(IntVec2(i, j));
+			auto& node = grid.getNodeAtIndex(IntVec2(i, j));
 			for (Monster *monster : node)
 			{
 				if (monster->lastRunCheck != runIndex)

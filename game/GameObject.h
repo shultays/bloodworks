@@ -99,7 +99,9 @@ class GameObject
 		int t;
 		Vec2 v0;
 		Vec2 v1;
-		float f;
+		float f0;
+		float f1;
+		float radius;
 	};
 
 	cVector<ColliderData> colliders;
@@ -120,5 +122,5 @@ public:
 
 	int addCircleCollider(const Vec2& shift, float radius);
 	int addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius);
-	int addRectCollider(const Vec2& shift, const Vec2& size, float rotation);
+	int addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius);
 };

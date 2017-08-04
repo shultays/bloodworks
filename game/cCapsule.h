@@ -1,7 +1,10 @@
 #pragma once
 
 #include "cTools.h"
-#include "cCircle.h"
+#include "cGlobals.h"
+
+class Circle;
+class Rect;
 
 class Capsule
 {
@@ -50,6 +53,7 @@ public:
 		return radius;
 	}
 
+	float doesHit(const Vec2& begin, const Vec2& ray, float radius);
 
 	bool doesIntersect(const Vec2& point) const
 	{
@@ -59,14 +63,9 @@ public:
 
 	}
 
-	bool doesIntersect(const Circle& circle) const
-	{
-		float l = (circle.getOrigin() - pos0).dot(dir);
-		clamp(l, 0.0f, len);
-		float r = radius + circle.getRadius();
-		return circle.getOrigin().distanceSquared(pos0 + dir * l) < r * r;
-	}
-
+	bool doesIntersect(const Circle& circle) const;
+	bool doesIntersect(const Capsule& capsule) const;
+	bool doesIntersect(const Rect& r) const;
 
 	void drawDebug(int color = 0xFFFFFFFF, float time = 0.0f)
 	{
@@ -76,47 +75,5 @@ public:
 		debugRenderer.addLine(pos0 - dir.sideVec() * radius, pos1 - dir.sideVec() * radius, time, color);
 	}
 
-	Vec2 getSolver(const Circle& circle) const
-	{
-		Vec2 toCircle = circle.getOrigin() - pos0;
-		float l = toCircle.dot(dir);
-		float r = circle.getRadius() + radius;
-		if (l < 0.0f)
-		{
-			float d = circle.getOrigin().distanceSquared(pos0);
-			if (d < r * r)
-			{
-				Vec2 toCircle = circle.getOrigin() - pos0;
-				d = toCircle.normalize();
-				return toCircle * (r - d);
-			}
-		}
-		else if (l > len)
-		{
-			float d = circle.getOrigin().distanceSquared(pos1);
-			if (d < r * r)
-			{
-				Vec2 toCircle = circle.getOrigin() - pos1;
-				d = toCircle.normalize();
-				return toCircle * (r - d);
-			}
-		}
-		else
-		{
-			float d = circle.getOrigin().distanceSquared(pos0 + dir * l);
-			if (d < r * r)
-			{
-				d = sqrt(d) - r;
-				if (dir.sideVec().dot(toCircle) < 0.0f)
-				{
-					return dir.sideVec() * d;
-				}
-				else
-				{
-					return -dir.sideVec() * d;
-				}
-			}
-		}
-		return Vec2::zero();
-	}
+	Vec2 getSolver(const Circle& circle) const;
 };

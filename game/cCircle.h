@@ -3,6 +3,9 @@
 #include "cTools.h"
 #include "cGlobals.h"
 
+class Rect;
+class Capsule;
+
 class Circle
 {
 	Vec2 origin;
@@ -36,17 +39,18 @@ public:
 		return point.distanceSquared(origin) < radius * radius;
 	}
 
-	bool doesIntersect(const Circle& circle) const
-	{
-		float r = radius + circle.radius;
-		return circle.origin.distanceSquared(origin) < r * r;
-	}
+	bool doesIntersect(const Circle& circle) const;
+
+	bool doesIntersect(const Capsule& capsule) const;
+
+	bool doesIntersect(const Rect& rect) const;
 
 	void drawDebug(int color = 0xFFFFFFFF, float time = 0.0f)
 	{
 		debugRenderer.addCircle(origin, radius, time, color);
 	}
 
+	float doesHit(const Vec2& begin, const Vec2& ray, float radius = 0.0f);
 
 	Vec2 getSolver(const Circle& circle) const
 	{
