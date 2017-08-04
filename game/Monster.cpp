@@ -310,10 +310,44 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 	}
 }
 
-Vec2 Monster::getPathPos(const Vec2& pos)
+Vec2 Monster::getPathPos(const Vec2& target)
 {
+	Vec2 dir = target - this->position;
+	float len = dir.normalize();
+	const float radius = collisionRadius * 0.5f;
+	const float checkDistance = 120.0f;
+	float t = bloodworks->getCollisionController()->getRayDistance(position + dir * radius * 0.5f, dir * checkDistance, 0.0f);
+	//debugRenderer.addLine(position + dir * 10.0f, position + dir * checkDistance);
+	if (t > checkDistance - 10.0f)
+	{
+		return target;
+	}
+	float angle = dir.toAngle();
+	for (int i = 1; i < 8; i++)
+	{
+		float shift = i * pi_d2/ 5.0f;
+
+		Vec2 dirRotated;
+		dirRotated = Vec2::fromAngle(angle + shift);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * radius * 0.5f, dirRotated * checkDistance, 0.0f);
+		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
+		if (t > checkDistance - 10.0f)
+		{
+			//debugRenderer.addLine(position, position + dirRotated * checkDistance, 0.0f, 0xFFFF0000);
+			return position + dirRotated * checkDistance;
+		}
+
+		dirRotated = Vec2::fromAngle(angle - shift);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * 5.0f, dirRotated * checkDistance, 0.0f);
+		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
+		if (t > checkDistance - 10.0f)
+		{
+			//debugRenderer.addLine(position, position + dirRotated * checkDistance, 0.0f, 0xFFFF0000);
+			return position + dirRotated * checkDistance;
+		}
+	}
 	// todo pathfinding
-	return pos;
+	return target;
 }
 
 void Monster::addIgnoreId(int id)
