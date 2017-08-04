@@ -31,4 +31,9 @@ void main(void)
 	{
 		gl_FragColor.a *= (t - 10.0) / 10.0;
 	}
+	
+	if (t < 0.0)
+	{
+		gl_FragColor.a = 0.0;
+	}
 }

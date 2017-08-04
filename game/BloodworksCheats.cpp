@@ -41,6 +41,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 
 void BloodworksCheats::onTick()
 {
+
 	const cVector<Perk*>& perks = bloodworks->getPerks();
 	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
 	const cVector<Gun*>& guns = bloodworks->getGuns();
@@ -199,14 +200,11 @@ void BloodworksCheats::onTick()
 	{
 		monsterController->drawDebug();
 	}
-	//if (input.isKeyDown(key_f3))
+	if (input.isKeyDown(key_f3))
 	{
-		if (input.isKeyDown(key_f3))
-		{
-			Circle c(player->getPosition(), player->getCollisionRadius());
-			c.drawDebug(0xFFFF0000);
-		}
-		bloodworks->getCollisionController()->drawDebug(input.isKeyDown(key_f3));
+		Circle c(player->getPosition(), player->getCollisionRadius());
+		c.drawDebug(0xFFFF0000);
+		bloodworks->getCollisionController()->drawDebug(true);
 	}
 
 	if (input.isKeyPressed(key_g))
@@ -292,14 +290,14 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "RocketLauncher")
+		if (gun->getScriptName() == "Laser")
 		{
-			//player->setGun(gun);
+			player->setGun(gun);
 		}
 
 		if (gun->getScriptName() == "BananaBomb")
 		{
-			player->setSecondaryGun(gun);
+			//player->setSecondaryGun(gun);
 		}
 		if (gun->getScriptName() == "RocketBarrage")
 		{
@@ -307,7 +305,7 @@ void BloodworksCheats::onLoadMission()
 		}
 		if (gun->getScriptName() == "BigLaser")
 		{
-			//player->setSecondaryGun(gun);
+			player->setSecondaryGun(gun);
 		}
 	}
 }

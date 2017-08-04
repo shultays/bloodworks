@@ -11,6 +11,7 @@ class GameObjectTemplate
 	std::string name;
 	std::string scriptFile;
 	std::string scriptName;
+	std::string basePath;
 	sol::table scriptTable;
 
 	sol::table jsonTable;
@@ -22,14 +23,20 @@ public:
 		scriptFile = j["scriptFile"].get<std::string>();
 		scriptName = j["scriptName"].get<std::string>();
 
+		basePath = file.folder;
+
 		if (lua[scriptName] == sol::nil)
 		{
-			lua[scriptName] = lua.create_table();
+			scriptTable = lua[scriptName] = lua.create_table();
 
 			std::string scriptPath = file.folder + j["scriptFile"].get<std::string>();
 			lua.script_file(scriptPath);
 		}
 		scriptTable = lua[scriptName];
+		if (scriptTable["onLoad"])
+		{
+			scriptTable["onLoad"](this);
+		}
 	}
 
 	const std::string& getName() const
