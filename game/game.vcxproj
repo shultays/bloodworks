@@ -190,6 +190,8 @@
     <ClCompile Include="cAARect.cpp" />
     <ClCompile Include="cAnimatedRenderable.cpp" />
     <ClCompile Include="cButton.cpp" />
+    <ClCompile Include="cCapsule.cpp" />
+    <ClCompile Include="cCircle.cpp" />
     <ClCompile Include="cDebugRenderable.cpp" />
     <ClCompile Include="cFont.cpp" />
     <ClCompile Include="cGlobals.cpp" />
@@ -201,6 +203,7 @@
     <ClCompile Include="CollisionController.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cPostProcess.cpp" />
+    <ClCompile Include="cRect.cpp" />
     <ClCompile Include="cSlave.cpp" />
     <ClCompile Include="cSlaveWindows.cpp" />
     <ClCompile Include="cTimeProfiler.cpp" />

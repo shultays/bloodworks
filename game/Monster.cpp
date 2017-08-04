@@ -19,6 +19,8 @@
 #include "MonsterTemplate.h"
 #include "BloodworksCheats.h"
 #include "cTimeProfiler.h"
+#include "CollisionController.h"
+#include "cCircle.h"
 
 Monster::Monster(Bloodworks *bloodworks)
 {
@@ -151,6 +153,45 @@ void Monster::tick()
 	{
 		position += moveVelocity * timer.getDt();
 	}
+	Vec2 newPosition = position;
+
+	{
+		bool solved = false;
+		for (int i = 0; i < 5; i++)
+		{
+			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius));
+			if (solver.lengthSquared() < 0.0001f)
+			{
+				solved = true;
+				break;
+			}
+			else
+			{
+				position += solver;
+			}
+		}
+
+		if (solved == false)
+		{
+			for (int i = 1; i < 10; i++)
+			{
+				position = (prevPosition - newPosition) * ((float)i) / 9.0f + newPosition;
+				if (i == 9)
+				{
+					position = prevPosition;
+				}
+				Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius));
+				if (solver.lengthSquared() == 0.0f)
+				{
+					break;
+				}
+			}
+		}
+	}
+
+
+
+
 
 	float dt = timer.getDt();
 	for (int i = 0; i < knockbacks.size(); i++)

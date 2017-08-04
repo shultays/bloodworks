@@ -20,7 +20,32 @@ function Survival.init()
 	end
 	missionData.curMaxMonster = missionData.maxMonster
 	
-	--addGameObjectUsingTemplate("Collider")
+
+	local colliderSpawnChances = {}
+	local totalChance = 0.0
+	for name,collider in pairs(Colliders) do 
+		local chance = 1.0
+		if collider.jsonTable.chance ~= nil then
+			chance = collider.jsonTable.chance
+		end
+		totalChance = totalChance + chance
+		colliderSpawnChances[name] = chance
+	end
+	
+	for i=1,25 do
+		local m = nil
+		local randChance = math.random() * totalChance
+		for key,value in pairs(colliderSpawnChances) do
+			randChance = randChance - value
+			if randChance <= 0.000001 then
+				m = key
+				break
+			end
+		end
+		if m ~= nil then
+			addGameObjectUsingTemplate(m)
+		end
+	end
 end
 
 function Survival.onTick()
