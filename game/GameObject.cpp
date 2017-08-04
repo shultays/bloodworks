@@ -29,22 +29,23 @@ void GameObject::updateMatrix()
 		if (collider.t == ColliderData::type_circle)
 		{
 			Vec2 t = pos + ((collider.v0 * scale) * rot);
-			float r = collider.f * s;
+			float r = collider.f0 * s;
 			bloodworks->getCollisionController()->relocateCollider(collider.id, Circle(t, r));
 		}
 		else if (collider.t == ColliderData::type_capsule)
 		{
 			Vec2 t0 = pos + ((collider.v0 * scale) * rot);
 			Vec2 t1 = pos + ((collider.v1 * scale) * rot);
-			float r = collider.f * s;
+			float r = collider.f0 * s;
 			bloodworks->getCollisionController()->relocateCollider(collider.id, Capsule(t0, t1, r));
 		}
 		else if (collider.t == ColliderData::type_rect)
 		{
 			Vec2 t0 = pos + ((collider.v0 * scale) * rot);
 			Vec2 t1 = scale * collider.v1;
-			float r = collider.f + rotation;
-			bloodworks->getCollisionController()->relocateCollider(collider.id, Rect(t0, t1, r));
+			float r = collider.f0 + rotation;
+			float r2 = collider.f1 * s;
+			bloodworks->getCollisionController()->relocateCollider(collider.id, Rect(t0, t1, r, r2));
 		}
 	}
 }
@@ -84,6 +85,11 @@ void GameObject::setAlignment(RenderableAlignment alignment)
 GameObject::~GameObject()
 {
 	SAFE_DELETE(renderableGroup);
+
+	for (auto& collider : colliders)
+	{
+		bloodworks->getCollisionController()->removeCollider(collider.id);
+	}
 }
 
 cTexturedQuadRenderable* GameObject::addTexture(const std::string& texture, const std::string& shader)
@@ -160,7 +166,7 @@ int GameObject::addCircleCollider(const Vec2& shift, float radius)
 	ColliderData& collider = colliders.insertAndGetReference();
 	collider.t = ColliderData::type_circle;
 	collider.v0 = shift;
-	collider.f = radius;
+	collider.f0 = radius;
 
 	Vec2 t = pos + ((shift * scale) * Mat2::rotation(rotation));
 	float r = radius * scale.length();
@@ -174,7 +180,7 @@ int GameObject::addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float rad
 	collider.t = ColliderData::type_capsule;
 	collider.v0 = pos0;
 	collider.v1 = pos1;
-	collider.f = radius;
+	collider.f0 = radius;
 
 	Vec2 t0 = pos + ((pos0 * scale) * Mat2::rotation(rotation));
 	Vec2 t1 = pos + ((pos1 * scale) * Mat2::rotation(rotation));
@@ -183,18 +189,20 @@ int GameObject::addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float rad
 	return collider.id;
 }
 
-int GameObject::addRectCollider(const Vec2& shift, const Vec2& size, float rotation)
+int GameObject::addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius)
 {
 	ColliderData& collider = colliders.insertAndGetReference();
 	collider.t = ColliderData::type_capsule;
 	collider.v0 = shift;
 	collider.v1 = size;
-	collider.f = rotation;
+	collider.f0 = rotation;
+	collider.f1 = radius;
 
 	Vec2 t0 = pos + ((shift * scale) * Mat2::rotation(this->rotation));
 	Vec2 t1 = scale * size;
 	float r = rotation + this->rotation;
-	collider.id = bloodworks->getCollisionController()->addCollider(Rect(t0, t1, r), this);
+	float r2 = radius * scale.length();
+	collider.id = bloodworks->getCollisionController()->addCollider(Rect(t0, t1, r, r2), this);
 	return collider.id;
 }
 

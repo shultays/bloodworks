@@ -148,4 +148,5 @@ public:
 
 	void clampPos(Vec2& position) const;
 	Vec2 getRandomPos() const;
+	bool doesIntersect(const AARect& rect) const;
 };

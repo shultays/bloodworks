@@ -212,4 +212,9 @@ public:
 	{
 		return gridStart;
 	}
+
+	bool isValidIndex(const IntVec2& index) const
+	{
+		return index.x >= 0 && index.y >= 0 && index.x < nodeCount.x && index.y < nodeCount.y;
+	}
 };
