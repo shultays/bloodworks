@@ -50,6 +50,7 @@ MeleeHitImage = {}
 
 function MeleeHitImage.build(monster)
 	local gameObject =  addGameObject("MeleeHitImage")
+	gameObject:setLevel(RenderableLevel.player + 5)
 	gameObject.data.startTime = time
 	gameObject.data.renderable = gameObject:addTexture("~/resources/monsters/melee_hit.png", "~/resources/default")
 	gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(20.0, 20.0))

@@ -213,6 +213,13 @@
     <ClCompile Include="CollisionController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="cRect.cpp">
+      <Filter>Coral\Math\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="cCircle.cpp">
+      <Filter>Coral\Math\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="cCapsule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">

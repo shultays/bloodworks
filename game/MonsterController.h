@@ -44,8 +44,9 @@ public:
 	const cVector<Monster*>& getMonsterAt(const Vec2& pos) const;
 
 	MonsterHitResult getClosestMonsterOnLine(const Vec2& begin, const Vec2& ray, float radius, sol::table& args);
+	bool runForRayWithoutCollision(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc = nullptr);
 	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc = nullptr);
-	bool runForNode(const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc);
+	bool runForNode(const Vec2& begin, const Vec2& ray, float radius, const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc);
 
 	Monster* getClosestMonster(const Vec2& pos);
 	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);

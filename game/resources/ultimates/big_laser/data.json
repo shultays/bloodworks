@@ -33,6 +33,6 @@
   "laserBeginWidth" : 40.0,
   
   "laserEndShift" : 0.0,
-  "laserEndWidth" : 10.0,
+  "laserEndWidth" : 100.0,
   "showShootAnimation" : false
 }
