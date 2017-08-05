@@ -179,6 +179,12 @@ void Player::tick()
 	monsterExperienceMultiplier.tick();
 	gunSpreadMultiplier.tick();
 
+	bool colorChanged = colorMultiplier.tick();
+	if (colorChanged && renderable)
+	{
+		renderable->setColor(colorMultiplier.getBuffedValue());
+	}
+
 	oldPos = pos;
 
 	float wantedAngle = moveAngle;
@@ -196,7 +202,7 @@ void Player::tick()
 
 	if (moving)
 	{
-		if (wantedAngle != moveAngle)
+		if (wantedAngle != moveAngle && currentMaxSpeed > 0.0001f)
 		{
 			float diff = angleDiff(moveAngle, wantedAngle);
 			float rotation = lerp(maxRotation, minRotation, moveSpeed / currentMaxSpeed) * dt;
@@ -250,6 +256,10 @@ void Player::tick()
 
 	float boundaryAmount = 40.0f;
 
+	for (auto& m : moveAmounts)
+	{
+		moveAmount += m;
+	}
 	if (newPos.x < boundaries.getMin().x && moveAmount.x < 0.0f)
 	{
 		moveAmount.x = moveAmount.x * max(0.0f, (newPos.x + boundaryAmount - boundaries.getMin().x) / boundaryAmount);
@@ -268,7 +278,8 @@ void Player::tick()
 		moveAmount.y = moveAmount.y * max(0.0f, (boundaries.getMax().y + boundaryAmount - newPos.y) / boundaryAmount);
 	}
 
-	pos = pos + moveAmount;
+	pos += moveAmount;
+	moveAmounts.clear();
 	Vec2 afterPos = pos;
 
 	float collisionRadius = getCollisionRadius();
@@ -816,4 +827,9 @@ float Player::getBulletRadius() const
 float Player::getCollisionRadius() const
 {
 	return 15.0f;
+}
+
+void Player::moveBy(const Vec2& diff)
+{
+	moveAmounts.push_back(diff);
 }

@@ -106,6 +106,7 @@ function makeBossDefault(monster)
 		monster:setScale(0.8 + math.random() * 0.3)
 		monster.experienceMultiplier = monster.experienceMultiplier * 0.3
 		monster.scoreMultiplier = monster.scoreMultiplier * 0.3
+		monster.data.hitPoint = monster.hitPoint
 		monster.data.onKillFuncSplit = function (monster)
 			if monster.data.remainingLife > 0 then
 				monster.data.remainingLife = monster.data.remainingLife - 1
@@ -129,8 +130,8 @@ function makeBossDefault(monster)
 					newMonster.experienceMultiplier = monster.experienceMultiplier * 0.5
 					newMonster.scoreMultiplier = monster.scoreMultiplier * 0.5
 
-					newMonster.hitPoint = math.floor(monster.hitPoint * 0.5)
-					
+					newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
+					newMonster.data.hitPoint = newMonster.hitPoint
 					newMonster.moveAngle = monster.moveAngle + math.pi * (i - 0.5)
 					
 					addCustomOnKill(newMonster, monster.data.onKillFuncSplit)
@@ -143,6 +144,7 @@ function makeBossDefault(monster)
 		monster:setScale(0.8 + math.random() * 0.3)
 		monster.experienceMultiplier = monster.experienceMultiplier * 0.5
 		monster.scoreMultiplier = monster.scoreMultiplier * 0.5
+		monster.data.hitPoint = monster.hitPoint
 		addCustomOnKill(monster, function (monster)
 			for i = 1,8 do
 				local newMonster = addMonster(monster.monsterTemplate.name)
@@ -163,7 +165,9 @@ function makeBossDefault(monster)
 				newMonster.experienceMultiplier = monster.experienceMultiplier * 0.1
 				newMonster.scoreMultiplier = monster.scoreMultiplier * 0.1
 
-				newMonster.hitPoint = math.floor(monster.hitPoint * 0.3)
+				newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
+				newMonster.data.hitPoint = newMonster.hitPoint
+					
 				newMonster.data.randomMove = true
 				newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
 			end
@@ -221,9 +225,7 @@ function makeBossDefault(monster)
 			if monster.hitPoint > 0 then
 				local t = math.random() * math.pi * 2.0
 				local r = math.random() * 100.0 + 100.0
-				local v = Vec2:new()
-				v:setAngle(t)
-				v = v * r
+				local v = Vec2.fromAngle(t) * r
 				for i=1,8 do
 					monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
 				end
