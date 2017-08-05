@@ -35,14 +35,17 @@ public:
 	LevelUpPopup(Bloodworks *bloodworks);
 	~LevelUpPopup();
 	bool isVisible() const;
-	void show(bool levelAdded = true);
+	void show(bool setAlpha = true);
 	void tick();
 
 	int getWaitingLevels() const
 	{
 		return waitingLevels;
 	}
-
+	void addLevel()
+	{
+		waitingLevels++;
+	}
 	void reset();
 	void showLevelUpText();
 };

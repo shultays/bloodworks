@@ -20,16 +20,18 @@ function FlareGun.onTick(gun)
 end
 
 function FlareGun.onBulletHit(gun, bullet, monster)
-	if monster.data.flamethrowerObject == nil then
-		monster.data.flamethrowerObject = addGameObject("BurnMonsterObject")
-		monster.data.flamethrowerObject.data.monster = monster
-		monster.data.flamethrowerObject.data.damageMin = 6
-		monster.data.flamethrowerObject.data.damageVar = 6
+	if monster ~= nil then
+		if monster.data.flamethrowerObject == nil then
+			monster.data.flamethrowerObject = addGameObject("BurnMonsterObject")
+			monster.data.flamethrowerObject.data.monster = monster
+			monster.data.flamethrowerObject.data.damageMin = 6
+			monster.data.flamethrowerObject.data.damageVar = 6
+		end
+		if monster.data.burnParticle == nil then
+			monster.data.burnParticle = monster:addParticleSpawner("FlameParticle", {})
+		end
+		monster.data.flamethrowerObject.data.count = 7
 	end
-	if monster.data.burnParticle == nil then
-		monster.data.burnParticle = monster:addParticleSpawner("FlameParticle", {})
-	end
-	monster.data.flamethrowerObject.data.count = 7
 end
 
 function FlareGun.onBulletTick(gun, bullet)

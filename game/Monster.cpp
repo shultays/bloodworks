@@ -346,7 +346,6 @@ Vec2 Monster::getPathPos(const Vec2& target)
 			return position + dirRotated * checkDistance;
 		}
 	}
-	// todo pathfinding
 	return target;
 }
 
