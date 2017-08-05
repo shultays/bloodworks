@@ -57,6 +57,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
 		sol::meta_function::unary_minus, [](const Vec2& a) { return -a; },
 
+		"fromAngle", [](float angle) { return Vec2::fromAngle(angle); },
+
 		"rotateBy", [](Vec2& v, float angle) { v = v * Mat2::rotation(angle); },
 
 		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
@@ -449,9 +451,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addExplosion",
-		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage)
+		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime)
 	{
-		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage);
+		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime);
 	});
 
 	lua.set_function("playSound",
@@ -695,6 +697,15 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonsterOnLine(pos, ray, radius, args);
 	});
 
+	lua.set_function("runForEachMonsterInRadius",
+		[&](const Vec2& pos, float radius, sol::table& args, sol::function& func)
+	{
+		std::function<bool(Monster*)> func2 = [&func](Monster* monster)
+		{
+			return func(monster);
+		};
+		bloodworks->getMonsterController()->runForRadius(pos, radius, args, func2);
+	});
 
 	lua.set_function("runForEachMonsterOnLine",
 		[&](const Vec2& pos, const Vec2& ray, float radius, sol::table& args, sol::function& func)
@@ -947,16 +958,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 
 	lua.new_usertype<Player>("Player",
-		"position", &Player::pos,
+		"position", sol::readonly(&Player::pos),
 		"moveSpeed", sol::readonly(&Player::moveSpeed),
 		"crosshairPos", sol::readonly(&Player::crosshairPos),
 		"crosshairDistance", sol::readonly(&Player::crosshairDistance),
 		"gunPos", sol::readonly(&Player::gunPos),
 		"aimDir", sol::readonly(&Player::aimDir),
 		"aimAngle", sol::readonly(&Player::aimAngle),
+		"moveAngle", sol::readonly(&Player::moveAngle),
 		"moveDir", sol::readonly(&Player::moveDir),
 		"visible", sol::readonly(&Player::visible),
 		"isDead", sol::readonly(&Player::isDead),
+		"colorMultiplier", &Player::colorMultiplier,
 		"moveVelocity", sol::readonly(&Player::moveVelocity),
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
@@ -984,7 +997,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getHitpoints", &Player::getHitpoints,
 		"setMaxHitpoints", &Player::setMaxHitpoints,
 		"setHitpoints", &Player::setHitpoints,
-
+		"moveBy", &Player::moveBy,
 		"data", &Player::data
 		);
 

@@ -33,10 +33,7 @@ function CriticalParticle.addParticle(params, pos, args)
 	end
 	
 	params.color = Vec3.new(r, g, b)
-	
-	params.moveSpeed = Vec2.new(0.0, 0.0)
-	params.moveSpeed:setAngle(math.random() * math.pi * 2.0)
-	params.moveSpeed = params.moveSpeed * (args.moveSpeed * (1.0 + math.random() * 0.5))
+	params.moveSpeed = Vec2.fromAngle(math.random() * math.pi * 2.0) * (args.moveSpeed * (1.0 + math.random() * 0.5))
 	
 	if params.bullet ~= nil then
 		params.moveSpeed = params.moveSpeed + params.bullet.moveVelocity
