@@ -495,16 +495,18 @@ bool MonsterController::runForRay(const Vec2& begin, const Vec2& initialRay, flo
 
 Monster* MonsterController::getClosestMonster(const Vec2& pos)
 {
-	return getClosestMonsterWithIgnoreId(pos, -1);
+	static const std::vector<int> temp;
+	return getClosestMonsterWithIgnoreId(pos, temp);
 }
 
 
 Monster* MonsterController::getClosestMonsterInRange(const Vec2& pos, float range)
 {
-	return getClosestMonsterInRangeWithIgnoreId(pos, range, -1);
+	static const std::vector<int> temp;
+	return getClosestMonsterInRangeWithIgnoreId(pos, range, temp);
 }
 
-Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId)
+Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, const std::vector<int>& ignoreId)
 {
 	float closest = range * range;
 	Monster *closestMonster = nullptr;
@@ -544,11 +546,23 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 					float d;
 					if (monster->isDead == false
 						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
-						&& (d = monster->getPosition().distanceSquared(pos)) < closest
-						&& (ignoreId == -1 || monster->hasIgnoreId(ignoreId) == false))
+						&& (d = monster->getPosition().distanceSquared(pos)) < closest)
 					{
-						closest = d;
-						closestMonster = monster;
+						bool valid = true;
+
+						for (int id : ignoreId)
+						{
+							if (monster->hasIgnoreId(id))
+							{
+								valid = false;
+								break;
+							}
+						}
+						if (valid)
+						{
+							closest = d;
+							closestMonster = monster;
+						}
 					}
 				}
 			}
@@ -559,10 +573,24 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 		for (auto& monster : monsters)
 		{
 			float d;
-			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreId == -1 ||  monster->hasIgnoreId(ignoreId) == false))
+			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
 			{
-				closest = d;
-				closestMonster = monster;
+
+				bool valid = true;
+
+				for (int id : ignoreId)
+				{
+					if (monster->hasIgnoreId(id))
+					{
+						valid = false;
+						break;
+					}
+				}
+				if (valid)
+				{
+					closest = d;
+					closestMonster = monster;
+				}
 			}
 		}
 	}
@@ -893,17 +921,29 @@ void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int 
 	damageMonstersInRangeWithIgnoreId(pos, range, minRange, maxRange, false, -1);
 }
 
-Monster* MonsterController::getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId)
+Monster* MonsterController::getClosestMonsterWithIgnoreId(const Vec2& pos, const std::vector<int>& ignoreId)
 {
 	float closest = FLT_MAX;
 	Monster *closestMonster = nullptr;
 	for (auto& monster : monsters)
 	{
 		float d;
-		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)) && (ignoreId == -1 || monster->hasIgnoreId(ignoreId) == false))
+		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
 		{
-			closest = d;
-			closestMonster = monster;
+			bool valid = true;
+			for (int id : ignoreId)
+			{
+				if (monster->hasIgnoreId(id))
+				{
+					valid = false;
+					break;
+				}
+			}
+			if (valid)
+			{
+				closest = d;
+				closestMonster = monster;
+			}
 		}
 	}
 
