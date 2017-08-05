@@ -484,6 +484,15 @@ const std::string& Gun::getScriptName() const
 	return scriptName;
 }
 
+int Gun::onPlayerDamaged(int damage, float dir, sol::table& params)
+{
+	if (scriptTable["onPlayerDamaged"])
+	{
+		return scriptTable["onPlayerDamaged"](this, damage, dir, params);
+	}
+	return damage;
+}
+
 int Gun::getCurrentAmmo() const
 {
 	return currentAmmo;

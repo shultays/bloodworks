@@ -306,6 +306,10 @@ void BloodworksCheats::onLoadMission()
 		{
 			//player->setSecondaryGun(gun);
 		}
+		if (gun->getScriptName() == "PhoenixDive")
+		{
+			player->setSecondaryGun(gun);
+		}
 	}
 }
 
