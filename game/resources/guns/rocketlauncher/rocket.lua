@@ -19,7 +19,7 @@ function RocketLauncher.onTick(gun)
 			bullet.data.moveSpeed = bullet.moveSpeed
 			bullet.data.lateralSpeedDir = player.moveVelocity - (player.moveDir * player.moveVelocity:dot(player.aimDir))
 			bullet.data.lateralSpeed = bullet.data.lateralSpeedDir:safeNormalize() * 0.3
-			bullet.data.lifeTime = 2.5
+			bullet.lifeTime = 2.5
 			bullet.meshRotation = bullet.moveAngle
 		end
 	end
@@ -31,12 +31,7 @@ end
 
 function RocketLauncher.onBulletTick(gun, bullet)
     local data = bullet.data
-	data.lifeTime = data.lifeTime - dt
 	
-	if data.lifeTime < 0.0 then
-		gun:onBulletHit(bullet, nil)
-		bullet:removeSelf()
-	end
 	data.moveSpeed = data.moveSpeed + dt * 250
 	if data.moveSpeed > 250.0 then
 		data.moveSpeed = 250.0

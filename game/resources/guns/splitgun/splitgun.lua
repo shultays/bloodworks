@@ -32,30 +32,32 @@ end
 
 
 function SplitGun.onBulletHit(gun, bullet, monster)
-	if bullet.data.remainingSplit > 0 then
-		local newBullet = gun:addBullet()
-		local particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-		newBullet.penetrateCount = 2 - bullet.penetrateUsed
-		particle.args.initialScale = 2.0
-		particle.args.fadeOutSpeed = 1.2
-		particle.args.startFadeinSpeed = 10000.0
-		newBullet.position = bullet.position
-		newBullet.moveAngle = bullet.moveAngle - math.pi * 0.1
-		newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
-		monster:addIgnoreId(newBullet.id)
-		
-		newBullet = gun:addBullet()
-		particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-		newBullet.penetrateCount = 2 - bullet.penetrateUsed
-		particle.args.initialScale = 2.0
-		particle.args.fadeOutSpeed = 1.2
-		particle.args.startFadeinSpeed = 10000.0
-		newBullet.position = bullet.position
-		newBullet.moveAngle = bullet.moveAngle + math.pi * 0.1
-		newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
-		monster:addIgnoreId(newBullet.id)
-		
-		
-		playSound({path = "~/resources/sounds/split_gun.ogg", position = bullet.position, volume = 0.5})
+	if monster ~= nil then
+		if bullet.data.remainingSplit > 0 then
+			local newBullet = gun:addBullet()
+			local particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
+			newBullet.penetrateCount = 2 - bullet.penetrateUsed
+			particle.args.initialScale = 2.0
+			particle.args.fadeOutSpeed = 1.2
+			particle.args.startFadeinSpeed = 10000.0
+			newBullet.position = bullet.position
+			newBullet.moveAngle = bullet.moveAngle - math.pi * 0.1
+			newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
+			monster:addIgnoreId(newBullet.id)
+			
+			newBullet = gun:addBullet()
+			particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
+			newBullet.penetrateCount = 2 - bullet.penetrateUsed
+			particle.args.initialScale = 2.0
+			particle.args.fadeOutSpeed = 1.2
+			particle.args.startFadeinSpeed = 10000.0
+			newBullet.position = bullet.position
+			newBullet.moveAngle = bullet.moveAngle + math.pi * 0.1
+			newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
+			monster:addIgnoreId(newBullet.id)
+			
+			
+			playSound({path = "~/resources/sounds/split_gun.ogg", position = bullet.position, volume = 0.5})
+		end
 	end
 end

@@ -40,22 +40,24 @@ end
 
 
 function ShrinkGun.onBulletHit(gun, bullet, monster)
-	monster:setScale(monster.scale * 0.7)
-	
-	local particleCount = 10
-	if monster.scale < 0.4 then
-		particleCount = 20
-		monster:killSelf(Vec2:new())
-		playSound({path = "~/resources/sounds/shimmer_1.ogg"})
-	else
-	
-		playSound({path = "~/resources/sounds/shrink_hit.ogg"})
-	end
-	
-	if monster.data.shrinkParticle == nil then
-		monster.data.shrinkParticle = monster:addParticleSpawner("CriticalParticle", {});
-	end
-	for i=1,particleCount do
-		monster:spawnParticle(monster.data.shrinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
+	if monster ~= nil then
+		monster:setScale(monster.scale * 0.7)
+		
+		local particleCount = 10
+		if monster.scale < 0.4 then
+			particleCount = 20
+			monster:killSelf(Vec2:new())
+			playSound({path = "~/resources/sounds/shimmer_1.ogg"})
+		else
+		
+			playSound({path = "~/resources/sounds/shrink_hit.ogg"})
+		end
+		
+		if monster.data.shrinkParticle == nil then
+			monster.data.shrinkParticle = monster:addParticleSpawner("CriticalParticle", {});
+		end
+		for i=1,particleCount do
+			monster:spawnParticle(monster.data.shrinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
+		end
 	end
 end
