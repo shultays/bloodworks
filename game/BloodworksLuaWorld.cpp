@@ -335,11 +335,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"penetrateCount", &Bullet::penetrateCount,
 		"penetrateUsed", sol::readonly(&Bullet::penetrateUsed),
 
-		"script", &Bullet::script,
-
-		"onHitCallback", &Bullet::onHitCallback,
-		"onTickCallback", &Bullet::onTickCallback,
-		"shouldHitMonsterTest", &Bullet::shouldHitMonsterTest,
+		"setScript", &Bullet::setScript,
 
 		"isDead", sol::readonly(&Bullet::isDead),
 
@@ -631,9 +627,20 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("getClosestMonsterWithIgnoreId",
-		[&](const Vec2& pos, int ignoreId) -> Monster*
+		[&](const Vec2& pos, const sol::table& ignoreIdList) -> Monster*
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterWithIgnoreId(pos, ignoreId);
+		std::vector<int> ignoreIds;
+
+		if (auto argIgnoreIds = ignoreIdList)
+		{
+			int t = 1;
+			while (argIgnoreIds[t])
+			{
+				ignoreIds.push_back(argIgnoreIds[t].get<int>());
+				t++;
+			}
+		}
+		return bloodworks->getMonsterController()->getClosestMonsterWithIgnoreId(pos, ignoreIds);
 	});
 
 	lua.set_function("getClosestMonsterInRange",
@@ -656,9 +663,19 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("getClosestMonsterInRangeWithIgnoreId",
-		[&](const Vec2& pos, float range, int ignoreId) -> Monster*
+		[&](const Vec2& pos, float range, const sol::table& ignoreIdList) -> Monster*
 	{
-		return bloodworks->getMonsterController()->getClosestMonsterInRangeWithIgnoreId(pos, range, ignoreId);
+		std::vector<int> ignoreIds;
+		if (auto argIgnoreIds = ignoreIdList)
+		{
+			int t = 1;
+			while (argIgnoreIds[t])
+			{
+				ignoreIds.push_back(argIgnoreIds[t].get<int>());
+				t++;
+			}
+		}
+		return bloodworks->getMonsterController()->getClosestMonsterInRangeWithIgnoreId(pos, range, ignoreIds);
 	});
 
 	lua.set_function("damageMonstersInRangeWithIgnoreId",

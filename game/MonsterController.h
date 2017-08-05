@@ -49,9 +49,9 @@ public:
 	bool runForNode(const Vec2& begin, const Vec2& ray, float radius, const IntVec2& index, Gun* gun, Bullet* bullet, int searchId, cVector<int>& ignoreIds, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc);
 
 	Monster* getClosestMonster(const Vec2& pos);
-	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, int ignoreId);
+	Monster* getClosestMonsterWithIgnoreId(const Vec2& pos, const std::vector<int>& ignoreId);
 	Monster* getClosestMonsterInRange(const Vec2& pos, float range);
-	Monster* getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, int ignoreId);
+	Monster* getClosestMonsterInRangeWithIgnoreId(const Vec2& pos, float range, const std::vector<int>& ignoreId);
 	void getAllMonstersInRange(const Vec2& pos, float range, cVector<Monster*>& foundMonsters);
 
 	void damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange);

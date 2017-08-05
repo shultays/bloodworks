@@ -34,8 +34,10 @@ function PulseGun.onBulletTick(gun, bullet)
 end
 
 function PulseGun.onBulletHit(gun, bullet, monster)
-	monster:addKnockback(bullet.moveDir * 200.0, 0.06)
-	if bullet.data.toKillTime > 0.05 then
-		bullet.data.toKillTime = 0.05
+	if monster ~= nil then
+		monster:addKnockback(bullet.moveDir * 200.0, 0.06)
+		if bullet.data.toKillTime > 0.05 then
+			bullet.data.toKillTime = 0.05
+		end
 	end
 end
