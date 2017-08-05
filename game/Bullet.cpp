@@ -61,9 +61,9 @@ void Bullet::tick()
 {
 	float dt = timer.getDt();
 	Vec2 oldPos = pos;
-	if (script && onTickCallback.size())
+	if (onTickCallback)
 	{
-		script[onTickCallback](this);
+		onTickCallback(this);
 	}
 
 	if (gun != nullptr)
@@ -82,11 +82,13 @@ void Bullet::tick()
 
 	if (bloodworks->isCoorOutside(pos, -20.0f) || (lifeTime > 0.0f && timer.getTime() - startTime > lifeTime))
 	{
+		onHit(nullptr);
 		removeSelf();
 	}
 
 	if (bloodworks->getCollisionController()->hasCollision(Circle(pos, radius)))
 	{
+		onHit(nullptr);
 		removeSelf();
 	}
 
@@ -126,10 +128,7 @@ void Bullet::tick()
 		if (bloodworks->getPlayer()->getPosition().distanceSquared(pos) < checkRadius * checkRadius)
 		{
 			bloodworks->getPlayer()->doDamageWithArgs(damage, moveAngle, onDamageArgs);
-			if (script && onHitCallback.length())
-			{
-				script[onHitCallback](this, bloodworks->getPlayer());
-			}
+			onHit(nullptr);
 			removeSelf();
 		}
 	}
@@ -144,11 +143,11 @@ void Bullet::tick()
 			{
 				if (monster->shouldHit(this) == false)
 				{
-					return false;
+					return true;
 				}
-				if (script && shouldHitMonsterTest.size())
+				if (shouldHitMonsterTest)
 				{
-					if (((bool)script[shouldHitMonsterTest](this, monster)) == false)
+					if (shouldHitMonsterTest(this, monster))
 					{
 						return true;
 					}
@@ -165,17 +164,8 @@ void Bullet::tick()
 					monster->addIgnoreId(id);
 				}
 
-				if (gun)
-				{
-					gun->onBulletHit(this, monster);
-				}
-
-				if (script && onHitCallback.length())
-				{
-					script[onHitCallback](this, monster);
-				}
-
 				monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
+				onHit(monster);
 				return false;
 			}
 			return true;
@@ -220,6 +210,18 @@ Gun* Bullet::getGun() const
 	return gun;
 }
 
+void Bullet::onHit(Monster* monster)
+{
+	if (onHitCallback)
+	{
+		onHitCallback(this, monster);
+	}
+	if (gun)
+	{
+		gun->onBulletHit(this, monster);
+	}
+}
+
 void Bullet::clampPos()
 {
 	AARect rect = bloodworks->getMapLimits();
@@ -262,6 +264,15 @@ void Bullet::setPosition(const Vec2& pos)
 		particle.lastSpawnPos = pos;
 	}
 	clampPos();
+}
+
+void Bullet::setScript(sol::table& script)
+{
+	this->script = script;
+
+	onHitCallback = script["onHit"];
+	onTickCallback = script["onTick"];
+	shouldHitMonsterTest = script["shouldHitMonsterTest"];
 }
 
 void Bullet::addRenderableTextureWithSize(const std::string& texture, const Vec2& dimensions)
