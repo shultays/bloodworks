@@ -68,7 +68,7 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
 				oldGameObjectPos = bullet.position
 			end
 			
-			m = getClosestMonsterInRangeWithIgnoreId(bullet.position, 80.0, bullet.id)
+			m = getClosestMonsterInRangeWithIgnoreId(bullet.position, 80.0, {bullet.id})
 		end
 	end
 end

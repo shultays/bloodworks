@@ -12,7 +12,7 @@
   "scriptName" : "BigLaser",
   
   "maxAmmo" : 1,
-  "reloadTime" : 4.5,
+  "reloadTime" : 20,
   
   "firingSoundContinuous" : true,
   "firingSound" : {

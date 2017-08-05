@@ -135,4 +135,5 @@ public:
 	{
 		return ultimate;
 	}
+	int onPlayerDamaged(int damage, float dir, sol::table& params);
 };

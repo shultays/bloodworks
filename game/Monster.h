@@ -162,4 +162,8 @@ public:
 	{
 		return debugVal;
 	}
+	bool isFirstTick() const
+	{
+		return firstTick;
+	}
 };

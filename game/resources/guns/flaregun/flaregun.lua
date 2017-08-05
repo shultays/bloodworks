@@ -36,7 +36,6 @@ end
 
 function FlareGun.onBulletTick(gun, bullet)
     local data = bullet.data
-	local v = Vec2.new(0.0, 0.0)
 	if data.randShift > 1.0 then
 		data.randShift = data.randShift - dt
 		data.randAngle = data.randAngle + dt * 0.5
@@ -51,7 +50,6 @@ function FlareGun.onBulletTick(gun, bullet)
 		end
 	end
 	data.totalShift = data.totalShift + data.randAngle * dt
-	v:setAngle(bullet.moveAngle + math.pi * 0.5)
-	v = v * (1000.0 * data.randAngle * dt)
+	local v = Vec2.fromAngle(bullet.moveAngle + math.pi * 0.5) * (1000.0 * data.randAngle * dt)
 	bullet.position = bullet.position + v
 end
