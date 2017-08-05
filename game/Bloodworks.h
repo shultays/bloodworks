@@ -217,7 +217,6 @@ public:
 		return pauseSlowdown;
 	}
 
-	void openLevelupPopup();
 	void doPause();
 	void doUnpause();
 	cVector<Perk*> getAvailablePerks() const;
