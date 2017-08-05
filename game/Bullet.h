@@ -9,6 +9,7 @@ class cRenderableContainer;
 class Bloodworks;
 class cRenderable;
 class cParticle;
+class Monster;
 
 class Bullet
 {
@@ -42,9 +43,9 @@ class Bullet
 
 	sol::table script;
 
-	std::string onHitCallback;
-	std::string onTickCallback;
-	std::string shouldHitMonsterTest;
+	sol::function onHitCallback;
+	sol::function onTickCallback;
+	sol::function shouldHitMonsterTest;
 
 	sol::table data;
 	sol::table particleArgs;
@@ -64,6 +65,7 @@ class Bullet
 	cVector<Particledata> particles;
 
 	void clampPos();
+	void onHit(Monster* monster);
 public:
 	Bullet(Bloodworks *bloodworks, Gun *gun);
 	~Bullet();
@@ -93,6 +95,7 @@ public:
 	cParticle* addTrailParticle(const std::string& name, const Vec2& shift, float spawnDistance, const sol::table& args);
 	void modifyDrawLevel(int level);
 	void setPosition(const Vec2& pos);
+	void setScript(sol::table& script);
 	void updateDrawable();
 	void removeSelf();
 	float getMeshRotation();

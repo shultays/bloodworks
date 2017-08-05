@@ -78,22 +78,15 @@ bool LevelUpPopup::isVisible() const
 	return levelupGroup->isVisible();
 }
 
-void LevelUpPopup::show(bool levelAdded)
+void LevelUpPopup::show(bool setAlpha)
 {
 	levelUpSound->play();
-	if (levelAdded)
-	{
-		waitingLevels++;
-	}
-	if (waitingLevels >= 2 && levelAdded)
-	{
-		levelUpShowTime = 1.0f;
-		return;
-	}
-
 	lastMouseMoveTimer = 0.01f;
 	input.showMouse();
-	input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2 + 70);
+	if (setAlpha)
+	{
+		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2 + 70);
+	}
 	bloodworks->doPause();
 	levelupGroup->setVisible(true);
 	std::stringstream ss;
@@ -113,7 +106,7 @@ void LevelUpPopup::show(bool levelAdded)
 	currentPerkExplanation->setText("");
 	hoverLevelupPerkIndex = -1;
 
-	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+	levelupGroup->setColor(Vec4(1.0f, 1.0f, 1.0f, setAlpha ? 0.0f : 1.0f));
 	levelUpText->setVisible(false);
 	if (levelupPerksRenderables.size())
 	{
@@ -283,14 +276,17 @@ void LevelUpPopup::tick()
 		{
 			levelupPerks[i]->takeLevel();
 			bloodworks->onPerkUsed(levelupPerks[i]);
-			input.hideMouse();
 			bloodworks->doUnpause();
 			levelupGroup->setVisible(false);
 			clearPerks();
 			waitingLevels--;
 			if (waitingLevels > 0)
 			{
-				levelUpText->setVisible(true);
+				show(false);
+			}
+			else
+			{
+				input.hideMouse();
 			}
 			return;
 		}
@@ -334,5 +330,4 @@ void LevelUpPopup::showLevelUpText()
 	levelUpSound->play();
 	levelUpText->setVisible(true);
 	levelUpShowTime = 1.0f;
-	waitingLevels++;
 }

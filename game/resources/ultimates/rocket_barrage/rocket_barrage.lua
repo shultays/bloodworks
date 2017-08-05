@@ -48,7 +48,9 @@ function RocketBarrage.onTick(gun)
 end
 
 function RocketBarrage.onBulletHit(gun, bullet, monster)
-	addExplosion(bullet.position, 80.0, 180.0, 20, 30)
+	if monster ~= nil then
+		addExplosion(bullet.position, 80.0, 180.0, 20, 30)
+	end
 end
 
 function RocketBarrage.onBulletTick(gun, bullet)
