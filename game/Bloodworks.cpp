@@ -329,11 +329,6 @@ void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
 	}
 }
 
-void Bloodworks::openLevelupPopup()
-{
-	levelUpPopup->show();
-}
-
 void Bloodworks::doPause()
 {
 	paused = true;
@@ -653,9 +648,10 @@ bool Bloodworks::isOptionsVisible() const
 
 void Bloodworks::onLevelUp()
 {
+	levelUpPopup->addLevel();
 	if (config->getAutoOpenLevelupPopup())
 	{
-		openLevelupPopup();
+		levelUpPopup->show();
 	}
 	else
 	{
@@ -876,7 +872,7 @@ void Bloodworks::tick()
 
 	if (levelUpPopup->isVisible() == false && levelUpPopup->getWaitingLevels() > 0 && player->isActive() && mapper.isKeyDown(GameKey::LevelUp))
 	{
-		levelUpPopup->show(false);
+		levelUpPopup->show();
 	}
 
 	luaWorld->tick();

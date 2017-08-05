@@ -246,7 +246,7 @@ void Player::tick()
 	Vec2 newPos = pos + moveAmount;
 	oldMoveAmount = moveAmount;
 	AARect boundaries = bloodworks->getMapLimits();
-	boundaries.addThreshold(20.0f);
+	boundaries.addThreshold(-20.0f);
 
 	float boundaryAmount = 40.0f;
 
