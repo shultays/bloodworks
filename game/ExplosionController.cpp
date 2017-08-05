@@ -72,7 +72,7 @@ void ExplosionController::tick()
 	}
 }
 
-void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
+void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime)
 {
 	float particleScale = maxScale * 0.67f;
 	float duration = maxScale / scaleSpeed;
@@ -95,7 +95,7 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	explosionData.lastDamageScale = -50.0f;
 	explosionData.maxScale = maxScale;
 	explosionData.scaleSpeed = scaleSpeed;
-	explosionData.startTime = timer.getTime();
+	explosionData.startTime = timer.getTime() - startTime;
 	explosionData.minDamage = minDamage;
 	explosionData.maxDamage = maxDamage;
 

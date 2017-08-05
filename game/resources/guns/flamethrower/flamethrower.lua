@@ -12,9 +12,7 @@ function Flamethrower.onTick(gun)
 			gun:consumeAmmo()
 			local bullet = gun:addBullet()
 			local playerSpeed = player.moveVelocity
-			local bulletSpeed = Vec2.new(0.0, 0.0)
-			bulletSpeed:setAngle(bullet.moveAngle)
-			bulletSpeed = bulletSpeed * bullet.moveSpeed
+			local bulletSpeed = Vec2.fromAngle(bullet.moveAngle) * bullet.moveSpeed
 			local totalSpeed = playerSpeed + bulletSpeed
 			bullet.moveSpeed = totalSpeed:length()
 			bullet.moveAngle = totalSpeed:getAngle()

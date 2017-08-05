@@ -54,6 +54,7 @@ class Player
 	BuffFloat globalMonsterSpeedMultiplier;
 	BuffFloat clipCountMultiplier;
 	BuffFloat gunSpreadMultiplier;
+	BuffVec4 colorMultiplier;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
 	Vec2 barSize, scaledBarSize;
@@ -84,6 +85,7 @@ class Player
 	float reloadAlpha;
 
 	float joystickCheckTimer;
+	cVector<Vec2> moveAmounts;
 
 	void checkInput(bool& moving, float& wantedAngle);
 	void updateExperience();
@@ -179,4 +181,5 @@ public:
 	void killSelf();
 	float getBulletRadius() const;
 	float getCollisionRadius() const;
+	void moveBy(const Vec2& diff);
 };

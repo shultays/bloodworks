@@ -1,0 +1,15 @@
+{
+  "type" : "gun",
+  "name": "Phoenix Dive",
+  "icon" : "icon.png",
+  
+  "scriptFile" : "phoenix_dive.lua",
+  "scriptName" : "PhoenixDive",
+  
+  "maxAmmo" : 1,
+  "reloadTime" : 2,
+  
+  "ultimate" : true,
+  
+  "showShootAnimation" : false
+}
