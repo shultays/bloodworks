@@ -194,10 +194,10 @@ bool MonsterController::runForNode(const Vec2& begin, const Vec2& ray, float rad
 		grid.drawDebug(index, 0xFF0000FF);
 	}
 
-	cVector<Monster*> node2 = grid.getNodeAtIndex(index);
 	const cVector<Monster*>& node = grid.getNodeAtIndex(index);
-	for (Monster* monster : node)
+	for (int m = 0; m < node.size(); m++)
 	{
+		Monster* monster = node[m];
 		if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
 		{
 			continue;
@@ -243,8 +243,9 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 
 	if (radius > NODE_SIZE)
 	{
-		for (Monster* monster : monsters)
+		for (int m = 0; m < monsters.size(); m++)
 		{
+			Monster* monster = monsters[m];
 			if (checkMonster(monster, gun, bullet, searchId, ignoreIds) == false)
 			{
 				continue;
@@ -482,6 +483,102 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 	return false;
 }
 
+
+bool MonsterController::runForRadius(const Vec2& pos, float radius, sol::table& args, std::function<bool(Monster*)>& func)
+{
+	Gun *gun = nullptr;
+	Bullet *bullet = nullptr;
+	cVector<int> ignoreIds;
+	if (args)
+	{
+		gun = args["gun"];
+		bullet = args["bullet"];
+
+		if (auto argIgnoreIds = args["ignoreIds"])
+		{
+			int t = 1;
+			while (argIgnoreIds[t])
+			{
+				ignoreIds.push_back(argIgnoreIds[t].get<int>());
+				t++;
+			}
+		}
+	}
+
+	int searchId = bloodworks->getUniqueId();
+
+	if (radius < 400.0f)
+	{
+		Vec2 min = pos - radius;
+		Vec2 max = pos + radius;
+
+		IntVec2 minIndex = grid.getNodeIndex(min);
+		IntVec2 maxIndex = grid.getNodeIndex(max);
+
+		if (minIndex.x < 0)
+		{
+			minIndex.x = 0;
+		}
+		if (minIndex.y < 0)
+		{
+			minIndex.y = 0;
+		}
+
+		if (maxIndex.x > grid.getNodeCount().x - 1)
+		{
+			maxIndex.x = grid.getNodeCount().x - 1;
+		}
+		if (maxIndex.y < grid.getNodeCount().y - 1)
+		{
+			maxIndex.y = grid.getNodeCount().y - 1;
+		}
+
+		for (int i = minIndex.x; i <= maxIndex.x; i++)
+		{
+			for (int j = minIndex.y; j <= maxIndex.y; j++)
+			{
+				auto& node = grid.getNodeAtIndex(i, j);
+				for (int m = 0; m < node.size(); m++)
+				{
+					Monster* monster = node[m];
+					if (monster->isDead == false && checkMonster(monster, gun, bullet, searchId, ignoreIds))
+					{
+						float r = radius + monster->getRadius();
+						if (monster->getPosition().distanceSquared(pos) < r * r)
+						{
+							if (func(monster))
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int m = 0; m < monsters.size(); m++)
+		{
+			Monster* monster = monsters[m];
+			if (monster->isDead == false && checkMonster(monster, gun, bullet, searchId, ignoreIds))
+			{
+				float r = radius + monster->getRadius();
+				if (monster->getPosition().distanceSquared(pos) < r * r)
+				{
+					if (func(monster))
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+
 bool MonsterController::runForRay(const Vec2& begin, const Vec2& initialRay, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
 {
 	Vec2 ray = initialRay;
@@ -511,7 +608,7 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 	float closest = range * range;
 	Monster *closestMonster = nullptr;
 
-	if (range > 200)
+	if (range < 400.0f)
 	{
 		Vec2 min = pos - range;
 		Vec2 max = pos + range;
@@ -541,8 +638,10 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 		{
 			for (int j = minIndex.y; j <= maxIndex.y; j++)
 			{
-				for (auto& monster : grid.getNodeAtIndex(i, j))
+				auto& node = grid.getNodeAtIndex(i, j);
+				for (int m = 0; m < node.size(); m++)
 				{
+					Monster* monster = node[m];
 					float d;
 					if (monster->isDead == false
 						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
@@ -570,8 +669,9 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 	}
 	else
 	{
-		for (auto& monster : monsters)
+		for (int m=0; m<monsters.size(); m++)
 		{
+			Monster *monster = monsters[m];
 			float d;
 			if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
 			{
@@ -600,9 +700,7 @@ Monster* MonsterController::getClosestMonsterInRangeWithIgnoreId(const Vec2& pos
 
 void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, cVector<Monster*>& foundMonsters)
 {
-	float maxDistanceSquared = range * range;
-
-	if (range > 200)
+	if (range < 400.0f)
 	{
 		Vec2 min = pos - range;
 		Vec2 max = pos + range;
@@ -633,11 +731,15 @@ void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, cVec
 			for (int j = minIndex.y; j <= maxIndex.y; j++)
 			{
 				IntVec2 index(i, j);
-				for (auto& monster : grid.getNodeAtIndex(i, j))
+
+				auto& node = grid.getNodeAtIndex(i, j);
+				for (int m = 0; m < node.size(); m++)
 				{
+					Monster* monster = node[m];
+					float r = range + monster->getRadius();
 					if (monster->isDead == false 
 						&& (i == minIndex.x || i == monster->gridStart.x) && (j == minIndex.y || j == monster->gridStart.y)
-						&& monster->getPosition().distanceSquared(pos) < maxDistanceSquared)
+						&& monster->getPosition().distanceSquared(pos) < r * r)
 					{
 						foundMonsters.push_back(monster);
 					}
@@ -648,9 +750,11 @@ void MonsterController::getAllMonstersInRange(const Vec2& pos, float range, cVec
 	}
 	else
 	{
-		for (Monster* monster : monsters)
+		for (int m = 0; m < monsters.size(); m++)
 		{
-			if (monster->getPosition().distanceSquared(pos) < maxDistanceSquared)
+			Monster* monster = monsters[m];
+			float r = range + monster->getRadius();
+			if (monster->getPosition().distanceSquared(pos) < r * r)
 			{
 				foundMonsters.push_back(monster);
 			}
@@ -662,8 +766,9 @@ void MonsterController::damageMonstersInRangeWithIgnoreId(const Vec2& pos, float
 {
 	cVector<Monster*> found;
 	getAllMonstersInRange(pos, range, found);
-	for (Monster* monster : found)
+	for (int m = 0; m < found.size(); m++)
 	{
+		Monster* monster = found[m];
 		if (ignoreId  == -1|| monster->hasIgnoreId(ignoreId) == false)
 		{
 			monster->doDamage(randInt(minRange, maxRange), (monster->position - pos).normalized());
@@ -836,8 +941,9 @@ void MonsterController::runForEachMonsterInRadius(const Vec2& pos, float radius,
 		for (int j = start.y; j <= end.y; j++)
 		{
 			auto& node = grid.getNodeAtIndex(IntVec2(i, j));
-			for (Monster *monster : node)
+			for (int m = 0; m < node.size(); m++)
 			{
+				Monster* monster = node[m];
 				if (monster->lastRunCheck != runIndex)
 				{
 					monster->lastRunCheck = runIndex;
@@ -863,8 +969,9 @@ void MonsterController::runForEachMonsterInPie(const Vec2& pos, float radius, fl
 		for (int j = start.y; j <= end.y; j++)
 		{
 			auto& node = grid.getNodeAtIndex(IntVec2(i, j));
-			for (Monster *monster : node)
+			for(int m=0; m<node.size(); m++)
 			{
+				Monster* monster = node[m];
 				if (monster->lastRunCheck != runIndex)
 				{
 					monster->lastRunCheck = runIndex;
@@ -925,8 +1032,9 @@ Monster* MonsterController::getClosestMonsterWithIgnoreId(const Vec2& pos, const
 {
 	float closest = FLT_MAX;
 	Monster *closestMonster = nullptr;
-	for (auto& monster : monsters)
+	for (int m = 0; m < monsters.size(); m++)
 	{
+		Monster *monster = monsters[m];
 		float d;
 		if (monster->isDead == false && closest > (d = monster->getPosition().distanceSquared(pos)))
 		{

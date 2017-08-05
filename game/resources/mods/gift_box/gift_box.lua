@@ -27,10 +27,9 @@ end
 
 function GiftBox.onMissionLoad(missionData)
 	local m = addRandomMonster("GiftBox")
-	local shift = Vec2.new(0.0, 0.0)
-	shift:setAngle(math.random() * math.pi)
+	local shift = Vec2.fromAngle(math.random() * math.pi) * 200.0
 	
-	m.position = player.position + shift * 200.0
+	m.position = player.position + shift
 	m.data.spawnType = "gun"
 	
 	missionData.spawnWeaponOnFirstKill = false

@@ -43,9 +43,7 @@ function RocketLauncher.onBulletTick(gun, bullet)
 		data.lateralSpeed = 0.0
 	end
 	
-	local defaultSpeed = Vec2.new(0.0, 0.0)
-	defaultSpeed:setAngle(data.moveAngle)
-	defaultSpeed = defaultSpeed * data.moveSpeed
+	local defaultSpeed = Vec2.fromAngle(data.moveAngle) * data.moveSpeed
 	
 	local finalSpeed = defaultSpeed + data.lateralSpeedDir * data.lateralSpeed
 	
