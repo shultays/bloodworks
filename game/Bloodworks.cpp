@@ -374,6 +374,14 @@ int Bloodworks::onPlayerDamaged(int damage, float dir, sol::table& params)
 	{
 		damage = perk->onPlayerDamaged(damage, dir, params);
 	}
+	if (player->getGun())
+	{
+		damage = player->getGun()->onPlayerDamaged(damage, dir, params);
+	}
+	if (player->getSecondaryGun())
+	{
+		damage = player->getSecondaryGun()->onPlayerDamaged(damage, dir, params);
+	}
 	return damage;
 }
 
@@ -849,9 +857,9 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 }
 
 
-void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage)
+void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime)
 {
-	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage);
+	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage, startTime);
 }
 
 void Bloodworks::addDrop(const Vec2& position)

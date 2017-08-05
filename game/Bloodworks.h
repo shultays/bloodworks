@@ -172,7 +172,7 @@ public:
 	}
 
 	void addDrop(const Vec2& position);
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage);
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f);
 
 	int getUniqueId()
 	{
