@@ -86,7 +86,7 @@ void Bullet::tick()
 		removeSelf();
 	}
 
-	if (bloodworks->getCollisionController()->hasCollision(Circle(pos, radius)))
+	if (hasCollision && bloodworks->getCollisionController()->hasCollision(Circle(pos, radius)))
 	{
 		onHit(nullptr);
 		removeSelf();
