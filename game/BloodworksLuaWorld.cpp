@@ -322,6 +322,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"startTime", &Bullet::startTime,
 		"meshRotation", &Bullet::meshRotation,
 
+		"hasCollision", &Bullet::hasCollision,
+
 		"meshScale", &Bullet::meshScale,
 		"scale", sol::readonly(&Bullet::scale),
 		"setScale", [](Bullet& b, float scale) { b.scale = scale; b.updateDrawable(); },
