@@ -17,9 +17,14 @@ NukeOnDeathObject = {}
 function NukeOnDeathObject.onTick(gameObject)
 	local data = gameObject.data
 	if data.nukeSpawning then
-		if data.homingCount < 8 and data.lastHomingTime + 0.15 < time then
+		if data.homingCount < 8 and data.lastHomingTime + 0.05 < time then
 			data.lastHomingTime = time
-			HomingOrb.spawn(data.position)
+			local bullet = HomingOrb.spawn(nil, data.position + Vec2.fromAngle(math.random() * math.pi * 2.0) * (math.random() * 5.0 + 5.0))
+			if bullet ~= nil then
+				bullet.damage = bullet.damage * 5
+				bullet.moveSpeed = bullet.moveSpeed * (math.random() * 1.0 + 1.0)
+				bullet.lifeTime = 1.0
+			end
 			data.homingCount = data.homingCount + 1
 		end
 	end	

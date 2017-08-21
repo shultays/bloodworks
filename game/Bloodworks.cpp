@@ -959,22 +959,9 @@ void Bloodworks::tick()
 
 void Bloodworks::tickCamera()
 {
-	if (cameraCenterPos.x > player->getPosition().x + 50.0f)
-	{
-		cameraCenterPos.x = player->getPosition().x + 50;
-	}
-	else if (cameraCenterPos.x < player->getPosition().x - 50.0f)
-	{
-		cameraCenterPos.x = player->getPosition().x - 50;
-	}
-	if (cameraCenterPos.y > player->getPosition().y + 50.0f)
-	{
-		cameraCenterPos.y = player->getPosition().y + 50;
-	}
-	else if (cameraCenterPos.y < player->getPosition().y - 50.0f)
-	{
-		cameraCenterPos.y = player->getPosition().y - 50;
-	}
+	AARect playerRect(player->getPosition(), player->getPosition());
+	playerRect.addThreshold(50.0f);
+	playerRect.clampPos(cameraCenterPos);
 
 	Vec2 playerAimDir = player->getCrosshairPos();
 	float playerAimLength = playerAimDir.normalize();
@@ -997,8 +984,11 @@ void Bloodworks::tickCamera()
 	verticalMaxMove *= cameraZoom;
 
 	AARect cameraRect = mapRect;
-	cameraRect.addThreshold(horizontalMaxMove, verticalMaxMove);
-	cameraRect.clampPos(cameraPos);
+	cameraRect.addThreshold(-horizontalMaxMove, -verticalMaxMove);
+	if (cameraRect.isValidSafeSafe())
+	{
+		cameraRect.clampPos(cameraPos);
+	}
 }
 
 void Bloodworks::tickGameSlowdown()
