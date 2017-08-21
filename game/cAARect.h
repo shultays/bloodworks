@@ -4,6 +4,7 @@
 
 class AARect
 {
+public:
 	union
 	{
 		struct  
@@ -11,9 +12,9 @@ class AARect
 			Vec2 minPoint;
 			Vec2 maxPoint;
 		};
-		Vec4 v;
+		Vec4 points;
 	};
-public:
+
 	AARect(){}
 	AARect(float minX, float minY, float maxX, float maxY)
 	{
@@ -29,12 +30,12 @@ public:
 
 	AARect(const Vec4& v)
 	{
-		this->v = v;
+		this->points = v;
 	}
 
 	const Vec4& toVec() const
 	{
-		return v;
+		return points;
 	}
 
 	const static AARect& invalid()
@@ -51,6 +52,11 @@ public:
 	bool isValid() const
 	{
 		return minPoint.x <= maxPoint.x;
+	}
+
+	bool isValidSafeSafe() const
+	{
+		return minPoint.x <= maxPoint.x && minPoint.y <= maxPoint.y;
 	}
 
 	bool isOutside(float x, float y, float threshold) const
@@ -85,12 +91,12 @@ public:
 
 	bool operator==(const AARect& other) const
 	{
-		return v == other.v;
+		return points == other.points;
 	}
 
 	void operator=(const AARect& other)
 	{
-		v = other.v;
+		points = other.points;
 	}
 
 	AARect transform(const Mat3& mat) const;
