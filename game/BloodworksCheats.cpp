@@ -100,7 +100,7 @@ void BloodworksCheats::onTick()
 	{
 		for (int i = 0; i < perks.size(); i++)
 		{
-			if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "Scavenger")
+			if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "NukeOnDeath")
 			{
 				perks[i]->takeLevel();
 				bloodworks->onPerkUsed(perks[i]);
