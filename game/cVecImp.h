@@ -541,6 +541,26 @@ public:
 #endif
 #endif
 
+	static G_VEC_IMP_NAME minVec(const G_VEC_IMP_NAME& a, const G_VEC_IMP_NAME& b)
+	{
+		G_VEC_IMP_NAME ret;
+		for (int i = 0; i < GVEC_N; ++i)
+		{
+			ret[i] = (a[i] < b[i]) ? a[i] : b[i];
+		}
+		return ret;
+	}
+
+	static G_VEC_IMP_NAME maxMec(const G_VEC_IMP_NAME& a, const G_VEC_IMP_NAME& b)
+	{
+		G_VEC_IMP_NAME ret;
+		for (int i = 0; i < GVEC_N; ++i)
+		{
+			ret[i] = (a[i] > b[i]) ? a[i] : b[i];
+		}
+		return ret;
+	}
+
 #if GVEC_N == 3
 
 	static G_VEC_IMP_NAME fromColor(unsigned int color) 

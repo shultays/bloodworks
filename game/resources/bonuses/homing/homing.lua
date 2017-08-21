@@ -1,9 +1,10 @@
 
 HomingOrb.homingOrbId = getGlobalUniqueId()
+HomingOrb.homingOrbIdInitial = getGlobalUniqueId()
 
 function HomingOrb.spawn(bonus, pos)
-	local monster = getClosestMonsterWithIgnoreId(pos, {HomingOrb.homingOrbId})
-	
+	local monster = getClosestMonsterWithIgnoreId(pos, {HomingOrb.homingOrbIdInitial})
+	monster:addIgnoreId(HomingOrb.homingOrbIdInitial)
 	if monster ~= nil then
 		local bullet = addCustomBullet()
 		bullet.damage = math.floor(math.random() * 30.0 + 30)
@@ -14,6 +15,7 @@ function HomingOrb.spawn(bonus, pos)
 		bullet:addRenderableTextureWithSize(HomingOrb.basePath .. "bullet.png", Vec2.new(14.0, 14.0))
 		bullet.data.lastHitIndex = -1
 		bullet.radius = 16.0
+		bullet.hasCollision = false
 		
 		bullet.moveAngle = (monster.position - pos):getAngle()
 		bullet.penetrateCount = math.floor(6 * player.data.bonusDurationMultiplier)
@@ -28,6 +30,8 @@ function HomingOrb.spawn(bonus, pos)
 		particle:setTexture(HomingOrb.basePath .. "particle.png")
 		
 		playSound({path = "~/resources/sounds/plasma.ogg"})
+		
+		return bullet
 	end
 end
 
