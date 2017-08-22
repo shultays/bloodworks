@@ -4,9 +4,11 @@ function Flamethrower.init(gun)
 	ShootTimer.initGun(gun, 0.05)
 	gun.data.gameObject = addGameObject("FlamethrowerObject")
 	gun.data.particle = gun.data.gameObject:addParticle("FlameParticle", {})
+	gun.data.particleTime = 0.0
 end
 
 function Flamethrower.onTick(gun)
+	local data = gun.data
 	if gun.isTriggered and gun:hasAmmo() then
 		if ShootTimer.checkGun(gun) then
 			gun:consumeAmmo()
@@ -19,8 +21,20 @@ function Flamethrower.onTick(gun)
 			bullet.onDamageArgs.noSlowdown = true
 			bullet.penetrateCount = 100
 		end
-		for i = 1,6 do
-			gun.data.particle:addParticle(player.gunPos, {moveSpeed = (player.aimDir * 300.0) + player.moveVelocity})
+		
+		local bulletSpeed =  gun.bulletSpeed * player.bulletSpeedMultiplier:getBuffedValue()
+		local totalSpeed = player.moveVelocity + player.aimDir * bulletSpeed
+		local speed = totalSpeed:normalize()
+		local range = speed * gun.bulletLifeTime
+		
+		local collision = getCollisionForRay(player.gunPos - totalSpeed * 20.0, totalSpeed * (range + 20.0), 0.0)
+		collision = collision - 40.0
+		
+		data.particleTime = data.particleTime - dt
+		
+		while data.particleTime < 0.0 do
+			data.particleTime = data.particleTime + 0.002
+			data.particle:addParticle(player.gunPos, {moveSpeed = (player.aimDir * bulletSpeed ) + player.moveVelocity, lifeTime = collision * 0.6/ range})
 		end
 		gun.playFiringSound = true
 	else
