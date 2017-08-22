@@ -1,0 +1,77 @@
+uniform sampler2D uTexture0;
+uniform float uShaderAmount;
+varying vec2 vScreenUV;
+
+uniform vec2 uRelBlackHolePos;
+uniform vec2 uScreen;
+uniform float uTime;
+uniform float uZoom;
+
+vec2 offsetPos(vec2 pos, float t, float d)
+{
+	pos.x += 2.0 * t/d;
+	pos.y = min(pos.y*t, 1.0);
+	return pos;
+}
+
+float triangle(float x, float w) {
+	return (w-abs(mod(max(x,-x),2.0*w)-w)) /w;
+}
+
+vec3 getTexel(vec2 uv, float a) {
+	vec3 val = texture(uTexture0, uv).rgb;
+    vec3 t = val;
+	t *= t.bgr * 2.2;
+	return mix(t, val, a);
+}
+
+void main(void) 
+{
+	vec4 textureColor = texture(uTexture0, vScreenUV);
+	if (uShaderAmount <= 0.01f){
+		gl_FragColor = textureColor;
+		return;
+	}
+	vec4 finalColor;
+	float t = fract(uTime*0.8);
+    
+    vec2 shift =  (uRelBlackHolePos / uScreen) ;
+    
+	vec2 tc = vScreenUV - shift ;
+    float scale = 1.0 * uZoom * uScreen.y / 400.0 / uShaderAmount;
+	
+    vec2 aspect = vec2(uScreen.x / uScreen.y, 1.0);
+    tc *= aspect;
+	vec2 pol = vec2(atan(tc.x,tc.y),length(tc));
+    pol.y *= scale;
+	float dist = smoothstep(0.0, 1.0, pol.y*2.0);
+    
+    aspect *= scale;
+    float a = dist * 2.0 - 1.0;
+	vec2 pol2 = mix(offsetPos(pol, t, dist), pol, dist );
+	tc = vec2(sin(pol2.x),cos(pol2.x))*(pol2.y+0.002/pol2.y) / aspect + shift;
+	finalColor.r = triangle(t, 0.5)*getTexel(tc, a).r;
+	tc = vec2(sin(pol2.x),cos(pol2.x))*(pol2.y+0.001/pol2.y)/ aspect  + shift;
+	finalColor.g = triangle(t, 0.5)*getTexel(tc, a).g;
+	tc = vec2(sin(pol2.x),cos(pol2.x))*pol2.y/ aspect  + shift;
+	finalColor.b = triangle(t, 0.5)*getTexel(tc, a).b;
+    
+	pol2 = mix(offsetPos(pol, fract(t+0.5), dist), pol, dist);
+	tc = vec2(sin(pol2.x),cos(pol2.x))*(pol2.y+0.002/pol2.y)/ aspect  + shift;
+	finalColor.r += triangle(t+0.5, 0.5)*getTexel(tc, a).r;
+	tc = vec2(sin(pol2.x),cos(pol2.x))*(pol2.y+0.001/pol2.y)/ aspect  + shift;
+	finalColor.g += triangle(t+0.5, 0.5)*getTexel(tc, a).g;
+	tc = vec2(sin(pol2.x),cos(pol2.x))*pol2.y/ aspect  + shift;
+	finalColor.b += triangle(t+0.5, 0.5)*getTexel(tc, a).b;
+    
+	finalColor.r *= smoothstep(0.2, 0.325, dist)/dist;
+	finalColor.g *= smoothstep(0.2, 0.45, dist)/dist;
+	finalColor.b *= smoothstep(0.2, 0.6, dist)/dist;
+    
+	finalColor.a = 1.0;
+	gl_FragColor = finalColor;
+}
+
+
+
+

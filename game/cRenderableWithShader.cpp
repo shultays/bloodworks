@@ -109,6 +109,10 @@ int cUniformDataWithShader::addUniformVec4(const std::string& uniform, const Vec
 
 void cUniformDataWithShader::setUniform(int index, float data)
 {
+	if (index == -1)
+	{
+		return;
+	}
 	UniformData uniform;
 	uniform.type = TypeFloat;
 	uniform.f = data;
@@ -117,6 +121,10 @@ void cUniformDataWithShader::setUniform(int index, float data)
 
 void cUniformDataWithShader::setUniform(int index, const Vec2& data)
 {
+	if (index == -1)
+	{
+		return;
+	}
 	UniformData uniform;
 	uniform.type = TypeVec2;
 	uniform.vec2 = data;
@@ -125,6 +133,10 @@ void cUniformDataWithShader::setUniform(int index, const Vec2& data)
 
 void cUniformDataWithShader::setUniform(int index, const Vec3& data)
 {
+	if (index == -1)
+	{
+		return;
+	}
 	UniformData uniform;
 	uniform.type = TypeVec3;
 	uniform.vec3 = data;
@@ -133,6 +145,10 @@ void cUniformDataWithShader::setUniform(int index, const Vec3& data)
 
 void cUniformDataWithShader::setUniform(int index, const Vec4& data)
 {
+	if (index == -1)
+	{
+		return;
+	}
 	UniformData uniform;
 	uniform.type = TypeVec4;
 	uniform.vec4 = data;
