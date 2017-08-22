@@ -219,7 +219,9 @@
     <ClCompile Include="cCircle.cpp">
       <Filter>Coral\Math\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="cCapsule.cpp" />
+    <ClCompile Include="cCapsule.cpp">
+      <Filter>Coral\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">

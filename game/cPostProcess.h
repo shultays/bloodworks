@@ -8,10 +8,15 @@ class cPostProcess : public cUniformDataWithShader
 	cGame *game;
 	bool enabled;
 	int shaderAmountIndex;
+	int screenSizeIndex;
+	int timeIndex;
+	int zoomIndex;
+	float shaderWeight;
 public:
 	cPostProcess()
 	{
 		game = nullptr;
+		shaderWeight = 1.0f;
 	}
 	~cPostProcess();
 
@@ -19,7 +24,13 @@ public:
 
 	void setShaderWeight(float amount)
 	{
+		shaderWeight = amount;
 		setUniform(shaderAmountIndex, amount);
+	}
+
+	float getShaderWeight() const
+	{
+		return shaderWeight;
 	}
 
 	cShaderShr& getShader()

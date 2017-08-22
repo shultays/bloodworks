@@ -19,6 +19,7 @@ class BloodworksCheats
 public:
 	static BloodworksCheats *instance;
 	BloodworksCheats(Bloodworks *bloodworks);
+	~BloodworksCheats();
 	void onTick();
 	void onMonsterTick(Monster *monster);
 	void onRender();
