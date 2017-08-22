@@ -16,6 +16,7 @@
 #include "Gun.h"
 #include "MissionController.h"
 #include "CollisionController.h"
+#include "cPostProcess.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -37,6 +38,10 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 #else
 	showFPS = coral.isDebuggerPresent();
 #endif
+}
+
+BloodworksCheats::~BloodworksCheats()
+{
 }
 
 void BloodworksCheats::onTick()
@@ -100,7 +105,7 @@ void BloodworksCheats::onTick()
 	{
 		for (int i = 0; i < perks.size(); i++)
 		{
-			if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "NukeOnDeath")
+			if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "FasterBullets")
 			{
 				perks[i]->takeLevel();
 				bloodworks->onPerkUsed(perks[i]);
@@ -290,7 +295,7 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Laser")
+		if (gun->getScriptName() == "Flamethrower")
 		{
 			//player->setGun(gun);
 		}

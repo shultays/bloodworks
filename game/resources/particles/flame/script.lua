@@ -5,6 +5,7 @@ function FlameParticle.initSystem()
 	addAttribute("moveSpeed", "vec2")
 	addAttribute("initialScale", "float")
 	addAttribute("rotateSpeed", "float")
+	addAttribute("lifeTime", "float")
 	addAttribute("uvStart", "vec2")
 end
 
@@ -12,6 +13,7 @@ function FlameParticle.setDefaultArgs(args)
 	args.moveSpeed = 100.0
 	args.initialScale = 12.0
 	args.rotateSpeed = 6.0
+	args.lifeTime = 10.0
 end
 
 function FlameParticle.addParticle(params, pos, args)
@@ -26,6 +28,10 @@ function FlameParticle.addParticle(params, pos, args)
 	params.rotateSpeed = args.rotateSpeed * (1.0 + math.random())
 	
 	params.particleBeginTime = params.particleBeginTime + math.random() * dt
+	
+	if params.lifeTime == nil then
+		params.lifeTime = 10.0
+	end
 	
 	if math.random() > 0.5 then
 		params.rotateSpeed = -params.rotateSpeed

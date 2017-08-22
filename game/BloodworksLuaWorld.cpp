@@ -541,6 +541,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"laser", &Gun::laser
 		);
 
+	lua.set_function("convertToScreenPosition",
+		[&](const Vec2& pos) -> Vec2
+	{
+		return (pos - bloodworks->getCameraPos()) / bloodworks->getCameraZoom() + bloodworks->getScreenDimensions().toVec() * 0.5f;
+	});
+
 	lua.set_function("getGunCount",
 		[&]() -> int
 	{
