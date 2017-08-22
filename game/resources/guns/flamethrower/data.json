@@ -10,7 +10,7 @@
   
   "maxAmmo" : 100,
   "reloadTime" : 2.4,
-  "bulletLifeTime" : 0.67,
+  "bulletLifeTime" : 0.60,
   
   "firingSoundContinuous" : true,
   "firingSound" : "~/resources/sounds/flame.ogg",

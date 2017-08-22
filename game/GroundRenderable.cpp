@@ -32,7 +32,6 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, frameBufferTexture, 0);
 
@@ -148,7 +147,6 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		bloodworks->lastAlignment = brushRenderable->getAlignment();
 
 		brushRenderable->render(true, Mat3::identity(), AARect::invalid());
-
 	}
 
 
@@ -156,7 +154,8 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 
 	glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
 	bloodworks->lastShader = nullptr;
-
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 GroundRenderable::~GroundRenderable()
