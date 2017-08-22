@@ -6,6 +6,7 @@ attribute vec3 color;
 attribute vec2 moveSpeed;
 attribute float initialScale;
 attribute float rotateSpeed;
+attribute float lifeTime;
 attribute vec2 uvStart;
 
 uniform float uCurrentTime;
@@ -37,6 +38,13 @@ void main(void)
 	float alpha = 0.4;
 	if (dt > 0.3){
 		alpha -= dt - 0.3;
+	}
+	
+	float alphaMult = 1.0 - (dt - lifeTime) * 20.0;
+	if (alphaMult < 0.0){
+		alpha = 0.0;
+	} else if (alphaMult < 1.0){
+		alpha *= alphaMult;
 	}
 	vColor = vec4(finalColor, alpha);
 	
