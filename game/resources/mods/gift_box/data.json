@@ -12,16 +12,16 @@
   
   "animations" : 
   {
-	"stand" : 
-	{
-		"baseFolder" : "art",
-		"looped" : true,
-		"frameDuration" : 1.0,
-		"frames":
-		[
-			"gift_box.png"
-		]
-	}
+    "stand" : 
+    {
+        "baseFolder" : "art",
+        "looped" : true,
+        "frameDuration" : 1.0,
+        "frames":
+        [
+            "gift_box.png"
+        ]
+    }
   },
   
   "scriptFile" : "gift_box.lua",

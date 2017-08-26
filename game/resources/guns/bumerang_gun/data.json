@@ -14,8 +14,8 @@
   
   
   "firingSound" : {
-	"path" : "~/resources/sounds/throw.ogg",
-	"volume" : 0.70
+    "path" : "~/resources/sounds/throw.ogg",
+    "volume" : 0.70
   },
   
   "scriptFile" : "bumerang_gun.lua",
