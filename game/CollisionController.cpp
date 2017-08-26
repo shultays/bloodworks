@@ -62,18 +62,18 @@ void CollisionController::drawDebug(bool drawGrid)
 	bodyGrid.drawDebug(drawGrid);
 }
 
-Vec2 CollisionController::getLongestSolver(const Circle& c)
+Vec2 CollisionController::getLongestSolver(const Circle& c, unsigned ignoreFlags)
 {
-	return bodyGrid.getLongestSolver(c);
+	return bodyGrid.getLongestSolver(c, ignoreFlags);
 }
 
-Vec2 CollisionController::getFreePosition(float radius)
+Vec2 CollisionController::getFreePosition(float radius, unsigned ignoreFlags)
 {
 	const AARect rect = bloodworks->getMapLimits();
 	for (int i = 0; i < 16; i++)
 	{
 		Vec2 pos = rect.getRandomPos();
-		if (bodyGrid.hasCollision(Circle(pos, radius)))
+		if (bodyGrid.hasCollision(Circle(pos, radius), ignoreFlags))
 		{
 			continue;
 		}
@@ -82,7 +82,7 @@ Vec2 CollisionController::getFreePosition(float radius)
 	return rect.getRandomPos();
 }
 
-float CollisionController::getRayDistance(const Vec2& begin, const Vec2& ray, float radius)
+float CollisionController::getRayDistance(const Vec2& begin, const Vec2& ray, float radius, unsigned ignoreFlags)
 {
-	return bodyGrid.getRayDistance(begin, ray, radius);
+	return bodyGrid.getRayDistance(begin, ray, radius, ignoreFlags);
 }

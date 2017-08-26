@@ -98,33 +98,6 @@ function Survival.onTick()
 		end
 	end
 
-	if isKeyPressed(keys.F4) and (missionData.postProcess == nil or missionData.postProcess:isEnabled() == false) then
-		if missionData.postProcess == nil then
-			missionData.postProcess = addPostProcess("resources/post_process/blackhole.ps")
-		end
-		missionData.postProcess:setEnabled(true)
-		missionData.p = 0.0
-		missionData.ppos = player.position + player.aimDir * (player.crosshairDistance + 50.0)		
-	end
-
-	if missionData.postProcess ~= nil and missionData.p > 8.0 then
-		missionData.postProcess:setEnabled(false)
-	end
-	
-	if missionData.postProcess ~= nil and missionData.postProcess:isEnabled() then
-		missionData.p = missionData.p + dt * 2.0
-		if missionData.p < 1.0 then
-			missionData.postProcess:setShaderWeight(missionData.p)
-		elseif missionData.p > 7.0 then
-			missionData.postProcess:setShaderWeight(8.0 - missionData.p)
-		else
-			missionData.postProcess:setShaderWeight(1.0)
-		end
-		
-		local v = convertToScreenPosition(missionData.ppos)
-		missionData.postProcess:addUniformVec2("uRelBlackHolePos", v)
-	end
-
 	if isKeyPressed(keys.Escape) or isKeyPressed(keys.joystick_0_button_back) then
 		if gotoMainMenu() then
 			return
@@ -231,12 +204,14 @@ function Survival.onDebugTick()
 	end
 	
 	if isKeyReleased(keys.Insert) then
-		local t = missionData.maxMonster * 0.5 - getMonsterCount()
-		for i = 1, t - 10 do
-			local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
-			local monster = addRandomMonster()
-			monster.position = pos
-			monster.moveAngle =  math.random() * math.pi * 2.0
+		local t = missionData.maxMonster * 0.2 - getMonsterCount()
+		if t > 1 then
+			for i = 1, t - 10 do
+				local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
+				local monster = addRandomMonster()
+				monster.position = pos
+				monster.moveAngle =  math.random() * math.pi * 2.0
+			end
 		end
 	end
 end

@@ -161,7 +161,7 @@ void GameObject::removeAnimation(cAnimatedTexturedQuadRenderable *animation)
 	SAFE_DELETE(animation);
 }
 
-int GameObject::addCircleCollider(const Vec2& shift, float radius)
+int GameObject::addCircleCollider(const Vec2& shift, float radius, int flags)
 {
 	ColliderData& collider = colliders.insertAndGetReference();
 	collider.t = ColliderData::type_circle;
@@ -171,10 +171,11 @@ int GameObject::addCircleCollider(const Vec2& shift, float radius)
 	Vec2 t = pos + ((shift * scale) * Mat2::rotation(rotation));
 	float r = radius * scale.length();
 	collider.id = bloodworks->getCollisionController()->addCollider(Circle(t, r), this);
+	bloodworks->getCollisionController()->setFlags(collider.id, flags);
 	return collider.id;
 }
 
-int GameObject::addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius)
+int GameObject::addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius, int flags)
 {
 	ColliderData& collider = colliders.insertAndGetReference();
 	collider.t = ColliderData::type_capsule;
@@ -186,10 +187,11 @@ int GameObject::addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float rad
 	Vec2 t1 = pos + ((pos1 * scale) * Mat2::rotation(rotation));
 	float r = radius * scale.length();
 	collider.id = bloodworks->getCollisionController()->addCollider(Capsule(t0, t1, r), this);
+	bloodworks->getCollisionController()->setFlags(collider.id, flags);
 	return collider.id;
 }
 
-int GameObject::addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius)
+int GameObject::addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius, int flags)
 {
 	ColliderData& collider = colliders.insertAndGetReference();
 	collider.t = ColliderData::type_capsule;
@@ -203,6 +205,7 @@ int GameObject::addRectCollider(const Vec2& shift, const Vec2& size, float rotat
 	float r = rotation + this->rotation;
 	float r2 = radius * scale.length();
 	collider.id = bloodworks->getCollisionController()->addCollider(Rect(t0, t1, r, r2), this);
+	bloodworks->getCollisionController()->setFlags(collider.id, flags);
 	return collider.id;
 }
 

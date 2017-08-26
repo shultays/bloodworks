@@ -1,0 +1,15 @@
+{
+  "type" : "gun",
+  "name": "Black Hole Gun",
+  "icon" : "icon.png",
+  
+  "scriptFile" : "black_hole.lua",
+  "scriptName" : "BlackHole",
+  
+  "maxAmmo" : 1,
+  "reloadTime" : 2,
+  
+  "ultimate" : true,
+  
+  "showShootAnimation" : false
+}
