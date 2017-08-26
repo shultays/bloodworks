@@ -1,335 +1,335 @@
 {
-	"type" : "json_list",
-	"elements" : [
-		{
-			"type" : "game_object_template",
-			"name" : "house1",
-			"chance" : 0.7,
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "house_1.png",
-			"size" : [120.0, 114.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 15.0],
-					"size" : [85.0, 67.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [10.0, -45.0],
-					"size" : [35.0, 45.0]
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "house2",
-			"chance" : 0.7,
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "house_1b.png",
-			"size" : [120.0, 114.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 15.0],
-					"size" : [85.0, 67.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [42.0, -45.0],
-					"size" : [35.0, 45.0]
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "house3",
-			"chance" : 0.7,
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "house_1c.png",
-			"size" : [120.0, 114.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 15.0],
-					"size" : [85.0, 67.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [10.0, -45.0],
-					"size" : [35.0, 35.0]
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "house4",
-			"chance" : 0.7,
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "house_2.png",
-			"size" : [126.0, 130.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [-3.0, 27.0],
-					"size" : [110.0, 88.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [62.0, -48.0],
-					"size" : [40.0, 65.0]
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "house5",
-			"chance" : 0.7,
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "house_2b.png",
-			"size" : [126.0, 130.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [-3.0, 27.0],
-					"size" : [110.0, 88.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [65.0, -50.0],
-					"size" : [40.0, 65.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin1",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_1.png",
-			"size" : [94.0, 76.0],
-			
-			"colliders" : [
-				{
-					"type" : "capsule",
-					"pos1" : [-40.0, 2.0],
-					"pos2" : [40.0, 2.0],
-					"radius" : 28.0
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin2",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_2.png",
-			"size" : [142.0, 100.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [5.0, -13.0],
-					"size" : [105.0, 65.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin3",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_3.png",
-			"size" : [136.0, 92.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [14.0, -8.0],
-					"size" : [93.0, 55.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin4",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_4.png",
-			"size" : [66.0, 88.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [10.0, -5.0],
-					"size" : [40.0, 65.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin5",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_5.png",
-			"size" : [102.0, 74.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [1.0, 3.0],
-					"size" : [77.0, 50.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "ruin6",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"image" : "ruin_6.png",
-			"size" : [87.0, 114.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 30.0],
-					"size" : [45.0, 40.0]
-				},
-				{
-					"type" : "quad",
-					"shift" : [20.0, -30.0],
-					"size" : [20.0, 40.0]
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "bunker1",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"images" : ["bunker1.png", "bunker2.png"],
-			"size" : [92.0, 92.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 0.0],
-					"size" : [40.0, 40.0],
-					"radius" : 10.0
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "bunker2",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"images" : ["bunker3.png", "bunker4.png", "bunker5.png", "bunker6.png", "bunker7.png"],
-			"size" : [90.0, 160.0],
-			
-			"colliders" : [
-				{
-					"type" : "quad",
-					"shift" : [0.0, 0.0],
-					"size" : [50.0, 115.0],
-					"radius" : 10.0
-				}
-			]
-		}
-		,{
-			"type" : "game_object_template",
-			"name" : "bunker3",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"images" : ["bunker8.png", "bunker9.png", "bunker10.png", "bunker11.png"],
-			"size" : [100.0, 230.0],
-			
-			"colliders" : [
-				{
-					"type" : "capsule",
-					"pos1" : [0.0, -130.0],
-					"pos2" : [0.0, 130.0],
-					"radius" : 50.0
-				}
-			]
-		}
-		
-		,{
-			"type" : "game_object_template",
-			"name" : "bunker4",
-			
-			"scriptFile" : "collider.lua",
-			"scriptName" : "Collider",
-			
-			"images" : [
-				"bunker12.png",
-				"bunker13.png",
-				"bunker14.png",
-				"bunker15.png",
-				"bunker16.png",
-				"bunker17.png",
-				"bunker18.png",
-				"bunker19.png",
-				"bunker20.png",
-				"bunker21.png",
-				"bunker22.png",
-				"bunker23.png",
-				"bunker24.png",
-				"bunker25.png"
-			],
-			"size" : [100.0, 100.0],
-			
-			"colliders" : [
-				{
-					"type" : "circle",
-					"radius" : 50.0
-				}
-			]
-		}
-	]
+    "type" : "json_list",
+    "elements" : [
+        {
+            "type" : "game_object_template",
+            "name" : "house1",
+            "chance" : 0.7,
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "house_1.png",
+            "size" : [120.0, 114.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 15.0],
+                    "size" : [85.0, 67.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [10.0, -45.0],
+                    "size" : [35.0, 45.0]
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "house2",
+            "chance" : 0.7,
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "house_1b.png",
+            "size" : [120.0, 114.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 15.0],
+                    "size" : [85.0, 67.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [42.0, -45.0],
+                    "size" : [35.0, 45.0]
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "house3",
+            "chance" : 0.7,
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "house_1c.png",
+            "size" : [120.0, 114.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 15.0],
+                    "size" : [85.0, 67.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [10.0, -45.0],
+                    "size" : [35.0, 35.0]
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "house4",
+            "chance" : 0.7,
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "house_2.png",
+            "size" : [126.0, 130.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [-3.0, 27.0],
+                    "size" : [110.0, 88.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [62.0, -48.0],
+                    "size" : [40.0, 65.0]
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "house5",
+            "chance" : 0.7,
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "house_2b.png",
+            "size" : [126.0, 130.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [-3.0, 27.0],
+                    "size" : [110.0, 88.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [65.0, -50.0],
+                    "size" : [40.0, 65.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin1",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_1.png",
+            "size" : [94.0, 76.0],
+            
+            "colliders" : [
+                {
+                    "type" : "capsule",
+                    "pos1" : [-40.0, 2.0],
+                    "pos2" : [40.0, 2.0],
+                    "radius" : 28.0
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin2",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_2.png",
+            "size" : [142.0, 100.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [5.0, -13.0],
+                    "size" : [105.0, 65.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin3",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_3.png",
+            "size" : [136.0, 92.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [14.0, -8.0],
+                    "size" : [93.0, 55.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin4",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_4.png",
+            "size" : [66.0, 88.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [10.0, -5.0],
+                    "size" : [40.0, 65.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin5",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_5.png",
+            "size" : [102.0, 74.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [1.0, 3.0],
+                    "size" : [77.0, 50.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "ruin6",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "image" : "ruin_6.png",
+            "size" : [87.0, 114.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 30.0],
+                    "size" : [45.0, 40.0]
+                },
+                {
+                    "type" : "quad",
+                    "shift" : [20.0, -30.0],
+                    "size" : [20.0, 40.0]
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "bunker1",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "images" : ["bunker1.png", "bunker2.png"],
+            "size" : [92.0, 92.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 0.0],
+                    "size" : [40.0, 40.0],
+                    "radius" : 10.0
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "bunker2",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "images" : ["bunker3.png", "bunker4.png", "bunker5.png", "bunker6.png", "bunker7.png"],
+            "size" : [90.0, 160.0],
+            
+            "colliders" : [
+                {
+                    "type" : "quad",
+                    "shift" : [0.0, 0.0],
+                    "size" : [50.0, 115.0],
+                    "radius" : 10.0
+                }
+            ]
+        }
+        ,{
+            "type" : "game_object_template",
+            "name" : "bunker3",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "images" : ["bunker8.png", "bunker9.png", "bunker10.png", "bunker11.png"],
+            "size" : [100.0, 230.0],
+            
+            "colliders" : [
+                {
+                    "type" : "capsule",
+                    "pos1" : [0.0, -130.0],
+                    "pos2" : [0.0, 130.0],
+                    "radius" : 50.0
+                }
+            ]
+        }
+        
+        ,{
+            "type" : "game_object_template",
+            "name" : "bunker4",
+            
+            "scriptFile" : "collider.lua",
+            "scriptName" : "Collider",
+            
+            "images" : [
+                "bunker12.png",
+                "bunker13.png",
+                "bunker14.png",
+                "bunker15.png",
+                "bunker16.png",
+                "bunker17.png",
+                "bunker18.png",
+                "bunker19.png",
+                "bunker20.png",
+                "bunker21.png",
+                "bunker22.png",
+                "bunker23.png",
+                "bunker24.png",
+                "bunker25.png"
+            ],
+            "size" : [100.0, 100.0],
+            
+            "colliders" : [
+                {
+                    "type" : "circle",
+                    "radius" : 50.0
+                }
+            ]
+        }
+    ]
 }
