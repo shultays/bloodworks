@@ -1,4 +1,4 @@
 
 function NoSlowdownOnHit.init()
-	player.data.noSlowdownOnHit = true
+    player.data.noSlowdownOnHit = true
 end

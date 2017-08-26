@@ -13,8 +13,8 @@
   "reloadTime" : 1.8,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/shrink_shoot.ogg",
-	"volume" : 1.0
+    "path" : "~/resources/sounds/shrink_shoot.ogg",
+    "volume" : 1.0
   },
   
   "scriptFile" : "shrinkgun.lua",
