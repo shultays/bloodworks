@@ -32,6 +32,11 @@ RenderableLevel = {
 	GUI = 7000
 }
 
+CollisionFlags = {
+	NoPlayerCollision = 1,
+	NoMonsterCollision = 2,
+	NoBulletCollision = 4,
+}
 
 function printTable(myTable)
 	if myTable == nil then

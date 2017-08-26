@@ -89,6 +89,13 @@ class Player
 
 	void checkInput(bool& moving, float& wantedAngle);
 	void updateExperience();
+
+	struct OldGun
+	{
+		float timeToTick;
+		Gun* gun;
+	};
+	cVector<OldGun> oldGuns;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

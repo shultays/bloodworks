@@ -46,7 +46,6 @@ BloodworksCheats::~BloodworksCheats()
 
 void BloodworksCheats::onTick()
 {
-
 	const cVector<Perk*>& perks = bloodworks->getPerks();
 	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
 	const cVector<Gun*>& guns = bloodworks->getGuns();
@@ -234,7 +233,7 @@ void BloodworksCheats::onTick()
 	static int z = 0;
 	if (input.isKeyPressed(key_c))
 	{
-		z = (z + 1) % 3;
+		z = (z + 1) % 4;
 
 		for (auto& gun : guns)
 		{
@@ -246,7 +245,11 @@ void BloodworksCheats::onTick()
 			{
 				player->setSecondaryGun(gun);
 			}
-			if (gun->getScriptName() == "BigLaser"&& z == 2)
+			if (gun->getScriptName() == "BigLaser" && z == 2)
+			{
+				player->setSecondaryGun(gun);
+			}
+			if (gun->getScriptName() == "BlackHole" && z == 3)
 			{
 				player->setSecondaryGun(gun);
 			}
@@ -295,7 +298,7 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Flamethrower")
+		if (gun->getScriptName() == "Laser")
 		{
 			//player->setGun(gun);
 		}
@@ -311,7 +314,7 @@ void BloodworksCheats::onLoadMission()
 		{
 			//player->setSecondaryGun(gun);
 		}
-		if (gun->getScriptName() == "PhoenixDive")
+		if (gun->getScriptName() == "BlackHole")
 		{
 			player->setSecondaryGun(gun);
 		}
