@@ -140,7 +140,9 @@ MonsterController::MonsterHitResult MonsterController::getClosestMonsterOnLine(c
 	result.distance = initialRay.length();
 	result.monster = nullptr;
 	Vec2 ray = initialRay;
-	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius);
+
+	unsigned ignoreFlags = args["ignoreFlags"];
+	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius, ignoreFlags);
 	if (d >= 0.0f)
 	{
 		result.distance = (d + radius * 2.0f);
@@ -582,7 +584,8 @@ bool MonsterController::runForRadius(const Vec2& pos, float radius, sol::table& 
 bool MonsterController::runForRay(const Vec2& begin, const Vec2& initialRay, float radius, sol::table& args, std::function<bool(Monster*)>& func, std::function<bool(const Vec2&)>* ignoreFunc)
 {
 	Vec2 ray = initialRay;
-	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius);
+	unsigned ignoreFlags = args["ignoreFlags"];
+	float d = bloodworks->getCollisionController()->getRayDistance(begin, ray, radius, ignoreFlags);
 	if (d >= 0.0f)
 	{
 		ray = initialRay.normalized() * (d + radius * 2.0f);
@@ -826,6 +829,8 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	bool onEdges = args["onEdges"];
 	bool onScreen = args["onScreen"];
 
+	unsigned ignoreFlags = args["ignoreFlags"];
+
 	bool outsideScreen = onScreen == false && ((bool)args["notOnScreen"]);
 	bool notNearMonsters = args["notNearMonsters"];
 	bool nearPlayer = args["nearPlayer"];
@@ -872,7 +877,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 
 		if (dontCheckCollision == false)
 		{
-			bool hasCollision = bloodworks->getCollisionController()->hasCollision(Circle(pos, 20.0f));
+			bool hasCollision = bloodworks->getCollisionController()->hasCollision(Circle(pos, 20.0f), ignoreFlags);
 			if (hasCollision)
 			{
 				score += 10000.0f;
