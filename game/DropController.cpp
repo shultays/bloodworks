@@ -41,10 +41,8 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 
 	drop.pos = position;
 
-	cRenderableContainer *group = new cRenderableContainer(bloodworks);
-
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.gun->getIconPath(), "resources/default");
-	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec();
+	drop.renderable = new cTexturedQuadRenderable(bloodworks, drop.gun->getIconPath(), "resources/default");
+	Vec2 textureSize = drop.renderable->getTexture()->getDimensions().toVec();
 	if (textureSize.w > 32.0f)
 	{
 		textureSize *= 32.0f / textureSize.w;
@@ -53,18 +51,13 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	{
 		textureSize *= 17.0f / textureSize.h;
 	}
-	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
-	group->addRenderable(renderable);
-
-	cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
-	text->setTextAlignment(TextAlignment::center);
-	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
-	group->addRenderable(text);
-
-	group->setWorldMatrix(Mat3::translationMatrix(position));
-	drop.renderable = group;
-	drop.text = text;
+	drop.renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f).translateBy(position));
 	bloodworks->addRenderable(drop.renderable, PLAYER - 1);
+
+	drop.text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.gun->getName(), 11);
+	drop.text->setTextAlignment(TextAlignment::center);
+	drop.text->setWorldMatrix(Mat3::translationMatrix(position + (0.0f, 15.0f)));
+	bloodworks->addRenderable(drop.text, GUI - 10);
 
 	drops.push_back(drop);
 }
@@ -87,23 +80,16 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	drop.gun = nullptr;
 	drop.pos = position;
 
-	cRenderableContainer *group = new cRenderableContainer(bloodworks);
 
-	cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, drop.bonus->getIconPath(), "resources/default");
-	Vec2 textureSize = renderable->getTexture()->getDimensions().toVec() * 0.12f;
-
-	renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize));
-	group->addRenderable(renderable);
-
-	cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.bonus->getName(), 11);
-	text->setTextAlignment(TextAlignment::center);
-	text->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 15.0f)));
-	group->addRenderable(text);
-
-	group->setWorldMatrix(Mat3::translationMatrix(position));
-	drop.renderable = group;
-	drop.text = text;
+	drop.renderable = new cTexturedQuadRenderable(bloodworks, drop.bonus->getIconPath(), "resources/default");
+	Vec2 textureSize = drop.renderable->getTexture()->getDimensions().toVec() * 0.12f;
+	drop.renderable->setWorldMatrix(Mat3::scaleMatrix(textureSize).translateBy(position));
 	bloodworks->addRenderable(drop.renderable, PLAYER - 1);
+
+	drop.text = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), drop.bonus->getName(), 11);
+	drop.text->setTextAlignment(TextAlignment::center);
+	drop.text->setWorldMatrix(Mat3::translationMatrix(position + (0.0f, 15.0f)));
+	bloodworks->addRenderable(drop.text, GUI - 10);
 
 	drops.push_back(drop);
 }
@@ -168,6 +154,7 @@ void DropController::tick()
 		if (remove)
 		{
 			SAFE_DELETE(drop.renderable);
+			SAFE_DELETE(drop.text);
 			drops.swapToTailRemove(i);
 			i--;
 		}
@@ -229,6 +216,7 @@ void DropController::reset()
 	for (auto& drop : drops)
 	{
 		SAFE_DELETE(drop.renderable);
+		SAFE_DELETE(drop.text);
 	}
 	drops.clear();
 	lastDropSpawn = timer.getTime();

@@ -4,7 +4,7 @@
 
 class Gun;
 class Bonus;
-class cRenderableContainer;
+class cTexturedQuadRenderable;
 class Bloodworks;
 class Monster;
 
@@ -16,7 +16,7 @@ class DropController
 		Gun *gun;
 		Bonus *bonus;
 		Vec2 pos;
-		cRenderableContainer *renderable;
+		cTexturedQuadRenderable *renderable;
 		cTextRenderable *text;
 		float time;
 
