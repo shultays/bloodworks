@@ -1,14 +1,14 @@
 
 {
-	"type" : "animation",
-	"name" : "shoot",
+    "type" : "animation",
+    "name" : "shoot",
 
-	"frameDuration" : 0.1,
-	
-	"frames":
-	[
-		["f0.png", 0.05],
-		"f1.png",
-		["f2.png", 0.05]
-	]
+    "frameDuration" : 0.1,
+    
+    "frames":
+    [
+        ["f0.png", 0.05],
+        "f1.png",
+        ["f2.png", 0.05]
+    ]
 }

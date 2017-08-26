@@ -16,8 +16,8 @@
   
   "firingSoundContinuous" : true,
   "firingSound" : {
-	"path" : "~/resources/sounds/laser.ogg",
-	"volume" : 0.65
+    "path" : "~/resources/sounds/laser.ogg",
+    "volume" : 0.65
   },
   "firingSoundFadein" : 0.3,
 

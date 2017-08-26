@@ -13,8 +13,8 @@
   "reloadTime" : 0.6,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/flare.ogg",
-	"volume" : 3.75
+    "path" : "~/resources/sounds/flare.ogg",
+    "volume" : 3.75
   },
   
   "scriptFile" : "flaregun.lua",
