@@ -24,7 +24,7 @@ function BigLaser.onTick(gun)
 		data.shooting = data.shooting - dt
 		gun.laser:setVisible(true)
 		local range = 450.0
-		local collision = getCollisionForRay(player.gunPos, player.aimDir * range, 15)
+		local collision = getCollisionForRay(player.gunPos, player.aimDir * range, 15, CollisionFlags.NoBulletCollision)
 		if collision >= 0.0 then
 			range = collision + 20
 		end

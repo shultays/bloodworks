@@ -441,15 +441,15 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addLine",
-		[&](const Vec2& pos0, const Vec2& pos1)
+		[&](const Vec2& pos0, const Vec2& pos1, float time, int color)
 	{
-		debugRenderer.addLine(pos0, pos1);
+		debugRenderer.addLine(pos0, pos1, time, color ? color : -1);
 	});
 
 	lua.set_function("addCircle",
-		[&](const Vec2& pos0, float r)
+		[&](const Vec2& pos0, float r, float time, int color)
 	{
-		debugRenderer.addCircle(pos0, r);
+		debugRenderer.addCircle(pos0, r, time, color ? color : -1);
 	});
 
 	lua.set_function("addExplosion",
@@ -465,33 +465,33 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("getFreePosition",
-		[&](float radius)
+		[&](float radius, unsigned ignoreFlags)
 	{
-		return bloodworks->getCollisionController()->getFreePosition(radius);
+		return bloodworks->getCollisionController()->getFreePosition(radius, ignoreFlags);
 	});
 
 	lua.set_function("hasCircleCollision",
-		[&](const Vec2& pos, float radius)
+		[&](const Vec2& pos, float radius, unsigned ignoreFlags)
 	{
-		return bloodworks->getCollisionController()->hasCollision(Circle(pos, radius));
+		return bloodworks->getCollisionController()->hasCollision(Circle(pos, radius), ignoreFlags);
 	});
 
 	lua.set_function("hasCapsuleCollision",
-		[&](const Vec2& pos, const Vec2& pos2, float radius)
+		[&](const Vec2& pos, const Vec2& pos2, float radius, unsigned ignoreFlags)
 	{
-		return bloodworks->getCollisionController()->hasCollision(Capsule(pos, pos2, radius));
+		return bloodworks->getCollisionController()->hasCollision(Capsule(pos, pos2, radius), ignoreFlags);
 	});
 
 	lua.set_function("hasRectCollision",
-		[&](const Vec2& pos, const Vec2& size, float rotation, float radius)
+		[&](const Vec2& pos, const Vec2& size, float rotation, float radius, unsigned ignoreFlags)
 	{
-		return bloodworks->getCollisionController()->hasCollision(Rect(pos, size, rotation, radius));
+		return bloodworks->getCollisionController()->hasCollision(Rect(pos, size, rotation, radius), ignoreFlags);
 	});
 
 	lua.set_function("getCollisionForRay",
-		[&](const Vec2& pos, const Vec2& ray, float radius)
+		[&](const Vec2& pos, const Vec2& ray, float radius, unsigned ignoreFlags)
 	{
-		return bloodworks->getCollisionController()->getRayDistance(pos, ray, radius);
+		return bloodworks->getCollisionController()->getRayDistance(pos, ray, radius, ignoreFlags);
 	});
 
 	lua.new_usertype<Bonus>("Bonus",
@@ -1122,6 +1122,71 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getBuffedValue", &BuffVec4::getBuffedValue
 
 		);
+
+
+	lua.set_function("addCircleCollider",
+		[&](const Vec2& pos, float radius)
+	{
+		return bloodworks->getCollisionController()->addCollider(Circle(pos, radius), nullptr);
+	});
+	lua.set_function("addCapsuleCollider",
+		[&](const Vec2& pos0, const Vec2& pos1, float radius)
+	{
+		return bloodworks->getCollisionController()->addCollider(Capsule(pos0, pos1, radius), nullptr);
+	});
+	lua.set_function("addRectCollider",
+		[&](const Vec2& pos, const Vec2& size, float rotation, float radius)
+	{
+		return bloodworks->getCollisionController()->addCollider(Rect(pos, size, rotation, radius), nullptr);
+	});
+
+	lua.set_function("relocateCircleCollider",
+		[&](int index, const Vec2& pos, float radius)
+	{
+		return bloodworks->getCollisionController()->relocateCollider(index, Circle(pos, radius));
+	});
+	lua.set_function("relocateCapsuleCollider",
+		[&](int index, const Vec2& pos0, const Vec2& pos1, float radius)
+	{
+		return bloodworks->getCollisionController()->relocateCollider(index, Capsule(pos0, pos1, radius));
+	});
+	lua.set_function("relocateRectCollider",
+		[&](int index, const Vec2& pos, const Vec2& size, float rotation, float radius)
+	{
+		return bloodworks->getCollisionController()->relocateCollider(index, Rect(pos, size, rotation, radius));
+	});
+
+	lua.set_function("removeCollider",
+		[&](int index)
+	{
+		bloodworks->getCollisionController()->removeCollider(index);
+	});
+
+	lua.set_function("setColliderFlag",
+		[&](int index, int flag, bool isSet)
+	{
+		bloodworks->getCollisionController()->setFlag(index, flag, true);
+	});
+	lua.set_function("setColliderFlags",
+		[&](int index, int flags)
+	{
+		bloodworks->getCollisionController()->setFlags(index, flags);
+	});
+	lua.set_function("clearColliderFlag",
+		[&](int index, int flag, bool isSet)
+	{
+		bloodworks->getCollisionController()->setFlag(index, flag, false);
+	});
+	lua.set_function("hasColliderFlag",
+		[&](int index, int flag, bool isSet)
+	{
+		return bloodworks->getCollisionController()->hasFlag(index, flag);
+	});
+	lua.set_function("getColliderFlags",
+		[&](int index, int flag, bool isSet)
+	{
+		return bloodworks->getCollisionController()->getFlags(index);
+	});
 }
 
 

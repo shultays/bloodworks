@@ -120,7 +120,7 @@ public:
 	void removeParticle(cParticle *particle);
 	void removeAnimation(cAnimatedTexturedQuadRenderable *animation);
 
-	int addCircleCollider(const Vec2& shift, float radius);
-	int addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius);
-	int addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius);
+	int addCircleCollider(const Vec2& shift, float radius, int flags);
+	int addCapsuleCollider(const Vec2& pos0, const Vec2& pos1, float radius, int flags);
+	int addRectCollider(const Vec2& shift, const Vec2& size, float rotation, float radius, int flags);
 };
