@@ -13,82 +13,82 @@
   
   "animations" : 
   {
-	"stand" : 
-	{
-		"baseFolder" : "art",
-		"looped" : true,
-		"frameDuration" : 0.5,
-		"frames":
-		[
-			"s0.png"
-		]
-	},
-	
-	"walk" : 
-	{
-		"baseFolder" : "art",
-		"looped" : true,
-		"frameDuration" : 0.1,
-		"frames":
-		[
-			"s0.png",
-			"s1.png",
-			"s2.png",
-			"s1.png"
-		]
-	},
-	
-	"attack" : 
-	{
-		"baseFolder" : "art",
-		"frameDuration" : 0.1,
-		"frames":
-		[
-			"s0.png",
-			"a0.png",
-			"a1.png",
-			"a2.png",
-			"a3.png",
-			"a1.png"
-		]
-	}
+    "stand" : 
+    {
+        "baseFolder" : "art",
+        "looped" : true,
+        "frameDuration" : 0.5,
+        "frames":
+        [
+            "s0.png"
+        ]
+    },
+    
+    "walk" : 
+    {
+        "baseFolder" : "art",
+        "looped" : true,
+        "frameDuration" : 0.1,
+        "frames":
+        [
+            "s0.png",
+            "s1.png",
+            "s2.png",
+            "s1.png"
+        ]
+    },
+    
+    "attack" : 
+    {
+        "baseFolder" : "art",
+        "frameDuration" : 0.1,
+        "frames":
+        [
+            "s0.png",
+            "a0.png",
+            "a1.png",
+            "a2.png",
+            "a3.png",
+            "a1.png"
+        ]
+    }
   },
   
   "scriptFile" : "spider.lua",
   "scriptName" : "Spider",
   
   "bodyParts" : [
-	["art/part0.png", 17.0, 0.0],
-	["art/part1.png", 5.0, 19.5],
-	["art/part2.png", 5.0, -16.5],
-	["art/part3.png", -13.0, -18.0],
-	["art/part4.png", -12.5, 4.5],
-	["art/part5.png", -4.5, 0.0],
-	["art/part6.png", -4.0, 17.5]
+    ["art/part0.png", 17.0, 0.0],
+    ["art/part1.png", 5.0, 19.5],
+    ["art/part2.png", 5.0, -16.5],
+    ["art/part3.png", -13.0, -18.0],
+    ["art/part4.png", -12.5, 4.5],
+    ["art/part5.png", -4.5, 0.0],
+    ["art/part6.png", -4.0, 17.5]
   ],
   
   "bodyPartBits" : [
-	"art/bit0.png", 
-	"art/bit1.png", 
-	"art/bit2.png", 
-	"art/bit3.png", 
-	"art/bit4.png", 
-	"art/bit5.png", 
-	"art/bit6.png", 
-	"art/bit7.png", 
-	"art/bit8.png"
+    "art/bit0.png", 
+    "art/bit1.png", 
+    "art/bit2.png", 
+    "art/bit3.png", 
+    "art/bit4.png", 
+    "art/bit5.png", 
+    "art/bit6.png", 
+    "art/bit7.png", 
+    "art/bit8.png"
   ],
   
   "hitSounds" : [
-	"~/resources/sounds/monster_hit/hit_0.ogg", 
-	"~/resources/sounds/monster_hit/hit_1.ogg", 
-	"~/resources/sounds/monster_hit/hit_2.ogg"
+    "~/resources/sounds/monster_hit/hit_0.ogg", 
+    "~/resources/sounds/monster_hit/hit_1.ogg", 
+    "~/resources/sounds/monster_hit/hit_2.ogg"
   ], 
   
   "killSounds" : [
-	"~/resources/sounds/monster_hit/hit_0.ogg", 
-	"~/resources/sounds/monster_hit/hit_1.ogg", 
-	"~/resources/sounds/monster_hit/hit_2.ogg"
+    "~/resources/sounds/monster_hit/hit_0.ogg", 
+    "~/resources/sounds/monster_hit/hit_1.ogg", 
+    "~/resources/sounds/monster_hit/hit_2.ogg"
   ]
   
   
