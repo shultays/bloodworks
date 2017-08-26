@@ -13,8 +13,8 @@
   "reloadTime" : 1.2,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/pulse.ogg",
-	"volume" : 0.75
+    "path" : "~/resources/sounds/pulse.ogg",
+    "volume" : 0.75
   },
   
   "scriptFile" : "pulsegun.lua",

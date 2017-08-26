@@ -13,27 +13,27 @@
   
   "animations" : 
   {
-	"stand" : 
-	{
-		"baseFolder" : "art",
-		"looped" : false,
-		"frameDuration" : 0.12,
-		"frames":
-		[
-			["0.png", 0.8],
-			"1.png",
-			"2.png",
-			"3.png",
-			"4.png",
-			"5.png",
-			["6.png", 0.4],
-			"5.png",
-			"4.png",
-			"3.png",
-			"2.png",
-			"1.png"
-		]
-	}
+    "stand" : 
+    {
+        "baseFolder" : "art",
+        "looped" : false,
+        "frameDuration" : 0.12,
+        "frames":
+        [
+            ["0.png", 0.8],
+            "1.png",
+            "2.png",
+            "3.png",
+            "4.png",
+            "5.png",
+            ["6.png", 0.4],
+            "5.png",
+            "4.png",
+            "3.png",
+            "2.png",
+            "1.png"
+        ]
+    }
   },
   
   "scriptFile" : "egg.lua",
@@ -42,34 +42,34 @@
   "bitSpeed" : 0.4,
   
   "bodyParts" : [
-	["art/part0.png", 118, -118],
-	["art/part1.png", -14.55, -275.6],
-	["art/part2.png", 334.7, 43.65],
-	["art/part3.png", 186.1, -219],
-	["art/part4.png", -25.55, -215.6],
-	["art/part5.png", -130, 220],
-	["art/part6.png", -16, 56],
-	["art/part7.png", -222, -32],
-	["art/part8.png", 130, 234],
-	["art/part9.png", 186, 116]
+    ["art/part0.png", 118, -118],
+    ["art/part1.png", -14.55, -275.6],
+    ["art/part2.png", 334.7, 43.65],
+    ["art/part3.png", 186.1, -219],
+    ["art/part4.png", -25.55, -215.6],
+    ["art/part5.png", -130, 220],
+    ["art/part6.png", -16, 56],
+    ["art/part7.png", -222, -32],
+    ["art/part8.png", 130, 234],
+    ["art/part9.png", 186, 116]
   ],
   
   "bodyPartBits" : [
-	"art/bit0.png", 
-	"art/bit1.png", 
-	"art/bit2.png", 
-	"art/bit3.png"
+    "art/bit0.png", 
+    "art/bit1.png", 
+    "art/bit2.png", 
+    "art/bit3.png"
   ],
   
   "hitSounds" : [
-	"~/resources/sounds/monster_hit/hit_0.ogg", 
-	"~/resources/sounds/monster_hit/hit_1.ogg", 
-	"~/resources/sounds/monster_hit/hit_2.ogg"
+    "~/resources/sounds/monster_hit/hit_0.ogg", 
+    "~/resources/sounds/monster_hit/hit_1.ogg", 
+    "~/resources/sounds/monster_hit/hit_2.ogg"
   ],
   
   "killSounds" : [
-	"~/resources/sounds/monster_hit/hit_0.ogg", 
-	"~/resources/sounds/monster_hit/hit_1.ogg", 
-	"~/resources/sounds/monster_hit/hit_2.ogg"
+    "~/resources/sounds/monster_hit/hit_0.ogg", 
+    "~/resources/sounds/monster_hit/hit_1.ogg", 
+    "~/resources/sounds/monster_hit/hit_2.ogg"
   ]
 }
