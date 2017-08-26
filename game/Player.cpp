@@ -287,7 +287,7 @@ void Player::tick()
 	bool solved = false;
 	for(int i=0; i<5; i++)
 	{
-		Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius));
+		Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius), CollisionController::no_player_collision);
 		if (solver.lengthSquared() < 0.0001f)
 		{
 			solved = true;
@@ -308,7 +308,7 @@ void Player::tick()
 			{
 				pos = oldPos;
 			}
-			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius));
+			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(pos, collisionRadius), CollisionController::no_player_collision);
 			if (solver.lengthSquared() == 0.0f)
 			{
 				break;
@@ -480,6 +480,21 @@ void Player::tick()
 		secondaryGun->tick(dt);
 		secondaryGun->updateLaser(gunPos, -aimAngle);
 	}
+	for (int i = 0; i < oldGuns.size(); i++)
+	{
+		oldGuns[i].timeToTick -= dt;
+		if (oldGuns[i].timeToTick < 0.0f)
+		{
+			oldGuns.swapToTailRemove(i);
+			i--;
+		}
+		else
+		{
+			oldGuns[i].gun->setTriggered(false);
+			oldGuns[i].gun->tick(dt);
+			oldGuns[i].gun->updateLaser(gunPos, -aimAngle);
+		}
+	}
 }
 
 void Player::setGun(Gun *gun)
@@ -487,10 +502,20 @@ void Player::setGun(Gun *gun)
 	if (this->gun)
 	{
 		this->gun->stop();
+		auto& oldGun = oldGuns.insertAndGetReference();
+		oldGun.gun = this->gun;
+		oldGun.timeToTick = 30.0f;
 	}
 
 	this->gun = gun;
-
+	for (int i = 0; i < oldGuns.size(); i++)
+	{
+		if (oldGuns[i].gun == gun)
+		{
+			oldGuns.swapToTailRemove(i);
+			break;
+		}
+	}
 	if (this->gun)
 	{
 		shootRenderable->setColor(this->gun->getShootingParticleColor());
@@ -503,10 +528,20 @@ void Player::setSecondaryGun(Gun *gun)
 	if (this->secondaryGun)
 	{
 		this->secondaryGun->stop();
+		auto& oldGun = oldGuns.insertAndGetReference();
+		oldGun.gun = this->secondaryGun;
+		oldGun.timeToTick = 30.0f;
 	}
 
 	this->secondaryGun = gun;
-
+	for (int i = 0; i < oldGuns.size(); i++)
+	{
+		if (oldGuns[i].gun == gun)
+		{
+			oldGuns.swapToTailRemove(i);
+			break;
+		}
+	}
 	if (this->secondaryGun)
 	{
 		this->secondaryGun->start();
@@ -669,7 +704,7 @@ void Player::reset()
 
 	oldSpreadAngle = 0.0f;
 	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
-	aimAngle = 0.0f;
+	aimAngle = pi_d2;
 	aimDir = Vec2::fromAngle(aimAngle);
 
 	crosshairPos = Vec2(0.0f, 50.0f);
