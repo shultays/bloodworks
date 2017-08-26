@@ -29,6 +29,7 @@ class cBodyGrid
 		void* userData;
 		IntVec2 minGrid;
 		IntVec2 maxGrid;
+		unsigned flags;
 		union
 		{
 			Circle circle;
@@ -186,6 +187,7 @@ public:
 			removedBodyIndices.resize(removedBodyIndices.size() - 1);
 		}
 		BodyUnion& obj = bodies[index];
+		obj.flags = 0;
 		obj.set(body);
 		AARect aabb = obj.getAABB();
 		obj.minGrid = getNodeIndex(aabb.getMin());
@@ -204,7 +206,7 @@ public:
 	}
 
 	template<class T>
-	bool hasCollision(const T& testBody)
+	bool hasCollision(const T& testBody, unsigned ignoreFlags)
 	{
 		AARect aabb = testBody.getAABB();
 		IntVec2 minGrid = getNodeIndex(aabb.getMin());
@@ -217,7 +219,7 @@ public:
 				for (auto i : data[x][y])
 				{
 					BodyUnion& body = bodies[i];
-					if (body.lastSearchIndex == searchIndex)
+					if (body.lastSearchIndex == searchIndex || (body.flags & ignoreFlags) > 0)
 					{
 						continue;
 					}
@@ -341,7 +343,7 @@ public:
 		}
 	}
 
-	Vec2 getLongestSolver(const Circle& c)
+	Vec2 getLongestSolver(const Circle& c, unsigned ignoreFlags)
 	{
 		AARect rect = c.getAABB();
 
@@ -359,7 +361,7 @@ public:
 				{
 					Vec2 cur;
 					BodyUnion& body = bodies[i];
-					if (body.lastSearchIndex == searchIndex)
+					if (body.lastSearchIndex == searchIndex || (body.flags & ignoreFlags) > 0)
 					{
 						continue;
 					}
@@ -397,7 +399,7 @@ public:
 	}
 
 
-	float getRayDistance(const Vec2& begin, const Vec2& ray, float radius)
+	float getRayDistance(const Vec2& begin, const Vec2& ray, float radius, int ignoreFlags)
 	{
 		float distance = ray.length();
 
@@ -425,12 +427,12 @@ public:
 			return false;
 		};
 
-		runForRay(begin, ray, radius, func);
+		runForRay(begin, ray, radius, ignoreFlags, func);
 
 		return distance;
 	}
 
-	bool runForNode(const IntVec2& index, int searchId, std::function<bool(int)>& func)
+	bool runForNode(const IntVec2& index, int searchId, int ignoreFlags, std::function<bool(int)>& func)
 	{
 		if (data.isValid(index) == false)
 		{
@@ -439,7 +441,7 @@ public:
 		auto& node = data[index];
 		for (int i : node)
 		{
-			if (bodies[i].lastSearchIndex == searchId)
+			if (bodies[i].lastSearchIndex == searchId || (bodies[i].flags & ignoreFlags) > 0)
 			{
 				continue;
 			}
@@ -454,7 +456,7 @@ public:
 		return false;
 	}
 
-	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, std::function<bool(int)>& func)
+	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, int ignoreFlags, std::function<bool(int)>& func)
 	{
 		bool renderDebug = input.isKeyDown(key_g);
 
@@ -462,7 +464,7 @@ public:
 		{
 			for (int i=0; i<bodies.size(); i++)
 			{
-				if (bodies[i].bodyType != BodyUnion::type_invalid)
+				if (bodies[i].bodyType != BodyUnion::type_invalid && (bodies[i].flags & ignoreFlags) == 0)
 				{
 					if (func(i))
 					{
@@ -504,7 +506,7 @@ public:
 				if (checked[1][1] == false || hasRadius == false)
 				{
 					checked[1][1] = true;
-					if (runForNode(current, searchId, func))
+					if (runForNode(current, searchId, ignoreFlags, func))
 					{
 						return true;
 					}
@@ -525,7 +527,7 @@ public:
 						if (checked[0][1] == false)
 						{
 							checked[0][1] = true;
-							if (runForNode(current + IntVec2(-1, 0), searchId, func))
+							if (runForNode(current + IntVec2(-1, 0), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -533,7 +535,7 @@ public:
 						if (checked[0][0] == false && currentPos.y - radius < curPos.y)
 						{
 							checked[0][0] = true;
-							if (runForNode(current + IntVec2(-1, -1), searchId, func))
+							if (runForNode(current + IntVec2(-1, -1), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -541,7 +543,7 @@ public:
 						if (checked[0][2] == false && currentPos.y + radius > endPos.y)
 						{
 							checked[0][2] = true;
-							if (runForNode(current + IntVec2(-1, +1), searchId, func))
+							if (runForNode(current + IntVec2(-1, +1), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -551,7 +553,7 @@ public:
 					if (checked[1][0] == false && currentPos.y - radius < curPos.y)
 					{
 						checked[1][0] = true;
-						if (runForNode(current + IntVec2(0, -1), searchId, func))
+						if (runForNode(current + IntVec2(0, -1), searchId, ignoreFlags, func))
 						{
 							return true;
 						}
@@ -559,7 +561,7 @@ public:
 					if (checked[1][2] == false && currentPos.y + radius > endPos.y)
 					{
 						checked[1][2] = true;
-						if (runForNode(current + IntVec2(0, +1), searchId, func))
+						if (runForNode(current + IntVec2(0, +1), searchId, ignoreFlags, func))
 						{
 							return true;
 						}
@@ -570,7 +572,7 @@ public:
 						if (checked[2][1] == false)
 						{
 							checked[2][1] = true;
-							if (runForNode(current + IntVec2(+1, 0), searchId, func))
+							if (runForNode(current + IntVec2(+1, 0), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -578,7 +580,7 @@ public:
 						if (checked[2][0] == false && currentPos.y - radius < curPos.y)
 						{
 							checked[2][0] = true;
-							if (runForNode(current + IntVec2(+1, -1), searchId, func))
+							if (runForNode(current + IntVec2(+1, -1), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -586,7 +588,7 @@ public:
 						if (checked[2][2] == false && currentPos.y + radius > endPos.y)
 						{
 							checked[2][2] = true;
-							if (runForNode(current + IntVec2(+1, +1), searchId, func))
+							if (runForNode(current + IntVec2(+1, +1), searchId, ignoreFlags, func))
 							{
 								return true;
 							}
@@ -700,8 +702,30 @@ public:
 		return false;
 	}
 
+	void setFlag(int index, unsigned flag, bool isSet)
+	{
+		if (isSet)
+		{
+			bodies[index].flags |= flag;
+		}
+		else
+		{
+			bodies[index].flags &= ~flag;
+		}
+	}
 
+	void setFlags(int index, unsigned flags)
+	{
+		bodies[index].flags = flags;
+	}
 
+	bool hasFlag(int index, unsigned flag)
+	{
+		return (bodies[index].flags & flag) > 0;
+	}
 
-
+	unsigned getFlags(int index)
+	{
+		return bodies[index].flags;
+	}
 };

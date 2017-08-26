@@ -159,7 +159,7 @@ void Monster::tick()
 		bool solved = false;
 		for (int i = 0; i < 5; i++)
 		{
-			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius));
+			Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius), CollisionController::no_monster_collision);
 			if (solver.lengthSquared() < 0.0001f)
 			{
 				solved = true;
@@ -180,7 +180,7 @@ void Monster::tick()
 				{
 					position = prevPosition;
 				}
-				Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius));
+				Vec2 solver = bloodworks->getCollisionController()->getLongestSolver(Circle(position, collisionRadius), CollisionController::no_monster_collision);
 				if (solver.lengthSquared() == 0.0f)
 				{
 					break;
@@ -190,16 +190,17 @@ void Monster::tick()
 	}
 
 
-
-
-
 	float dt = timer.getDt();
 	for (int i = 0; i < knockbacks.size(); i++)
 	{
 		Knockback& k = knockbacks[i];
 		bool remove = false;
 		float pushAmount = dt;
-		if (k.duration < dt)
+		if (k.duration < -0.5f)
+		{
+			pushAmount = dt;
+		}
+		else if (k.duration < dt)
 		{
 			pushAmount = k.duration;
 		}
@@ -316,7 +317,7 @@ Vec2 Monster::getPathPos(const Vec2& target)
 	float len = dir.normalize();
 	const float radius = collisionRadius * 0.5f;
 	const float checkDistance = 120.0f;
-	float t = bloodworks->getCollisionController()->getRayDistance(position + dir * radius * 0.5f, dir * checkDistance, 0.0f);
+	float t = bloodworks->getCollisionController()->getRayDistance(position + dir * radius * 0.5f, dir * checkDistance, 0.0f, CollisionController::no_monster_collision);
 	//debugRenderer.addLine(position + dir * 10.0f, position + dir * checkDistance);
 	if (t > checkDistance - 10.0f)
 	{
@@ -329,7 +330,7 @@ Vec2 Monster::getPathPos(const Vec2& target)
 
 		Vec2 dirRotated;
 		dirRotated = Vec2::fromAngle(angle + shift);
-		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * radius * 0.5f, dirRotated * checkDistance, 0.0f);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * radius * 0.5f, dirRotated * checkDistance, 0.0f, CollisionController::no_monster_collision);
 		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
 		if (t > checkDistance - 10.0f)
 		{
@@ -338,7 +339,7 @@ Vec2 Monster::getPathPos(const Vec2& target)
 		}
 
 		dirRotated = Vec2::fromAngle(angle - shift);
-		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * 5.0f, dirRotated * checkDistance, 0.0f);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * 5.0f, dirRotated * checkDistance, 0.0f, CollisionController::no_monster_collision);
 		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
 		if (t > checkDistance - 10.0f)
 		{
@@ -463,10 +464,9 @@ void Monster::spawnParticleShiftedWithoutArgs(const Vec2& shift, cParticle *part
 
 void Monster::addKnockback(const Vec2& speed, float duration)
 {
-	Knockback k;
+	Knockback& k = knockbacks.insertAndGetReference();
 	k.speed = speed;
 	k.duration = duration;
-	knockbacks.push_back(k);
 }
 
 void Monster::modifyDrawLevel(int level)
@@ -589,7 +589,7 @@ void Monster::killSelf(const Vec2& blowDir)
 		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 
-	if (monsterTemplate->killSounds.size() && timer.getTime() - lastSoundTime > 0.1f)
+	if (monsterTemplate->killSounds.size() && timer.getTime() - lastSoundTime > 0.1f && blowDir.isNonZero())
 	{
 		lastSoundTime = timer.getTime();
 		cSoundSampleShr s = monsterTemplate->killSounds[randInt(monsterTemplate->killSounds.size())];
