@@ -13,8 +13,8 @@
   "reloadTime" : 1.5,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/assault.ogg",
-	"volume" : 0.80
+    "path" : "~/resources/sounds/assault.ogg",
+    "volume" : 0.80
   },
   
   "scriptFile" : "machine.lua",

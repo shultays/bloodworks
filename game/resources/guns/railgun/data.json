@@ -13,8 +13,8 @@
   "reloadTime" : 3.0,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/railgun.ogg",
-	"volume" : 0.75
+    "path" : "~/resources/sounds/railgun.ogg",
+    "volume" : 0.75
   },
   
   "scriptFile" : "railgun.lua",
