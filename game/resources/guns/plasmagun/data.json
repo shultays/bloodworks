@@ -12,8 +12,8 @@
   "reloadTime" : 2.5,
   
   "firingSound" : {
-	"path" : "~/resources/sounds/plasma.ogg",
-	"volume" : 0.75
+    "path" : "~/resources/sounds/plasma.ogg",
+    "volume" : 0.75
   },
   "bulletHitSound" : "~/resources/sounds/plasma_hit.ogg",
   

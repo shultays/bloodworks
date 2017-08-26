@@ -14,8 +14,8 @@
   
   
   "firingSound" : {
-	"path" : "~/resources/sounds/shotgun.ogg",
-	"volume" : 0.85
+    "path" : "~/resources/sounds/shotgun.ogg",
+    "volume" : 0.85
   },
   
   "hideSpread" : true,
