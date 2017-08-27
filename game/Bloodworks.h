@@ -271,7 +271,7 @@ public:
 	void removeFromActiveBonuses(Bonus* bonus);
 	void onPlayerPickedGun(Gun * gun);
 	void onPlayerPickedBonus(Bonus * bonus, const Vec2& pos);
-	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
+	int onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 	CollisionController* getCollisionController() const;
 	GameObjectTemplate* getGameObjectTemplate(const std::string& templateName);
 	void clear();

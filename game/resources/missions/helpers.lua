@@ -211,9 +211,14 @@ function makeBossDefault(monster)
     elseif t == 9 then -- invulnerability after hit -- todo fix
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
         addCustomOnHit(monster, function(monster, damage, args)
+            if time - monster.data.lastHitTime < 1.0 then
+                damage = 0
+            end
+            
             local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
             monster.colorMultiplier:setBuffDuration(buffId, 1.0)
             monster.data.lastHitTime = time
+            return damage
         end)
         addCustomShouldHit(monster, function(monster, gun, bullet)
             return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
@@ -224,7 +229,7 @@ function makeBossDefault(monster)
         monster.hitPoint = math.floor(monster.hitPoint * 1.5)
 
         addCustomOnHit(monster, function(monster, damage, args)
-            if monster.hitPoint > 0 then
+            if monster.hitPoint > damage then
                 local t = math.random() * math.pi * 2.0
                 local r = math.random() * 100.0 + 100.0
                 local v = Vec2.fromAngle(t) * r
@@ -238,6 +243,7 @@ function makeBossDefault(monster)
                 
                 playSound({path = "~/resources/sounds/shimmer_1.ogg"})
             end
+            return damage
         end)
     elseif t == 11 then -- spawn little clones
         monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))

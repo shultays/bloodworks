@@ -1013,9 +1013,9 @@ void MonsterController::drawDebug()
 	grid.drawDebug();
 }
 
-void MonsterController::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+int MonsterController::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
 {
-	customMonsterOnHit(monster, damage, dir, args);
+	return customMonsterOnHit(monster, damage, dir, args);
 }
 
 bool MonsterController::shouldHit(Monster* monster, Gun* gun, Bullet *bullet)
