@@ -1005,7 +1005,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"getHitpoints", &Player::getHitpoints,
 		"setMaxHitpoints", &Player::setMaxHitpoints,
 		"setHitpoints", &Player::setHitpoints,
-		"moveBy", &Player::moveBy,
+		"addKnockback", &Player::addKnockback,
 		"data", &Player::data
 		);
 
