@@ -63,7 +63,7 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 
 void Bloodworks::init()
 {
-	nextGlobalUniqueId = 0;
+	nextGlobalUniqueId = 1;
 
 	lua.script(R"(
 			doNotDelete = {}
@@ -790,14 +790,8 @@ void Bloodworks::clear()
 
 void Bloodworks::reload()
 {
-	bool b;
-	b = lua["mission"];
 	clear();
-	b = lua["mission"];
-	b = lua["asdasdasdasd"];
 	init();
-	b = lua["mission"];
-	b = lua["mission"];
 }
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)

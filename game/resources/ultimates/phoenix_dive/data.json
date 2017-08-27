@@ -6,7 +6,7 @@
   "scriptFile" : "phoenix_dive.lua",
   "scriptName" : "PhoenixDive",
   
-  "maxAmmo" : 1,
+  "maxAmmo" : 6,
   "reloadTime" : 30,
   
   "ultimate" : true,

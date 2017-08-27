@@ -9,6 +9,7 @@ end
 function BlackHole.onTick(gun)
     local data = gun.data
     if gun.isTriggered and gun:hasAmmo() and data.started == false then
+        gun:consumeAmmo()
         if gun.data.postprocess == nil then
             gun.data.postprocess = addPostProcess("resources/post_process/blackhole.ps")
         end
