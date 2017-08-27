@@ -85,7 +85,6 @@ class Player
 	float reloadAlpha;
 
 	float joystickCheckTimer;
-	cVector<Vec2> moveAmounts;
 
 	void checkInput(bool& moving, float& wantedAngle);
 	void updateExperience();
@@ -96,6 +95,13 @@ class Player
 		Gun* gun;
 	};
 	cVector<OldGun> oldGuns;
+
+	struct Knockback
+	{
+		Vec2 speed;
+		float duration;
+	};
+	cVector<Knockback> knockbacks;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -188,5 +194,5 @@ public:
 	void killSelf();
 	float getBulletRadius() const;
 	float getCollisionRadius() const;
-	void moveBy(const Vec2& diff);
+	void addKnockback(const Vec2& speed, float duration);
 };

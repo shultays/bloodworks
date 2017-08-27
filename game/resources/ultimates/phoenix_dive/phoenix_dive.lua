@@ -26,6 +26,7 @@ function PhoenixDive.onTick(gun)
         data.hitTime = 0.0
         data.started = true
         playSound({path = "~/resources/sounds/dive.ogg", volume = 0.9})
+        player:addKnockback(Vec2.fromAngle(data.moveAngle) * 500.0, data.shooting)
     end
     
     if data.shooting >= 0.0 then
@@ -39,7 +40,6 @@ function PhoenixDive.onTick(gun)
             addExplosion(player.position, 160.0, 230.0, 250, 350, 0.1)
             playSound({path = "~/resources/sounds/explode.ogg"})
         end
-        player:moveBy(Vec2.fromAngle(data.moveAngle) * 500.0 * dt)
         
         data.hitTime = data.hitTime - dt
         if data.hitTime < 0.0 then
