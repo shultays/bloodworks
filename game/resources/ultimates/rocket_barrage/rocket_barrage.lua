@@ -23,6 +23,7 @@ function RocketBarrage.onTick(gun)
     if data.shooting > 0.0 then
         data.shooting = data.shooting - dt
         data.shootDt = data.shootDt + dt * 180
+        player:addKnockback(-player.aimDir * 30.0, -1.0)
         while data.shootDt > 0.0 do
             data.shootDt = data.shootDt - 1
             local bullet = gun:addBullet()

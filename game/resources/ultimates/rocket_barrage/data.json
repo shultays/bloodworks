@@ -8,7 +8,7 @@
   "bulletSpeed" : 350.0,
   "bulletDamage" : [40, 70],
   
-  "maxAmmo" : 1,
+  "maxAmmo" : 6,
   "reloadTime" : 20,
   
   "firingSound" : "~/resources/sounds/rocket.ogg",

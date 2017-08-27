@@ -6,7 +6,7 @@
   "scriptFile" : "banana_bomb.lua",
   "scriptName" : "BananaBomb",
   
-  "maxAmmo" : 1,
+  "maxAmmo" : 6,
   "reloadTime" : 20,
   
   "ultimate" : true,

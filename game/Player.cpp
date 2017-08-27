@@ -13,12 +13,15 @@
 #include "BloodRenderable.h"
 #include "BloodworksConfig.h"
 #include "CollisionController.h"
+#include "cTexture.h"
 
 #include <sstream>
 
 const float healthPos = -50.0f;
 const float expPos = -62.0f;
 const float expPosX = -0.5f;
+
+const float iconSize = 22.0f;
 
 int Player::calculateExperienceForLevel(int level)
 {
@@ -60,6 +63,32 @@ Player::Player(Bloodworks *bloodworks)
 	spread = new cTexturedQuadRenderable(bloodworks, "resources/crosshair_spread.png", "resources/default");
 	spread->setWorldMatrix(Mat3::scaleMatrix(20.0f));
 	bloodworks->addRenderable(spread, GUI + 101);
+
+	primaryRenderable = new cRenderableContainer(bloodworks);
+	primaryRenderable->setWorldMatrix(Mat3::translationMatrix(50.0f, 50.0f));
+	primaryRenderable->setAlignment(RenderableAlignment::bottomLeft);
+	bloodworks->addRenderable(primaryRenderable, GUI + 103);
+
+	primaryIcon = new cTexturedQuadRenderable(bloodworks, "", "resources/default");
+	primaryIcon->setWorldMatrix(Mat3::scaleMatrix(40.0f));
+	primaryRenderable->addRenderable(primaryIcon);
+
+	primaryAmmo = new cTexturedQuadRenderable(bloodworks, "resources/reload_ring.png", "resources/reload");
+	primaryAmmo->setWorldMatrix(Mat3::scaleMatrix(40.0f));
+	primaryRenderable->addRenderable(primaryAmmo);
+
+	secondaryRenderable = new cRenderableContainer(bloodworks);
+	secondaryRenderable->setWorldMatrix(Mat3::translationMatrix(-50.0f, 50.0f));
+	secondaryRenderable->setAlignment(RenderableAlignment::bottomRight);
+	bloodworks->addRenderable(secondaryRenderable, GUI + 103);
+
+	secondaryIcon = new cTexturedQuadRenderable(bloodworks, "", "resources/default");
+	secondaryIcon->setWorldMatrix(Mat3::scaleMatrix(40.0f));
+	secondaryRenderable->addRenderable(secondaryIcon);
+
+	secondaryAmmo = new cTexturedQuadRenderable(bloodworks, "resources/reload_ring.png", "resources/reload");
+	secondaryAmmo->setWorldMatrix(Mat3::scaleMatrix(40.0f));
+	secondaryRenderable->addRenderable(secondaryAmmo);
 
 	barSize = Vec2(256.0f, 32.0f);
 	barSize *= 0.4f;
@@ -129,6 +158,14 @@ Player::Player(Bloodworks *bloodworks)
 	maxAmmoUniformIndex = ammo->addUniformInt("uMaxAmmo", 0);
 	reloadingUniformIndex = ammo->addUniformFloat("uReloading", 0.0f);
 
+	primaryAmmo->addUniformFloat("uCurrentAmmo", 0.0f);
+	primaryAmmo->addUniformInt("uMaxAmmo", 0);
+	primaryAmmo->addUniformFloat("uReloading", 0.0f);
+
+	secondaryAmmo->addUniformFloat("uCurrentAmmo", 0.0f);
+	secondaryAmmo->addUniformInt("uMaxAmmo", 0);
+	secondaryAmmo->addUniformFloat("uReloading", 0.0f);
+
 	reset();
 }
 
@@ -139,6 +176,8 @@ Player::~Player()
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(spread);
 	SAFE_DELETE(healthRenderable);
+	SAFE_DELETE(primaryRenderable);
+	SAFE_DELETE(secondaryRenderable);
 
 	SAFE_DELETE(healthBarBG);
 	SAFE_DELETE(healthBarActive);
@@ -402,12 +441,15 @@ void Player::tick()
 		if (gun->isReloading())
 		{
 			ammo->setUniform(currentAmmoUniformIndex, gun->getMaxAmmo() * gun->getReloadPercentage());
+			primaryAmmo->setUniform(currentAmmoUniformIndex, gun->getMaxAmmo() * gun->getReloadPercentage());
 		}
 		else
 		{
 			ammo->setUniform(currentAmmoUniformIndex, (float)gun->getCurrentAmmo());
+			primaryAmmo->setUniform(currentAmmoUniformIndex, (float)gun->getCurrentAmmo());
 		}
 		ammo->setUniform(maxAmmoUniformIndex, gun->getMaxAmmo());
+		primaryAmmo->setUniform(maxAmmoUniformIndex, gun->getMaxAmmo());
 
 		if (gun->isReloading())
 		{
@@ -423,11 +465,44 @@ void Player::tick()
 		}
 
 		ammo->setUniform(reloadingUniformIndex, reloadAlpha);
+		primaryAmmo->setUniform(reloadingUniformIndex, reloadAlpha);
 		ammo->setVisible(true);
+		primaryAmmo->setVisible(true);
+		primaryAmmo->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 	else
 	{
 		ammo->setVisible(false);
+		primaryAmmo->setVisible(false);
+	}
+
+	if (secondaryGun)
+	{
+		if (secondaryGun->isReloading())
+		{
+			secondaryAmmo->setUniform(currentAmmoUniformIndex, secondaryGun->getMaxAmmo() * (1.0f - secondaryGun->getReloadPercentage()));
+		}
+		else
+		{
+			secondaryAmmo->setUniform(currentAmmoUniformIndex, (float)secondaryGun->getCurrentAmmo());
+		}
+		secondaryAmmo->setUniform(maxAmmoUniformIndex, secondaryGun->getMaxAmmo());
+
+		if (secondaryGun->isReloading())
+		{
+			secondaryReloadAlpha = 1.0f;
+		}
+		else
+		{
+			secondaryReloadAlpha -= dt * 6.0f;
+			if (secondaryReloadAlpha < 0.0f)
+			{
+				secondaryReloadAlpha = 0.0f;
+			}
+		}
+
+		secondaryAmmo->setUniform(reloadingUniformIndex, secondaryReloadAlpha);
+		secondaryAmmo->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	if (gun && gun->spreadVisible())
@@ -494,7 +569,10 @@ void Player::tick()
 		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack2);
 		secondaryGun->setTriggered(trigerred);
 		secondaryGun->tick(dt);
-		secondaryGun->updateLaser(gunPos, -aimAngle);
+		if (secondaryGun)
+		{
+			secondaryGun->updateLaser(gunPos, -aimAngle);
+		}
 	}
 	for (int i = 0; i < oldGuns.size(); i++)
 	{
@@ -536,7 +614,19 @@ void Player::setGun(Gun *gun)
 	{
 		shootRenderable->setColor(this->gun->getShootingParticleColor());
 		this->gun->start();
+		primaryIcon->setTexture(this->gun->getIconPath());
+		Vec2 textureSize = primaryIcon->getTexture()->getDimensions().toVec();
+		if (textureSize.w > iconSize)
+		{
+			textureSize *= iconSize / textureSize.w;
+		}
+		if (textureSize.h > iconSize * 0.7f)
+		{
+			textureSize *= iconSize * 0.7f / textureSize.h;
+		}
+		primaryIcon->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
 	}
+	//primaryRenderable->setVisible( this->gun != nullptr);
 }
 
 void Player::setSecondaryGun(Gun *gun)
@@ -561,7 +651,19 @@ void Player::setSecondaryGun(Gun *gun)
 	if (this->secondaryGun)
 	{
 		this->secondaryGun->start();
+		secondaryIcon->setTexture(this->secondaryGun->getIconPath());
+		Vec2 textureSize = secondaryIcon->getTexture()->getDimensions().toVec();
+		if (textureSize.w > iconSize)
+		{
+			textureSize *= iconSize / textureSize.w;
+		}
+		if (textureSize.h > iconSize * 0.7f)
+		{
+			textureSize *= iconSize * 0.7f / textureSize.h;
+		}
+		secondaryIcon->setWorldMatrix(Mat3::scaleMatrix(textureSize).rotateBy(-pi * 0.15f));
 	}
+	secondaryRenderable->setVisible(this->secondaryGun != nullptr);
 }
 
 Gun* Player::getGun()
@@ -695,6 +797,8 @@ void Player::setVisible(bool visible)
 	experienceBarBG->setVisible(visible);
 	experienceBarActive->setVisible(visible);
 	experienceBarFG->setVisible(visible);
+	primaryRenderable->setVisible(false);
+	secondaryRenderable->setVisible(visible);
 	updateHitPoints();
 	updateExperience();
 }
@@ -768,6 +872,11 @@ void Player::resize()
 	scaledExpBarSize = expBarSize / bloodworks->getCameraZoom();
 	experienceBarBG->setWorldMatrix(barMat);
 	experienceBarFG->setWorldMatrix(barMat);
+
+	float shift = 80.0f / bloodworks->getCameraZoom();
+
+	primaryRenderable->setWorldMatrix(Mat3::scaleMatrix( 1 / bloodworks->getCameraZoom()).translateBy(shift, shift));
+	secondaryRenderable->setWorldMatrix(Mat3::scaleMatrix( 1 / bloodworks->getCameraZoom()).translateBy(-shift, shift));
 
 	updateHitPoints();
 	updateExperience();
