@@ -151,10 +151,11 @@ void Bonus::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
 	}
 }
 
-void Bonus::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+int Bonus::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
 {
 	if (onMonsterDamagedFunc)
 	{
-		onMonsterDamagedFunc(this, monster, damage, dir, args);
+		return onMonsterDamagedFunc(this, monster, damage, dir, args);
 	}
+	return damage;
 }
