@@ -67,6 +67,16 @@ function BlackHole.onTick(gun)
                     monster:addKnockback(toSide * m * 800.0 + toHole * m * 300.0, -1.0)
                 end
             end)
+        
+            moveRange = moveRange + 30
+            local d = player.position:distance(data.ppos)
+            if d < moveRange then
+                local m = (moveRange - d) * t / (moveRange - killRange)
+                local a = (player.position - data.ppos):getAngle()
+                local toHole = -Vec2.fromAngle(a)
+                local toSide = -toHole:sideVec()
+                player:addKnockback(toSide * m * 800.0 + toHole * m * 200.0, -1.0)
+            end
         end
     end
 end

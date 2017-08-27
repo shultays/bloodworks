@@ -255,10 +255,27 @@ void Player::tick()
 	boundaries.addThreshold(-20.0f);
 
 	float boundaryAmount = 40.0f;
-
-	for (auto& m : moveAmounts)
+	for (int i = 0; i < knockbacks.size(); i++)
 	{
-		moveAmount += m;
+		Knockback& k = knockbacks[i];
+		bool remove = false;
+		float pushAmount = dt;
+		if (k.duration < -0.5f)
+		{
+			pushAmount = dt;
+		}
+		else if (k.duration < dt)
+		{
+			pushAmount = k.duration;
+		}
+		k.duration -= dt;
+		moveAmount += k.speed * pushAmount;
+
+		if (k.duration <= 0.0f)
+		{
+			knockbacks.swapToTailRemove(i);
+			i--;
+		}
 	}
 	if (newPos.x < boundaries.getMin().x && moveAmount.x < 0.0f)
 	{
@@ -279,7 +296,6 @@ void Player::tick()
 	}
 
 	pos += moveAmount;
-	moveAmounts.clear();
 	Vec2 afterPos = pos;
 
 	float collisionRadius = getCollisionRadius();
@@ -687,6 +703,7 @@ void Player::reset()
 {
 	reloadAlpha = 0.0f;
 
+	knockbacks.clear();
 	maxSpeed.clear();
 	monsterExperienceMultiplier.clear();
 	damageMultiplier.clear();
@@ -864,7 +881,9 @@ float Player::getCollisionRadius() const
 	return 15.0f;
 }
 
-void Player::moveBy(const Vec2& diff)
+void Player::addKnockback(const Vec2& speed, float duration)
 {
-	moveAmounts.push_back(diff);
+	Knockback& k = knockbacks.insertAndGetReference();
+	k.speed = speed;
+	k.duration = duration;
 }
