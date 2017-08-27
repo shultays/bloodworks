@@ -11,6 +11,7 @@ class cTextRenderable;
 class cRenderable;
 class cRenderableContainer;
 class cAnimatedTexturedQuadRenderable;
+class cTexturedQuadRenderable;
 class cRenderableWithShader;
 
 class Player
@@ -27,6 +28,14 @@ class Player
 	cRenderableContainer *renderable;
 	cRenderable *crosshair;
 	cRenderableWithShader *ammo;
+
+	cRenderableContainer *primaryRenderable;
+	cRenderableWithShader *primaryAmmo;
+	cTexturedQuadRenderable *primaryIcon;
+
+	cRenderableContainer *secondaryRenderable;
+	cRenderableWithShader *secondaryAmmo;
+	cTexturedQuadRenderable *secondaryIcon;
 	cRenderable *spread;
 	Vec2 crosshairPos;
 	float crosshairDistance;
@@ -83,6 +92,7 @@ class Player
 	int maxAmmoUniformIndex;
 	int reloadingUniformIndex;
 	float reloadAlpha;
+	float secondaryReloadAlpha;
 
 	float joystickCheckTimer;
 
