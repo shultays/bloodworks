@@ -65,6 +65,13 @@ void Bloodworks::init()
 {
 	nextGlobalUniqueId = 0;
 
+	lua.script(R"(
+			doNotDelete = {}
+			for k in pairs (_G) do
+				doNotDelete[k] = true
+			end
+		)");
+
 	config = new BloodworksConfig();
 
 	luaWorld = new BloodworksLuaWorld(this);
@@ -78,7 +85,6 @@ void Bloodworks::init()
 	coral.getSoundManager()->setGlobalVolume(config->getVolume());
 
 	lua["time"] = timer.getTime();
-
 
 	dropController = new DropController(this);
 	monsterController = new MonsterController(this);
@@ -249,69 +255,7 @@ Bloodworks::Bloodworks()
 
 Bloodworks::~Bloodworks()
 {
-	for (auto& animation : animationTemplates)
-	{
-		SAFE_DELETE(animation.second);
-	}
-	animationTemplates.clear();
-	for (auto& particle : particles)
-	{
-		SAFE_DELETE(particle.second);
-	}
-	particles.clear();
-	for (auto& laser : laserTemplates)
-	{
-		SAFE_DELETE(laser.second);
-	}
-	laserTemplates.clear();
-
-	player->setGun(nullptr);
-	SAFE_DELETE(bloodRenderable);
-	SAFE_DELETE(bg);
-	SAFE_DELETE(player);
-	SAFE_DELETE(pausePostProcess);
-	// SAFE_DELETE(luaWorld); TODO fix
-	for (auto& gun : guns)
-	{
-		SAFE_DELETE(gun);
-	}
-	guns.clear();
-	for (auto& bonus : bonuses)
-	{
-		SAFE_DELETE(bonus);
-	}
-	bonuses.clear();
-	SAFE_DELETE(dropController);
-	SAFE_DELETE(explosionController);
-
-	for (auto& fg : fgs)
-	{
-		SAFE_DELETE(fg);
-	}
-	fgs.clear();
-
-	for (auto& perk : perks)
-	{
-		SAFE_DELETE(perk);
-	}
-	perks.clear();
-
-	SAFE_DELETE(optionsPopup);
-	SAFE_DELETE(levelUpPopup);
-	SAFE_DELETE(mainMenu);
-	SAFE_DELETE(dropController);
-
-	SAFE_DELETE(monsterController);
-	SAFE_DELETE(bulletController);
-	SAFE_DELETE(missionController);
-	SAFE_DELETE(collisionController);
-	SAFE_DELETE(oneShotSoundManager);
-	SAFE_DELETE(modWindow);
-	SAFE_DELETE(config);
-
-#ifdef HAS_BLOODWORKS_CHEATS
-	SAFE_DELETE(bloodworksCheats);
-#endif
+	clear();
 }
 
 void Bloodworks::onAddedGunBullet(Gun *gun, Bullet *bullet)
@@ -677,7 +621,7 @@ void Bloodworks::showMods()
 	modWindow->setVisible(true);
 }
 
-void Bloodworks::loadMod(const std::string& path)
+void Bloodworks::loadMod(const std::string& path, bool loadOnlyModData)
 {
 	DirentHelper::Folder folder(path);
 	cVector<DirentHelper::File> files = folder.getAllFiles(true);
@@ -687,7 +631,7 @@ void Bloodworks::loadMod(const std::string& path)
 		{
 			nlohmann::json j;
 			appendJson(j, f.folder + f.file);
-			parseJson(j, f);
+			parseJson(j, f, loadOnlyModData);
 		}
 	}
 }
@@ -777,13 +721,87 @@ GameObjectTemplate* Bloodworks::getGameObjectTemplate(const std::string& templat
 	return gameObjectTemplates[templateName];
 }
 
-void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f)
+void Bloodworks::clear()
 {
-	if (j.count("disabled") && j["disabled"].get<bool>() == true)
+	for (auto& animation : animationTemplates)
 	{
-		return;
+		SAFE_DELETE(animation.second);
 	}
+	animationTemplates.clear();
+	for (auto& particle : particles)
+	{
+		SAFE_DELETE(particle.second);
+	}
+	particles.clear();
+	for (auto& laser : laserTemplates)
+	{
+		SAFE_DELETE(laser.second);
+	}
+	laserTemplates.clear();
 
+	player->setGun(nullptr);
+	SAFE_DELETE(bloodRenderable);
+	SAFE_DELETE(bg);
+	SAFE_DELETE(player);
+	SAFE_DELETE(pausePostProcess);
+	SAFE_DELETE(luaWorld);
+	for (auto& gun : guns)
+	{
+		SAFE_DELETE(gun);
+	}
+	guns.clear();
+	for (auto& bonus : bonuses)
+	{
+		SAFE_DELETE(bonus);
+	}
+	bonuses.clear();
+	SAFE_DELETE(dropController);
+	SAFE_DELETE(explosionController);
+
+	for (auto& fg : fgs)
+	{
+		SAFE_DELETE(fg);
+	}
+	fgs.clear();
+
+	for (auto& perk : perks)
+	{
+		SAFE_DELETE(perk);
+	}
+	perks.clear();
+
+	SAFE_DELETE(optionsPopup);
+	SAFE_DELETE(levelUpPopup);
+	SAFE_DELETE(mainMenu);
+	SAFE_DELETE(dropController);
+
+	SAFE_DELETE(monsterController);
+	SAFE_DELETE(bulletController);
+	SAFE_DELETE(missionController);
+	SAFE_DELETE(collisionController);
+	SAFE_DELETE(oneShotSoundManager);
+	SAFE_DELETE(modWindow);
+	SAFE_DELETE(config);
+
+#ifdef HAS_BLOODWORKS_CHEATS
+	SAFE_DELETE(bloodworksCheats);
+#endif
+}
+
+void Bloodworks::reload()
+{
+	bool b;
+	b = lua["mission"];
+	clear();
+	b = lua["mission"];
+	b = lua["asdasdasdasd"];
+	init();
+	b = lua["mission"];
+	b = lua["mission"];
+}
+
+void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
+{
 	if (j.count("type") == 0)
 	{
 		return;
@@ -793,7 +811,13 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f)
 	{
 		modWindow->addInstalledMod(j, f);
 	}
-	else if (type == "gun")
+
+	if (loadOnlyModData || (j.count("disabled") && j["disabled"].get<bool>() == true) || modWindow->isPathDisabled(f.folder))
+	{
+		return;
+	}
+
+	if (type == "gun")
 	{
 		Gun *gun = new Gun(this, j, f);
 		guns.push_back(gun);
@@ -955,6 +979,11 @@ void Bloodworks::tick()
 	//debugRenderer.addCircle(player->getPosition(), 3.0f, 0.0f);
 	//debugRenderer.addCircle(player->getGunPos(), 3.0f, 0.0f);
 	config->check();
+
+	if (input.isKeyPressed(key_j))
+	{
+		reload();
+	}
 }
 
 void Bloodworks::tickCamera()
