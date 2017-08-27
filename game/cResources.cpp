@@ -8,12 +8,15 @@
 
 int nextSharedPtrUniqueId = 0;
 
+int totalResource = 0;
+
 void cResources::objectFreed(cFont* object)
 {
 	std::string ID = fontID(object->getFontDataPath());
 	std::unordered_map<std::string, cFontShr>::iterator got = fonts.find(ID);
 	assert(got != fonts.end());
 	got->second.setCustomDeallocator(nullptr);
+	fontGraveyard.add(ID, got->second, timer.getRenderTime());
 	fonts.erase(got);
 }
 
@@ -23,6 +26,7 @@ void cResources::objectFreed(cTexture* object)
 	std::unordered_map<std::string, cTextureShr>::iterator got = textures.find(ID);
 	assert(got != textures.end());
 	got->second.setCustomDeallocator(nullptr);
+	textureGraveyard.add(ID, got->second, timer.getRenderTime());
 	textures.erase(got);
 }
 
@@ -32,6 +36,7 @@ void cResources::objectFreed(cShader* object)
 	std::unordered_map<std::string, cShaderShr>::iterator got = shaders.find(ID);
 	assert(got != shaders.end());
 	got->second.setCustomDeallocator(nullptr);
+	shaderGraveyard.add(ID, got->second, timer.getRenderTime());
 	shaders.erase(got);
 }
 
@@ -41,6 +46,7 @@ void cResources::objectFreed(cSoundSample* object)
 	std::unordered_map<std::string, cSoundSampleShr>::iterator got = soundSamples.find(ID);
 	assert(got != soundSamples.end());
 	got->second.setCustomDeallocator(nullptr);
+	soundGraveyard.add(ID, got->second, timer.getRenderTime());
 	soundSamples.erase(got);
 }
 
@@ -93,6 +99,15 @@ void cResources::deleteObject(cSoundSample* object)
 	delete object;
 }
 
+void cResources::tick()
+{
+	float time = timer.getRenderTime();
+	textureGraveyard.tick(time);
+	shaderGraveyard.tick(time);
+	soundGraveyard.tick(time);
+	fontGraveyard.tick(time);
+}
+
 cResources::cResources()
 {
 
@@ -122,10 +137,14 @@ cShaderShr cResources::getShader(const std::string& vertexShaderFile, const std:
 		return got->second;
 	}
 
-	cShaderShr shader = new cShader();
+	cShaderShr shader = shaderGraveyard.get(ID);
+	if (shader == nullptr)
+	{
+		shader = new cShader();
+		shader->loadFromFile(vpath, ppath);
+	}
 	shader.setCustomDeallocator(this);
 
-	shader->loadFromFile(vpath, ppath);
 	shaders[ID] = shader;
 	return shader;
 }
@@ -141,7 +160,11 @@ cTextureShr cResources::getTexture(const std::string& textureName, bool repeat)
 		return got->second;
 	}
 
-	cTextureShr texture = new cTexture(path, repeat);
+	cTextureShr texture = textureGraveyard.get(ID);
+	if (texture == nullptr)
+	{
+		texture = new cTexture(path, repeat);
+	}
 	texture.setCustomDeallocator(this);
 
 	textures[ID] = texture;
@@ -160,8 +183,13 @@ cSoundSampleShr cResources::getSoundSample(const std::string& soundSamplePathNot
 		return got->second;
 	}
 
-	cSoundSampleShr sample = new cSoundSample(coral.getSoundManager());
-	sample->loadSample(soundSamplePath);
+	cSoundSampleShr sample = soundGraveyard.get(ID);
+	if (sample == nullptr)
+	{
+		sample = new cSoundSample(coral.getSoundManager());
+		sample->loadSample(soundSamplePath);
+	}
+	
 	sample.setCustomDeallocator(this);
 
 	soundSamples[ID] = sample;
@@ -180,7 +208,13 @@ cFontShr cResources::getFont(const std::string& fontDataPath)
 		return got->second;
 	}
 
-	cFontShr font = new cFont(path);
+	cFontShr font = fontGraveyard.get(ID);
+
+	if (font == nullptr)
+	{
+		font = new cFont(path);
+	}
+
 	font.setCustomDeallocator(this);
 
 	fonts[ID] = font;
@@ -189,6 +223,11 @@ cFontShr cResources::getFont(const std::string& fontDataPath)
 
 void cResources::freeAll()
 {
+	fontGraveyard.clear();
+	soundGraveyard.clear();
+	shaderGraveyard.clear();
+	textureGraveyard.clear();
+
 	bool err = false;
 	for (unsigned i = 0; i < shaders.bucket_count(); ++i)
 	{
@@ -242,9 +281,13 @@ void cResources::freeAll()
 		}
 	}
 
+	if (totalResource != 0)
+	{
+		printf("Total resource = %d\n", totalResource);
+		err = true;
+	}
 	if (err)
 	{
 		assert(false);
 	}
 }
-

@@ -253,9 +253,9 @@ void Cleanup()
 	SDL_DestroyWindow(mainWindow);
 	mainWindow = nullptr;
 	SDL_Quit();
-	coral.clear();
 	debugRenderer.freeAll();
 	resources.freeAll();
+	coral.clear();
 }
 
 void CheckSDLError(int line = -1)

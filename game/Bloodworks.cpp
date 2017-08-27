@@ -46,7 +46,7 @@ BloodworksCheats *bloodworksCheats;
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
-	printf("loading json %s\n", fileName.c_str());
+	printf("json %s\n", fileName.c_str());
 	std::string jsonFile2;
 	textFileRead(fileName, jsonFile2);
 	nlohmann::json j2 = nlohmann::json::parse(jsonFile2.c_str());
@@ -979,11 +979,9 @@ void Bloodworks::tick()
 		}
 	}
 
-	//debugRenderer.addCircle(player->getPosition(), 3.0f, 0.0f);
-	//debugRenderer.addCircle(player->getGunPos(), 3.0f, 0.0f);
 	config->check();
 
-	if (input.isKeyPressed(key_j))
+	if (input.isKeyPressed(key_j) && missionController->isLoaded() == false)
 	{
 		reload();
 	}
