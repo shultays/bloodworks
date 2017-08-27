@@ -8,10 +8,13 @@
 #include "cButton.h"
 #include "cScrollContainer.h"
 #include "BloodworksControls.h"
+#include "cTickBox.h"
 
 float buttonHeight = 30.0f;
 float height = 35.0f;
 float y = 90.0f - buttonHeight * 0.5f;
+
+#define MOD_FOLDER "resources/mods/"
 
 void ModWindow::showModDetails(struct ModData& modData)
 {
@@ -43,21 +46,11 @@ void ModWindow::showModDetails(struct ModData& modData)
 		bloodworks->addSlaveWork(&fetchImage);
 	}
 
+	std::string name = modData.jsonData["name"].get<std::string>();
+	detailInstalled = installedModIndices.count(name) > 0;
 
-	detailInstalled = installedModIndices.count(modData.jsonData["name"].get<std::string>()) > 0;
 
-	if (detailInstalled)
-	{
-		detailInstallButton->setVisible(false);
-		detailInstallText->setVisible(true);
-		detailInstallText->setText("Installed");
-	}
-	else
-	{
-		detailInstallButton->setVisible(true);
-		detailInstallText->setVisible(false);
-		detailInstallText->setText("");
-	}
+	updateDetailInfo();
 }
 
 ModWindow::ModWindow(Bloodworks *bloodworks) 
@@ -65,6 +58,8 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 	, fetchResults(this)
 {
 	this->bloodworks = bloodworks;
+	needsReset = false;
+	closeOnNextTick = false;
 
 	mainWindow = new cRenderableContainer(bloodworks);
 	mainWindow->setAlignment(RenderableAlignment::center);
@@ -144,10 +139,18 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 		modDetailWindow->addRenderable(detailDescription);
 
 		detailInstallText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 18.0f);
-		detailInstallText->setWorldMatrix(Mat3::translationMatrix(190.0f, -140.0f));
+		detailInstallText->setWorldMatrix(Mat3::translationMatrix(180.0f, -120.0f));
 		detailInstallText->setTextAlignment(TextAlignment::center);
 		modDetailWindow->addRenderable(detailInstallText);
 
+		Vec2 p(245.0f, -117.0f);
+		detailIsEnabled = new cTickBox(bloodworks);
+		detailIsEnabled->setWorldMatrix(Mat3::translationMatrix(p));
+		detailIsEnabled->setDefaultMatrix(p, Vec2(20.0f), 0.0f);
+		detailIsEnabled->setHoverMatrix(p, Vec2(20.0f), 0.0f);
+		detailIsEnabled->setHitArea(-20.0f * 0.6f, 20.0f * 0.6f);
+		detailIsEnabled->setChecked(true);
+		modDetailWindow->addRenderable(detailIsEnabled);
 
 		detailInstallButton = new cButton(bloodworks);
 		detailInstallButton->setHitArea(Vec2(-260.0f, -height * 0.5f), Vec2(250.0f, height * 0.5f));
@@ -167,10 +170,50 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 		detailInstallButton->addRenderable(text);
 
 		modDetailWindow->addRenderable(detailInstallButton);
+
+		detailDeleteButton = new cButton(bloodworks);
+		detailDeleteButton->setHitArea(Vec2(-260.0f, -height * 0.5f), Vec2(250.0f, height * 0.5f));
+		detailDeleteButton->setDefaultShift(Vec2(190.0f, -150.0f));
+		detailDeleteButton->setHoverShift(Vec2(190.0f, -150.0f));
+		detailDeleteButton->setHoverScale(1.1f);
+		detailDeleteButton->setHoverSpeed(10.0f);
+
+		bg = new cTexturedQuadRenderable(bloodworks, "resources/ui/install_bg.png", "resources/default");
+		bg->setWorldMatrix(Mat3::scaleMatrix(80.0f, buttonHeight * 0.5f));
+		bg->setColor(Vec4::fromColor(0x66FFFFFF));
+		detailDeleteButton->addRenderable(bg);
+
+		text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Delete", 18.0f);
+		text->setWorldMatrix(Mat3::translationMatrix(-3.0f, -3.0f));
+		text->setTextAlignment(TextAlignment::center);
+		detailDeleteButton->addRenderable(text);
+
+		modDetailWindow->addRenderable(detailDeleteButton);
 	}
 
+	modLoadingText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Reloading Content\nPlease Wait...", 18.0f);
+	modLoadingText->setWorldMatrix(Mat3::translationMatrix(0.0f, 0.0f));
+	modLoadingText->setTextAlignment(TextAlignment::center);
+	mainWindow->addRenderable(modLoadingText);
+
+	modLoadingText->setVisible(false);
 	modDetailWindow->setVisible(false);
 	modListWindow->setVisible(false);
+
+	std::ifstream file(MOD_FOLDER "disabled_mods.txt");
+
+	std::string line;
+
+	while (file >> line)
+	{
+		if (line.length() > 0)
+		{
+			std::string fullPath = MOD_FOLDER + line;
+			fixFolderPath(fullPath);
+			disabledMods.push_back(line);
+			disabledModsFullPaths.push_back(fullPath);
+		}
+	}
 
 	setVisible(false);
 }
@@ -187,17 +230,42 @@ bool ModWindow::isVisible() const
 
 void ModWindow::setVisible(bool visible)
 {
+	if (needsReset && visible == false)
+	{
+		closeOnNextTick = true;
+		closeOnNextTickSetRenderTime = timer.getRenderTime();
+		modListWindow->setVisible(false);
+		modDetailWindow->setVisible(false);
+		modLoadingText->setVisible(true);
+		
+		return;
+	}
 	mainWindow->setVisible(visible);
 	if (visible)
 	{
+		modLoadingText->setVisible(false);
 		modListWindow->setVisible(true);
 		modDetailWindow->setVisible(false);
+	}
+	if (needsReset && visible == false)
+	{
+		bloodworks->reload();
 	}
 }
 
 void ModWindow::tick()
 {
-
+	if (closeOnNextTick)
+	{
+		if (timer.getRenderTime() > closeOnNextTickSetRenderTime)
+		{
+			closeOnNextTick = false;
+			needsReset = false;
+			setVisible(false);
+			bloodworks->reload();
+		}
+		return;
+	}
 	if (!isVisible())
 	{
 		return;
@@ -232,6 +300,39 @@ void ModWindow::tick()
 	else if (modDetailWindow->isVisible())
 	{
 		detailInstallButton->check(input.getMousePos());
+		detailDeleteButton->check(input.getMousePos());
+		detailIsEnabled->check(input.getMousePos());
+		if (detailIsEnabled->isChanged())
+		{
+			detailEnabled = detailIsEnabled->isChecked();
+			updateDetailInfo();
+
+			std::string name = detailedMod.jsonData["name"].get<std::string>();
+			std::string fullPath = installedMods[installedModIndices[name]].filePath.folder;
+
+			syncModEnableState(fullPath, detailEnabled);
+
+			needsReset = true;
+		}
+
+		if (detailDeleteButton->isClicked())
+		{
+			detailInstalled = false;
+
+			std::string name = detailedMod.jsonData["name"].get<std::string>();
+			std::string fullPath = installedMods[installedModIndices[name]].filePath.folder;
+
+			oldInstalledMods.push_back(name);
+			installedModIndices.erase(name);
+			if (fullPath.size() > 0 && fullPath != MOD_FOLDER)
+			{
+				cPackHelper::deleteFolder(fullPath, true, true);
+			}
+
+			syncModEnableState(fullPath, true);
+			updateDetailInfo();
+			needsReset = true;
+		}
 		if (detailInstallButton->isClicked())
 		{
 			fetchMod.modWindow = this;
@@ -249,11 +350,32 @@ void ModWindow::tick()
 			{
 				if (fetchMod.isDone())
 				{
+					detailEnabled = true;
+					detailInstalled = true;
+					updateDetailInfo();
 					detailInstallText->setText("Installed");
 					if (fetchMod.valid)
 					{
 						fetchMod.valid = false;
-						bloodworks->loadMod(fetchMod.installPath);
+						bool contains = false;
+						std::string name = detailedMod.jsonData["name"].get<std::string>();
+						for (auto& s : oldInstalledMods)
+						{
+							if (s == name)
+							{
+								contains = true;
+								break;
+							}
+						}
+						if (contains == false)
+						{
+							bloodworks->loadMod(fetchMod.installPath);
+						}
+						else
+						{
+							bloodworks->loadMod(fetchMod.installPath, false);
+							needsReset = true;
+						}
 						updateList();
 						detailInstalled = true;
 					}
@@ -261,8 +383,7 @@ void ModWindow::tick()
 				else
 				{
 					std::stringstream ss;
-					ss << round((fetchMod.readBuffer.size() * 100.0f) / fetchMod.byteToLoad);
-					ss << "%";
+					ss << "  " << round((fetchMod.readBuffer.size() * 100.0f) / fetchMod.byteToLoad) << "%";
 					detailInstallText->setText(ss.str());
 				}
 			}
@@ -284,6 +405,78 @@ void ModWindow::addInstalledMod(nlohmann::json& j, DirentHelper::File& f)
 	installedModIndices[m.jsonData["name"].get<std::string>()] = installedMods.size() - 1;
 }
 
+bool ModWindow::isPathDisabled(const std::string& path) const
+{
+	for (auto& s : disabledModsFullPaths)
+	{
+		if (beginsWith(path, s))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void ModWindow::updateDetailInfo()
+{
+	if (detailInstalled)
+	{
+		detailInstallButton->setVisible(false);
+		detailDeleteButton->setVisible(true);
+		detailInstallText->setVisible(true);
+		detailIsEnabled->setVisible(true);
+		if (detailEnabled)
+		{
+			detailInstallText->setText("Enabled");
+			detailIsEnabled->setChecked(true);
+		}
+		else
+		{
+			detailInstallText->setText("Disabled");
+			detailIsEnabled->setChecked(false);
+		}
+	}
+	else
+	{
+		detailDeleteButton->setVisible(false);
+		detailInstallButton->setVisible(true);
+		detailInstallText->setVisible(false);
+		detailInstallText->setText("");
+		detailIsEnabled->setVisible(false);
+	}
+}
+
+void ModWindow::syncModEnableState(const std::string& fullPath, bool detailEnabled)
+{
+	if (detailEnabled == false)
+	{
+		std::string path = fullPath.substr(sizeof(MOD_FOLDER) - 1);
+		fixFilePath(path);
+		disabledMods.push_back(path);
+		disabledModsFullPaths.push_back(fullPath);
+	}
+	else
+	{
+		for (int i = 0; i < disabledMods.size(); i++)
+		{
+			if (beginsWith(fullPath, disabledModsFullPaths[i]))
+			{
+				disabledMods.swapToTailRemove(i);
+				disabledModsFullPaths.swapToTailRemove(i);
+				i--;
+			}
+		}
+	}
+
+	updateList();
+	std::ofstream file(MOD_FOLDER "disabled_mods.txt");
+	for (auto& s : disabledMods)
+	{
+		file << s << std::endl;
+	}
+	file.close();
+}
+
 void ModWindow::updateList()
 {
 	for (int i = 0; i < modSelectButtons.size(); i++)
@@ -303,7 +496,9 @@ void ModWindow::updateList()
 		button->setHoverScale(1.01f);
 		button->setHoverSpeed(10.0f);
 		button->setUserData(reinterpret_cast<void*>((size_t)i));
-		bool installed = installedModIndices.count(mod["name"].get<std::string>()) > 0;
+
+		std::string name = mod["name"].get<std::string>();
+		bool installed = installedModIndices.count(name) > 0;
 
 		cTexturedQuadRenderable* bg;
 		cTextRenderable *text;
@@ -315,9 +510,19 @@ void ModWindow::updateList()
 
 		if (installed)
 		{
+			bool isEnabled = isPathDisabled(installedMods[installedModIndices[name]].filePath.folder) == false;
+
 			bg = new cTexturedQuadRenderable(bloodworks, "resources/ui/installed_mod.png", "resources/default");
 			bg->setWorldMatrix(Mat3::scaleMatrix(10.0f).translateBy(-250.0f, 0.0f));
-			bg->setColor(Vec4::fromColor(0xFF44FF44));
+
+			if (isEnabled)
+			{
+				bg->setColor(Vec4::fromColor(0xFF44FF44));
+			}
+			else
+			{
+				bg->setColor(Vec4::fromColor(0xFF666666));
+			}
 			button->addRenderable(bg);
 		}
 
@@ -518,7 +723,7 @@ void ModWindow::FetchMod::runOnMain()
 			mod_folder = ss.str();
 		}
 		bool addedUnderScore = false;
-		std::string folder = "resources/mods/" + mod_folder;
+		std::string folder = MOD_FOLDER + mod_folder;
 		while (true)
 		{
 			DirentHelper::Folder f(folder);

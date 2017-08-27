@@ -107,7 +107,7 @@ class Bloodworks : public cGame
 	std::map<std::string, cAnimationTemplate*> animationTemplates;
 	std::map<std::string, GameObjectTemplate*> gameObjectTemplates;
 
-	void parseJson(nlohmann::json& j, DirentHelper::File& f);
+	void parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData = false);
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -264,7 +264,7 @@ public:
 	void onLevelUp();
 	void addSlaveWork(cSlaveWork* work);
 	void showMods();
-	void loadMod(const std::string& path);
+	void loadMod(const std::string& path, bool loadOnlyModData = false);
 	void updateVolume();
 	void updateMusicVolume();
 	void addToActiveBonuses(Bonus* bonus);
@@ -274,4 +274,6 @@ public:
 	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 	CollisionController* getCollisionController() const;
 	GameObjectTemplate* getGameObjectTemplate(const std::string& templateName);
+	void clear();
+	void reload();
 };

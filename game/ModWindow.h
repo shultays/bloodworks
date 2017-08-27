@@ -10,6 +10,7 @@ class cButton;
 class cScrollContainer;
 class cTextRenderable;
 class cTexturedQuadRenderable;
+class cTickBox;
 
 class ModWindow
 {
@@ -34,21 +35,33 @@ class ModWindow
 	cVector<struct ModData> loadedMods;
 	cVector<struct ModData> installedMods;
 	std::unordered_map<std::string, int> installedModIndices;
+	cVector<std::string> oldInstalledMods;
 
 	void showModDetails(struct ModData& modData);
 
 	bool detailInstalled;
+	bool detailEnabled;
 	cTextRenderable *detailName;
 	cTexturedQuadRenderable *detailIcon;
 	cTextRenderable *detailVersion;
 	cTextRenderable *detailCreator;
 	cTextRenderable *detailDescription;
+	cTextRenderable *modLoadingText;
 	cButton *detailInstallButton;
 	cTextRenderable *detailInstallText;
+	cTickBox *detailIsEnabled;
+	cButton *detailDeleteButton;
 	ModData detailedMod;
 
 	void updateList();
+	bool needsReset;
+	bool closeOnNextTick;
+	float closeOnNextTickSetRenderTime;
 
+	cVector<std::string> disabledMods;
+	cVector<std::string> disabledModsFullPaths;
+	void updateDetailInfo();
+	void syncModEnableState(const std::string& fullPath, bool detailEnabled);
 public:
 
 	class LoginWork : public cSlaveWork
@@ -104,4 +117,5 @@ public:
 	void setVisible(bool visible);
 	void tick();
 	void addInstalledMod(nlohmann::json& j, DirentHelper::File& f);
+	bool isPathDisabled(const std::string& path) const;
 };
