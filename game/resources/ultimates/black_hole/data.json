@@ -6,8 +6,8 @@
   "scriptFile" : "black_hole.lua",
   "scriptName" : "BlackHole",
   
-  "maxAmmo" : 1,
-  "reloadTime" : 2,
+  "maxAmmo" : 6,
+  "reloadTime" : 20,
   
   "ultimate" : true,
   

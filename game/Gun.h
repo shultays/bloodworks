@@ -117,7 +117,7 @@ public:
 
 	bool hasAmmo() const
 	{
-		return maxAmmo == 0 || currentAmmo > 0;
+		return reloading == false && (maxAmmo == 0 || currentAmmo > 0);
 	}
 
 	void addAmmo();

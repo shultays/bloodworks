@@ -207,7 +207,6 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 
 	buffedMaxAmmo = currentAmmo = getMaxAmmo();
 	reloading = false;
-
 }
 
 void Gun::stop()
@@ -259,7 +258,7 @@ void Gun::tick(float dt)
 		{
 			reloadEnding = true;
 
-			if (reloadEndSound.isValid())
+			if (ultimate == false && reloadEndSound.isValid())
 			{
 				bloodworks->addGameSound(reloadEndSound.play());
 			}
@@ -268,7 +267,10 @@ void Gun::tick(float dt)
 		if (remainingReload < 0.0)
 		{
 			reloading = false;
-			currentAmmo = buffedMaxAmmo;
+			if (ultimate == false)
+			{
+				currentAmmo = buffedMaxAmmo;
+			}
 
 			if (scriptTable["onReloadEnded"])
 			{
@@ -428,13 +430,29 @@ void Gun::addAmmo()
 
 void Gun::consumeAmmo()
 {
-	if (currentAmmo > 0)
+	if (ultimate)
 	{
 		currentAmmo--;
-		if (currentAmmo <= 0)
+		if (currentAmmo == 0)
 		{
-			currentAmmo = 0;
+			bloodworks->getPlayer()->setSecondaryGun(nullptr);
+			return;
+		}
+		else
+		{
 			reload();
+		}
+	}
+	else
+	{
+		if (currentAmmo > 0)
+		{
+			currentAmmo--;
+			if (currentAmmo <= 0)
+			{
+				currentAmmo = 0;
+				reload();
+			}
 		}
 	}
 }
@@ -444,11 +462,10 @@ void Gun::reload()
 	if (reloading == false)
 	{
 		bloodworks->onGunReloaded(this);
-		currentAmmo = 0;
 		reloading = true;
 		reloadEnding = false;
 		remainingReload = reloadTime;
-		if (reloadBeginSound.isValid())
+		if (ultimate == false && reloadBeginSound.isValid())
 		{
 			bloodworks->addGameSound(reloadBeginSound.play());
 		}
