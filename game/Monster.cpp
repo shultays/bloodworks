@@ -75,6 +75,8 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
 
+	hasCollision = true;
+
 	dropChance = 0.05f;
 	firstTick = true;
 	luaShouldHit = scriptTable["shouldHit"];
@@ -153,9 +155,34 @@ void Monster::tick()
 	{
 		position += moveVelocity * timer.getDt();
 	}
-	Vec2 newPosition = position;
 
+	float dt = timer.getDt();
+	for (int i = 0; i < knockbacks.size(); i++)
 	{
+		Knockback& k = knockbacks[i];
+		bool remove = false;
+		float pushAmount = dt;
+		if (k.duration < -0.5f)
+		{
+			pushAmount = dt;
+		}
+		else if (k.duration < dt)
+		{
+			pushAmount = k.duration;
+		}
+		k.duration -= dt;
+		position += k.speed * pushAmount * knockbackResistance.getBuffedValue();
+
+		if (k.duration <= 0.0f)
+		{
+			knockbacks.swapToTailRemove(i);
+			i--;
+		}
+	}
+
+	if (hasCollision)
+	{
+		Vec2 newPosition = position;
 		bool solved = false;
 		for (int i = 0; i < 5; i++)
 		{
@@ -189,29 +216,6 @@ void Monster::tick()
 		}
 	}
 
-	float dt = timer.getDt();
-	for (int i = 0; i < knockbacks.size(); i++)
-	{
-		Knockback& k = knockbacks[i];
-		bool remove = false;
-		float pushAmount = dt;
-		if (k.duration < -0.5f)
-		{
-			pushAmount = dt;
-		}
-		else if (k.duration < dt)
-		{
-			pushAmount = k.duration;
-		}
-		k.duration -= dt;
-		position += k.speed * pushAmount * knockbackResistance.getBuffedValue();
-
-		if (k.duration <= 0.0f)
-		{
-			knockbacks.swapToTailRemove(i);
-			i--;
-		}
-	}
 	clampPos();
 #ifdef HAS_BLOODWORKS_CHEATS
 	BloodworksCheats::instance->onMonsterTick(this);
@@ -312,6 +316,10 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 
 Vec2 Monster::getPathPos(const Vec2& target)
 {
+	if (hasCollision == false)
+	{
+		return target;
+	}
 	Vec2 dir = target - this->position;
 	float len = dir.normalize();
 	const float radius = collisionRadius * 0.5f;
