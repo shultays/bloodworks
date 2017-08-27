@@ -102,13 +102,27 @@ void BloodworksCheats::onTick()
 
 	if (input.isKeyPressed(key_2))
 	{
-		for (int i = 0; i < perks.size(); i++)
+		if (input.isKeyDown(key_space))
 		{
-			if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "FasterBullets")
+			for (int i = 0; i < perks.size(); i++)
 			{
-				perks[i]->takeLevel();
-				bloodworks->onPerkUsed(perks[i]);
-				break;
+				while (perks[i]->isTakenFully() == false && perks[i]->getMaxLevel() > 0)
+				{
+					perks[i]->takeLevel();
+					bloodworks->onPerkUsed(perks[i]);
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < perks.size(); i++)
+			{
+				if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "FasterBullets")
+				{
+					perks[i]->takeLevel();
+					bloodworks->onPerkUsed(perks[i]);
+					break;
+				}
 			}
 		}
 	}
@@ -342,7 +356,7 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 
 void BloodworksCheats::onInit()
 {
-	const bool testGame = false;
+	static bool testGame = true;
 	if (coral.isDebuggerPresent())
 	{
 		coral.setFullScreen(false);
@@ -352,6 +366,7 @@ void BloodworksCheats::onInit()
 		coral.getSoundManager()->setGlobalVolume(0.0f);
 		bloodworks->loadMission("Survival");
 	}
+	testGame = false;
 }
 
 #endif

@@ -84,6 +84,7 @@ function makeBossDefault(monster)
         monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
         monster:setScale(monster.scale * 0.85)
         monster.hasCollision = false
+        monster.hasBlood = false
     elseif t == 3 then -- hits hard
         monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
         monster.data.minDamage = math.floor(monster.data.minDamage * 2.0)
