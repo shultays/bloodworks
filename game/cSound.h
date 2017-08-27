@@ -55,6 +55,7 @@ public:
 	bool isEmpty();
 };
 */
+
 class cSoundSample
 {
 	friend class cSoundSampleWithParams;

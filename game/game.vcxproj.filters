@@ -222,6 +222,10 @@
     <ClCompile Include="cCapsule.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
+    <ClCompile Include="cShader.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="cTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVec.h">
