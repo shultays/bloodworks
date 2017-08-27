@@ -11,6 +11,7 @@ end
 function PhoenixDive.onTick(gun)
     local data = gun.data
     if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
+        gun:consumeAmmo()
         data.shooting = 0.6
         
         local buff = player.maxSpeed:addBuff(0.0)
