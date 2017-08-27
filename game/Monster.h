@@ -43,6 +43,7 @@ class Monster
 
 	bool isDead;
 	bool hasBlood;
+	bool hasGibs;
 	bool firstTick;
 	float animationSpeed;
 
