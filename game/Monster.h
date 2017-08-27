@@ -96,6 +96,8 @@ class Monster
 
 	void clampPos();
 	int debugVal;
+
+	bool hasCollision;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();

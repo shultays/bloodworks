@@ -67,7 +67,6 @@ bool Init()
 
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::jit, sol::lib::os);
 
-
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
 	glewInit();

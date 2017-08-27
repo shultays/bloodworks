@@ -73,34 +73,35 @@ function makeBossDefault(monster)
     monster.scoreMultiplier = 5.0 + math.random() * 2.0
     monster:modifyDrawLevel(3)
     local t = math.random(11)
-    --t = 6
+    --t = 2
     
-    if t == 1 then
+    if t == 1 then -- huge & tank
         monster.hitPoint = monster.hitPoint * 7
         monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
         monster:setScale(1.0 + math.random() * 0.3)
         monster.knockbackResistance:addBuff(0.07)
-    elseif t == 2 then
+    elseif t == 2 then -- ghost
         monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
         monster:setScale(monster.scale * 0.85)
-    elseif t == 3 then
+        monster.hasCollision = false
+    elseif t == 3 then -- hits hard
         monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
         monster.data.minDamage = math.floor(monster.data.minDamage * 2.0)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
-    elseif t == 4 then
+    elseif t == 4 then -- fast
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
         monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.85
         monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
         monster.knockbackResistance:addBuff(0.4)
-    elseif t == 5 then
+    elseif t == 5 then -- shoots bullets (fast)
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
         monster.data.shootsBullets = true
         monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (2.0 + min * 1.5))
         monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (2.0 + min * 1.5))
         monster.data.bulletRate = 1.5 - clamp(min * 0.1) * 0.8
         monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
-    elseif t == 6 then
+    elseif t == 6 then -- spawns 2 on death
         monster.data.remainingLife = 3
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
         monster:setScale(0.8 + math.random() * 0.3)
@@ -139,7 +140,7 @@ function makeBossDefault(monster)
             end
         end
         addCustomOnKill(monster, monster.data.onKillFuncSplit)
-    elseif t == 7 then
+    elseif t == 7 then -- spawns 8 on death
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
         monster:setScale(0.8 + math.random() * 0.3)
         monster.experienceMultiplier = monster.experienceMultiplier * 0.5
@@ -172,7 +173,7 @@ function makeBossDefault(monster)
                 newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
             end
         end)
-    elseif t == 8 then
+    elseif t == 8 then -- angel
         monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
         monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 3.5
         monster.data.originalSpeed = monster.data.maxMoveSpeed
@@ -206,7 +207,7 @@ function makeBossDefault(monster)
                 monster.data.canHit = true
             end
         end)
-    elseif t == 9 then
+    elseif t == 9 then -- invulnerability after hit -- todo fix
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
         addCustomOnHit(monster, function(monster, damage, args)
             local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
@@ -216,7 +217,7 @@ function makeBossDefault(monster)
         addCustomShouldHit(monster, function(monster, gun, bullet)
             return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
         end)
-    elseif t == 10 then
+    elseif t == 10 then -- blinks
         monster.data.blinkParticle = monster:addParticleSpawner("CriticalParticle", {});
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 1.7, 1.0))
         monster.hitPoint = math.floor(monster.hitPoint * 1.5)
@@ -237,7 +238,7 @@ function makeBossDefault(monster)
                 playSound({path = "~/resources/sounds/shimmer_1.ogg"})
             end
         end)
-    elseif t == 11 then
+    elseif t == 11 then -- spawn little clones
         monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
         monster.moveSpeed = monster.moveSpeed * 0.5
         monster.data.maxHitpoint = monster.hitPoint
