@@ -10,7 +10,7 @@
 
 int main(int argn, const char* argv[])
 {
-	bool uploadAll = false;
+	bool uploadAll = true;
 	std::vector<DirentHelper::Folder> allMods;
 	int modIndex = 0;
 	if (uploadAll)
