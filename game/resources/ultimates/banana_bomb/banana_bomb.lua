@@ -7,6 +7,7 @@ end
 function BananaBomb.onTick(gun)
     local data = gun.data
     if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
+        gun:consumeAmmo()
         data.shooting = 0.5
         
         local gameObject = addGameObject("BananaBombObject")
