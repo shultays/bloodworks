@@ -274,13 +274,18 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 		dir = -moveDir;
 	}
 	damage = (int)(damage * bloodworks->getPlayer()->getDamageMultiplier());
+	damage = bloodworks->onMonsterDamaged(this, damage, dir, args);
+
+	if (damage <= 0)
+	{
+		return;
+	}
 	hitPoint -= damage;
 
 	if (luaHit)
 	{
 		luaHit(this, damage, dir, args);
 	}
-	bloodworks->onMonsterDamaged(this, damage, dir, args);
 
 	if (hitPoint <= 0)
 	{

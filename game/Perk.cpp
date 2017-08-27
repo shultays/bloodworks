@@ -72,12 +72,13 @@ void Perk::reset()
 	level = 0;
 }
 
-void Perk::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+int Perk::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
 {
 	if (onMonsterDamagedFunc)
 	{
-		onMonsterDamagedFunc(monster, damage, dir, args);
+		return onMonsterDamagedFunc(monster, damage, dir, args);
 	}
+	return damage;
 }
 
 void Perk::onTick()
