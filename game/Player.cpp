@@ -805,8 +805,6 @@ void Player::setVisible(bool visible)
 
 void Player::reset()
 {
-	reloadAlpha = 0.0f;
-
 	knockbacks.clear();
 	maxSpeed.clear();
 	monsterExperienceMultiplier.clear();
@@ -822,6 +820,9 @@ void Player::reset()
 	maxRotateSpeed.setBaseValue(pi * 6.0f);
 
 	isDead = false;
+
+	reloadAlpha = 0.0f;
+	secondaryReloadAlpha = 0.0f;
 
 	oldSpreadAngle = 0.0f;
 	gunPos = oldMoveAmount = oldPos = pos = Vec2::zero();
