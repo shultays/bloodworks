@@ -148,6 +148,10 @@ inline void fixFilePath(std::string& path)
 	{
 		path = path.substr(1);
 	}
+	if (path[path.size() - 1] == '/')
+	{
+		path = path.substr(0, path.size() - 1);
+	}
 }
 
 inline void fixFolderPath(std::string& path)
@@ -162,3 +166,10 @@ inline void fixFolderPath(std::string& path)
 void printStack();
 void printExceptionStack(void* pExp);
 void doBreak();
+
+template<class TContainer>
+bool beginsWith(const TContainer& input, const TContainer& match)
+{
+	return input.size() >= match.size()
+		&& equal(match.begin(), match.end(), input.begin());
+}

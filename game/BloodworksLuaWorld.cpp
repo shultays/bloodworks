@@ -35,7 +35,7 @@
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
 	this->bloodworks = b;
-
+	
 	buffController = nullptr;
 
 #ifdef DEBUG
@@ -905,6 +905,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"addKnockback", &Monster::addKnockback,
 
 		"dropChance", &Monster::dropChance,
+		"hasCollision", &Monster::hasCollision,
 
 		"killSelf", [&](Monster* monster)
 	{
@@ -963,7 +964,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setAlignment", &GameObject::setAlignment
 
 		);
-
 
 	lua.new_usertype<Player>("Player",
 		"position", sol::readonly(&Player::pos),
@@ -1189,6 +1189,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 }
 
+
+BloodworksLuaWorld::~BloodworksLuaWorld()
+{
+	clear();
+	lua["deleteAll"]();
+}
 
 void BloodworksLuaWorld::reset()
 {
