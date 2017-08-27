@@ -189,7 +189,6 @@ void Monster::tick()
 		}
 	}
 
-
 	float dt = timer.getDt();
 	for (int i = 0; i < knockbacks.size(); i++)
 	{
