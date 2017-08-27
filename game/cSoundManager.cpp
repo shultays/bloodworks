@@ -36,10 +36,13 @@ float cSoundManager::getGlobalVolume() const
 	return soloud->getGlobalVolume();
 }
 
+extern int totalResource;
+
 cSoundSample::cSoundSample(cSoundManager* soundManager)
 {
 	this->soundManager = soundManager;
 	this->sample = nullptr;
+	totalResource++;
 }
 
 void cSoundSample::loadSample(const std::string& file)
@@ -149,6 +152,7 @@ void cSoundHandleGroup::addHandle(cSoundHandle& handle)
 */
 cSoundSample::~cSoundSample()
 {
+	totalResource--;
 	SAFE_DELETE(sample);
 }
 

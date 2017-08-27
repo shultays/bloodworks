@@ -204,8 +204,10 @@
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cPostProcess.cpp" />
     <ClCompile Include="cRect.cpp" />
+    <ClCompile Include="cShader.cpp" />
     <ClCompile Include="cSlave.cpp" />
     <ClCompile Include="cSlaveWindows.cpp" />
+    <ClCompile Include="cTexture.cpp" />
     <ClCompile Include="cTimeProfiler.cpp" />
     <ClCompile Include="GroundRenderable.cpp" />
     <ClCompile Include="ModWindow.cpp" />
