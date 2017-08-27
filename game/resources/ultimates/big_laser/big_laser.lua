@@ -12,8 +12,8 @@ function BigLaser.onTick(gun)
     gun.laser:setVisible(false)
     local data = gun.data
     if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
-        data.shooting = 2.5
         gun:consumeAmmo()
+        data.shooting = 2.5
         
         local buff = player.maxRotateSpeed:addBuff(0.1)
         player.maxRotateSpeed:setBuffDuration(buff, data.shooting + 0.3)

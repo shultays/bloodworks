@@ -312,7 +312,7 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Laser")
+		if (gun->getScriptName() == "FlareGun")
 		{
 			//player->setGun(gun);
 		}
