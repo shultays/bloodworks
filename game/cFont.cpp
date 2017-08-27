@@ -2,8 +2,11 @@
 #include "cShader.h"
 #include "cTexture.h"
 
+extern int totalResource;
+
 cFont::cFont(const std::string& fontData)
 {
+	totalResource++;
 	this->fontData = fontData;
 	for (int i = 0; i < 256; i++)
 	{
@@ -77,6 +80,7 @@ cFont::cFont(const std::string& fontData)
 
 cFont::~cFont()
 {
+	totalResource--;
 	texture = nullptr;
 	for (int i = 0; i < 256; i++)
 	{
