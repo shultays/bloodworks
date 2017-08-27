@@ -166,3 +166,19 @@ if createProfiler == nil then
         return DummyProfiler
     end
 end
+
+function deleteAll()
+    for k in pairs (_G) do
+        if k ~= "" and k ~= nil and _G[k] ~= _G and _G[k] ~= doNotDelete and doNotDelete[k] ~= true then
+            _G[k] = nil
+        end
+    end
+end
+
+function fillDoNotDelete()
+    doNotDelete = {}
+    for k in pairs (_G) do
+        doNotDelete[k] = true
+    end
+end
+
