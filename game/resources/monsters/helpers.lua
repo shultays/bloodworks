@@ -287,9 +287,13 @@ end
 function customMonsterOnHit(monster, damage, dir, args)
     if monster.data.customHit ~= nil then
         for key,hit in pairs(monster.data.customHit) do
-            hit(monster, damage, dir, args)
+            damage = hit(monster, damage, dir, args)
+            if damage <= 0 then
+                break
+            end
         end
     end
+    return damage
 end
 
 function addCustomShouldHit(monster, shouldHit)
