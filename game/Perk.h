@@ -90,5 +90,5 @@ public:
 	{
 		return hideLevelText == false && maxLevel > 1;
 	}
-	void onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
+	int onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 };
