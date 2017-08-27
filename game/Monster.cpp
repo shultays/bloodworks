@@ -43,6 +43,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
 	hasBlood = monsterTemplate->hasBlood;
+	hasGibs = true;
 	knockbackResistance.setBaseValue(1.0f);
 	animationSpeed = 1.0f;
 
@@ -523,18 +524,21 @@ void Monster::spawnBodyParts(const Vec2& blowDir)
 			}
 		}
 
-		for (int i : parts)
+		if (hasGibs)
 		{
-			cTextureShr s = monsterTemplate->bodyParts[i].texture;
-			cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
-			partRenderable->setColor(renderable->getColor());
-			Mat3 mat = renderable->getWorldMatrix();
-			partRenderable->setWorldMatrix(mat);
-			bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
-				position + monsterTemplate->bodyParts[i].shift * partScale * Mat2::rotation(moveAngle),
-				monsterTemplate->bodyParts[i].texture->getDimensions().toVec() * partScale,
-				moveAngle - pi_d2,
-				blowDir * 2.0f);
+			for (int i : parts)
+			{
+				cTextureShr s = monsterTemplate->bodyParts[i].texture;
+				cTexturedQuadRenderable *partRenderable = new cTexturedQuadRenderable(bloodworks, s->getName(), "resources/default");
+				partRenderable->setColor(renderable->getColor());
+				Mat3 mat = renderable->getWorldMatrix();
+				partRenderable->setWorldMatrix(mat);
+				bloodworks->getBloodRenderable()->addBodyPart(partRenderable,
+					position + monsterTemplate->bodyParts[i].shift * partScale * Mat2::rotation(moveAngle),
+					monsterTemplate->bodyParts[i].texture->getDimensions().toVec() * partScale,
+					moveAngle - pi_d2,
+					blowDir * 2.0f);
+			}
 		}
 	}
 }
@@ -548,7 +552,7 @@ void Monster::clampPos()
 
 void Monster::spawnBits(const Vec2& blowDir, int extraBits)
 {
-	if (monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
+	if (hasGibs == false || monsterTemplate->bodyPartBits.size() == 0 || (lastBitTime > timer.getTime() +  0.5f && extraBits == 0))
 	{
 		return;
 	}
@@ -597,7 +601,7 @@ void Monster::killSelf(const Vec2& blowDir)
 
 	if (bloodworks->getPlayer())
 	{
-		bloodworks->getPlayer()->addScore((int)round(monsterTemplate->score * scoreMultiplier));
+		bloodworks->getPlayer()->addScore((int)round(monsterTemplate->score * scoreMultiplier * randFloat(0.8f, 1.2f)));
 		bloodworks->getPlayer()->gainExperience((int)(monsterTemplate->experience * experienceMultiplier * bloodworks->getPlayer()->getMonsterExperienceMultiplier()));
 	}
 

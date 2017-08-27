@@ -897,6 +897,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"isDead", sol::readonly(&Monster::isDead),
 		"hasBlood", &Monster::hasBlood,
+		"hasGibs", &Monster::hasGibs,
 
 		"playAnimation", &Monster::playAnimation,
 		"addTimer", &Monster::addTimer,
