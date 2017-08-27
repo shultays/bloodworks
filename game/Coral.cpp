@@ -122,7 +122,7 @@ void Coral::tick()
 		doBreak();
 	}
 #endif
-
+	resources.tick();
 	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.01f) 
