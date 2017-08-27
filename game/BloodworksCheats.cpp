@@ -330,7 +330,7 @@ void BloodworksCheats::onLoadMission()
 		}
 		if (gun->getScriptName() == "BlackHole")
 		{
-			player->setSecondaryGun(gun);
+			//player->setSecondaryGun(gun);
 		}
 	}
 }
