@@ -27,9 +27,20 @@ end
 
 function GiftBox.onMissionLoad(missionData)
     local m = addRandomMonster("GiftBox")
-    local shift = Vec2.fromAngle(math.random() * math.pi) * 200.0
     
-    m.position = player.position + shift
+    local spawn
+    local t = 10
+    
+    while t > 0 do
+        t = t - 1
+        local shift = Vec2.fromAngle(math.random() * math.pi) * 200.0
+        spawn = player.position + shift
+        if hasCircleCollision(spawn, 30.0) == false then
+            break
+        end
+    end
+    
+    m.position = spawn
     m.data.spawnType = "gun"
     
     missionData.spawnWeaponOnFirstKill = false

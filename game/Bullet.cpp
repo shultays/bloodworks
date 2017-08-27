@@ -100,16 +100,13 @@ void Bullet::tick()
 	for (auto& particleData : particles)
 	{
 		Vec2 finalPos = pos + (particleData.spawnShift * Mat2::rotation(-getMeshRotation() + pi_d2));
-		Vec2 toFinalPos = (finalPos - particleData.lastSpawnPos).normalized();
-		float d = particleData.spawnDistance * particleData.spawnDistance;
-		while (particleData.lastSpawnPos.distanceSquared(finalPos) > d)
+		Vec2 toFinalPos = finalPos - particleData.lastSpawnPos;
+		float distanceToFinal = toFinalPos.normalize();
+		while (distanceToFinal > particleData.spawnDistance)
 		{
-			
+			distanceToFinal -= particleData.spawnDistance;
+
 			particleData.lastSpawnPos += toFinalPos * particleData.spawnDistance;
-			if (Vec2::dot(toFinalPos, finalPos - particleData.lastSpawnPos) < 0.0f)
-			{
-				particleData.lastSpawnPos = finalPos;
-			}
 
 			if (particleData.particle->getParticleTemplate()->needsLuaCall())
 			{
@@ -120,6 +117,7 @@ void Bullet::tick()
 				particleData.particle->addParticleInternal(particleData.lastSpawnPos, nullptr, nullptr);
 			}
 		}
+
 	}
 	
 	if (monsterBullet)
@@ -256,13 +254,17 @@ void Bullet::modifyDrawLevel(int level)
 
 void Bullet::setPosition(const Vec2& pos)
 {
+	if (this->pos.distanceSquared(pos) > 10.0f * 10.0f)
+	{
+		for (auto& particle : particles)
+		{
+			particle.lastSpawnPos = pos;
+		}
+	}
+
 	this->pos = pos;
 	bloodworks->getBulletController()->relocateBullet(this);
 
-	for (auto& particle : particles)
-	{
-		particle.lastSpawnPos = pos;
-	}
 	clampPos();
 }
 
