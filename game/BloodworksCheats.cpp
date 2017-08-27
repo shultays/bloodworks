@@ -356,7 +356,7 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 
 void BloodworksCheats::onInit()
 {
-	static bool testGame = true;
+	static bool testGame = false;
 	if (coral.isDebuggerPresent())
 	{
 		coral.setFullScreen(false);
