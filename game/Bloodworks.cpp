@@ -694,21 +694,30 @@ void Bloodworks::onPlayerPickedBonus(Bonus *bonus, const Vec2& pos)
 	}
 }
 
-void Bloodworks::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
+int Bloodworks::onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args)
 {
 	for (auto& bonus : activeBonuses)
 	{
 		if (bonus->isActive())
 		{
-			bonus->onMonsterDamaged(monster, damage, dir, args);
+			damage = bonus->onMonsterDamaged(monster, damage, dir, args);
+			if (damage <= 0)
+			{
+				return damage;
+			}
 		}
 	}
 	for (auto& perk : usedPerks)
 	{
-		perk->onMonsterDamaged(monster, damage, dir, args);
+		damage = perk->onMonsterDamaged(monster, damage, dir, args);
+		if (damage <= 0)
+		{
+			return damage;
+		}
 	}
 
-	monsterController->onMonsterDamaged(monster, damage, dir, args);
+	damage = monsterController->onMonsterDamaged(monster, damage, dir, args);
+	return damage;
 }
 
 CollisionController* Bloodworks::getCollisionController() const
