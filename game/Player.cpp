@@ -797,8 +797,8 @@ void Player::setVisible(bool visible)
 	experienceBarBG->setVisible(visible);
 	experienceBarActive->setVisible(visible);
 	experienceBarFG->setVisible(visible);
-	primaryRenderable->setVisible(false);
-	secondaryRenderable->setVisible(visible);
+	primaryRenderable->setVisible(false && gun != nullptr);
+	secondaryRenderable->setVisible(visible && secondaryGun != nullptr);
 	updateHitPoints();
 	updateExperience();
 }

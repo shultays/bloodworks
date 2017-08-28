@@ -479,7 +479,7 @@ void Gun::reload()
 
 int Gun::getMaxAmmo() const
 {
-	return bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
+	return ultimate ? maxAmmo : bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
 }
 
 float Gun::getSpawnChance()
