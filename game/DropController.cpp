@@ -137,11 +137,11 @@ void DropController::tick()
 			remove = true;
 		}
 
-		if (drop.time + 20.0f < timer.getTime())
+		if (drop.time + 30.0f < timer.getTime())
 		{
 			remove = true;
 		}
-		else if (drop.time + 15.0f < timer.getTime())
+		else if (drop.time + 25.0f < timer.getTime())
 		{
 			bool isFadeout = ((int)(timer.getTime() * 3)) % 2 != 0;
 			if (isFadeout == false)
@@ -238,7 +238,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 			return;
 		}
 
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 70.0f;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 50.0f;
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
