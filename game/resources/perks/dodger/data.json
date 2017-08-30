@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Dodger",
   "description": "You have a chance to dodge damage.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "dodger.lua",
   "scriptName" : "Dodger"
 }
