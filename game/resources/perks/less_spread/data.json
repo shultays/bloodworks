@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Less Spread",
   "description": "Your guns do less spread.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "less_spread.lua",
   "scriptName" : "LessSpread"
 }

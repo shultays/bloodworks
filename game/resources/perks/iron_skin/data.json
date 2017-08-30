@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Iron Skin",
   "description": "Your skin reduces the damage you take.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "iron_skin.lua",
   "scriptName" : "IronSkin",
   "maxLevel" : 3

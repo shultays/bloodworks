@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Long Distance Runner",
   "description": "Your movement speed gets higher.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "faster_movement.lua",
   "scriptName" : "FasterMovement"
 }

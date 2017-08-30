@@ -10,7 +10,10 @@ Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& 
 	this->bloodworks = bloodworks;
 	name = j["name"].get<std::string>();
 	description = j["description"].get<std::string>();
-	iconPath = file.folder + j["iconFile"].get<std::string>();
+	if(j["iconFile"].get<std::string>().length() > 0)
+	{
+		iconPath = file.folder + j["iconFile"].get<std::string>();
+	}
 	scriptName = j["scriptName"].get<std::string>();
 
 	if (j.count("maxLevel"))

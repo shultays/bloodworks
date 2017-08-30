@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Scavenger",
   "description": "Getting bonuses and guns also recovers your health a little.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "scavenger.lua",
   "scriptName" : "Scavenger"
 }
