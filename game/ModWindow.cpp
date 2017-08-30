@@ -291,9 +291,10 @@ void ModWindow::tick()
 				int modIndex = (int)reinterpret_cast<size_t>(modSelectButtons[i]->getUserData());
 				showModDetails(loadedMods[modIndex]);
 			}
-		}	
-		if (mapper.isKeyPressed(GameKey::Back))
+		}
+		if (mapper.isKeyPressed(GameKey::Back) || (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center))))
 		{
+			input.clearKeyPress(mouse_button_left);
 			setVisible(false);
 		}
 	}
@@ -388,7 +389,7 @@ void ModWindow::tick()
 				}
 			}
 		}
-		if (mapper.isKeyPressed(GameKey::Back))
+		if (mapper.isKeyPressed(GameKey::Back) || (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center))))
 		{
 			detailIcon->setTexture(""); // todo bug? try removing does not clear the texture
 			setVisible(true);
