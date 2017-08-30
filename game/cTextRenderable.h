@@ -26,13 +26,14 @@ private:
 			pos += newStr.length();
 		}
 	}
+	Vec4 textColor;
 public:
 	cTextRenderable(cGame *game, cFontShr font, std::string text = "", float textSize = 38.0f, Vec4 textColor = Vec4(1.0f)) : cRenderableWithShader(game, "resources/default.vs", "resources/default.ps")
 	{
 		this->font = font;
 		setText(text);
-		this->textSize = textSize;
-		this->color = textColor;
+		setTextSize(textSize);
+		setTextColor(textColor);
 		setTextAlignment(TextAlignment::left);
 		setVerticalTextAlignment(VerticalTextAlignment::bottom);
 		lengthDirty = true;
@@ -78,7 +79,7 @@ public:
 
 	void setTextColor(const Vec4& color)
 	{
-		this->color = color;
+		this->textColor = color;
 	}
 	void setVerticalTextAlignment(VerticalTextAlignment param1);
 	const std::string& getText() const;
