@@ -123,7 +123,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		}
 		
 		glActiveTexture(GL_TEXTURE0);
-		shader->setColor(color);
+		shader->setColor(color * textColor);
 		shader->setTexture0(0);
 
 		for (int i = line.startIndex; i < line.endIndex; i++)

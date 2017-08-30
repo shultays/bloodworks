@@ -3,12 +3,14 @@
 #include "cInput.h"
 #include "cGlobals.h"
 
+#define CONFIG_COUNT 2
+
 void KeyMapper::setSavePath(const std::string& file)
 {
 	for (auto& data : mappedKeys)
 	{
 		cVector<std::string> keyNames;
-		for (int i = 0; i < data.num; i++)
+		for (int i = 0; i < CONFIG_COUNT; i++)
 		{
 			keyNames.push_back(input.getKeyName(data.keys[i]));
 		}
@@ -32,7 +34,6 @@ void KeyMapper::setSavePath(const std::string& file)
 		}
 		else
 		{
-			mappedKeys[index].num = values.size();
 			for (int j = 0; j < values.size(); j++)
 			{
 				mappedKeys[index].keys[j] = keys[j];
@@ -54,9 +55,8 @@ MappedKey KeyMapper::addKeyMap(const std::string& name, Key defaultKey0, Key def
 	keyInfo.keys[1] = defaultKey1;
 	keyInfo.keys[2] = defaultKey2;
 	keyInfo.keys[3] = defaultKey3;
-	keyInfo.num = (keyInfo.keys[0] > 0) + (keyInfo.keys[1] > 0) + (keyInfo.keys[2] > 0) + (keyInfo.keys[3] > 0);
 	cVector<std::string> keyNames;
-	for (int i = 0; i < keyInfo.num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		keyNames.push_back(input.getKeyName(keyInfo.keys[i]));
 	}
@@ -81,9 +81,8 @@ void KeyMapper::setKeyMap(MappedKey key, Key defaultKey0, Key defaultKey1 /*= (K
 	keyInfo.keys[1] = defaultKey1;
 	keyInfo.keys[2] = defaultKey2;
 	keyInfo.keys[3] = defaultKey3;
-	keyInfo.num = (keyInfo.keys[0] > 0) + (keyInfo.keys[1] > 0) + (keyInfo.keys[2] > 0) + (keyInfo.keys[3] > 0);
 	cVector<std::string> keyNames;
-	for (int i = 0; i < keyInfo.num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		keyNames.push_back(input.getKeyName(keyInfo.keys[i]));
 	}
@@ -92,7 +91,7 @@ void KeyMapper::setKeyMap(MappedKey key, Key defaultKey0, Key defaultKey1 /*= (K
 
 bool KeyMapper::isKeyDown(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		if (input.isKeyDown(mappedKeys[key].keys[i])) return true;
 	}
@@ -101,7 +100,7 @@ bool KeyMapper::isKeyDown(MappedKey key)
 
 bool KeyMapper::isKeyUp(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		if (input.isKeyUp(mappedKeys[key].keys[i]) == false) return false;
 	}
@@ -110,7 +109,7 @@ bool KeyMapper::isKeyUp(MappedKey key)
 
 bool KeyMapper::isKeyPressed(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		if (input.isKeyPressed(mappedKeys[key].keys[i])) return true;
 	}
@@ -119,7 +118,7 @@ bool KeyMapper::isKeyPressed(MappedKey key)
 
 bool KeyMapper::isKeyReleased(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		if (input.isKeyReleased(mappedKeys[key].keys[i])) return true;
 	}
@@ -130,7 +129,7 @@ float KeyMapper::getKeyTime(MappedKey key)
 {
 	float maxTime = -1.0f;
 
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		float t = input.getKeyTime(mappedKeys[key].keys[i]);
 		if (maxTime < t)
@@ -143,7 +142,7 @@ float KeyMapper::getKeyTime(MappedKey key)
 
 void KeyMapper::clearKeyPress(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		input.clearKeyPress(mappedKeys[key].keys[i]);
 	}
@@ -151,7 +150,7 @@ void KeyMapper::clearKeyPress(MappedKey key)
 
 void KeyMapper::clearKeyRelease(MappedKey key)
 {
-	for (int i = 0; i < mappedKeys[key].num; i++)
+	for (int i = 0; i < CONFIG_COUNT; i++)
 	{
 		input.clearKeyRelease(mappedKeys[key].keys[i]);
 	}

@@ -15,10 +15,8 @@ class cKeyMapButton : public cRenderableContainer
 	bool changed;
 	bool inUse;
 	Vec2 bgSize;
-	std::string oldText;
 	
-	int keyCount;
-	Key keys[4];
+	Key gameKey;
 public:
 	cKeyMapButton(cGame *game);
 	void check(const Vec2& mousePos, bool ignoreClick = false);
@@ -32,5 +30,6 @@ public:
 	}
 	void cancel();
 	void mapKeysTo(MappedKey key) const;
-	void setKeys(const Key keys[4]);
+	void setKey(const Key gameKey);
+	void setInUse();
 };

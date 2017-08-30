@@ -257,6 +257,11 @@ enum Key
 	mouse_button_5,
 	mouse_end = mouse_button_5,
 
+	joystick_0_button_up,
+	joystick_0_button_down,
+	joystick_0_button_left,
+	joystick_0_button_right,
+
 	joystick_0_button_a,
 	joystick_0_button_b,
 	joystick_0_button_x,
@@ -266,10 +271,14 @@ enum Key
 	joystick_0_button_back,
 	joystick_0_button_start,
 
+	key_count,
+
 	joystick_0_start = joystick_0_button_a,
 	joystick_0_end = joystick_0_button_start,
 
-	key_count,
+	joystickhat_hat_0_start = joystick_0_button_up,
+	joystickhat_hat_0_end = joystick_0_button_right,
+
 };
 
 class cInput
