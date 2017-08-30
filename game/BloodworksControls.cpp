@@ -8,25 +8,22 @@ void BloodworksControls::init()
 {
 	const Key GameKeyValues[][4] =
 	{
-		{ key_left, key_a },
-		{ key_right, key_d },
-		{ key_up, key_w },
-		{ key_down, key_s },
+		{ key_a,					joystick_0_button_up },
+		{ key_d,					joystick_0_button_down },
+		{ key_w,					joystick_0_button_left },
+		{ key_s,					joystick_0_button_right },
 
-		{ mouse_button_left, joystick_0_button_rightshoulder },
-		{ mouse_button_right, joystick_0_button_a },
-		{ mouse_button_middle, joystick_0_button_b },
+		{ mouse_button_left,		joystick_0_button_rightshoulder },
+		{ mouse_button_right,		joystick_0_button_a },
 
-		{ key_r, mouse_button_4, joystick_0_button_leftshoulder },
-		{ key_tab, joystick_0_button_y },
-		{ key_e, mouse_button_5, joystick_0_button_x },
+		{ key_r,					joystick_0_button_leftshoulder },
+		{ key_tab,					joystick_0_button_y },
 
-		{ key_p, joystick_0_button_start },
-		{ key_space },
+		{ key_p,					joystick_0_button_start },
 
-		{ key_return, key_space, joystick_0_button_x },
-		{ key_escape, joystick_0_button_back },
-		{ key_f10 },
+		{ key_return,				joystick_0_button_x },
+		{ key_escape,				joystick_0_button_back },
+		{ key_f10,					key_invalid},
 
 	};
 
@@ -37,20 +34,17 @@ void BloodworksControls::init()
 		"Up",
 		"Down",
 		"Attack",
-		"Attack2",
-		"Special",
+		"Ultimate",
 		"Reload",
 		"Level_Up",
 		"Pause",
-		"Swap_Guns",
-		"Show_Hints",
 		"Select",
 		"Back",
 		"Toggle_Fullscreen",
 	};
 
 	mapper.setSavePath("keys.txt");
-	for (int i = 0; i < (int)GameKey::EndStatic; i++)
+	for (int i = 0; i < (int)GameKey::Count; i++)
 	{
 		BloodworksControls::KeyData keyData;
 		GameKey key = (GameKey)i;
