@@ -484,11 +484,17 @@ int Gun::getMaxAmmo() const
 
 float Gun::getSpawnChance()
 {
+	float chance = spawnChance;
 	if (dynamicSpawnChance)
 	{
-		return dynamicSpawnChance();
+		chance = dynamicSpawnChance();
 	}
-	return spawnChance;
+
+	if (bloodworks->getPlayer()->getGun() == this || bloodworks->getPlayer()->getSecondaryGun() == this)
+	{
+		chance *= 0.1f;
+	}
+	return chance;
 }
 
 float Gun::getBulletLifeTime() const

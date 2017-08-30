@@ -15,6 +15,8 @@ function BananaBomb.onTick(gun)
         gameObject.data.speed = gameObject.data.speed * (math.random() * 30.0 + 100.0)
         gameObject.data.throwDuration = gameObject.data.throwDuration * 0.8
         gameObject:setPosition(player.position)
+        playSound({path = "~/resources/sounds/swish.ogg"})
+        
     end
     
     if data.shooting >= 0.0 then
