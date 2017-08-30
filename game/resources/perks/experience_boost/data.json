@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Experience Boost",
   "description": "Monsters give you more experience.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "experience_boost.lua",
   "scriptName" : "ExperienceBoostPerk"
 }
