@@ -13,16 +13,13 @@ enum class GameKey : MappedKey
 	Down,
 	Attack,
 	Attack2,
-	Special,
 	Reload,
 	LevelUp,
 	Pause,
-	SwapGuns,
-	ShowHints,
 	Select,
 	Back,
 	Fullscreen,
-	EndStatic
+	Count
 };
 
 class BloodworksControls

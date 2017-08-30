@@ -111,6 +111,7 @@ void cInput::setMousePos(const Vec2& pos, const Vec2& relativePos)
 
 void cInput::setLuaKeys()
 {
+	nameMap["Unassigned"] = key_invalid;
 	nameMap["A"] = key_a;
 	nameMap["B"] = key_b;
 	nameMap["C"] = key_c;
@@ -357,14 +358,19 @@ void cInput::setLuaKeys()
 	nameMap["Mouse4"] = mouse_button_4;
 	nameMap["Mouse5"] = mouse_button_5;
 
-	nameMap["joystick_a"] = joystick_0_button_a;
-	nameMap["joystick_b"] = joystick_0_button_b;
-	nameMap["joystick_x"] = joystick_0_button_x;
-	nameMap["joystick_y"] = joystick_0_button_y;
-	nameMap["joystick_leftshoulder"] = joystick_0_button_leftshoulder;
-	nameMap["joystick_rightshoulder"] = joystick_0_button_rightshoulder;
-	nameMap["joystick_back"] = joystick_0_button_back;
-	nameMap["joystick_start"] = joystick_0_button_start;
+	nameMap["j_up"] = joystick_0_button_up;
+	nameMap["j_down"] = joystick_0_button_down;
+	nameMap["j_left"] = joystick_0_button_left;
+	nameMap["j_right"] = joystick_0_button_right;
+
+	nameMap["j_a"] = joystick_0_button_a;
+	nameMap["j_b"] = joystick_0_button_b;
+	nameMap["j_x"] = joystick_0_button_x;
+	nameMap["j_y"] = joystick_0_button_y;
+	nameMap["j_leftshoulder"] = joystick_0_button_leftshoulder;
+	nameMap["j_rightshoulder"] = joystick_0_button_rightshoulder;
+	nameMap["j_back"] = joystick_0_button_back;
+	nameMap["j_start"] = joystick_0_button_start;
 
 	auto keys = lua["keys"] = lua.create_table();
 	for (auto& key : nameMap)

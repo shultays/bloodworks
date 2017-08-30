@@ -548,7 +548,7 @@ void Player::tick()
 
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
-	healthRenderable->setVisible(mapper.isKeyDown(GameKey::ShowHints));
+	healthRenderable->setVisible(input.isKeyDown(key_space));
 	gunPos = pos + aimDir * 24.0f - aimDir.sideVec() * 6.0f;
 
 	Mat3 mat = Mat3::identity();
