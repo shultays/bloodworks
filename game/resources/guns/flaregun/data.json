@@ -7,10 +7,10 @@
   "bulletMeshShift" : [-5.0, 0.0],
   "bulletRadius" : 3.0,
   "bulletSpeed" : 320.0,
-  "bulletDamage" : [65, 75],
+  "bulletDamage" : [65, 85],
   
-  "maxAmmo" : 8,
-  "reloadTime" : 0.6,
+  "maxAmmo" : 10,
+  "reloadTime" : 0.4,
   
   "firingSound" : {
     "path" : "~/resources/sounds/flare.ogg",
