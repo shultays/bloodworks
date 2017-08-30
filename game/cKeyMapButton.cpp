@@ -26,7 +26,7 @@ cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableContainer(game)
 
 	changed = false;
 	inUse = false;
-	keyCount = false;
+	gameKey = key_invalid;
 }
 
 void cKeyMapButton::check(const Vec2& mousePos, bool ignoreClick)
@@ -41,52 +41,25 @@ void cKeyMapButton::check(const Vec2& mousePos, bool ignoreClick)
 		{
 			cancel();
 		}
-		else if (input.isKeyPressed(key_return) || keyCount == 4)
-		{
-			if (keys[0] == key_invalid)
-			{
-				cancel();
-			}
-			else
-			{
-				changed = true;
-				inUse = false;
-			}
-		}
 		else
 		{
 			for (int k = 0; k < key_count; k++)
 			{
 				if (k != key_escape && k != key_return && input.isKeyPressed(k))
 				{
-					if (keys[0] != k && keys[1] != k && keys[2] != k && keys[3] != k)
-					{
-						if (keyCount == 0)
-						{
-							text->setText(input.getKeyName((Key)k));
-						}
-						else
-						{
-							text->setText(text->getText() + " " + input.getKeyName((Key)k));
-						}
-						keys[keyCount++] = (Key)k;
-					}
+					text->setText(input.getKeyName((Key)k));
+					gameKey = (Key)k;
+
+					changed = true;
+					inUse = false;
 				}
 			}
 		}
 	}
 	else if (bgButton->isClicked())
 	{
-		keyCount = 0;
-		keys[0] = key_invalid;
-		keys[1] = key_invalid;
-		keys[2] = key_invalid;
-		keys[3] = key_invalid;
-		inUse = true;
-		oldText = text->getText();
-		text->setText("");
+		setInUse();
 	}
-
 }
 
 void cKeyMapButton::cancel()
@@ -94,42 +67,24 @@ void cKeyMapButton::cancel()
 	if (inUse)
 	{
 		inUse = false;
-		text->setText(oldText);
+		text->setText(input.getKeyName(gameKey));
 	}
 }
 
 void cKeyMapButton::mapKeysTo(MappedKey key) const
 {
-	if (keyCount)
-	{
-		mapper.setKeyMap(key, keys[0], keys[1], keys[2], keys[3]);
-	}
+	mapper.setKeyMap(key, gameKey);
 }
 
-void cKeyMapButton::setKeys(const Key keys[4])
+void cKeyMapButton::setKey(const Key gameKey)
 {
-	if (keys[0] == key_invalid)
-	{
-		keyCount = 0;
-		text->setText("Unassigned");
-	}
-	else
-	{
-		keyCount = 1;
-		text->setText(input.getKeyName(keys[0]));
-		this->keys[0] = keys[0];
-		for (int i = 1; i < 4; i++)
-		{
-			if (keys[i] == key_invalid)
-			{
-				break;
-			}
-			else
-			{
-				this->keys[i] = keys[i];
-				text->setText(text->getText() + " " + input.getKeyName(keys[i]));
-			}
-		}
-	}
+	this->gameKey = gameKey;
+	text->setText(input.getKeyName(gameKey));
+}
+
+void cKeyMapButton::setInUse()
+{
+	inUse = true;
+	text->setText("Press Any Key");
 }
 

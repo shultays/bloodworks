@@ -209,11 +209,58 @@ void RunGame()
 			}
 			else if (event.type == SDL_JOYBUTTONDOWN)
 			{
-				input.pressKey(event.jbutton.button + joystick_0_start);
+				if (event.jbutton.button + joystick_0_start <= joystick_0_end)
+				{
+					input.pressKey(event.jbutton.button + joystick_0_start);
+				}
 			}
 			else if (event.type == SDL_JOYBUTTONUP)
 			{
-				input.releaseKey(event.jbutton.button + joystick_0_start);
+				if (event.jbutton.button + joystick_0_start <= joystick_0_end)
+				{
+					input.releaseKey(event.jbutton.button + joystick_0_start);
+				}
+			}
+
+			else if (event.type == SDL_JOYHATMOTION)
+			{
+				bool up = (event.jhat.value & SDL_HAT_UP) > 0;
+				bool down = (event.jhat.value & SDL_HAT_DOWN) > 0;
+				bool left = (event.jhat.value & SDL_HAT_LEFT) > 0;
+				bool right = (event.jhat.value & SDL_HAT_RIGHT) > 0;
+
+				if (up && input.isKeyUp(joystick_0_button_up))
+				{
+					input.pressKey(joystick_0_button_up);
+				}
+				else if (!up && input.isKeyDown(joystick_0_button_up))
+				{
+					input.releaseKey(joystick_0_button_up);
+				}
+				if (down && input.isKeyUp(joystick_0_button_down))
+				{
+					input.pressKey(joystick_0_button_down);
+				}
+				else if (!down && input.isKeyDown(joystick_0_button_down))
+				{
+					input.releaseKey(joystick_0_button_down);
+				}
+				if (left && input.isKeyUp(joystick_0_button_left))
+				{
+					input.pressKey(joystick_0_button_left);
+				}
+				else if (!left && input.isKeyDown(joystick_0_button_left))
+				{
+					input.releaseKey(joystick_0_button_left);
+				}
+				if (right && input.isKeyUp(joystick_0_button_right))
+				{
+					input.pressKey(joystick_0_button_right);
+				}
+				else if (!right && input.isKeyDown(joystick_0_button_right))
+				{
+					input.releaseKey(joystick_0_button_right);
+				}
 			}
 
 			

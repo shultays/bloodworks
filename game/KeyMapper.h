@@ -13,7 +13,7 @@ class KeyMapper
 	struct KeyInfo
 	{
 		std::string name;
-		int num;
+		//int num;
 		Key keys[4];
 	};
 

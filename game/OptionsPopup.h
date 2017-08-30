@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cVector.h"
+#include "cAARect.h"
 
 class Bloodworks;
 class cRenderableContainer;
@@ -43,6 +44,8 @@ class OptionsPopup
 	cScrollContainer *inputGroup;
 
 	cSlider *sensitivity;
+	cButton *controlSwitch;
+	cTextRenderable *controlSwitchText;
 
 	cKeyMapButton *inUseKey;
 	cVector<cKeyMapButton*> keyMapButtons;
@@ -58,6 +61,8 @@ class OptionsPopup
 	bool changingTabs;
 
 	void changeTab(cButton *tab, cRenderable *group);
+
+	AARect inside;
 public:
 	OptionsPopup(Bloodworks *bloodworks);
 	~OptionsPopup();

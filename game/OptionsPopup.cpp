@@ -26,7 +26,9 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->setAlignment(RenderableAlignment::center);
 
 	cTexturedQuadRenderable *t = new cTexturedQuadRenderable(bloodworks, "resources/level_up_bg.png", "resources/default");
+	Vec2 size = t->getTexture()->getDimensions().toVec() * 0.65f;
 	t->setWorldMatrix(Mat3::scaleMatrix(t->getTexture()->getDimensions().toVec() * 0.65f));
+	inside = AARect(size * -0.5f, size * 0.5f);
 	optionsGroup->addRenderable(t);
 	
 	const float titleY = 150.0f;
@@ -63,12 +65,12 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	x = -200.0f;
 	y = 40.0f;
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize);
+	
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
 	text->setTextAlignment(TextAlignment::left);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	gameplayGroup->addRenderable(text);
-
 	gore = new cTickBox(bloodworks);
 	gore->setWorldMatrix(Mat3::translationMatrix(x, y));
 	gore->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
@@ -79,7 +81,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	gore->setChecked(config->getGore());
 	y -= rowShift;
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
 	text->setTextAlignment(TextAlignment::left);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
@@ -143,6 +145,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(inputTitle);
 
 	inputGroup = new cScrollContainer(bloodworks);
+	inputGroup->setAlignment(RenderableAlignment::center);
 	inputGroup->setVisible(false);
 
 	x = -240.0f;
@@ -162,27 +165,53 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	sensitivity->setMinMax(0, 100);
 	sensitivity->setValue((int)round(config->getSensitivity() * 100));
 	inputGroup->addRenderable(sensitivity);
+	y -= rowShift;
+
+
+	controlSwitch = new cButton(bloodworks);
+	controlSwitch->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), nullptr);
+	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, "resources/ui/slider_bg.png", "resources/default");
+	Vec2 bgSize = quad->getTexture()->getDimensions().toVec();
+	quad->setWorldMatrix(Mat3::scaleMatrix(bgSize));
+	controlSwitch->addRenderable(quad);
+	controlSwitch->setDefaultMatrix(Vec2(0.0f, y - 5.0f), 1.0f, 0.0f);
+	controlSwitch->setHoverMatrix(Vec2(0.0f, y - 5.0f), 1.0f, 0.0f);
+	controlSwitch->setHitArea(-bgSize, bgSize);
+
+	controlSwitchText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "< Keyboard >", 18.0f);
+	controlSwitchText->setWorldMatrix(Mat3::translationMatrix(0.0f, bgSize.h * 0.7f));
+	controlSwitchText->setTextAlignment(TextAlignment::center);
+	controlSwitchText->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	controlSwitch->addRenderable(controlSwitchText);
+	inputGroup->addRenderable(controlSwitch);
 
 	optionsGroup->addRenderable(inputGroup);
 
 	y -= rowShift;
 
-	for (auto& key : BloodworksControls::getKeyData())
+	float yBase = y;
+	for (int i = 0; i < 2; i++)
 	{
+		y = yBase;
+		for (auto& key : BloodworksControls::getKeyData())
+		{
+			text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), key.keyName, fontSize);
+			text->setWorldMatrix(Mat3::translationMatrix(x, y));
+			text->setTextAlignment(TextAlignment::left);
+			text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+			inputGroup->addRenderable(text);
 
-		text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), key.keyName, fontSize);
-		text->setWorldMatrix(Mat3::translationMatrix(x, y));
-		text->setTextAlignment(TextAlignment::left);
-		text->setVerticalTextAlignment(VerticalTextAlignment::mid);
-		inputGroup->addRenderable(text);
-
-		cKeyMapButton *k = new cKeyMapButton(bloodworks);
-		k->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
-		inputGroup->addRenderable(k);
-		k->setKeys(mapper.getMappedKeys(key.key));
-		keyMapButtons.push_back(k);
-
-		y -= rowShift * 0.7f;
+			cKeyMapButton *k = new cKeyMapButton(bloodworks);
+			k->setWorldMatrix(Mat3::translationMatrix(x + sliderShift, y - 5.0f));
+			inputGroup->addRenderable(k);
+			k->setKey(mapper.getMappedKeys(key.key)[i]);
+			keyMapButtons.push_back(k);
+			if (i > 0)
+			{
+				k->setVisible(false);
+			}
+			y -= rowShift * 0.7f;
+		}
 	}
 	inputGroup->setRect(AARect(-300.0f, -180.0f, 300.0f, 110.0f));
 	inputGroup->setMaxScroll(startY - y + 20.0f);
@@ -233,7 +262,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	y -= rowShift;
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "V-Sync", fontSize);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "V-Sync", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
 	text->setTextAlignment(TextAlignment::left);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
@@ -385,10 +414,35 @@ void OptionsPopup::tick()
 		Vec2 transformedPos = input.getMousePos() - inputGroup->getScrollMatrix().row2.vec2;
 
 		sensitivity->check(transformedPos, !isInside);
-
 		if (sensitivity->isChanged())
 		{
 			config->setSensitivity(sensitivity->getIntValue() / 100.0f);
+		}
+
+		controlSwitch->check(transformedPos, !isInside);
+		if (controlSwitch->isClicked())
+		{
+			int page = keyMapButtons[0]->isVisible() ? 1 : 0;
+			if (page == 0)
+			{
+				controlSwitchText->setText("< Keyboard >");
+			}
+			else if (page == 1)
+			{
+				controlSwitchText->setText("< Joystick >");
+			}
+			for (int i = 0; i < keyMapButtons.size(); i++)
+			{
+				auto& key = keyMapButtons[i];
+				if (i >= page * (int)GameKey::Count && i < (page + 1)* (int)GameKey::Count)
+				{
+					key->setVisible(true);
+				}
+				else
+				{
+					key->setVisible(false);
+				}
+			}
 		}
 
 		inputGroup->check(input.getMousePos());
@@ -400,18 +454,21 @@ void OptionsPopup::tick()
 		for (int i=0; i<keyMapButtons.size(); i++)
 		{
 			auto& key = keyMapButtons[i];
-			key->check(transformedPos, !isInside);
-			if (key->isInUse())
+			if (key->isVisible())
 			{
-				if (inUseKey != nullptr && inUseKey != key)
+				key->check(transformedPos, !isInside);
+				if (key->isInUse())
 				{
-					inUseKey->cancel();
+					if (inUseKey != nullptr && inUseKey != key)
+					{
+						inUseKey->cancel();
+					}
+					inUseKey = key;
 				}
-				inUseKey = key;
-			}
-			if (key->isChanged())
-			{
-				key->mapKeysTo(BloodworksControls::getKeyData()[i].key);
+				if (key->isChanged())
+				{
+					key->mapKeysTo(BloodworksControls::getKeyData()[i].key);
+				}
 			}
 		}
 	}
@@ -447,6 +504,11 @@ void OptionsPopup::tick()
 		}
 	}
 
+	if (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center)))
+	{
+		input.clearKeyPress(mouse_button_left);
+		optionsGroup->setVisible(false);
+	}
 	if (mapper.isKeyPressed(GameKey::Back) && inUseKey == nullptr)
 	{
 		optionsGroup->setVisible(false);
