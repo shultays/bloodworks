@@ -80,7 +80,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		}
 	}
 
-	float lineHeight = (textSize + linePadding) * mat._00;
+	float lineHeight = (textSize + linePadding);
 
 	for (int l=0; l<lineData.size(); l++)
 	{
@@ -91,11 +91,11 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 		if (verticalTextAlignment == VerticalTextAlignment::top)
 		{
-			temp2.translateBy(0.0f, -textSize* mat._00 - lineHeight*lineData.size());
+			temp2.translateBy(0.0f, -textSize - lineHeight*lineData.size());
 		}
 		else if (verticalTextAlignment == VerticalTextAlignment::mid)
 		{
-			temp2.translateBy(0.0f, textSize* mat._00 * -0.5f + lineHeight * ((lineData.size() - 1) * 0.5f));
+			temp2.translateBy(0.0f, textSize * -0.5f + lineHeight * ((lineData.size() - 1) * 0.5f));
 		}
 
 		Mat3 temp = isIdentity ? temp2 : temp2 * mat;
@@ -121,7 +121,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 		if (l > 0)
 		{
-			temp.translateBy(0.0f, -l * lineHeight);
+			temp.translateBy(0.0f, -l * lineHeight * mat._00);
 		}
 		
 		glActiveTexture(GL_TEXTURE0);
