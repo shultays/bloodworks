@@ -292,9 +292,11 @@ void LevelUpPopup::tick()
 		}
 	}
 
-	if (mapper.isKeyPressed(GameKey::Back))
+
+	if (mapper.isKeyPressed(GameKey::Back) || (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center))))
 	{
 		mapper.clearKeyPress(GameKey::Back);
+		input.clearKeyPress(mouse_button_left);
 
 		input.hideMouse();
 		bloodworks->doUnpause();
