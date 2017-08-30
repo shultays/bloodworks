@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Faster Reload",
   "description": "You reload your gun at a faster rate.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "faster_reload.lua",
   "scriptName" : "FasterReload",
   "maxLevel" : 3

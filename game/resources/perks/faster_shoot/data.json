@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Increased Rate of Fire",
   "description": "Your rate of fire increases.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "faster_shoot.lua",
   "scriptName" : "FasterShoot"
 }
