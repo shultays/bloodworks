@@ -3,5 +3,6 @@
   "name": "Explosion",
   "iconFile" : "icon.png",
   "scriptFile" : "explosion.lua",
-  "scriptName" : "Explosion"
+  "scriptName" : "Explosion", 
+  "spawnChance" : 1.5
 }

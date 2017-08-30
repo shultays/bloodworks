@@ -107,7 +107,7 @@ cTextRenderable* GameObject::addText(const std::string& text, const std::string&
 {
 	checkRenderable();
 
-	cTextRenderable *renderable = new cTextRenderable((cGame*)bloodworks, resources.getFont(font.size() ? font : "resources/fontData.txt"), text);
+	cTextRenderable *renderable = new cTextRenderable(bloodworks, resources.getFont(font.size() ? font : "resources/fontData.txt"), text);
 	renderableGroup->addRenderable(renderable);
 
 	return renderable;
