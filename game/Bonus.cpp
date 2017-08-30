@@ -79,11 +79,12 @@ void Bonus::reset()
 
 float Bonus::getSpawnChance()
 {
+	float chance = spawnChance;
 	if (dynamicSpawnChance)
 	{
-		return dynamicSpawnChance(this);
+		chance = dynamicSpawnChance(this);
 	}
-	return spawnChance;
+	return chance * 2.0f;
 }
 
 void Bonus::onTick()

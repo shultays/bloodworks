@@ -30,7 +30,7 @@ function FlareGun.onBulletHit(gun, bullet, monster)
         if monster.data.burnParticle == nil then
             monster.data.burnParticle = monster:addParticleSpawner("FlameParticle", {})
         end
-        monster.data.flamethrowerObject.data.count = 7
+        monster.data.flamethrowerObject.data.count = 9
     end
 end
 
