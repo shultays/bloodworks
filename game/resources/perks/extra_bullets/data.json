@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Extra Clip Size",
   "description": "Your guns have more ammo.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "extra_bullets.lua",
   "scriptName" : "ExtraBullets"
 }

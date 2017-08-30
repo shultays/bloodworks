@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Experience",
   "description": "You gain a big percentage of experience for your next level.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "experience.lua",
   "scriptName" : "ExperiencePerk",
   "maxLevel" : -1
