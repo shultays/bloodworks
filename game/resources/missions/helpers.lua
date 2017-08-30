@@ -73,13 +73,15 @@ function makeBossDefault(monster)
     monster.scoreMultiplier = 5.0 + math.random() * 2.0
     monster:modifyDrawLevel(3)
     local t = math.random(11)
-    --t = 2
+    --t = 1
     
     if t == 1 then -- huge & tank
         monster.hitPoint = monster.hitPoint * 7
         monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
         monster:setScale(1.0 + math.random() * 0.3)
         monster.knockbackResistance:addBuff(0.07)
+        monster.data.stunDuration = 0.0
+        monster.data.slowDuration = 0.0
     elseif t == 2 then -- ghost
         monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
         monster:setScale(monster.scale * 0.85)

@@ -9,7 +9,7 @@
   "bulletDamage" : [40, 70],
   
   "maxAmmo" : 6,
-  "reloadTime" : 2.0,
+  "reloadTime" : 2.8,
   
   "firingSound" : "~/resources/sounds/rocket.ogg",
   "bulletHitSound" : "~/resources/sounds/missile_explosion.ogg",
