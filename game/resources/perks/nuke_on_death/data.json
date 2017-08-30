@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Final Revenge",
   "description": "You get your revenge on death.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "nuke_on_death.lua",
   "scriptName" : "NukeOnDeath"
 }
