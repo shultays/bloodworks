@@ -46,6 +46,10 @@ BloodworksCheats::~BloodworksCheats()
 
 void BloodworksCheats::onTick()
 {
+	if (bloodworks->isMissionLoaded() == false)
+	{
+		return;
+	}
 	const cVector<Perk*>& perks = bloodworks->getPerks();
 	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
 	const cVector<Gun*>& guns = bloodworks->getGuns();
