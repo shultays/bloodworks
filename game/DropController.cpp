@@ -11,6 +11,7 @@
 #include "Monster.h"
 #include "Gun.h"
 #include "BloodworksControls.h"
+#include "MonsterController.h"
 
 DropController::~DropController()
 {
@@ -19,7 +20,6 @@ DropController::~DropController()
 
 void DropController::spawnGun(const Vec2& position, int forceIndex)
 {
-	lastDropSpawn = timer.getTime();
 	Drop drop;
 	drop.bonus = nullptr;
 	drop.time = timer.getTime();
@@ -64,7 +64,6 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 
 void DropController::spawnBonus(const Vec2& position, int forceIndex)
 {
-	lastDropSpawn = timer.getTime();
 	Drop drop;
 	drop.canFadeout = false;
 	drop.time = timer.getTime();
@@ -96,6 +95,23 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 
 void DropController::tick()
 {
+	if (bloodworks->isMissionLoaded() == false)
+	{
+		return;
+	}
+	if (timer.getDt() > 0.0f)
+	{
+		float timeSinceLastDrop = timer.getTime() - lastRandomDropSpawn;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 50.0f;
+		float r = randFloat();
+		if (r < extraDropChance)
+		{
+			const Vec2& pos = bloodworks->getMonsterController()->getRandomPos(lua.create_table()); // todo this shouldnt be in monstercontroller
+			lastRandomDropSpawn = timer.getTime();
+			spawnDrop(pos);
+		}
+	}
+
 	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
 	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (int i = 0; i < drops.size(); i++)
@@ -219,7 +235,7 @@ void DropController::reset()
 		SAFE_DELETE(drop.text);
 	}
 	drops.clear();
-	lastDropSpawn = timer.getTime();
+	lastRandomDropSpawn = lastDropSpawn = timer.getTime();
 }
 
 void DropController::onMonsterDied(Monster* monster, float dropChance)
@@ -242,6 +258,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
+			lastDropSpawn = timer.getTime();
 			spawnDrop(pos);
 		}
 	}
@@ -249,6 +266,6 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 
 float DropController::getLastSpawnTime() const
 {
-	return lastDropSpawn;
+	return max(lastRandomDropSpawn, lastDropSpawn);
 }
 
