@@ -26,11 +26,13 @@ class DropController
 	cVector<Drop> drops;
 
 	float lastDropSpawn;
+	float lastRandomDropSpawn;
 public:
 	DropController(Bloodworks *bloodworks)
 	{
 		this->bloodworks = bloodworks;
 		lastDropSpawn = 0.0f;
+		lastRandomDropSpawn = 0.0f;
 	}
 	~DropController();
 
