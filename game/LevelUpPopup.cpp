@@ -164,6 +164,7 @@ void LevelUpPopup::show(bool setAlpha)
 			text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 			text->setMaxLength(70.0f);
 			text->setMaxLineCount(6);
+			text->setLinePadding(0.0f);
 			t->addRenderable(text);
 		}
 
