@@ -17,9 +17,11 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 	cVector<struct LineData> lineData;
 	lineData.reserve(4);
+	float scaledLength = maxLength * mat._00;
 
 	{
 		int lastCharToDraw = 0;
+
 		while (true)
 		{
 			struct LineData data;
@@ -49,7 +51,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 				}
 				float t = charSize * textSize / font->maxWidth + font->leftPadding + font->rightPadding;
 				float newLength = length + t * mat._00;
-				if (newLength > maxLength)
+				if (newLength > scaledLength)
 				{
 					if (lastSpaceIndex == -1)
 					{
@@ -78,7 +80,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		}
 	}
 
-	float lineHeight = textSize + 6.0f;
+	float lineHeight = (textSize + linePadding) * mat._00;
 
 	for (int l=0; l<lineData.size(); l++)
 	{
@@ -89,11 +91,11 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 		if (verticalTextAlignment == VerticalTextAlignment::top)
 		{
-			temp2.translateBy(0.0f, -textSize - lineHeight*lineData.size());
+			temp2.translateBy(0.0f, -textSize* mat._00 - lineHeight*lineData.size());
 		}
 		else if (verticalTextAlignment == VerticalTextAlignment::mid)
 		{
-			temp2.translateBy(0.0f, textSize * -0.5f + lineHeight * ((lineData.size() - 1) * 0.5f));
+			temp2.translateBy(0.0f, textSize* mat._00 * -0.5f + lineHeight * ((lineData.size() - 1) * 0.5f));
 		}
 
 		Mat3 temp = isIdentity ? temp2 : temp2 * mat;
@@ -111,9 +113,9 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 		if (textAlignment == TextAlignment::fit && line.endIndex - line.startIndex > 0 && line.useSurplus)
 		{
-			if (maxLength - line.length < maxLength * 0.5f)
+			if (scaledLength - line.length < scaledLength * 0.5f)
 			{
-				subplusLength = (maxLength - line.length) / (line.endIndex - line.startIndex);
+				subplusLength = (scaledLength - line.length) / (line.endIndex - line.startIndex);
 			}
 		}
 

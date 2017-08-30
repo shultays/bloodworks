@@ -2,7 +2,7 @@
   "type" : "perk",
   "name": "Faster Bullets",
   "description": "Your bullets move faster.",
-  "iconFile" : "icon.png",
+  "iconFile" : "",
   "scriptFile" : "faster_bullets.lua",
   "scriptName" : "FasterBullets"
 }

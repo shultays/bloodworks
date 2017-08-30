@@ -145,9 +145,28 @@ void LevelUpPopup::show(bool setAlpha)
 		t->setHoverSpeed(10.0f);
 		t->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 
-		cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, levelupPerks[i]->getIconPath(), "resources/default");
+		std::string iconPath = levelupPerks[i]->getIconPath();
+		bool addText = false;
+		if (iconPath == "")
+		{
+			iconPath = "resources/perks/default_icon.png";
+			addText = true;
+		}
+		cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, iconPath, "resources/default");
 		quad->setWorldMatrix(Mat3::scaleMatrix(40.0f));
 		t->addRenderable(quad);
+
+		if (addText)
+		{
+			cTextRenderable *text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), levelupPerks[i]->getName(), 12.0f);
+			text->setWorldMatrix(Mat3::translationMatrix(0.0f, 8.0f));
+			text->setTextAlignment(TextAlignment::center);
+			text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+			text->setMaxLength(70.0f);
+			text->setMaxLineCount(6);
+			t->addRenderable(text);
+		}
+
 		bloodworks->addRenderable(t, GUI + 151);
 		levelupPerksRenderables.push_back(t);
 	}

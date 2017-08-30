@@ -8,6 +8,7 @@ class cTextRenderable : public cRenderableWithShader
 private:
 	cFontShr font;
 	float textSize;
+	float linePadding;
 	std::string text;
 	std::string textToPrint;
 	friend class cDebugRenderable;
@@ -39,6 +40,7 @@ public:
 		lengthDirty = true;
 		maxLength = FLT_MAX;
 		maxLine = INT_MAX;
+		linePadding = 6.0f;
 	}
 
 	virtual ~cTextRenderable()
@@ -46,6 +48,11 @@ public:
 		font = nullptr;
 	}
 
+	void setLinePadding(float linePadding)
+	{
+		this->linePadding = linePadding;
+		lengthDirty = true;
+	}
 	void setMaxLength(float maxLength)
 	{
 		this->maxLength = maxLength;
