@@ -392,7 +392,14 @@ void Gun::reset()
 {
 	data = lua.create_table();
 	id = bloodworks->getUniqueId();
-
+	playGunShootSound = false;
+	if (gunShootSoundHandle.isValid())
+	{
+		gunShootSoundCurVolume = 0.0f;
+		gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
+		gunShootSoundHandle.stop();
+		gunShootSoundHandle.clear();
+	}
 	spreadAngle = 0.0f;
 
 	currentAmmo = maxAmmo;
