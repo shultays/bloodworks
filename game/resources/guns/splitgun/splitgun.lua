@@ -24,7 +24,7 @@ function SplitGun.onTick(gun)
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
             
-            playSound({path = "~/resources/sounds/split_gun.ogg"})
+            playSound({path = SplitGun.basePath .. "split_gun.ogg"})
         end
     end
 end
@@ -57,7 +57,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             monster:addIgnoreId(newBullet.id)
             
             
-            playSound({path = "~/resources/sounds/split_gun.ogg", position = bullet.position, volume = 0.5})
+            playSound({path = SplitGun.basePath .. "split_gun.ogg", position = bullet.position, volume = 0.5})
         end
     end
 end
