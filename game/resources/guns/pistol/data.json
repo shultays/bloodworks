@@ -12,7 +12,7 @@
   "maxAmmo" : 12,
   "reloadTime" : 1.2,
   
-  "firingSound" : "~/resources/sounds/pistol.ogg",
+  "firingSound" : "pistol.ogg",
   
   "scriptFile" : "pistol.lua",
   "scriptName" : "Pistol"

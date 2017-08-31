@@ -14,7 +14,7 @@
   
   
   "firingSound" : {
-    "path" : "~/resources/sounds/shotgun.ogg",
+    "path" : "shotgun.ogg",
     "volume" : 0.85
   },
   

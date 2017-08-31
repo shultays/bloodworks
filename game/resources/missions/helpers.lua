@@ -103,7 +103,7 @@ function makeBossDefault(monster)
         monster.data.shootsBullets = true
         monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (2.0 + min * 1.5))
         monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (2.0 + min * 1.5))
-        monster.data.bulletRate = 1.5 - clamp(min * 0.1) * 0.8
+        monster.data.bulletRate = 1.0 - clamp(min * 0.1) * 0.4
         monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
     elseif t == 6 then -- spawns 2 on death
         monster.data.remainingLife = 3
@@ -211,7 +211,7 @@ function makeBossDefault(monster)
                 monster.data.canHit = true
             end
         end)
-    elseif t == 9 then -- invulnerability after hit -- todo fix
+    elseif t == 9 then -- invulnerability after hit
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
         addCustomOnHit(monster, function(monster, damage, args)
             if time - monster.data.lastHitTime < 1.0 then
@@ -244,7 +244,7 @@ function makeBossDefault(monster)
                     monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
                 end
                 
-                playSound({path = "~/resources/sounds/shimmer_1.ogg"})
+                playSound({path = "~/resources/sounds/shimmer.ogg"})
             end
             return damage
         end)

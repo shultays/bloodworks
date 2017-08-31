@@ -14,7 +14,7 @@ function QuadDamage.spawn(bonus, pos)
         data.postProcess:setShaderWeight(0.0)
     end
     data.time = time
-    playSound({path = "~/resources/sounds/metal_riff.ogg", volume = 0.5})
+    playSound({path = QuadDamage.basePath .. "metal_riff.ogg", volume = 0.5})
     
     addBuffIcon("QuadDamage", QuadDamage.basePath .. "icon.png")
 end

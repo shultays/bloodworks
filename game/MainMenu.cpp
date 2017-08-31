@@ -10,6 +10,8 @@
 #include "BloodworksControls.h"
 #include "BloodworksConfig.h"
 
+#define MAIN_MENU_MUSIC_VOL 1.3f
+
 MainMenu::MainMenu(Bloodworks *b)
 {
 	this->bloodworks = b;
@@ -198,7 +200,7 @@ void MainMenu::setVisible(bool visible)
 	{
 		handle = music->play();
 		handle.setLooped(true);
-		handle.setVolume(bloodworks->getConfig()->getMusicVolume());
+		handle.setVolume(bloodworks->getConfig()->getMusicVolume() * MAIN_MENU_MUSIC_VOL);
 		input.showMouse();
 		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
 	}

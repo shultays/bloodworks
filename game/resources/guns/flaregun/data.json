@@ -13,7 +13,7 @@
   "reloadTime" : 0.4,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/flare.ogg",
+    "path" : "flare.ogg",
     "volume" : 3.75
   },
   
