@@ -120,7 +120,25 @@ else
 	$success = "upload error";
 }
 
-if($validHeader and $validUser and $validUpload)
+
+$modid = -1;
+$validFile = true;
+$query = "SELECT userid, id FROM upload WHERE name = '$modname' LIMIT 1";
+$result = mysqli_query($link, $query);
+if ($result)
+{
+    while($row = $result->fetch_assoc()) 
+    {
+        $modid = $row["id"];
+        if ($row["userid"] != $userid)
+        {
+            $success = "mod is already uploaded for another user";
+            $validFile = false;
+        }
+    }
+}
+
+if($validHeader and $validUser and $validUpload and $validFile)
 {
 	$fileName = $_FILES['userfile']['name'];
 	$tmpName  = $_FILES['userfile']['tmp_name'];
@@ -185,9 +203,15 @@ if($validHeader and $validUser and $validUpload)
 			$content = addslashes($content);
 			$type = addslashes($type);
 	
-			$query = "INSERT INTO upload (name, description, version, creator, icon, folder, size, type, content, userid ) ".
-			"VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$folderName', '$fileSize', '$fileType', '$content', '$userid')";
-
+            if ($modid == -1)
+            {
+                $query = "INSERT INTO upload (name, description, version, creator, icon, folder, size, type, content, userid ) ".
+                "VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$folderName', '$fileSize', '$fileType', '$content', '$userid')";
+            }
+            else
+            {
+                $query = "UPDATE upload SET name='$modname', description = '$description', version = '$version', creator = '$creator', icon = '$icon', folder = '$folderName', size = '$fileSize', type = '$fileType', content = '$content', userid = '$userid' WHERE id = '$modid' ";
+            }
 			if (mysqli_query($link, $query))
 			{
 				$success = "true";

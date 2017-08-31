@@ -546,6 +546,7 @@ void ModWindow::updateList()
 
 		modList->addRenderable(button);
 		modSelectButtons.push_back(button);
+
 	}
 	modList->setScroll(0.0f);
 	modList->setMaxScroll(modSelectButtons.size() * height);
