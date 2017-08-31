@@ -1,6 +1,9 @@
 /game/x64/
 /game/resources/mods/
 /game/resources/temp/
+/game/config.txt
+/game/keys.txt
+/game/user_details.txt
 /temp
 /uploader/x64/
 /x64/
@@ -9,5 +12,4 @@ game.VC.db
 /.vs/
 /uploader/.vs/
 *.opendb
-user_details.txt
 server/opendb.php
