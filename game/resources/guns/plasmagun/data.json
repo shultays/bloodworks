@@ -12,10 +12,10 @@
   "reloadTime" : 2.5,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/plasma.ogg",
+    "path" : "plasma.ogg",
     "volume" : 0.75
   },
-  "bulletHitSound" : "~/resources/sounds/plasma_hit.ogg",
+  "bulletHitSound" : "plasma_hit.ogg",
   
   "scriptFile" : "plasmagun.lua",
   "scriptName" : "PlasmaGun",

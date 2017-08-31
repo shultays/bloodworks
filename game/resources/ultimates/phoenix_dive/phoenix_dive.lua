@@ -26,7 +26,7 @@ function PhoenixDive.onTick(gun)
         data.particleTime = 0.0
         data.hitTime = 0.0
         data.started = true
-        playSound({path = "~/resources/sounds/dive.ogg", volume = 0.9})
+        playSound({path = PhoenixDive.basePath .."dive.ogg", volume = 0.9})
         player:addKnockback(Vec2.fromAngle(data.moveAngle) * 500.0, data.shooting)
     end
     

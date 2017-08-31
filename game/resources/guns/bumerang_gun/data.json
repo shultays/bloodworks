@@ -14,7 +14,7 @@
   
   
   "firingSound" : {
-    "path" : "~/resources/sounds/throw.ogg",
+    "path" : "throw.ogg",
     "volume" : 0.70
   },
   
