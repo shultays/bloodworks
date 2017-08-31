@@ -139,34 +139,42 @@ int main(int argn, const char* argv[])
 		{
 			path = argv[1];
 		}
-		if (path.length() == 0)
-		{
-			std::cout << "Enter a mod folder to upload:\n";
-			std::cin >> path;
-		}
 
-		fixFolderPath(path);
-		std::string jsonPath = path + "mod_info.json";
 		std::string jsonText;
-		textFileRead(jsonPath, jsonText);
 
-		if (jsonText.length() == 0)
+		while (true)
 		{
-			std::cout << "Couldn't find mod file:" << jsonPath << "\n";
-		}
-		else
-		{
-			nlohmann::json j = nlohmann::json::parse(jsonText.c_str());
-
-			std::string tempName = "resources/temp/temp.bld";
-			bool done = cPackHelper::packFolder(path, tempName);
-			if (done)
+			if (path.length() == 0)
 			{
-				account.sendFile(account.getUsername(), account.getPassword(), path, j, tempName);
-				cPackHelper::deleteFile(tempName);
+				std::cout << "Enter a mod folder to upload:\n";
+				std::cin >> path;
+			}
+
+			fixFolderPath(path);
+			std::string jsonPath = path + "mod_info.json";
+			textFileRead(jsonPath, jsonText);
+
+			if (jsonText.length() == 0)
+			{
+				std::cout << "Couldn't find mod file:" << jsonPath << "\n";
+				path = "";
+			}
+			else
+			{
+				break;
 			}
 		}
 
+
+		nlohmann::json j = nlohmann::json::parse(jsonText.c_str());
+
+		std::string tempName = "resources/temp/temp.bld";
+		bool done = cPackHelper::packFolder(path, tempName);
+		if (done)
+		{
+			account.sendFile(account.getUsername(), account.getPassword(), path, j, tempName);
+			cPackHelper::deleteFile(tempName);
+		}
 	} while (uploadAll);
 	curl_global_cleanup();
 
