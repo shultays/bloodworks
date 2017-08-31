@@ -3,11 +3,11 @@ BlackHole.buffId = getGlobalUniqueId()
 function BlackHole.init(gun)
     gun.data.shooting = -1.0
     gun.data.started = false
-    gun.data.duration = 6.0
 end
 
 function BlackHole.onTick(gun)
     local data = gun.data
+    local duration = 6.0 * player.data.bonusDurationMultiplier
     if gun.isTriggered and gun:hasAmmo() and data.started == false then
         gun:consumeAmmo()
         if gun.data.postprocess == nil then
@@ -27,7 +27,7 @@ function BlackHole.onTick(gun)
     
     if data.started then
         data.shooting = data.shooting + dt
-        if data.shooting > data.duration or isKeyDown(keys.F) then
+        if data.shooting > duration or isKeyDown(keys.F) then
             data.started = false
             data.postprocess:setEnabled(false)
             removeCollider(data.bodyIndex)
@@ -36,8 +36,8 @@ function BlackHole.onTick(gun)
             local t = 1.0
             if data.shooting < 1.0  then
                 t = data.shooting
-            elseif data.shooting > data.duration - 1.0 then
-                t = data.duration - data.shooting
+            elseif data.shooting > duration - 1.0 then
+                t = duration - data.shooting
             end
         
             data.postprocess:setShaderWeight(t)
