@@ -1,10 +1,10 @@
 
 #pragma warning(disable: 4996)
 
-#include "../game/DirentHelper.h"
-#include "../game/cPackHelper.h"
-#include "../game/UserDetails.h"
-#include "../game/json.h"
+#include "../game/source/DirentHelper.h"
+#include "../game/source/cPackHelper.h"
+#include "../game/source/UserDetails.h"
+#include "../game/source/json.h"
 
 #include <iostream>
 
