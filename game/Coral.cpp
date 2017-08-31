@@ -135,6 +135,17 @@ void Coral::tick()
 	}
 }
 
+void Coral::setWindowSize(int width, int height)
+{
+	int w, h;
+	SDL_GetWindowSize(mainWindow, &w, &h);
+	if (w != width || h != height)
+	{
+		SDL_SetWindowSize(mainWindow, width, height);
+		SDL_SetWindowPosition(mainWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+	}
+}
+
 void Coral::setFullScreen(bool fullScreen)
 {
 	if (this->fullScreen != fullScreen)
