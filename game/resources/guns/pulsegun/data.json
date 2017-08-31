@@ -13,7 +13,7 @@
   "reloadTime" : 1.2,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/pulse.ogg",
+    "path" : "pulse.ogg",
     "volume" : 0.55
   },
   

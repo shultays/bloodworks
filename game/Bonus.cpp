@@ -12,6 +12,8 @@ Bonus::Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File
 {
 	this->bloodworks = bloodworks;
 
+	path = file.folder;
+
 	name = j["name"].get<std::string>();
 	iconPath = file.folder + j["iconFile"].get<std::string>();
 	scriptName = j["scriptName"].get<std::string>();

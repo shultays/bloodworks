@@ -13,7 +13,7 @@
   "reloadTime" : 1.8,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/shrink_shoot.ogg",
+    "path" : "shrink_shoot.ogg",
     "volume" : 1.0
   },
   

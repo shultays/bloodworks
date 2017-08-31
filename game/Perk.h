@@ -14,7 +14,10 @@ class Bonus;
 
 class Perk
 {
+	friend class BloodworksLuaWorld;
+
 	std::string name;
+	std::string path;
 	std::string description;
 	std::string iconPath;
 	std::string scriptName;
