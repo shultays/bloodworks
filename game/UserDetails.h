@@ -12,7 +12,7 @@
 #define CURL_STATICLIB 
 #include <curl/curl.h>
 
-#define USERFILE "uploader/user_details.txt"
+#define USERFILE "user_details.txt"
 
 class UserDetails
 {
