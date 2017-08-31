@@ -51,7 +51,11 @@ void cScrollContainer::check(const Vec2& mousePos)
 	if (update)
 	{
 		float val = 1.0f - slider->getFloatValue();
-		content->setWorldMatrix(Mat3::translationMatrix(0.0f, val * (maxScroll - (crop.getMax().y - crop.getMin().y))));
+		float t = (maxScroll - (crop.getMax().y - crop.getMin().y));
+		if (t > 0.0f)
+		{
+			content->setWorldMatrix(Mat3::translationMatrix(0.0f, val * t));
+		}
 	}
 }
 
@@ -93,6 +97,9 @@ bool cScrollContainer::isMouseInside(const Vec2& mousePos) const
 
 void cScrollContainer::setScroll(float scroll)
 {
-	float s = 1.0f - scroll / maxScroll;
-	slider->setValue(s);
+	if (maxScroll > 0.0f)
+	{
+		float s = 1.0f - scroll / maxScroll;
+		slider->setValue(s);
+	}
 }
