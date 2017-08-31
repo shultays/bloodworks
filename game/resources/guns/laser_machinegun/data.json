@@ -12,7 +12,7 @@
   "reloadTime" : 2.5,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/laser_machinegun.ogg",
+    "path" : "laser_machinegun.ogg",
     "volume" : 2.55
   },
   

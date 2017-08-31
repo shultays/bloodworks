@@ -11,7 +11,7 @@
   "maxAmmo" : 6,
   "reloadTime" : 20,
   
-  "firingSound" : "~/resources/sounds/rocket.ogg",
+  "firingSound" : "rocket.ogg",
   
   "ultimate" : true,
   

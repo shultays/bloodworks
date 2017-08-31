@@ -11,8 +11,8 @@
   "maxAmmo" : 6,
   "reloadTime" : 2.8,
   
-  "firingSound" : "~/resources/sounds/rocket.ogg",
-  "bulletHitSound" : "~/resources/sounds/missile_explosion.ogg",
+  "firingSound" : "rocket.ogg",
+  "bulletHitSound" : "missile_explosion.ogg",
   
   "scriptFile" : "rocket.lua",
   "scriptName" : "RocketLauncher"

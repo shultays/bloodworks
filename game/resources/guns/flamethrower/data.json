@@ -13,7 +13,7 @@
   "bulletLifeTime" : 0.60,
   
   "firingSoundContinuous" : true,
-  "firingSound" : "~/resources/sounds/flame.ogg",
+  "firingSound" : "flame.ogg",
   "firingSoundFadein" : 0.1,
   "firingSoundFadeout" : 0.6,
   

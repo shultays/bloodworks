@@ -18,6 +18,8 @@ class Bonus
 	std::string scriptName;
 	std::string iconPath;
 
+	std::string path;
+
 	float spawnChance;
 	Bloodworks *bloodworks;
 

@@ -1,5 +1,5 @@
 function Invincibility.spawn(bonus, pos)
-    playSound({path = "~/resources/sounds/shield.ogg", volume = 0.6})
+    playSound({path = Invincibility.basePath .. "shield.ogg", volume = 0.6})
     
     addBuffIcon("Invincibility", Invincibility.basePath .. "icon.png")
     
@@ -46,6 +46,6 @@ function Invincibility.onPlayerDamaged(bonus, damage, dir, params)
     if damage <= 0 then
         return damage
     end
-    playSound({path = "~/resources/sounds/shield_hit.ogg", volume = 0.6})
+    playSound({path = Invincibility.basePath .. "shield_hit.ogg", volume = 0.6})
     return -1
 end

@@ -14,8 +14,8 @@
   
   
   "firingSound" : {
-    "path" : "~/resources/sounds/rifle.ogg",
-    "volume" : 0.70
+    "path" : "rifle.ogg",
+    "volume" : 0.85
   },
   
   "scriptFile" : "rifle.lua",
