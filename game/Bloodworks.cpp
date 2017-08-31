@@ -74,6 +74,8 @@ void Bloodworks::init()
 
 	config = new BloodworksConfig();
 
+	coral.setWindowSize(config->getWindowWidth(), config->getWindowHeight());
+
 	luaWorld = new BloodworksLuaWorld(this);
 	luaWorld->reset();
 
@@ -345,6 +347,11 @@ void Bloodworks::windowResized(int width, int height)
 	mainMenu->resize();
 	player->resize();
 	missionController->repositionGUI();
+	if (coral.isFullScreen() == false)
+	{
+		config->setWindowWidth(width);
+		config->setWindowHeight(height);
+	}
 }
 
 void Bloodworks::clearMission()
