@@ -22,7 +22,7 @@ function BlackHole.onTick(gun)
         
         data.bulletBodyIndex = addCircleCollider(data.ppos, 1.0)
         setColliderFlags(data.bulletBodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoPlayerCollision)
-        playSound({path = "~/resources/sounds/black_hole.ogg", position = data.ppos, volume = 1.2})
+        playSound({path = BlackHole.basePath .. "black_hole.ogg", position = data.ppos, volume = 1.2})
     end
     
     if data.started then

@@ -29,6 +29,8 @@ class Gun
 	float bulletRadius;
 	float bulletSpeed;
 
+	std::string path;
+
 	std::string scriptName;
 	sol::table scriptTable;
 	int id;
