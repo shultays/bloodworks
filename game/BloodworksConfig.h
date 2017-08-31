@@ -15,6 +15,9 @@ class BloodworksConfig : protected cPersistent
 	bool vSync;
 	float volume;
 	float musicVolume;
+
+	int windowWidth;
+	int windowHeight;
 public:
 	BloodworksConfig()
 	{
@@ -32,6 +35,9 @@ public:
 
 		fullScreen = getBool("fullScreen", true);
 		vSync = getBool("vSync", true);
+
+		windowWidth = getInt("windowWidth", 800);
+		windowHeight = getInt("windowHeight", 600);
 	}
 
 	bool getGore() const
@@ -124,6 +130,29 @@ public:
 		this->vSync = vSync;
 		set("vSync", vSync);
 	}
+
+
+	int getWindowWidth() const
+	{
+		return windowWidth;
+	}
+	int getWindowHeight() const
+	{
+		return windowHeight;
+	}
+
+	void setWindowWidth(int windowWidth)
+	{
+		this->windowWidth = windowWidth;
+		set("windowWidth", windowWidth);
+	}
+	void setWindowHeight(int windowHeight)
+	{
+		this->windowHeight = windowHeight;
+		set("windowHeight", windowHeight);
+	}
+
+
 
 	void check()
 	{
