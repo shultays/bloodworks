@@ -1,10 +1,10 @@
 
 gore            1
 screenShake     1
-lockCrosshair   0
-autoOpenLevelupPopup 0
+lockCrosshair   1
+autoOpenLevelupPopup 1
 sensitivity     50
-volume          49
-musicVolume     100
+volume          50
+musicVolume     50
 fullScreen      1
 vSync           1
