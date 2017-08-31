@@ -10,7 +10,7 @@ function SlowMonsters.spawn(bonus, pos)
     end
     buff:setBuffDuration(8.0 * player.data.bonusDurationMultiplier)
     buff:restart()
-    playSound({path = "~/resources/sounds/slow.ogg", volume = 0.6})
+    playSound({path = SlowMonsters.basePath .. "slow.ogg", volume = 0.6})
 
     addBuffIcon("SlowMonsters", SlowMonsters.basePath .. "icon.png")
     

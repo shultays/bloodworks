@@ -31,6 +31,7 @@
 #include "cCircle.h"
 #include "cRect.h"
 #include "cCapsule.h"
+#include "Perk.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -502,10 +503,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"isActive", &Bonus::isActive
 		);
 
+	lua.new_usertype<Perk>("Perk",
+		"name", sol::readonly(&Perk::name),
+		"scriptName", sol::readonly(&Perk::scriptName),
+
+		"level", sol::readonly(&Perk::level),
+		"maxLevel", sol::readonly(&Perk::maxLevel)
+		);
+
 	lua.new_usertype<Gun>("Gun",
 		"id", sol::readonly(&Gun::id),
 		"data", &Gun::data,
-		"name", &Gun::name,
+		"name", sol::readonly(&Gun::name),
 		"bulletSpeed", &Gun::bulletSpeed,
 		"bulletRadius", &Gun::bulletRadius,
 		"bulletSpeed", &Gun::bulletSpeed,

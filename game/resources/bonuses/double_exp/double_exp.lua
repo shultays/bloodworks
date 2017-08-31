@@ -9,7 +9,7 @@ function DoubleExp.spawn(bonus, pos)
     
     addBuffIcon("DoubleExp", DoubleExp.basePath .. "icon.png")
     
-    playSound({path = "~/resources/sounds/double_exp.ogg", volume = 0.8})
+    playSound({path = DoubleExp.basePath .. "double_exp.ogg", volume = 1.3})
     bonus:setActive(true)
 end
 

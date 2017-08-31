@@ -15,6 +15,8 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 {
 	this->bloodworks = bloodworks;
 
+	path = file.folder;
+
 	lastShootSoundTime = timer.getTime();
 
 	name = j["name"].get<std::string>();
