@@ -3,5 +3,6 @@
   "name": "Homing Orb",
   "iconFile" : "icon.png",
   "scriptFile" : "homing.lua",
-  "scriptName" : "HomingOrb"
+  "scriptName" : "HomingOrb",
+  "spawnChance" : 1.5
 }

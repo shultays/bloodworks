@@ -38,6 +38,7 @@ public:
 	void init();
 	void clear();
 	void tick();
+	void setWindowSize(int width, int height);
 	void setFullScreen(bool fullScreen);
 	bool isFullScreen() const
 	{
