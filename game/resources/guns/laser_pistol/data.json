@@ -12,7 +12,7 @@
   "reloadTime" : 2.0,
   
   "firingSound" : {
-    "path" : "~/resources/sounds/laser_pistol.ogg",
+    "path" : "laser_pistol.ogg",
     "volume" : 0.85
   },
   

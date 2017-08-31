@@ -17,6 +17,8 @@ function AmmoManiac.spawn(bonus, pos)
 
     addBuffIcon("AmmoManiac", AmmoManiac.basePath .. "icon.png")
     
+    playSound({path = AmmoManiac.basePath .. "bulletcrazy.ogg", volume = 0.5})
+    
     bonus:setActive(true)
 end
 

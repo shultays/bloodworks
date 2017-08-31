@@ -17,7 +17,7 @@ function ReflexBoost.spawn(bonus, pos)
         data.postProcess:setShaderWeight(0.0)
     end
     data.time = time
-    playSound({path = "~/resources/sounds/clock.ogg", volume = 1.6})
+    playSound({path = ReflexBoost.basePath .. "clock.ogg", volume = 2.2})
     
     addBuffIcon("ReflexBoost", ReflexBoost.basePath .. "icon.png")
 end

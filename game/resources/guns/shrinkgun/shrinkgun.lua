@@ -47,10 +47,10 @@ function ShrinkGun.onBulletHit(gun, bullet, monster)
         if monster.scale < 0.4 then
             particleCount = 20
             monster:killSelf(Vec2:new())
-            playSound({path = "~/resources/sounds/shimmer_1.ogg"})
+            playSound({path = ShrinkGun.basePath .. "shrink_kill.ogg"})
         else
         
-            playSound({path = "~/resources/sounds/shrink_hit.ogg"})
+            playSound({path = ShrinkGun.basePath .. "shrink_hit.ogg"})
         end
         
         if monster.data.shrinkParticle == nil then

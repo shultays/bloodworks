@@ -20,7 +20,6 @@ function HomingOrb.spawn(bonus, pos)
         bullet.moveAngle = (monster.position - pos):getAngle()
         bullet.penetrateCount = math.floor(6 * player.data.bonusDurationMultiplier)
         bullet.damage = math.floor(math.random() * 40 + 30)
-        
         bullet.data.monster = monster
         local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 20.0, {})
         particle.args.color = Vec3.new(0.8, 0.7, 0.1)
@@ -29,7 +28,7 @@ function HomingOrb.spawn(bonus, pos)
         particle.args.scaleSpeed = -20
         particle:setTexture(HomingOrb.basePath .. "particle.png")
         
-        playSound({path = "~/resources/sounds/plasma.ogg"})
+        playSound({path = HomingOrb.basePath .. "plasma.ogg"})
         
         return bullet
     end
@@ -50,7 +49,7 @@ function HomingOrbBullet.onTick(bullet)
 end
 
 function HomingOrbBullet.onHit(bullet, monster)
-    playSound({path = "~/resources/sounds/plasma_hit.ogg", position = bullet.position})
+    playSound({path = HomingOrb.basePath .. "plasma_hit.ogg", position = bullet.position})
     if monster ~= nil then
         monster:addIgnoreId(HomingOrb.homingOrbId)
         bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, {HomingOrb.homingOrbId, bullet.id, monster.id})
