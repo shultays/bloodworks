@@ -27,460 +27,462 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cMat.cpp">
+    <ClCompile Include="source\cMat.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
-    <ClCompile Include="cGame.cpp">
+    <ClCompile Include="source\cGame.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cGlobals.cpp">
+    <ClCompile Include="source\cGlobals.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cInput.cpp">
+    <ClCompile Include="source\cInput.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="Coral.cpp">
+    <ClCompile Include="source\Coral.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cTime.cpp">
+    <ClCompile Include="source\cTime.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cTools.cpp">
+    <ClCompile Include="source\cTools.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="Bloodworks.cpp">
+    <ClCompile Include="source\Bloodworks.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cRenderable.cpp">
+    <ClCompile Include="source\cRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="source\Player.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="Monster.cpp">
+    <ClCompile Include="source\Monster.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cResources.cpp">
+    <ClCompile Include="source\cResources.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cDebugRenderable.cpp">
+    <ClCompile Include="source\cDebugRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cFont.cpp">
+    <ClCompile Include="source\cFont.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cAnimatedRenderable.cpp">
+    <ClCompile Include="source\cAnimatedRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cLuaWorld.cpp">
+    <ClCompile Include="source\cLuaWorld.cpp">
       <Filter>Coral\Lua</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterController.cpp">
+    <ClCompile Include="source\MonsterController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
+    <ClCompile Include="source\Bullet.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="BulletController.cpp">
+    <ClCompile Include="source\BulletController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="Gun.cpp">
+    <ClCompile Include="source\Gun.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="MissionController.cpp">
+    <ClCompile Include="source\MissionController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="BloodRenderable.cpp">
+    <ClCompile Include="source\BloodRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="Bonus.cpp">
+    <ClCompile Include="source\GameObject.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="source\LevelUpPopup.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="LevelUpPopup.cpp">
+    <ClCompile Include="source\ExplosionController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="ExplosionController.cpp">
+    <ClCompile Include="source\DropController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="DropController.cpp">
+    <ClCompile Include="source\BloodworksLuaWorld.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="BloodworksLuaWorld.cpp">
+    <ClCompile Include="source\LaserRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="LaserRenderable.cpp">
+    <ClCompile Include="source\MainMenu.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Bloodworks</Filter>
-    </ClCompile>
-    <ClCompile Include="cButton.cpp">
+    <ClCompile Include="source\cButton.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="Perk.cpp">
+    <ClCompile Include="source\Perk.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cSoundManager.cpp">
+    <ClCompile Include="source\cSoundManager.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="StackWalker.cpp">
+    <ClCompile Include="source\StackWalker.cpp">
       <Filter>Coral\StackWalker</Filter>
     </ClCompile>
-    <ClCompile Include="cTickBox.cpp">
+    <ClCompile Include="source\cTickBox.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cSlider.cpp">
+    <ClCompile Include="source\cSlider.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="OptionsPopup.cpp">
+    <ClCompile Include="source\OptionsPopup.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cPersistent.cpp">
+    <ClCompile Include="source\cPersistent.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="KeyMapper.cpp">
+    <ClCompile Include="source\KeyMapper.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="BloodworksControls.cpp">
+    <ClCompile Include="source\BloodworksControls.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cKeyMapButton.cpp">
+    <ClCompile Include="source\cKeyMapButton.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cMath.cpp">
+    <ClCompile Include="source\cMath.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
-    <ClCompile Include="cScrollContainer.cpp">
+    <ClCompile Include="source\cScrollContainer.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cRenderableContainer.cpp">
+    <ClCompile Include="source\cRenderableContainer.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cRenderableWithShader.cpp">
+    <ClCompile Include="source\cRenderableWithShader.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cTexturedQuadRenderable.cpp">
+    <ClCompile Include="source\cTexturedQuadRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cTextRenderable.cpp">
+    <ClCompile Include="source\cTextRenderable.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterTemplate.cpp">
+    <ClCompile Include="source\MonsterTemplate.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="OneShotSoundManager.cpp">
+    <ClCompile Include="source\OneShotSoundManager.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cParticle.cpp">
+    <ClCompile Include="source\cParticle.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="cPostProcess.cpp">
+    <ClCompile Include="source\cPostProcess.cpp">
       <Filter>Coral\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="ModWindow.cpp">
+    <ClCompile Include="source\ModWindow.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cSlave.cpp">
+    <ClCompile Include="source\cSlave.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cSlaveWindows.cpp">
+    <ClCompile Include="source\cSlaveWindows.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cMutexWindows.cpp">
+    <ClCompile Include="source\cMutexWindows.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="BloodworksConfig.cpp">
+    <ClCompile Include="source\BloodworksConfig.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="BloodworksCheats.cpp">
+    <ClCompile Include="source\BloodworksCheats.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cTimeProfiler.cpp">
+    <ClCompile Include="source\cTimeProfiler.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="GroundRenderable.cpp">
+    <ClCompile Include="source\GroundRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cAARect.cpp">
+    <ClCompile Include="source\cAARect.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionController.cpp">
+    <ClCompile Include="source\CollisionController.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
-    <ClCompile Include="cRect.cpp">
+    <ClCompile Include="source\cRect.cpp">
       <Filter>Coral\Math\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="cCircle.cpp">
+    <ClCompile Include="source\cCircle.cpp">
       <Filter>Coral\Math\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="cCapsule.cpp">
+    <ClCompile Include="source\cCapsule.cpp">
       <Filter>Coral\Math</Filter>
     </ClCompile>
-    <ClCompile Include="cShader.cpp">
+    <ClCompile Include="source\cShader.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="cTexture.cpp" />
+    <ClCompile Include="source\Bonus.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cTexture.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cVec.h">
+    <ClInclude Include="source\cVec.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
-    <ClInclude Include="cVecImp.h">
+    <ClInclude Include="source\cVecImp.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
-    <ClInclude Include="cMat.h">
+    <ClInclude Include="source\cMat.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
-    <ClInclude Include="cGame.h">
+    <ClInclude Include="source\cGame.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cGlobals.h">
+    <ClInclude Include="source\cGlobals.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cInput.h">
+    <ClInclude Include="source\cInput.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="Coral.h">
+    <ClInclude Include="source\Coral.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cTime.h">
+    <ClInclude Include="source\cTime.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cTools.h">
+    <ClInclude Include="source\cTools.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cShader.h">
+    <ClInclude Include="source\cShader.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cTexture.h">
+    <ClInclude Include="source\cTexture.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cResources.h">
+    <ClInclude Include="source\cResources.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cSharedPtr.h">
+    <ClInclude Include="source\cSharedPtr.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="Bloodworks.h">
+    <ClInclude Include="source\Bloodworks.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cRenderable.h">
+    <ClInclude Include="source\cRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="source\Player.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimatedRenderable.h">
+    <ClInclude Include="source\cAnimatedRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="Monster.h">
+    <ClInclude Include="source\Monster.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cFont.h">
+    <ClInclude Include="source\cFont.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cDebugRenderable.h">
+    <ClInclude Include="source\cDebugRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cLuaWorld.h">
+    <ClInclude Include="source\cLuaWorld.h">
       <Filter>Coral\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Sol.h">
+    <ClInclude Include="source\Sol.h">
       <Filter>Coral\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="json.h">
+    <ClInclude Include="source\json.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterController.h">
+    <ClInclude Include="source\MonsterController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cGrid.h">
+    <ClInclude Include="source\cGrid.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="Array2d.h">
+    <ClInclude Include="source\Array2d.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
+    <ClInclude Include="source\Bullet.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="Gun.h">
+    <ClInclude Include="source\Gun.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BulletController.h">
+    <ClInclude Include="source\BulletController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cPriorityVector.h">
+    <ClInclude Include="source\cPriorityVector.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="MissionController.h">
+    <ClInclude Include="source\MissionController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterTemplate.h">
+    <ClInclude Include="source\MonsterTemplate.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BloodRenderable.h">
+    <ClInclude Include="source\BloodRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="Bonus.h">
+    <ClInclude Include="source\GameObject.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="source\Perk.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="Perk.h">
+    <ClInclude Include="source\LevelUpPopup.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="LevelUpPopup.h">
+    <ClInclude Include="source\ExplosionController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="ExplosionController.h">
+    <ClInclude Include="source\DropController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="DropController.h">
+    <ClInclude Include="source\BloodworksLuaWorld.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BloodworksLuaWorld.h">
-      <Filter>Bloodworks</Filter>
-    </ClInclude>
-    <ClInclude Include="dirent.h">
+    <ClInclude Include="source\dirent.h">
       <Filter>Coral\dirent</Filter>
     </ClInclude>
-    <ClInclude Include="DirentHelper.h">
+    <ClInclude Include="source\DirentHelper.h">
       <Filter>Coral\dirent</Filter>
     </ClInclude>
-    <ClInclude Include="LaserRenderable.h">
+    <ClInclude Include="source\LaserRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cMath.h">
+    <ClInclude Include="source\cMath.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
-    <ClInclude Include="cButton.h">
+    <ClInclude Include="source\cButton.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
+    <ClInclude Include="source\MainMenu.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cSoundManager.h">
+    <ClInclude Include="source\cSoundManager.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cSound.h">
+    <ClInclude Include="source\cSound.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="OneShotSoundManager.h">
+    <ClInclude Include="source\OneShotSoundManager.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BuffFloat.h">
+    <ClInclude Include="source\BuffFloat.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="LuaBuffController.h">
+    <ClInclude Include="source\LuaBuffController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="StackWalker.h">
+    <ClInclude Include="source\StackWalker.h">
       <Filter>Coral\StackWalker</Filter>
     </ClInclude>
-    <ClInclude Include="cTickBox.h">
+    <ClInclude Include="source\cTickBox.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cSlider.h">
+    <ClInclude Include="source\cSlider.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="OptionsPopup.h">
+    <ClInclude Include="source\OptionsPopup.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cPersistent.h">
+    <ClInclude Include="source\cPersistent.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="KeyMapper.h">
+    <ClInclude Include="source\KeyMapper.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="BloodworksControls.h">
+    <ClInclude Include="source\BloodworksControls.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cKeyMapButton.h">
+    <ClInclude Include="source\cKeyMapButton.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cScrollContainer.h">
+    <ClInclude Include="source\cScrollContainer.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cRenderableContainer.h">
+    <ClInclude Include="source\cRenderableContainer.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cRenderableWithShader.h">
+    <ClInclude Include="source\cRenderableWithShader.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cTexturedQuadRenderable.h">
+    <ClInclude Include="source\cTexturedQuadRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cTextRenderable.h">
+    <ClInclude Include="source\cTextRenderable.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cParticle.h">
+    <ClInclude Include="source\cParticle.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cPostProcess.h">
+    <ClInclude Include="source\cPostProcess.h">
       <Filter>Coral\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="cPackHelper.h">
+    <ClInclude Include="source\cPackHelper.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="UserDetails.h">
+    <ClInclude Include="source\UserDetails.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="ModWindow.h">
+    <ClInclude Include="source\ModWindow.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cSlave.h">
+    <ClInclude Include="source\cSlave.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cMutex.h">
+    <ClInclude Include="source\cMutex.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cSlaveWork.h">
+    <ClInclude Include="source\cSlaveWork.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="BloodworksConfig.h">
+    <ClInclude Include="source\BloodworksConfig.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="BloodworksCheats.h">
+    <ClInclude Include="source\BloodworksCheats.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cTimeProfiler.h">
+    <ClInclude Include="source\cTimeProfiler.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimationTemplate.h">
+    <ClInclude Include="source\cAnimationTemplate.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="GroundRenderable.h">
+    <ClInclude Include="source\GroundRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cAARect.h">
+    <ClInclude Include="source\cAARect.h">
       <Filter>Coral\Math</Filter>
     </ClInclude>
-    <ClInclude Include="cCircle.h">
+    <ClInclude Include="source\cCircle.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="cRect.h">
+    <ClInclude Include="source\cRect.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="cBodyGrid.h">
+    <ClInclude Include="source\cBodyGrid.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="cVector.h">
+    <ClInclude Include="source\cVector.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionController.h">
+    <ClInclude Include="source\CollisionController.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
-    <ClInclude Include="cCapsule.h">
+    <ClInclude Include="source\cCapsule.h">
       <Filter>Coral\Math\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectTemplate.h">
+    <ClInclude Include="source\GameObjectTemplate.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Bonus.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
