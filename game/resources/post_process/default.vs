@@ -1,3 +1,4 @@
+#version 400
 attribute vec2 aVertexUV;
 
 uniform sampler2D uTexture0;
