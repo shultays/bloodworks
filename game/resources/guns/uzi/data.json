@@ -1,0 +1,24 @@
+{
+  "type" : "gun",
+  "name": "Uzi",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [6.0, 6.0],
+  "bulletMeshShift" : [0.0, 0.0],
+  "bulletRadius" : 1.0,
+  "bulletSpeed" : 750.0,
+  "bulletDamage" : [20, 30],
+  
+  "maxAmmo" : 32,
+  "reloadTime" : 1.5,
+  
+  "maxSoundPlayInterval" : 0.0,
+  
+  "firingSound" : {
+    "path" : "uzi.ogg",
+    "volume" : 0.70
+  },
+  
+  "scriptFile" : "uzi.lua",
+  "scriptName" : "Uzi"
+}
