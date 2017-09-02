@@ -56,7 +56,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 	credits = new cButton(bloodworks);
 	credits->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Credits", 32.0f, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Credits", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	credits->addRenderable(text);
@@ -168,7 +168,6 @@ void MainMenu::tick(bool hasPopup)
 	{
 		if (newGame->isClicked() || mapper.isKeyPressed(GameKey::Select))
 		{
-
 			mapper.clearKeyPress(GameKey::Select);
 			bloodworks->loadMission("Survival");
 		}
@@ -179,6 +178,10 @@ void MainMenu::tick(bool hasPopup)
 		else if (mods->isClicked())
 		{
 			bloodworks->showMods();
+		}
+		else if (credits->isClicked())
+		{
+			bloodworks->showCredits();
 		}
 		else if (quit->isClicked() || mapper.isKeyPressed(GameKey::Back))
 		{

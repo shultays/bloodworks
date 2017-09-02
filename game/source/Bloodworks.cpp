@@ -39,6 +39,7 @@
 #include "CollisionController.h"
 #include "GameObjectTemplate.h"
 #include "CrashReporterWindow.h"
+#include "CreditsWindow.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -99,6 +100,7 @@ void Bloodworks::initImplementation()
 	missionController = new MissionController(this);
 	oneShotSoundManager = new OneShotSoundManager(this);
 	modWindow = new ModWindow(this);
+	creditsWindow = new CreditsWindow(this);
 
 	player = new Player(this);
 
@@ -382,7 +384,7 @@ void Bloodworks::windowResized(int width, int height)
 	mainMenu->resize();
 	player->resize();
 	missionController->repositionGUI();
-	if (coral.isFullScreen() == false)
+	if (coral.isFullScreen() == false && coral.isDebuggerPresent() == false)
 	{
 		config->setWindowWidth(width);
 		config->setWindowHeight(height);
@@ -456,7 +458,7 @@ bool Bloodworks::gotoMainMenu()
 		return false;
 	}
 	clearMission();
-	mainMenu->setVisible(true);
+	setMainMenuVisible();
 	return true;
 }
 
@@ -658,9 +660,14 @@ void Bloodworks::addSlaveWork(cSlaveWork* work)
 	coral.getSlaveController()->addWork(work);
 }
 
+void Bloodworks::cancelSlaveWork(cSlaveWork* work)
+{
+	coral.getSlaveController()->cancelWork(work);
+}
+
 void Bloodworks::showMods()
 {
-	modWindow->setVisible(true);
+	modWindow->setVisible(true, true);
 }
 
 void Bloodworks::loadMod(const std::string& path, bool loadOnlyModData)
@@ -838,6 +845,7 @@ void Bloodworks::clear()
 	SAFE_DELETE(collisionController);
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
+	SAFE_DELETE(creditsWindow);
 
 #ifdef HAS_BLOODWORKS_CHEATS
 	SAFE_DELETE(bloodworksCheats);
@@ -848,6 +856,16 @@ void Bloodworks::reload()
 {
 	clear();
 	initImplementation();
+}
+
+void Bloodworks::showCredits()
+{
+	creditsWindow->setVisible(true);
+}
+
+void Bloodworks::setMainMenuVisible()
+{
+	mainMenu->setVisible(true);
 }
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
@@ -982,9 +1000,15 @@ void Bloodworks::tick()
 	}
 
 	luaWorld->tick();
-	mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible());
-	optionsPopup->tick();
-	modWindow->tick();
+
+	if (isMissionLoaded() == false)
+	{
+		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible());
+		optionsPopup->tick();
+		modWindow->tick();
+		creditsWindow->tick();
+	}
+
 	oneShotSoundManager->tick();
 
 	for (int i = 0; i < gameSounds.size(); i++)

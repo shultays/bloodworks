@@ -62,6 +62,7 @@ class ModWindow
 	cVector<std::string> disabledModsFullPaths;
 	void updateDetailInfo();
 	void syncModEnableState(const std::string& fullPath, bool detailEnabled);
+	void fetchData();
 public:
 
 	class LoginWork : public cSlaveWork
@@ -80,6 +81,7 @@ public:
 
 	class FetchResults : public cSlaveWork
 	{
+		std::string readBuffer;
 		ModWindow *modWindow;
 	public:
 		FetchResults(ModWindow* modWindow)
@@ -87,6 +89,7 @@ public:
 			this->modWindow = modWindow;
 		}
 		virtual void runOnSlave();
+		virtual void runOnMain();
 	} fetchResults;
 
 	class FetchImage : public cSlaveWork
@@ -114,7 +117,7 @@ public:
 	ModWindow(Bloodworks *bloodworks);
 	~ModWindow();
 	bool isVisible() const;
-	void setVisible(bool visible);
+	void setVisible(bool visible, bool refresh = false);
 	void tick();
 	void addInstalledMod(nlohmann::json& j, DirentHelper::File& f);
 	bool isPathDisabled(const std::string& path) const;
