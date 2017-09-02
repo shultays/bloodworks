@@ -289,6 +289,7 @@ Bloodworks::Bloodworks()
 
 	config = nullptr;
 	crashReporterWindow = nullptr;
+
 	BloodworksControls::init();
 }
 
