@@ -236,7 +236,7 @@ void cResources::freeAll()
 			local_it->second.setCustomDeallocator(nullptr);
 			if (local_it->second.counter->getCount() != 1)
 			{
-				printf("Warning shader %s is not released after resource cleanup\n", local_it->first.c_str());
+				out << "Warning shader " << local_it->first << "is not released after resource cleanup\n";
 				err = true;
 			}
 		}
@@ -249,7 +249,7 @@ void cResources::freeAll()
 			local_it->second.setCustomDeallocator(nullptr);
 			if (local_it->second.counter->getCount() != 1)
 			{
-				printf("Warning texture %s is not released after resource cleanup\n", local_it->first.c_str());
+				out << "Warning texture " << local_it->first << "is not released after resource cleanup\n";
 				err = true;
 			}
 		}
@@ -262,7 +262,7 @@ void cResources::freeAll()
 			local_it->second.setCustomDeallocator(nullptr);
 			if (local_it->second.counter->getCount() != 1)
 			{
-				printf("Warning font %s is not released after resource cleanup\n", local_it->first.c_str());
+				out << "Warning font " << local_it->first << "is not released after resource cleanup\n";
 				err = true;
 			}
 		}
@@ -275,7 +275,7 @@ void cResources::freeAll()
 			local_it->second.setCustomDeallocator(nullptr);
 			if (local_it->second.counter->getCount() != 1)
 			{
-				printf("Warning sound sample %s is not released after resource cleanup\n", local_it->first.c_str());
+				out << "Warning sound sample " << local_it->first << "is not released after resource cleanup\n";
 				err = true;
 			}
 		}
@@ -283,7 +283,7 @@ void cResources::freeAll()
 
 	if (totalResource != 0)
 	{
-		printf("Total resource = %d\n", totalResource);
+		out << "Total resource " << totalResource << "\n";
 		err = true;
 	}
 	if (err)

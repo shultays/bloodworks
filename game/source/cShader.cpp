@@ -13,7 +13,7 @@ cShader::~cShader()
 	totalResource--;
 	if (shaderProgram != -1)
 	{
-		printf("unloading %s %s\n", vertexShaderFile.c_str(), pixelShaderFile.c_str());
+		out << "unloading " << vertexShaderFile << " " << pixelShaderFile << "\n";
 	}
 	if (pixelShader != -1)
 	{

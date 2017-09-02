@@ -3,5 +3,6 @@
   "name": "Circle Fire",
   "iconFile" : "icon.png",
   "scriptFile" : "circle_fire.lua",
-  "scriptName" : "CircleFire"
+  "scriptName" : "CircleFire",
+  "spawnChance" : 1.5
 }

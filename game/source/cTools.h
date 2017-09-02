@@ -9,6 +9,10 @@
 #include <cassert>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
+
+#define STD_OUTPUT "stdout.txt"
+#define STD_OUTPUT_COPY "stdout_to_send.txt"
 
 #define SAFE_DELETE(x) do{delete x; x = nullptr;} while(0);
 #define SAFE_DELETE_ARRAY(x) do{delete[] x; x = nullptr;} while(0);
@@ -163,7 +167,7 @@ inline void fixFolderPath(std::string& path)
 	}
 }
 
-void printStack();
+void printStack(bool dummyPrint = false);
 void printExceptionStack(void* pExp);
 void doBreak();
 
@@ -173,3 +177,26 @@ bool beginsWith(const TContainer& input, const TContainer& match)
 	return input.size() >= match.size()
 		&& equal(match.begin(), match.end(), input.begin());
 }
+
+class cDebugStream
+{
+public:
+	std::ofstream coss;
+	cDebugStream(void);
+	~cDebugStream(void);
+	void open(const std::string& path);
+	void close();
+};
+
+template <class T>
+cDebugStream& operator<< (cDebugStream& st, const T& val)
+{
+	st.coss << val;
+	std::cout << val;
+	return st;
+};
+
+extern cDebugStream out;
+
+
+void SendReport(const std::string& message, bool useCopy = false);
