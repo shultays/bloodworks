@@ -1,3 +1,4 @@
+#version 400
 uniform sampler2D uTexture0;
 
 varying vec4 vColor;
@@ -20,7 +21,7 @@ void main(void)
 	
 	float c = (angle + M_PI) / (2.0 * M_PI);
 	
-	if (c > ((float)uCurrentAmmo) / uMaxAmmo)
+	if (c > (float(uCurrentAmmo)) / uMaxAmmo)
 	{
 		gl_FragColor.a = 0.0;
 	}
