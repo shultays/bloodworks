@@ -194,8 +194,8 @@ public:
 	GLuint pixelShader;
 	std::string vertexShaderFile;
 	std::string pixelShaderFile;
-
-	void printShaderInfoLog(const std::string& name, GLuint obj)
+	
+	void printErrorLog(const std::string& name, GLuint obj)
 	{
 		int infologLength = 0;
 		int charsWritten = 0;
@@ -212,22 +212,38 @@ public:
 		}
 	}
 
-	void printProgramInfoLog(GLuint obj) 
+	void printWarningsLog(const std::string& name, GLuint obj)
 	{
 		int infologLength = 0;
 		int charsWritten = 0;
 		char *infoLog;
 
-		glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
+		glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
 
 		if (infologLength > 1) {
 			infoLog = (char *)malloc(infologLength);
-			glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
-			out << "shader_error: " << infoLog << "\n";
-			hasError = true;
+			glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
+			out << "shader_warning: " << name << " " << infoLog << "\n";
 			free(infoLog);
 		}
 	}
+
+	//void printErrorLog(GLuint obj) 
+	//{
+	//	int infologLength = 0;
+	//	int charsWritten = 0;
+	//	char *infoLog;
+	//
+	//	glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infologLength);
+	//
+	//	if (infologLength > 1) {
+	//		infoLog = (char *)malloc(infologLength);
+	//		glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
+	//		out << "shader_error: " << infoLog << "\n";
+	//		hasError = true;
+	//		free(infoLog);
+	//	}
+	//}
 
 
 	GLuint buildShader(const std::string& name, const std::string& source, int shaderType)
@@ -246,8 +262,14 @@ public:
 
 		if (!compileStatus) 
 		{
-			printShaderInfoLog(name, shader);
+			printErrorLog(name, shader);
 			return 0;
+		}
+		else
+		{
+#ifdef DEBUG
+			printWarningsLog(name, shader);
+#endif
 		}
 
 		return shader;
