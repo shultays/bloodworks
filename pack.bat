@@ -22,6 +22,7 @@ del .\temp\bloodworks\uploader_stdout.txt
 
 rmdir .\temp\bloodworks\resources\mods /s /q
 mkdir .\temp\bloodworks\resources\mods
+mkdir .\temp\bloodworks\resources\temp
 
 del bloodworks.zip
 
