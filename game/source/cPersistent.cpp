@@ -96,7 +96,7 @@ void cPersistent::loadFromString(const std::string& content)
 		{
 			if (*c == '\n' || *c == '\r')
 			{
-				printf("ERROR\n");
+				out << "ERROR while parsing persistent\n" << content << "\n";
 				err = true;
 				break;
 			}
@@ -118,7 +118,7 @@ void cPersistent::loadFromString(const std::string& content)
 		{
 			if (*c == '\n' || *c == '\r')
 			{
-				printf("ERROR\n");
+				out << "ERROR while parsing persistent\n" << content << "\n";
 				err = true;
 				break;
 			}
@@ -149,7 +149,7 @@ void cPersistent::loadFromString(const std::string& content)
 			{
 				if (*c == '\n' || *c == '\r')
 				{
-					printf("ERROR\n");
+					out << "ERROR while parsing persistent\n" << content << "\n";
 					err = true;
 					break;
 				}
@@ -174,7 +174,7 @@ void cPersistent::loadFromString(const std::string& content)
 			{
 				if (*c == '\n' || *c == '\r')
 				{
-					printf("ERROR\n");
+					out << "ERROR while parsing persistent\n" << content << "\n";
 					err = true;
 					break;
 				}
@@ -224,7 +224,7 @@ void cPersistent::loadFromString(const std::string& content)
 		std::string name(nameBegin, betweenBegin - nameBegin);
 		if (dataIndices.find(name) != dataIndices.end())
 		{
-			printf("Warning: %s already defined\n", name.c_str());
+			out << "Warning: " << name << " already defined\n";
 		}
 		Data& data = getEmptyData(name);
 		if (type == TypeString)
@@ -275,7 +275,7 @@ void cPersistent::loadFromString(const std::string& content)
 					}
 					else
 					{
-						printf("ERROR");
+						out << "ERROR while parsing persistent\n" << content << "\n";
 						err = true;
 						break;
 					}
@@ -305,7 +305,7 @@ void cPersistent::loadFromString(const std::string& content)
 				}
 				else
 				{
-					printf("ERROR");
+					out << "ERROR while parsing persistent\n" << content << "\n";
 					break;
 				}
 			}

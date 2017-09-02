@@ -18,6 +18,8 @@ class BloodworksConfig : protected cPersistent
 
 	int windowWidth;
 	int windowHeight;
+
+	int crashAutoSendState;
 public:
 	BloodworksConfig()
 	{
@@ -38,6 +40,8 @@ public:
 
 		windowWidth = getInt("windowWidth", 800);
 		windowHeight = getInt("windowHeight", 600);
+
+		crashAutoSendState = getInt("crashAutoSendState", 0);
 	}
 
 	bool getGore() const
@@ -150,6 +154,17 @@ public:
 	{
 		this->windowHeight = windowHeight;
 		set("windowHeight", windowHeight);
+	}
+
+
+	void setCrashAutoSendState(int crashAutoSendState)
+	{
+		this->crashAutoSendState = crashAutoSendState;
+		set("crashAutoSendState", crashAutoSendState);
+	}
+	int getCrashAutoSendState() const
+	{
+		return crashAutoSendState;
 	}
 
 

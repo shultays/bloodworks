@@ -8,3 +8,4 @@ cResources resources;
 cDebugRenderable debugRenderer;
 cGame *game;
 cLuaWorld lua;
+cDebugStream out;

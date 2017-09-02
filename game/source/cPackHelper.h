@@ -57,11 +57,11 @@ public:
 				if (isTypeCorrect(f) == false)
 				{
 					allValid = false;
-					std::cout << "Invalid file type : " << f.folder + f.file << std::endl;
+					out << "Invalid file type : " << f.folder + f.file << "\n";
 				}
 				else
 				{
-					//std::cout << f.folder + f.file << std::endl;
+					//out << f.folder + f.file << std::endl;
 				}
 			}
 			if (allValid)
