@@ -35,13 +35,20 @@ public:
 	void print(bool dummyPrint)
 	{
 		this->dummyPrint = dummyPrint;
-		out << "\n\nStack Trace Begin\n--------------------\n";
+		if (dummyPrint == false)
+		{
+			out << "\n\nStack Trace Begin\n--------------------\n";
+		}
 		StackWalker::ShowCallstack();
-		out << "\n--------------------\nStack Trace End\n";
+		if (dummyPrint == false)
+		{
+			out << "\n--------------------\nStack Trace End\n";
+		}
 	}
 
 	void printExceptionStack(EXCEPTION_POINTERS* pExp)
 	{
+		dummyPrint = false;
 		out << "\n\nException Stack Trace Begin\n--------------------\n";
 		ShowCallstack(GetCurrentThread(), pExp->ContextRecord);
 		out << "\n--------------------\nException Stack Trace End\n";
