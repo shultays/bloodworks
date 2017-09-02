@@ -50,6 +50,7 @@ class GroundRenderable;
 class CollisionController;
 class GameObjectTemplate;
 class CrashReportWindow;
+class CreditsWindow;
 
 class Bloodworks : public cGame
 {
@@ -71,6 +72,7 @@ class Bloodworks : public cGame
 	LevelUpPopup *levelUpPopup;
 	OptionsPopup *optionsPopup;
 	ModWindow *modWindow;
+	CreditsWindow *creditsWindow;
 
 	cVector<Gun*> guns;
 	cVector<Bonus*> bonuses;
@@ -268,6 +270,7 @@ public:
 	bool isOptionsVisible() const;
 	void onLevelUp();
 	void addSlaveWork(cSlaveWork* work);
+	void cancelSlaveWork(cSlaveWork* work);
 	void showMods();
 	void loadMod(const std::string& path, bool loadOnlyModData = false);
 	void updateVolume();
@@ -281,4 +284,6 @@ public:
 	GameObjectTemplate* getGameObjectTemplate(const std::string& templateName);
 	void clear();
 	void reload();
+	void showCredits();
+	void setMainMenuVisible();
 };
