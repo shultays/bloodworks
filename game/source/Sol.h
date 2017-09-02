@@ -12431,7 +12431,7 @@ namespace sol {
 } // sol
 
   // end of sol/state_view.hpp
-
+extern bool hasError;
 namespace sol {
 	inline int default_at_panic(lua_State* L) {
 #ifdef SOL_NO_EXCEPTIONS
@@ -12442,6 +12442,7 @@ namespace sol {
 		if (message) {
 			std::string err = message;
 			out << "\n-----\nlua error\n%s\n-----\n" << err;
+			hasError = true;
 			lua_pop(L, 1);
  			throw error(err);
 		}

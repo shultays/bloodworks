@@ -6,7 +6,6 @@
 DWORD WINAPI SlaveThreadFunc(LPVOID lpParam) 
 {
 	ThreadData* data = (ThreadData*)lpParam;
-	out << "slave started " << data->slaveIndex << "\n";
 	while (data->freed == false) 
 	{
 		if (!data->workToDo) 
@@ -30,6 +29,7 @@ DWORD WINAPI SlaveThreadFunc(LPVOID lpParam)
 
 void cSlave::startSlaveThreadNative() 
 {
+	out << "slave started " << sharedData->slaveIndex << "\n";
 	DWORD threadID;
 	CreateThread(NULL, 0, SlaveThreadFunc, sharedData, 0, &threadID);
 }
