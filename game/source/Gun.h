@@ -76,6 +76,7 @@ class Gun
 	sol::function dynamicSpawnChance;
 	float bulletLifeTime;
 
+	float maxSoundPlayInterval;
 	float gunShootSoundFadein;
 	float gunShootSoundFadeout;
 	bool playGunShootSound;

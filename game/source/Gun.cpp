@@ -38,6 +38,15 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		ultimate = false;
 	}
 
+	if (j.count("maxSoundPlayInterval"))
+	{
+		maxSoundPlayInterval = j["maxSoundPlayInterval"].get<float>();
+	}
+	else
+	{
+		maxSoundPlayInterval = 0.1f;
+	}
+
 	if (j.count("spawnChance"))
 	{
 		spawnChance = j["spawnChance"].get<float>();
@@ -566,7 +575,7 @@ Bullet* Gun::addBullet()
 
 	bloodworks->onAddedGunBullet(this, bullet);
 
-	if (gunShootSound.isValid() && lastShootSoundTime + 0.1f < timer.getTime() && gunShootSoundContinuous == false)
+	if (gunShootSound.isValid() && lastShootSoundTime + maxSoundPlayInterval < timer.getTime() && gunShootSoundContinuous == false)
 	{
 		lastShootSoundTime = timer.getTime();
 		bloodworks->addGameSound(gunShootSound.play());
