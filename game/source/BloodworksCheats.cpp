@@ -328,7 +328,7 @@ void BloodworksCheats::onLoadMission()
 	{
 		if (gun->getScriptName() == "Uzi")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
 		if (gun->getScriptName() == "BananaBomb")
 		{
