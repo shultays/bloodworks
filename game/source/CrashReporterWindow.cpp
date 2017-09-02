@@ -78,7 +78,7 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	window->addRenderable(cancel);
 
 
-	Vec2 p(40.0f, -110.0f);
+	Vec2 p(55.0f, -110.0f);
 	remember = new cTickBox(bloodworks);
 	remember->setWorldMatrix(Mat3::translationMatrix(p));
 	remember->setDefaultMatrix(p, Vec2(20.0f), 0.0f);
