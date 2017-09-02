@@ -35,10 +35,7 @@ void ExplosionController::tick()
 		{
 			explosionData.lastDamageScale = newScale + 15.0f;
 			float damageScale = min(newScale + 15.0f, explosionData.maxScale);
-			if (input.isKeyUp(key_f2))
-			{
-				bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreId(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionData.id);
-			}
+			bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreId(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionData.id);
 		}
 
 		if (newScale > explosionData.maxScale)
@@ -86,12 +83,9 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	r.addLinear(fadeoutTimeIndex, duration - 0.2f, duration + 0.2f);
 	r.addLinear(scaleSpeedIndex, particleScale / duration, particleScale / duration + 6.0f);
 
-	if (input.isKeyUp(key_f1))
+	for (int i = 0; i < 15; i++)
 	{
-		for (int i = 0; i < 15; i++)
-		{
-			explosionParticles->addParticleInternal(pos, nullptr, &r);
-		}
+		explosionParticles->addParticleInternal(pos, nullptr, &r);
 	}
 	ExplosionData explosionData;
 	explosionData.ringRenderable = new cTexturedQuadRenderable(bloodworks, "resources/particles/explosionFire/ring.png", "resources/default");

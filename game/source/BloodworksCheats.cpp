@@ -220,11 +220,11 @@ void BloodworksCheats::onTick()
 		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
 	}
 
-	if (input.isKeyDown(key_f1 && false))
+	if (input.isKeyDown(key_f1))
 	{
 		bulletController->drawDebug();
 	}
-	if (input.isKeyDown(key_f2) && false)
+	if (input.isKeyDown(key_f2))
 	{
 		monsterController->drawDebug();
 	}
