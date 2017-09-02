@@ -70,15 +70,6 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 
 	cSlaveController* slaveController = coral.getSlaveController();
 
-	loginning = true;
-	fetchingResults = true;
-
-	if (userDetails.hasStoredUser())
-	{
-		bloodworks->addSlaveWork(&loginWork);
-	}
-
-	bloodworks->addSlaveWork(&fetchResults);
 	bloodworks->addRenderable(mainWindow, GUI + 151);
 
 	// mod list window
@@ -191,7 +182,7 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 		modDetailWindow->addRenderable(detailDeleteButton);
 	}
 
-	modLoadingText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Reloading Content\nPlease Wait...", 18.0f);
+	modLoadingText = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Please Wait...", 18.0f);
 	modLoadingText->setWorldMatrix(Mat3::translationMatrix(0.0f, 0.0f));
 	modLoadingText->setTextAlignment(TextAlignment::center);
 	mainWindow->addRenderable(modLoadingText);
@@ -216,6 +207,7 @@ ModWindow::ModWindow(Bloodworks *bloodworks)
 	}
 
 	setVisible(false);
+
 }
 
 ModWindow::~ModWindow()
@@ -228,7 +220,7 @@ bool ModWindow::isVisible() const
 	return mainWindow->isVisible();
 }
 
-void ModWindow::setVisible(bool visible)
+void ModWindow::setVisible(bool visible, bool refresh)
 {
 	if (needsReset && visible == false)
 	{
@@ -243,10 +235,20 @@ void ModWindow::setVisible(bool visible)
 	mainWindow->setVisible(visible);
 	if (visible)
 	{
-		modLoadingText->setVisible(false);
-		modListWindow->setVisible(true);
+		if (refresh)
+		{
+			fetchData();
+			modLoadingText->setVisible(true);
+			modListWindow->setVisible(false);
+		}
+		else
+		{
+			modLoadingText->setVisible(false);
+			modListWindow->setVisible(true);
+		}
 		modDetailWindow->setVisible(false);
 	}
+
 	if (needsReset && visible == false)
 	{
 		bloodworks->reload();
@@ -271,13 +273,31 @@ void ModWindow::tick()
 		return;
 	}
 
-	if (fetchingResults == true && fetchResults.isDone())
+	if (fetchingResults == true)
 	{
-		fetchingResults = false;
-		updateList();
-	}
+		if (fetchResults.isDone())
+		{
+			fetchingResults = false;
+			modLoadingText->setVisible(false);
 
-	if (modListWindow->isVisible())
+
+			modLoadingText->setVisible(false);
+			modListWindow->setVisible(true);
+			modDetailWindow->setVisible(false);
+
+			updateList();
+		}
+		else
+		{
+			if (mapper.isKeyPressed(GameKey::Back) || (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center))))
+			{
+				bloodworks->cancelSlaveWork(&fetchResults);
+				input.clearKeyPress(mouse_button_left);
+				setVisible(false);
+			}
+		}
+	}
+	else if (modListWindow->isVisible())
 	{
 		modList->check(input.getMousePos());
 		bool isInside = modList->isMouseInside(input.getMousePos());
@@ -416,6 +436,19 @@ bool ModWindow::isPathDisabled(const std::string& path) const
 		}
 	}
 	return false;
+}
+
+void ModWindow::fetchData()
+{
+	loadedMods.clear();
+	fetchingResults = true;
+	if (userDetails.hasStoredUser())
+	{
+		loginning = true;
+		bloodworks->addSlaveWork(&loginWork);
+	}
+
+	bloodworks->addSlaveWork(&fetchResults);
 }
 
 void ModWindow::updateDetailInfo()
@@ -562,10 +595,10 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 
 void ModWindow::FetchResults::runOnSlave()
 {
-	std::string readBuffer = "";
 	CURL *curl = curl_easy_init();
 	if (curl)
 	{
+		std::string readBuffer;
 		curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/listmods.php");
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -577,7 +610,16 @@ void ModWindow::FetchResults::runOnSlave()
 		}
 
 		curl_easy_cleanup(curl);
+
+		if (isCancelled() == false)
+		{
+			this->readBuffer = readBuffer;
+		}
 	}
+}
+
+void ModWindow::FetchResults::runOnMain()
+{
 	modWindow->loadedMods.clear();
 	if (readBuffer.size() > 0)
 	{
