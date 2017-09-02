@@ -28,6 +28,13 @@ $validUser = false;
 
 include 'opendb.php';
 include 'hasher.php';
+include 'check_spam.php';
+
+if (checkSpam($link, 60, 2, "upload") == false) {
+    echo "please dont kill my server";
+    include 'closedb.php';
+    exit();
+}
 $userid = "-1";
 $validHeader = false;
 
