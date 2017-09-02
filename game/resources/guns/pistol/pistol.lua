@@ -22,6 +22,7 @@ function Pistol.onTick(gun)
             local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
+            particle.args.color = Vec3.new(0.8, 0.8, 0.8)
         end
     end
 end
