@@ -127,6 +127,10 @@ void Coral::tick()
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.01f) 
 	{
+		SDL_Delay((Uint32)(timeToSleep * 1000));
+	}
+	else
+	{
 		SDL_Delay(0);
 	}
 }
