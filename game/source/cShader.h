@@ -6,6 +6,8 @@
 #include <iostream>
 #include <GL/glew.h>
 
+extern bool hasError;
+
 enum {
 	TypeFloat,
 	TypeVec2,
@@ -205,6 +207,7 @@ public:
 			infoLog = (char *)malloc(infologLength);
 			glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
 			out << "shader_error: " << name << " " << infoLog << "\n";
+			hasError = true;
 			free(infoLog);
 		}
 	}
@@ -221,6 +224,7 @@ public:
 			infoLog = (char *)malloc(infologLength);
 			glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
 			out << "shader_error: " << infoLog << "\n";
+			hasError = true;
 			free(infoLog);
 		}
 	}
@@ -254,6 +258,7 @@ public:
 		std::string shaderSource;
 		if (!textFileRead(fileName, shaderSource)) {
 			out << "Cannot load shader file : " << fileName;
+			hasError = true;
 			return 0;
 		}
 		return buildShader(fileName, shaderSource, shaderType);
