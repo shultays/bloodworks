@@ -8,6 +8,7 @@
 
 #include "cGlobals.h"
 #include "Bloodworks.h"
+#include "cPackHelper.h"
 
 std::string programName = "Bloodworks";
 
@@ -24,6 +25,13 @@ void Cleanup();
 
 Coral coral;
 
+LONG __stdcall CrashHandler(PEXCEPTION_POINTERS pExceptionInfo)
+{
+
+	out.close();
+	exit(0);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
 
 void addController(int id)
 {
@@ -44,7 +52,7 @@ bool Init()
 	srand((int)time((time_t)0));
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
-		std::cout << "Failed to init SDL\n";
+		out << "Failed to init SDL\n";
 		return false;
 	}
 
@@ -54,7 +62,7 @@ bool Init()
 
 	if (!mainWindow)
 	{
-		std::cout << "Unable to create window\n";
+		out << "Unable to create window\n";
 		CheckSDLError(__LINE__);
 		return false;
 	}
@@ -102,9 +110,9 @@ LONG WINAPI ExpFilter(EXCEPTION_POINTERS* pExp, DWORD dwExpCode)
 }
 #endif
 
-int main(int argc, char *argv[])
+int runMain()
 {
-	printStack();
+	printStack(true);
 	bool hasException = false;
 
 #ifdef _WIN32
@@ -144,10 +152,56 @@ int main(int argc, char *argv[])
 		{
 			SDL_HideWindow(mainWindow);
 		}
-		char c;
-		scanf_s("%c\n", &c, 1);
+		return -1;
 	}
 #endif
+	out << "Closing the game...\n";
+	return 0;
+}
+
+void checkOldOutput()
+{
+	std::ifstream input;
+	input.open(STD_OUTPUT);
+	SetUnhandledExceptionFilter(CrashHandler);
+	if (input.is_open())
+	{
+		input.close();
+		std::rename(STD_OUTPUT, STD_OUTPUT_COPY);
+	}
+}
+
+
+int main(int argc, char *argv[])
+{
+	checkOldOutput();
+	out.open(STD_OUTPUT);
+	int ret = runMain();
+	out.close();
+	if (ret == 0)
+	{
+		cPackHelper::deleteFile(STD_OUTPUT);
+	}
+	else
+	{
+		fflush(stdin);
+		printf("Looks like we have a problem, do you want to send log file? (Y/N)\n");
+		char c = getc(stdin);
+		if (c == 'Y' || c == 'y')
+		{
+			printf("Please input how this crash happened and press enter:\n");
+			std::string message;
+			while (message == "")
+			{
+				std::getline(std::cin, message);
+			}
+
+			SendReport(message);
+			printf("\n\nThanks for reporting the crash!\n");
+			cPackHelper::deleteFile(STD_OUTPUT);
+			getc(stdin);
+		}
+	}
 	return 0;
 }
 
@@ -311,10 +365,10 @@ void CheckSDLError(int line = -1)
 
 	if (error != "")
 	{
-		std::cout << "SLD Error : " << error << std::endl;
+		out << "SLD Error : " << error << "\n";
 
 		if (line != -1)
-			std::cout << "\nLine : " << line << std::endl;
+			out << "\nLine : " << line << "\n";
 
 		SDL_ClearError();
 	}
