@@ -5,11 +5,13 @@
 #include "../game/source/cPackHelper.h"
 #include "../game/source/UserDetails.h"
 #include "../game/source/json.h"
+cDebugStream out;
 
 #include <iostream>
 
 int main(int argn, const char* argv[])
 {
+	out.open("uploader_stdout.txt");
 	bool uploadAll = false;
 	std::vector<DirentHelper::Folder> allMods;
 	int modIndex = 0;
