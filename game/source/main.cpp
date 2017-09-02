@@ -183,6 +183,7 @@ int main(int argc, char *argv[])
 	if (ret == 0 && hasError == false)
 	{
 		cPackHelper::deleteFile(STD_OUTPUT);
+		cPackHelper::deleteFile(STD_OUTPUT_COPY);
 	}
 	else
 	{
