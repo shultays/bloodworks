@@ -11,7 +11,7 @@ cScopedTimeProfiler::~cScopedTimeProfiler()
 {
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff = end - startTime;
-	printf("%s : %lf\n", text, diff.count());
+	out << text << " : " << diff.count() << "\n";
 }
 
 
@@ -40,7 +40,7 @@ void cTimeProfiler::stop()
 
 		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> diff = end - startTime;
-		printf("%s : %lf\n", text, diff.count());
+		out << text << " : " << diff.count() << "\n";
 	}
 }
 
@@ -80,7 +80,7 @@ void cAccumulatedTimeProfiler::printResult()
 	assert(started == false);
 	if (total > 0.0)
 	{
-		printf("%s : %lf\n", text, total);
+		out << text << " : " << total << "\n";
 	}
 }
 
