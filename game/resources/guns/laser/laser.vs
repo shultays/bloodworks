@@ -1,3 +1,4 @@
+#version 400
 attribute float yShift;
 attribute float widthMult1;
 attribute float widthMult2;
