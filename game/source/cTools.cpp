@@ -5,6 +5,8 @@
 #include <streambuf>
 #include <SDL.h>
 #include <algorithm>
+#define CURL_STATICLIB 
+#include <curl/curl.h>
 
 #ifdef WINDOWS
 #undef APIENTRY
@@ -17,27 +19,32 @@
 class StackWalkerToConsole : public StackWalker
 {
 protected:
+	bool dummyPrint;
 	virtual void OnOutput(LPCSTR szText)
 	{
-		printf("%s", szText);
+		if (dummyPrint == false)
+		{
+			out << szText;
+		}
 	}
 public:
 	StackWalkerToConsole() : StackWalker(RetrieveNone)
 	{
 
 	}
-	void print()
+	void print(bool dummyPrint)
 	{
-		printf("\n\nStack Trace Begin\n--------------------\n");
+		this->dummyPrint = dummyPrint;
+		out << "\n\nStack Trace Begin\n--------------------\n";
 		StackWalker::ShowCallstack();
-		printf("\n--------------------\nStack Trace End\n");
+		out << "\n--------------------\nStack Trace End\n";
 	}
 
 	void printExceptionStack(EXCEPTION_POINTERS* pExp)
 	{
-		printf("\n\nException Stack Trace Begin\n--------------------\n");
+		out << "\n\nException Stack Trace Begin\n--------------------\n";
 		ShowCallstack(GetCurrentThread(), pExp->ContextRecord);
-		printf("\n--------------------\nException Stack Trace End\n");
+		out << "\n--------------------\nException Stack Trace End\n";
 	}
 } stack;
 
@@ -125,10 +132,10 @@ float randFloat(float begin, float end)
 	return randFloat() * (end - begin) + begin;
 }
 
-void printStack()
+void printStack(bool dummyPrint)
 {
 #ifdef _WIN32
-	stack.print();
+	stack.print(dummyPrint);
 #endif
 }
 
@@ -144,4 +151,71 @@ void doBreak()
 #ifdef _WIN32
 	__debugbreak();
 #endif
+}
+
+cDebugStream::cDebugStream(void)
+{
+}
+
+cDebugStream::~cDebugStream(void)
+{
+}
+
+void cDebugStream::open(const std::string& path)
+{
+	coss.open(path.c_str(), std::ofstream::out /*| std::ofstream::app */);
+}
+
+void cDebugStream::close()
+{
+	coss.close();
+}
+
+void SendReport(const std::string& message, bool useCopy)
+{
+	std::string readBuffer;
+
+	out.close();
+
+	std::string report;
+	if (useCopy)
+	{
+		textFileRead(STD_OUTPUT_COPY, report);
+	}
+	else
+	{
+		textFileRead(STD_OUTPUT, report);
+	}
+	CURL *curl = curl_easy_init();
+	if (curl)
+	{
+		struct curl_httppost *formpost = NULL;
+		struct curl_httppost *lastptr = NULL;
+		struct curl_slist *headerlist = NULL;
+
+		curl_formadd(&formpost,
+			&lastptr,
+			CURLFORM_COPYNAME, "message",
+			CURLFORM_COPYCONTENTS, message.c_str(),
+			CURLFORM_END);
+
+		curl_formadd(&formpost,
+			&lastptr,
+			CURLFORM_COPYNAME, "report",
+			CURLFORM_COPYCONTENTS, report.c_str(),
+			CURLFORM_END);
+
+		curl_easy_setopt(curl, CURLOPT_URL, "http://bloodworks.enginmercan.com/send_report.php");
+		curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+
+		CURLcode res = curl_easy_perform(curl);
+		if (res != CURLE_OK)
+		{
+			std::cout << "curl_easy_perform() failed: " << curl_easy_strerror(res) << "\n";
+		}
+
+		curl_easy_cleanup(curl);
+		curl_formfree(formpost);
+		curl_slist_free_all(headerlist);
+	}
 }

@@ -6,7 +6,7 @@
 DWORD WINAPI SlaveThreadFunc(LPVOID lpParam) 
 {
 	ThreadData* data = (ThreadData*)lpParam;
-	printf("slave started %d\n", data->slaveIndex);
+	out << "slave started " << data->slaveIndex << "\n";
 	while (data->freed == false) 
 	{
 		if (!data->workToDo) 
