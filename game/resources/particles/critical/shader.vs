@@ -1,3 +1,4 @@
+#version 400
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;

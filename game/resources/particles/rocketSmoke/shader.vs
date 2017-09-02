@@ -1,3 +1,4 @@
+#version 400
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
@@ -34,9 +35,9 @@ void main(void)
 	if (t < whiteDuration)
 	{
 		float l = t / whiteDuration;
-		finalColor.r = lerp(1.0, 1.0, l);
-		finalColor.g = lerp(0.3, 0.5, l);
-		finalColor.b = lerp(0.0, 0.0, l);
+		finalColor.r = mix(1.0, 1.0, l);
+		finalColor.g = mix(0.3, 0.5, l);
+		finalColor.b = mix(0.0, 0.0, l);
 	}
 	else 
 	{
@@ -45,9 +46,9 @@ void main(void)
 		if (t < yellowDuration)
 		{
 			float l = t / yellowDuration;
-			finalColor.r = lerp(0.8, color, l);
-			finalColor.g = lerp(0.4, color, l);
-			finalColor.b = lerp(0.0, color, l);
+			finalColor.r = mix(0.8, color, l);
+			finalColor.g = mix(0.4, color, l);
+			finalColor.b = mix(0.0, color, l);
 		}
 		else
 		{
