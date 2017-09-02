@@ -41,7 +41,7 @@ namespace DirentHelper
 			dir = opendir(name.c_str());
 			if (dir == nullptr)
 			{
-				printf("Folder '%s' does not exists\n", name.c_str());
+				out << "Folder '" << name << "' does not exists\n";
 			}
 			return dir;
 		}

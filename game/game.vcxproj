@@ -202,6 +202,7 @@
     <ClCompile Include="source\CollisionController.cpp" />
     <ClCompile Include="source\cParticle.cpp" />
     <ClCompile Include="source\cPostProcess.cpp" />
+    <ClCompile Include="source\CrashReporterWindow.cpp" />
     <ClCompile Include="source\cRect.cpp" />
     <ClCompile Include="source\cShader.cpp" />
     <ClCompile Include="source\cSlave.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="source\cPostProcess.h" />
     <ClInclude Include="source\cPriorityVector.h" />
     <ClInclude Include="source\cAARect.h" />
+    <ClInclude Include="source\CrashReporterWindow.h" />
     <ClInclude Include="source\cRect.h" />
     <ClInclude Include="source\cRenderable.h" />
     <ClInclude Include="source\cRenderableContainer.h" />

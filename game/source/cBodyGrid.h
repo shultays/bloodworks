@@ -687,7 +687,7 @@ public:
 
 			if (maxTry <= 0)
 			{
-				printf("Reached maxtry on ray cast, error?\n");
+				out << "Reached maxtry on ray cast, error?\n";
 			}
 			if (renderDebug)
 			{

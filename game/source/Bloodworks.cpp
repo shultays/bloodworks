@@ -38,6 +38,7 @@
 #include "GroundRenderable.h"
 #include "CollisionController.h"
 #include "GameObjectTemplate.h"
+#include "CrashReporterWindow.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -46,7 +47,7 @@ BloodworksCheats *bloodworksCheats;
 
 void appendJson(nlohmann::json& j, const std::string& fileName)
 {
-	printf("json %s\n", fileName.c_str());
+	out << "json " << fileName << "\n";
 	std::string jsonFile2;
 	textFileRead(fileName, jsonFile2);
 	nlohmann::json j2 = nlohmann::json::parse(jsonFile2.c_str());
@@ -61,7 +62,7 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 	}
 }
 
-void Bloodworks::init()
+void Bloodworks::initImplementation()
 {
 	nextGlobalUniqueId = 1;
 
@@ -72,7 +73,10 @@ void Bloodworks::init()
 			end
 		)");
 
-	config = new BloodworksConfig();
+	if (config == nullptr)
+	{
+		config = new BloodworksConfig();
+	}
 
 	coral.setWindowSize(config->getWindowWidth(), config->getWindowHeight());
 
@@ -102,7 +106,7 @@ void Bloodworks::init()
 
 	bg = new GroundRenderable(this);
 	addRenderable(bg, BACKGROUND);
-	
+
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
@@ -236,6 +240,32 @@ void Bloodworks::init()
 #endif
 }
 
+void Bloodworks::init()
+{
+	std::ifstream f(STD_OUTPUT_COPY);
+
+	if (f.good())
+	{
+		config = new BloodworksConfig();
+
+		if (config->getCrashAutoSendState() == 0)
+		{
+			crashReporterWindow = new CrashReportWindow(this);
+			return;
+		}
+		else
+		{
+			if (config->getCrashAutoSendState() == 1)
+			{
+				SendReport("in-game report", true);
+			}
+			f.close();
+			cPackHelper::deleteFile(STD_OUTPUT_COPY);
+		}
+	}
+	initImplementation();
+}
+
 Bloodworks::Bloodworks()
 {
 	nextUniqueId = 1000;
@@ -252,6 +282,8 @@ Bloodworks::Bloodworks()
 	soundPaused = false;
 	cameraCenterPos.setZero();
 
+	config = nullptr;
+	crashReporterWindow = nullptr;
 	BloodworksControls::init();
 }
 
@@ -739,6 +771,12 @@ GameObjectTemplate* Bloodworks::getGameObjectTemplate(const std::string& templat
 
 void Bloodworks::clear()
 {
+	SAFE_DELETE(config);
+	if (crashReporterWindow)
+	{
+		SAFE_DELETE(crashReporterWindow);
+		return;
+	}
 	for (auto& animation : animationTemplates)
 	{
 		SAFE_DELETE(animation.second);
@@ -797,7 +835,6 @@ void Bloodworks::clear()
 	SAFE_DELETE(collisionController);
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
-	SAFE_DELETE(config);
 
 #ifdef HAS_BLOODWORKS_CHEATS
 	SAFE_DELETE(bloodworksCheats);
@@ -807,7 +844,7 @@ void Bloodworks::clear()
 void Bloodworks::reload()
 {
 	clear();
-	init();
+	initImplementation();
 }
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
@@ -904,6 +941,30 @@ void Bloodworks::addDrop(const Vec2& position)
 void Bloodworks::tick()
 {
 	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
+
+	if (crashReporterWindow)
+	{
+		crashReporterWindow->tick();
+		if (crashReporterWindow->isClosed())
+		{
+			bool remember = crashReporterWindow->dontAskAgain();
+			bool shouldSend = crashReporterWindow->sendClicked();
+			if (shouldSend)
+			{
+				SendReport("in-game report", true);
+			}
+			cPackHelper::deleteFile(STD_OUTPUT_COPY);
+			SAFE_DELETE(crashReporterWindow);
+			initImplementation();
+			if (remember)
+			{
+				config->setCrashAutoSendState(shouldSend ? 1 : 2);
+			}
+		}
+		config->check();
+		return;
+	}
+
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksCheats->onTick();
 #endif
@@ -1077,6 +1138,10 @@ void Bloodworks::tickGameSlowdown()
 
 void Bloodworks::render()
 {
+	if (crashReporterWindow)
+	{
+		return;
+	}
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksCheats->onRender();
 #endif

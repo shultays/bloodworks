@@ -46,6 +46,12 @@ BloodworksCheats::~BloodworksCheats()
 
 void BloodworksCheats::onTick()
 {
+	if (input.isKeyDown(key_p) && input.isKeyDown(key_q) && input.isKeyDown(key_space))
+	{
+		out << "Intentional crash\n";
+		int *a = nullptr;
+		*a = 42;
+	}
 	if (bloodworks->isMissionLoaded() == false)
 	{
 		return;
@@ -294,6 +300,10 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 
 void BloodworksCheats::onRender()
 {
+	if (bloodworks->isMissionLoaded() == false)
+	{
+		return;
+	}
 	if (showFPS)
 	{
 		renderCount++;
