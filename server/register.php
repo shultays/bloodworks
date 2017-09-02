@@ -12,7 +12,12 @@ if(isset($_POST['username']) and isset($_POST['password']))
 	if(validUsername($username) and validPassword($password)) 
 	{
 		include 'opendb.php';
-
+        include 'check_spam.php';
+        if (checkSpam($link, 30, 0, "register") == false) {
+            echo "you can only register once 30 secs";
+            include 'closedb.php';
+            exit();
+        }
 		$query = "SELECT password FROM users WHERE username = '$username' LIMIT 1";
 		$result = mysqli_query($link, $query);
 		if (mysqli_num_rows($result) == 0) 

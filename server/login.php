@@ -10,6 +10,13 @@ if(isset($_POST['username']) and isset($_POST['password']))
 		
 		include 'opendb.php';
 
+        include 'check_spam.php';
+
+        if (checkSpam($link, 10, 20, "login") == false) {
+            echo "please dont spam login";
+            include 'closedb.php';
+            exit();
+        }
 		$query = "SELECT password FROM users  WHERE username = '".$_POST['username']."' LIMIT 1";
 		$result = mysqli_query($link, $query);
 		include 'closedb.php';
