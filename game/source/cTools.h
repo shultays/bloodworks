@@ -182,10 +182,15 @@ class cDebugStream
 {
 public:
 	std::ofstream coss;
-	cDebugStream(void);
-	~cDebugStream(void);
-	void open(const std::string& path);
-	void close();
+	void open(const std::string& path)
+	{
+		coss.open(path.c_str(), std::ofstream::out /*| std::ofstream::app */);
+	}
+
+	void close()
+	{
+		coss.close();
+	}
 };
 
 template <class T>

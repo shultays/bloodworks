@@ -186,22 +186,29 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		fflush(stdin);
-		printf("Looks like we have a problem, do you want to send log file? (Y/N)\n");
-		char c = getc(stdin);
-		if (c == 'Y' || c == 'y')
+		if (Coral::isDebuggerPresent())
 		{
-			printf("Please input how this crash happened and press enter:\n");
-			std::string message;
-			while (message == "")
-			{
-				std::getline(std::cin, message);
-			}
-
-			SendReport(message);
-			printf("\n\nThanks for reporting the crash!\n");
-			cPackHelper::deleteFile(STD_OUTPUT);
 			getc(stdin);
+		}
+		else
+		{
+			fflush(stdin);
+			printf("Looks like we have a problem, do you want to send log file? (Y/N)\n");
+			char c = getc(stdin);
+			if (c == 'Y' || c == 'y')
+			{
+				printf("Please input how this crash happened and press enter:\n");
+				std::string message;
+				while (message == "")
+				{
+					std::getline(std::cin, message);
+				}
+
+				SendReport(message);
+				printf("\n\nThanks for reporting the crash!\n");
+				cPackHelper::deleteFile(STD_OUTPUT);
+				getc(stdin);
+			}
 		}
 	}
 	return 0;
