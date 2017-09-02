@@ -4,6 +4,8 @@
 /game/config.txt
 /game/keys.txt
 /game/user_details.txt
+/game/stdout.txt
+/game/stdout_to_send.txt
 /temp
 /uploader/x64/
 /x64/

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "UserDetails.h"
 #include "cPackHelper.h"
 #include "json.h"
 
@@ -83,7 +82,7 @@ public:
 			{
 				if (getInvalidCharsInUsername(username).size() > 0 || getInvalidCharsInPassword(password).size() > 0)
 				{
-					printf("Invalid username/password stored in file\n");
+					out << "Invalid username/password stored in file\n";
 					std::ofstream file(USERFILE);
 					file.close();
 				}
@@ -132,8 +131,9 @@ public:
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 				CURLcode res = curl_easy_perform(curl);
 				if (res != CURLE_OK)
-					fprintf(stderr, "curl_easy_perform() failed: %s\n",
-						curl_easy_strerror(res));
+				{
+					out << "curl_easy_perform() failed: " << curl_easy_strerror(res) << "\n";
+				}
 				logined = readBuffer == "true";
 				curl_easy_cleanup(curl);
 				curl_formfree(formpost);
@@ -151,7 +151,7 @@ public:
 			}
 			else
 			{
-				std::cout << "Error : " << readBuffer << std::endl;
+				out << "Error : " << readBuffer << "\n";
 			}
 		}
 		return logined;
@@ -214,8 +214,9 @@ public:
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 				CURLcode res = curl_easy_perform(curl);
 				if (res != CURLE_OK)
-					fprintf(stderr, "curl_easy_perform() failed: %s\n",
-						curl_easy_strerror(res));
+				{
+					out << "curl_easy_perform() failed: " << curl_easy_strerror(res) << "\n";
+				}
 				logined = readBuffer == "true";
 				curl_easy_cleanup(curl);
 				curl_formfree(formpost);
@@ -233,7 +234,7 @@ public:
 			}
 			else
 			{
-				std::cout << "Error : " << readBuffer << std::endl;
+				out << "Error : " << readBuffer << "\n";
 			}
 		}
 		return logined;
@@ -274,18 +275,18 @@ public:
 		}
 		return password;
 	}
-
+	
 	bool UserDetails::sendFile(const std::string& username, const std::string& password, const std::string& path, nlohmann::json& modInfo, const std::string& file)
 	{
 		if (modInfo.count("name") == 0)
 		{
-			std::cout << "Error : mod name cannot be empty\n";
+			out << "Error : mod name cannot be empty\n";
 			return false;
 		}
 		std::string invalidChars = getInvalidCharsInUsername(modInfo["name"].get<std::string>());
 		if (invalidChars.size() > 0)
 		{
-			std::cout << "Error : mod name has invalid characters:" << invalidChars << "\n";
+			out << "Error : mod name has invalid characters:" << invalidChars << "\n";
 			return false;
 		}
 		if (modInfo.count("icon"))
@@ -294,7 +295,7 @@ public:
 			f.file = modInfo["icon"].get<std::string>();
 			if (f.isTypeOf("png") == false)
 			{
-				std::cout << "Error : mod icon must be a png file\n";
+				out << "Error : mod icon must be a png file\n";
 				return false;
 			}
 		}
@@ -314,7 +315,7 @@ public:
 
 		if (last_folder_path.size() == 0)
 		{
-			std::cout << "Error : folder name error\n";
+			out << "Error : folder name error\n";
 			return false;
 		}
 		bool success = false;
@@ -409,8 +410,9 @@ public:
 
 			CURLcode res = curl_easy_perform(curl);
 			if (res != CURLE_OK)
-				fprintf(stderr, "curl_easy_perform() failed: %s\n",
-					curl_easy_strerror(res));
+			{
+				out << "curl_easy_perform() failed: " << curl_easy_strerror(res) << "\n";
+			}
 
 			success = readBuffer == "true";
 			curl_easy_cleanup(curl);
@@ -421,11 +423,11 @@ public:
 
 		if (success)
 		{
-			std::cout << "Success!\n";
+			out << "Success!\n";
 		}
 		else
 		{
-			std::cout << "Error :" << readBuffer << "\n";
+			out << "Error :" << readBuffer << "\n";
 		}
 		return success;
 	}
