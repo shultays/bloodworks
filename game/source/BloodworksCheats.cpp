@@ -36,7 +36,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 #ifdef DEBUG
 	showFPS = true;
 #else
-	showFPS = coral.isDebuggerPresent();
+	showFPS = Coral::isDebuggerPresent();
 #endif
 }
 
@@ -371,11 +371,11 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 void BloodworksCheats::onInit()
 {
 	static bool testGame = false;
-	if (coral.isDebuggerPresent())
+	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);
 	}
-	if (coral.isDebuggerPresent() && testGame)
+	if (Coral::isDebuggerPresent() && testGame)
 	{
 		coral.getSoundManager()->setGlobalVolume(0.0f);
 		bloodworks->loadMission("Survival");

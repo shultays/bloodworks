@@ -50,7 +50,7 @@ public:
 		gameRunning = false;
 	}
 
-	bool isDebuggerPresent();
+	static bool isDebuggerPresent();
 
 	cSoundManager* getSoundManager() const
 	{
