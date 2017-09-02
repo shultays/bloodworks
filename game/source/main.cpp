@@ -23,6 +23,7 @@ void CheckSDLError(int line);
 void RunGame();
 void Cleanup();
 
+bool hasError = false;
 Coral coral;
 
 LONG __stdcall CrashHandler(PEXCEPTION_POINTERS pExceptionInfo)
@@ -53,6 +54,7 @@ bool Init()
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		out << "Failed to init SDL\n";
+		hasError = true;
 		return false;
 	}
 
@@ -178,7 +180,7 @@ int main(int argc, char *argv[])
 	out.open(STD_OUTPUT);
 	int ret = runMain();
 	out.close();
-	if (ret == 0)
+	if (ret == 0 && hasError == false)
 	{
 		cPackHelper::deleteFile(STD_OUTPUT);
 	}
