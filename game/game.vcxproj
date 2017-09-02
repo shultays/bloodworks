@@ -204,6 +204,7 @@
     <ClCompile Include="source\cPostProcess.cpp" />
     <ClCompile Include="source\CrashReporterWindow.cpp" />
     <ClCompile Include="source\cRect.cpp" />
+    <ClCompile Include="source\CreditsWindow.cpp" />
     <ClCompile Include="source\cShader.cpp" />
     <ClCompile Include="source\cSlave.cpp" />
     <ClCompile Include="source\cSlaveWindows.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="source\cAARect.h" />
     <ClInclude Include="source\CrashReporterWindow.h" />
     <ClInclude Include="source\cRect.h" />
+    <ClInclude Include="source\CreditsWindow.h" />
     <ClInclude Include="source\cRenderable.h" />
     <ClInclude Include="source\cRenderableContainer.h" />
     <ClInclude Include="source\cRenderableWithShader.h" />

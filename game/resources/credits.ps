@@ -1,0 +1,28 @@
+uniform sampler2D uTexture0;
+uniform float yULimit;
+
+uniform vec2 uScreenSize;
+uniform vec2 uScreenLimits;
+uniform float uOutsideAlpha;
+
+varying vec4 vColor;
+varying vec2 vVertexUV;
+
+varying vec2 vScreenCoor;
+
+void main(void) 
+{
+	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
+    vec2 p = (1.0 - abs(vScreenCoor)) * uScreenSize / uScreenLimits;
+    
+    float t = min(p.x, p.y);
+    
+    if (t < 0.5)
+    {
+        gl_FragColor.a *= uOutsideAlpha;
+    }
+    else if (t < 1.0)
+    {
+        gl_FragColor.a *= mix(uOutsideAlpha, 1.0, (t - 0.5) * 2.0);
+    }
+}
