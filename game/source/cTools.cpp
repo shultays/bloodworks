@@ -160,24 +160,6 @@ void doBreak()
 #endif
 }
 
-cDebugStream::cDebugStream(void)
-{
-}
-
-cDebugStream::~cDebugStream(void)
-{
-}
-
-void cDebugStream::open(const std::string& path)
-{
-	coss.open(path.c_str(), std::ofstream::out /*| std::ofstream::app */);
-}
-
-void cDebugStream::close()
-{
-	coss.close();
-}
-
 void SendReport(const std::string& message, bool useCopy)
 {
 	std::string readBuffer;
