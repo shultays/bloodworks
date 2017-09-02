@@ -139,7 +139,7 @@ void BloodworksCheats::onTick()
 
 	if (input.isKeyPressed(key_3))
 	{
-		std::string s = "CircleFire";
+		std::string s = "Explosion";
 
 		for (int i = 0; i < bonuses.size(); i++)
 		{
@@ -220,11 +220,11 @@ void BloodworksCheats::onTick()
 		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
 	}
 
-	if (input.isKeyDown(key_f1))
+	if (input.isKeyDown(key_f1 && false))
 	{
 		bulletController->drawDebug();
 	}
-	if (input.isKeyDown(key_f2))
+	if (input.isKeyDown(key_f2) && false)
 	{
 		monsterController->drawDebug();
 	}
