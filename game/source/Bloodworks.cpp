@@ -242,25 +242,28 @@ void Bloodworks::initImplementation()
 
 void Bloodworks::init()
 {
-	std::ifstream f(STD_OUTPUT_COPY);
-
-	if (f.good())
+	if (Coral::isDebuggerPresent() == false)
 	{
-		config = new BloodworksConfig();
+		std::ifstream f(STD_OUTPUT_COPY);
 
-		if (config->getCrashAutoSendState() == 0)
+		if (f.good())
 		{
-			crashReporterWindow = new CrashReportWindow(this);
-			return;
-		}
-		else
-		{
-			if (config->getCrashAutoSendState() == 1)
+			config = new BloodworksConfig();
+
+			if (config->getCrashAutoSendState() == 0)
 			{
-				SendReport("in-game report", true);
+				crashReporterWindow = new CrashReportWindow(this);
+				return;
 			}
-			f.close();
-			cPackHelper::deleteFile(STD_OUTPUT_COPY);
+			else
+			{
+				if (config->getCrashAutoSendState() == 1)
+				{
+					SendReport("in-game report", true);
+				}
+				f.close();
+				cPackHelper::deleteFile(STD_OUTPUT_COPY);
+			}
 		}
 	}
 	initImplementation();
