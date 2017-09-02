@@ -438,7 +438,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 	{
 		if (setAttributes[i] == 0)
 		{
-			printf("Attribute not set : %s\n", shader->getAttributeAtIndex(i).name.c_str());
+			out << "Attribute not set :" << shader->getAttributeAtIndex(i).name << "\n";
 		}
 	}
 

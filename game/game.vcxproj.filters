@@ -228,6 +228,9 @@
     <ClCompile Include="source\cTexture.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
+    <ClCompile Include="source\CrashReporterWindow.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">
@@ -483,6 +486,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="source\Bonus.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CrashReporterWindow.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

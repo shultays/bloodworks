@@ -16,6 +16,8 @@ xcopy game\*.vs .\temp\bloodworks /sy
 del .\temp\bloodworks\config.txt
 del .\temp\bloodworks\user_details.txt
 del .\temp\bloodworks\keys.txt
+del .\temp\bloodworks\stdout.txt
+del .\temp\bloodworks\stdout_to_send.txt
 
 rmdir .\temp\bloodworks\resources\mods /s /q
 mkdir .\temp\bloodworks\resources\mods

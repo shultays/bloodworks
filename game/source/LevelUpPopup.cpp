@@ -28,7 +28,7 @@ LevelUpPopup::LevelUpPopup(Bloodworks *bloodworks)
 	levelupGroupTitle->setTextAlignment(TextAlignment::center);
 	levelupGroup->addRenderable(levelupGroupTitle);
 
-	levelupGroupSubTitle = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "asd", 18.0f);
+	levelupGroupSubTitle = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 18.0f);
 	levelupGroupSubTitle->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, 83.0f)));
 	levelupGroupSubTitle->setTextAlignment(TextAlignment::center);
 	levelupGroup->addRenderable(levelupGroupSubTitle);
