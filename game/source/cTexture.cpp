@@ -1,6 +1,7 @@
 #include "cTexture.h"
 
 extern int totalResource;
+extern bool hasError;
 
 cTexture::cTexture()
 {
@@ -15,6 +16,7 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 	if (surf == NULL)
 	{
 		out << "surface_error: " << fileName << " " << SDL_GetError() << "\n";
+		hasError = true;
 	}
 
 	GLenum data_fmt;
