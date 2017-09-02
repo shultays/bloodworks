@@ -479,7 +479,7 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 		}
 		if (maxTry <= 0)
 		{
-			printf("Reached maxtry on ray cast, error?\n");
+			out << "Reached maxtry on ray cast, error?\n";
 		}
 	}
 	return false;

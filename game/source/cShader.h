@@ -204,7 +204,7 @@ public:
 		if (infologLength > 1) {
 			infoLog = (char *)malloc(infologLength);
 			glGetShaderInfoLog(obj, infologLength, &charsWritten, infoLog);
-			printf("%s\n%s\n\n", name.c_str(), infoLog);
+			out << "shader_error: " << name << " " << infoLog << "\n";
 			free(infoLog);
 		}
 	}
@@ -220,7 +220,7 @@ public:
 		if (infologLength > 1) {
 			infoLog = (char *)malloc(infologLength);
 			glGetProgramInfoLog(obj, infologLength, &charsWritten, infoLog);
-			printf("%s\n", infoLog);
+			out << "shader_error: " << infoLog << "\n";
 			free(infoLog);
 		}
 	}
@@ -253,7 +253,7 @@ public:
 	{
 		std::string shaderSource;
 		if (!textFileRead(fileName, shaderSource)) {
-			std::cout << "Cannot load shader file : " << fileName;
+			out << "Cannot load shader file : " << fileName;
 			return 0;
 		}
 		return buildShader(fileName, shaderSource, shaderType);
@@ -291,7 +291,7 @@ public:
 
 	bool loadFromFile(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 	{
-		printf("loading %s %s\n", vertexShaderFile.c_str(), pixelShaderFile.c_str());
+		out << "loading " << vertexShaderFile << " " <<  pixelShaderFile << "\n";
 		this->vertexShaderFile = vertexShaderFile;
 		this->pixelShaderFile = pixelShaderFile;
 

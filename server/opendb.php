@@ -3,6 +3,7 @@ $servername = "";
 $username_db = "";
 $password_db = "";
 $dbname = "";
+$reportPass = "";
 
 $link = mysqli_init();
 

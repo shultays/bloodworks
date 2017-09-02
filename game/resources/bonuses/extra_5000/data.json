@@ -3,5 +3,6 @@
   "name": "5000 Points",
   "iconFile" : "icon.png",
   "scriptFile" : "extra_5000.lua",
-  "scriptName" : "Extra5000"
+  "scriptName" : "Extra5000",
+  "spawnChance" : 0.15
 }

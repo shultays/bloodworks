@@ -49,10 +49,13 @@ class cAnimationTemplate;
 class GroundRenderable;
 class CollisionController;
 class GameObjectTemplate;
+class CrashReportWindow;
 
 class Bloodworks : public cGame
 {
 	Player *player;
+
+	CrashReportWindow *crashReporterWindow;
 
 	MissionController *missionController;
 	MonsterController *monsterController;
@@ -108,6 +111,8 @@ class Bloodworks : public cGame
 	std::map<std::string, GameObjectTemplate*> gameObjectTemplates;
 
 	void parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData = false);
+
+	void initImplementation();
 protected:
 	virtual void render() override;
 	virtual void tick() override;
