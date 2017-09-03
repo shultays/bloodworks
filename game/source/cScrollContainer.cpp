@@ -82,6 +82,10 @@ void cScrollContainer::setRect(const AARect& rect)
 
 void cScrollContainer::setMaxScroll(float maxScroll)
 {
+	if (maxScroll < 0.0f)
+	{
+		maxScroll = 0.0f;
+	}
 	this->maxScroll = maxScroll;
 }
 

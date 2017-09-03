@@ -149,10 +149,29 @@ void MissionController::removeGameObject(int id)
 void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& file)
 {
 	MissionData data;
-	data.name = j["name"].get<std::string>();
+	if (j.count("name"))
+	{
+		data.name = j["name"].get<std::string>();
+	}
+	if (j.count("icon") && j["icon"].get<std::string>().size())
+	{
+		data.icon = file.folder + j["icon"].get<std::string>();
+		fixFilePath(data.icon);
+	}
+	if (j.count("description"))
+	{
+		data.description = j["description"].get<std::string>();
+	}
+
 	data.scriptName = j["scriptName"].get<std::string>();
 	data.scriptFile = file.folder + j["scriptFile"].get<std::string>();
+	fixFilePath(data.scriptFile);
 	missions.push_back(data);
+
+	if (data.scriptName == "Survival")
+	{
+		return;
+	}
 }
 
 void MissionController::loadMission(const std::string& name)
