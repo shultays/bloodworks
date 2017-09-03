@@ -28,6 +28,8 @@ class MissionController
 	struct MissionData
 	{
 		std::string name;
+		std::string icon;
+		std::string description;
 		std::string scriptName;
 		std::string scriptFile;
 	};
@@ -70,4 +72,26 @@ public:
 		return gameSpeedMultiplier;
 	}
 	bool canExit();
+
+	int getMissionCount() const
+	{
+		return missions.size();
+	}
+
+	const std::string& GetMissionName(int index) const
+	{
+		return missions[index].name;
+	}
+	const std::string& GetMissionDecription(int index) const
+	{
+		return missions[index].description;
+	}
+	const std::string& GetMissionIcon(int index) const
+	{
+		return missions[index].icon;
+	}
+	const std::string& GetMissionScriptName(int index) const
+	{
+		return missions[index].scriptName;
+	}
 };

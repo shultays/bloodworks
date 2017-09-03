@@ -210,6 +210,7 @@
     <ClCompile Include="source\cSlaveWindows.cpp" />
     <ClCompile Include="source\cTexture.cpp" />
     <ClCompile Include="source\cTimeProfiler.cpp" />
+    <ClCompile Include="source\CustomGameWindow.cpp" />
     <ClCompile Include="source\GroundRenderable.cpp" />
     <ClCompile Include="source\ModWindow.cpp" />
     <ClCompile Include="source\MonsterTemplate.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="source\cGlobals.h" />
     <ClInclude Include="source\cTimeProfiler.h" />
     <ClInclude Include="source\cTools.h" />
+    <ClInclude Include="source\CustomGameWindow.h" />
     <ClInclude Include="source\cVec.h" />
     <ClInclude Include="source\cVecImp.h" />
     <ClInclude Include="source\cFont.h" />

@@ -40,6 +40,7 @@
 #include "GameObjectTemplate.h"
 #include "CrashReporterWindow.h"
 #include "CreditsWindow.h"
+#include "CustomGameWindow.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -101,6 +102,7 @@ void Bloodworks::initImplementation()
 	oneShotSoundManager = new OneShotSoundManager(this);
 	modWindow = new ModWindow(this);
 	creditsWindow = new CreditsWindow(this);
+	customGameWindow = new CustomGameWindow(this);
 
 	player = new Player(this);
 
@@ -855,6 +857,7 @@ void Bloodworks::clear()
 	SAFE_DELETE(oneShotSoundManager);
 	SAFE_DELETE(modWindow);
 	SAFE_DELETE(creditsWindow);
+	SAFE_DELETE(customGameWindow);
 
 #ifdef HAS_BLOODWORKS_CHEATS
 	SAFE_DELETE(bloodworksCheats);
@@ -879,7 +882,7 @@ void Bloodworks::setMainMenuVisible()
 
 void Bloodworks::showCustomGames()
 {
-	loadMission("BossFight");
+	customGameWindow->show();
 }
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
@@ -1025,10 +1028,11 @@ void Bloodworks::tick()
 
 	if (isMissionLoaded() == false)
 	{
-		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible());
+		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible() || customGameWindow->isVisible());
 		optionsPopup->tick();
 		modWindow->tick();
 		creditsWindow->tick();
+		customGameWindow->tick();
 	}
 
 	oneShotSoundManager->tick();
