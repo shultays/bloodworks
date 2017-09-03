@@ -161,7 +161,7 @@ void MissionController::loadMission(const std::string& name)
 	for (int i = 0; i<missions.size(); i++)
 	{
 		auto& mission = missions[i];
-		if (mission.name == name)
+		if (mission.scriptName == name)
 		{
 			loadedMission = i;
 			scriptTable = lua[mission.scriptName] = lua.create_table();
@@ -260,5 +260,18 @@ void MissionController::onDebugTick()
 			scriptTable["onDebugTick"]();
 		}
 	}
+}
+
+bool MissionController::canExit()
+{
+	if (loadedMission != -1)
+	{
+		if (scriptTable["canExit"])
+		{
+			return scriptTable["canExit"]();
+		}
+	}
+
+	return true;
 }
 

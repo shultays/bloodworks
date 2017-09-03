@@ -20,6 +20,7 @@ varying vec2 vVertexUV;
 void main(void) 
 {
 	float dt = uCurrentTime - time;
+	dt = min(dt, 10.0);
 	
 	float curScale = initialScale + scaleSpeed * dt;
 	vec3 worldPos = vec3(pos + (uv * 2.0 - vec2(1.0, 1.0)) * curScale, 1.0);

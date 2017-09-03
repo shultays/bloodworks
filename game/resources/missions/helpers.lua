@@ -364,3 +364,66 @@ end
 function canSpawnIgnoredMonster()
     return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and missionData.ignoreMonsterCount < 50
 end
+
+function showGameReset()
+local gameObject = addGameObject("FadeOutImage")
+    gameObject.data.startTime = time
+    gameObject.data.fadeOutStartTime = -1
+    gameObject.data.fadeInDuration = 1.0
+    gameObject:setLevel(RenderableLevel.GUI + 5)
+    gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
+    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+    gameObject.data.renderable:setTextSize(120.0)
+    gameObject:setPosition(Vec2.new(0, 50))
+    
+    gameObject = addGameObject("FadeOutImage")
+    gameObject.data.startTime = time
+    gameObject.data.fadeOutStartTime = -1
+    gameObject.data.fadeInDuration = 1.0
+    gameObject:setLevel(RenderableLevel.GUI + 5)
+    gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
+    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+    gameObject.data.renderable:setTextSize(32.0)
+    gameObject:setPosition(Vec2.new(0, -40))
+    
+    gameObject = addGameObject("FadeOutImage")
+    gameObject.data.startTime = time
+    gameObject.data.fadeOutStartTime = -1
+    gameObject.data.fadeInDuration = 1.0
+    gameObject:setLevel(RenderableLevel.GUI + 5)
+    gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
+    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+    gameObject.data.renderable:setTextSize(32.0)
+    gameObject:setPosition(Vec2.new(0, -80))
+end
+
+function addRandomColliders(count, distanceToMid)
+    local colliderSpawnChances = {}
+    local totalChance = 0.0
+    for name,collider in pairs(Colliders) do 
+        local chance = 1.0
+        if collider.jsonTable.chance ~= nil then
+            chance = collider.jsonTable.chance
+        end
+        totalChance = totalChance + chance
+        colliderSpawnChances[name] = chance
+    end
+    
+    for i=1,count do
+        local m = nil
+        local randChance = math.random() * totalChance
+        for key,value in pairs(colliderSpawnChances) do
+            randChance = randChance - value
+            if randChance <= 0.000001 then
+                m = key
+                break
+            end
+        end
+        if m ~= nil then
+            addGameObjectUsingTemplate(m, {distanceToMid = distanceToMid})
+        end
+    end
+end
