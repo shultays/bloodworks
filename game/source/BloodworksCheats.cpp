@@ -394,17 +394,17 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 
 void BloodworksCheats::onInit()
 {
-	static bool testGame = false;
+	static std::string testGame = "NarSieFight";
 	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);
 	}
-	if (Coral::isDebuggerPresent() && testGame)
+	if (Coral::isDebuggerPresent() && testGame.size())
 	{
 		coral.getSoundManager()->setGlobalVolume(0.0f);
-		bloodworks->loadMission("Survival");
+		bloodworks->loadMission(testGame);
 	}
-	testGame = false;
+	testGame = "";
 	if (hasCheats == false)
 	{
 		return;

@@ -6,5 +6,5 @@
   "icon": "icon.png",
   
   "scriptFile" : "boss.lua",
-  "scriptName" : "BossFight"
+  "scriptName" : "NarSieFight"
 }
