@@ -3,7 +3,7 @@ ReflexBoost.buffId = getGlobalUniqueId()
 function ReflexBoost.spawn(bonus, pos)
     local data = ReflexBoost.data
 
-    local duration = 6.0 * player.data.bonusDurationMultiplier
+    local duration = 5.0 * player.data.bonusDurationMultiplier
     
     local gameSpeed = getGameSpeedMultiplier()
     gameSpeed:addBuffWithId(ReflexBoost.buffId, 0.5)
