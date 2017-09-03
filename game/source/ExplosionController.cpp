@@ -3,6 +3,7 @@
 #include "cParticle.h"
 #include "cTexturedQuadRenderable.h"
 #include "MonsterController.h"
+#include "BloodworksConfig.h"
 #include "cTools.h"
 
 ExplosionController::ExplosionController(Bloodworks *bloodworks)
@@ -13,6 +14,8 @@ ExplosionController::ExplosionController(Bloodworks *bloodworks)
 	explosionParticles = new cParticle(bloodworks, fireParticle, lua.create_table());
 	explosionParticles->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(explosionParticles, MONSTERS + 1);
+
+	noParticles = bloodworks->getConfig()->getBool("no_explosion_particle", false, "Disables explosion particles (there is a problem with explosion particles on some machines)");
 }
 
 ExplosionController::~ExplosionController()
@@ -83,10 +86,14 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	r.addLinear(fadeoutTimeIndex, duration - 0.2f, duration + 0.2f);
 	r.addLinear(scaleSpeedIndex, particleScale / duration, particleScale / duration + 6.0f);
 
-	for (int i = 0; i < 15; i++)
+	if (noParticles == false)
 	{
-		explosionParticles->addParticleInternal(pos, nullptr, &r);
+		for (int i = 0; i < 15; i++)
+		{
+			explosionParticles->addParticleInternal(pos, nullptr, &r);
+		}
 	}
+
 	ExplosionData explosionData;
 	explosionData.ringRenderable = new cTexturedQuadRenderable(bloodworks, "resources/particles/explosionFire/ring.png", "resources/default");
 	explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(0.0f).translateBy(pos));

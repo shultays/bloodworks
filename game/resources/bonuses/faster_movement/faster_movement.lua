@@ -1,7 +1,7 @@
 FasterMovementBonus.buffId = getGlobalUniqueId()
 
 function FasterMovementBonus.spawn(bonus, pos)
-    player.maxSpeed:addBuffWithId(FasterMovementBonus.buffId, 1.7)
+    player.maxSpeed:addBuffWithId(FasterMovementBonus.buffId, 1.4)
     local buff = player.maxSpeed:getBuffInfo(FasterMovementBonus.buffId)
     if buff:getCurrentBuffAmount() >= 0.99 then
         buff:setBuffFadeInFadeOut(0.4, 0.5)

@@ -75,7 +75,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	prevPosition = position;
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
-
+	canGetOneShooted = false;
 	hasCollision = true;
 
 	dropChance = 0.05f;
