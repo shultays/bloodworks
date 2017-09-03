@@ -13,11 +13,13 @@ function Collider.init(gameobject, params, template)
     if params.distanceToMid ~= nil then
         distanceToMid = params.distanceToMid
     end
-    while true do
+    local maxTry = 10
+    while maxTry > 0 do
         pos = getFreePosition(150.0)
         if pos:length() > distanceToMid then
             break
         end
+        maxTry = maxTry - 1
     end
     gameobject:setPosition(pos)
     
