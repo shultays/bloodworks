@@ -28,7 +28,7 @@ varying float vExplosionEffect;
 void main(void) 
 {
 	float dt = uCurrentTime - time;
-	
+	dt = min(dt, 1.5);
 	float curScale = initialScale + scaleSpeed * dt;
 	vec3 worldPos = vec3(pos + moveSpeed * dt + (uv * 2.0 - vec2(1.0, 1.0)) * curScale, 1.0);
 	vec3 viewPos = uViewMatrix * worldPos;

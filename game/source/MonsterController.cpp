@@ -835,7 +835,7 @@ Vec2 MonsterController::getRandomPos(sol::table& args)
 	bool notNearMonsters = args["notNearMonsters"];
 	bool nearPlayer = args["nearPlayer"];
 	bool notNearPlayer = nearPlayer == false && (bool)(args["notNearPlayer"]);
-	float playerRange = args["playerRange"] ? args["playerRange"].get<float>() : 200.0f;
+	float playerRange = args["playerRange"] ? args["playerRange"].get<float>() : 300.0f;
 	
 	float bestScore = FLT_MAX;
 	Vec2 bestPos;
