@@ -2,7 +2,7 @@
 
 #include "cPersistent.h"
 
-class BloodworksConfig : protected cPersistent
+class BloodworksConfig : public cPersistent
 {
 	bool gore;
 	bool screenShake;

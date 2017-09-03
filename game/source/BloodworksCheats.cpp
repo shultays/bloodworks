@@ -33,6 +33,9 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	tickCount = renderCount = 0;
 	moveMonsters = true;
 	slowdownBuff = bloodworks->getGlobalUniqueId();
+
+	hasCheats = bloodworks->getConfig()->getBool("cheats", true);
+
 #ifdef DEBUG
 	showFPS = true;
 #else
@@ -52,10 +55,30 @@ void BloodworksCheats::onTick()
 		int *a = nullptr;
 		*a = 42;
 	}
+
+	if (showFPS)
+	{
+		tickCount++;
+		if (timer.getRealTime() - lastSetTickTime > 1.0f)
+		{
+			lastSetTickTime += 1.0f;
+			std::stringstream ss;
+			ss << "FPS " << tickCount << " Monster " << bloodworks->getMonsterController()->getMonsterCount();
+			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, 0xFFFFFFFF, 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
+
+			tickCount = 0;
+		}
+	}
+
+	if (hasCheats == false)
+	{
+		return;
+	}
 	if (bloodworks->isMissionLoaded() == false)
 	{
 		return;
 	}
+
 	const cVector<Perk*>& perks = bloodworks->getPerks();
 	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
 	const cVector<Gun*>& guns = bloodworks->getGuns();
@@ -74,21 +97,6 @@ void BloodworksCheats::onTick()
 			debugRenderer.removeText(1);
 		}
 	}
-
-	if (showFPS)
-	{
-		tickCount++;
-		if (timer.getRealTime() - lastSetTickTime > 1.0f)
-		{
-			lastSetTickTime += 1.0f;
-			std::stringstream ss;
-			ss << "FPS " << tickCount << " Monster " << bloodworks->getMonsterController()->getMonsterCount();
-			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, 0xFFFFFFFF, 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
-
-			tickCount = 0;
-		}
-	}
-
 	if (input.isKeyDown(key_num_minus) || input.isKeyDown(key_num_plus))
 	{
 		float globalVolume = coral.getSoundManager()->getGlobalVolume();
@@ -284,6 +292,10 @@ void BloodworksCheats::onTick()
 
 void BloodworksCheats::onMonsterTick(Monster *monster)
 {
+	if (hasCheats == false)
+	{
+		return;
+	}
 	if (moveMonsters == false)
 	{
 		monster->setPosition(monster->getPreviousPosition());
@@ -317,10 +329,18 @@ void BloodworksCheats::onRender()
 			renderCount = 0;
 		}
 	}
+	if (hasCheats == false)
+	{
+		return;
+	}
 }
 
 void BloodworksCheats::onLoadMission()
 {
+	if (hasCheats == false)
+	{
+		return;
+	}
 	const cVector<Gun*>& guns = bloodworks->getGuns();
 	Player *player = bloodworks->getPlayer();
 
@@ -351,6 +371,10 @@ void BloodworksCheats::onLoadMission()
 
 void BloodworksCheats::onMonsterPreTick(Monster* monster)
 {
+	if (hasCheats == false)
+	{
+		return;
+	}
 	if (monster->getDebug())
 	{
 		if (input.isKeyPressed(key_f5))
@@ -381,6 +405,10 @@ void BloodworksCheats::onInit()
 		bloodworks->loadMission("Survival");
 	}
 	testGame = false;
+	if (hasCheats == false)
+	{
+		return;
+	}
 }
 
 #endif

@@ -16,6 +16,7 @@ class BloodworksCheats
 	float lastSetRenderTime;
 	bool moveMonsters;
 	int slowdownBuff;
+	bool hasCheats;
 public:
 	static BloodworksCheats *instance;
 	BloodworksCheats(Bloodworks *bloodworks);
