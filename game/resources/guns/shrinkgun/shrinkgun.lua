@@ -40,7 +40,7 @@ end
 
 
 function ShrinkGun.onBulletHit(gun, bullet, monster)
-    if monster ~= nil then
+    if monster ~= nil and monster.canGetOneShooted == false then
         monster:setScale(monster.scale * 0.7)
         
         local particleCount = 10
