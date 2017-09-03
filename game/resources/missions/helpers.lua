@@ -403,6 +403,26 @@ local gameObject = addGameObject("FadeOutImage")
     gameObject:setPosition(Vec2.new(0, -80))
 end
 
+function debugInit(missionData)
+    missionData.extraMin = 0.0
+end
+
+function debugTick(missionData)
+    if isKeyReleased(keys.PageUp) then
+        missionData.extraMin = missionData.extraMin + 0.5
+        print("Extra Min " .. missionData.extraMin)
+    end
+    if isKeyReleased(keys.PageDown) then
+        missionData.extraMin = missionData.extraMin - 0.5
+        if missionData.extraMin < 0.0 then
+            missionData.extraMin = 0.0
+        end
+        print("Extra Min " .. missionData.extraMin)
+    end
+
+end
+
+
 function addRandomColliders(count, distanceToMid)
     local colliderSpawnChances = {}
     local totalChance = 0.0

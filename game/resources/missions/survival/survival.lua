@@ -3,8 +3,8 @@ function Survival.init()
     local theSeed = os.time()
     math.randomseed( theSeed )
     missionData = {}
+    debugInit(missionData)
     missionData.ignoreMonsterCount = 0
-    missionData.extraMin = 0.0
     missionData.lastSpawnTime = 0.0
     missionData.lastBossSpawn = -500
     missionData.perkPerLevel = 3
@@ -24,7 +24,7 @@ function Survival.init()
 end
 
 function Survival.onTick()
-    local min = missionTime / 60.0
+    min = missionTime / 60.0 + missionData.extraMin
     
     local monsterTypeCount = getAllMonsterTypeCount()
     
@@ -115,20 +115,8 @@ function Survival.onMonsterDied(monster)
 end
 
 function Survival.onDebugTick()
-    if isKeyReleased(keys.Home) then
-        HomingOrb.spawn(player.position)
-    end
-    if isKeyReleased(keys.PageUp) then
-        missionData.extraMin = missionData.extraMin + 0.5
-        print("Extra Min " .. missionData.extraMin)
-    end
-    if isKeyReleased(keys.PageDown) then
-        missionData.extraMin = missionData.extraMin - 0.5
-        if missionData.extraMin < 0.0 then
-            missionData.extraMin = 0.0
-        end
-        print("Extra Min " .. missionData.extraMin)
-    end
+
+    debugTick(missionData)
     
     if isKeyReleased(keys.Delete) then    
         local count = getMonsterCount()
