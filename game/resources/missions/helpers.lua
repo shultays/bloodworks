@@ -1,7 +1,10 @@
 
 function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, levelReduce)
-    local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
+    local min = missionTime / 60.0 +  math.random() * 1.5
     
+    if missionData.extraMin ~= nil then
+        min = min + missionData.extraMin
+    end
     if levelReduce ~= nil then
         min = min - levelReduce
     end

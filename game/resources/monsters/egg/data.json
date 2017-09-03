@@ -16,7 +16,7 @@
     "stand" : 
     {
         "baseFolder" : "art",
-        "looped" : false,
+        "looped" : true,
         "frameDuration" : 0.12,
         "frames":
         [
