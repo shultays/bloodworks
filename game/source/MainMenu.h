@@ -13,6 +13,7 @@ class MainMenu
 	cTexturedQuadRenderable *bloodworksText;
 
 	cButton *newGame;
+	cButton *customGames;
 	cButton *mods;
 	cButton *options;
 	cButton *credits;

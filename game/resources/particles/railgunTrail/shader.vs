@@ -22,6 +22,7 @@ varying vec2 vVertexUV;
 void main(void) 
 {
 	float dt = uCurrentTime - time;
+	dt = min(dt, 10.0);
 	
 	float curScale = initialScale + scaleSpeed * dt;
 	curScale = min(curScale, 8.0);
