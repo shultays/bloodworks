@@ -882,6 +882,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,
 		"moveAngle", &Monster::moveAngle,
+		"spriteAngle", &Monster::spriteAngle,
 		"moveVelocity", sol::readonly(&Monster::moveVelocity),
 		"moveDir", sol::readonly(&Monster::moveDir),
 
@@ -944,6 +945,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"spawnParticleShiftedWithoutArgs", &Monster::spawnParticleShiftedWithoutArgs,
 
 		"modifyDrawLevel", &Monster::modifyDrawLevel,
+		"setDrawLevel", &Monster::setDrawLevel,
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 
