@@ -1,20 +1,21 @@
 
-function BossFight.init()
+function NarSieFight.init()
     local theSeed = os.time()
     math.randomseed( theSeed )
     missionData = {}
+    debugInit(missionData)
     missionData.perkPerLevel = 3
     missionData.startTime = time
     missionData.firstTick = true
-    addRandomColliders(25, 500.0)
+    addRandomColliders(35, 400.0)
 end
 
-function BossFight.onTick()
-    local min = missionTime / 60.0
+function NarSieFight.onTick()
+    min = missionTime / 60.0 + missionData.extraMin
 
     if player.isDead then
         if isKeyPressed(keys.Space) then
-            loadMission("BossFight")
+            loadMission("NarSieFight")
         end
         
         return
@@ -43,12 +44,13 @@ function BossFight.onTick()
 end
 
 
-function BossFight.onPlayerDied()
+function NarSieFight.onPlayerDied()
     showGameReset()
 end
 
-function BossFight.onMonsterDied(monster)
+function NarSieFight.onMonsterDied(monster)
 end
 
-function BossFight.onDebugTick()
+function NarSieFight.onDebugTick()
+    debugTick(missionData)
 end
