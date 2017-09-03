@@ -9,9 +9,13 @@ function Collider.init(gameobject, params, template)
     local jsonTable = template.jsonTable
     local pos 
     
+    local distanceToMid = 200.0
+    if params.distanceToMid ~= nil then
+        distanceToMid = params.distanceToMid
+    end
     while true do
         pos = getFreePosition(150.0)
-        if pos:length() > 200.0 then
+        if pos:length() > distanceToMid then
             break
         end
     end

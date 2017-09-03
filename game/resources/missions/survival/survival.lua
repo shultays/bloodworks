@@ -20,32 +20,7 @@ function Survival.init()
     end
     missionData.curMaxMonster = missionData.maxMonster
     
-
-    local colliderSpawnChances = {}
-    local totalChance = 0.0
-    for name,collider in pairs(Colliders) do 
-        local chance = 1.0
-        if collider.jsonTable.chance ~= nil then
-            chance = collider.jsonTable.chance
-        end
-        totalChance = totalChance + chance
-        colliderSpawnChances[name] = chance
-    end
-    
-    for i=1,25 do
-        local m = nil
-        local randChance = math.random() * totalChance
-        for key,value in pairs(colliderSpawnChances) do
-            randChance = randChance - value
-            if randChance <= 0.000001 then
-                m = key
-                break
-            end
-        end
-        if m ~= nil then
-            addGameObjectUsingTemplate(m)
-        end
-    end
+    addRandomColliders(25)
 end
 
 function Survival.onTick()
@@ -98,12 +73,6 @@ function Survival.onTick()
         end
     end
 
-    if isKeyPressed(keys.Escape) or isKeyPressed(keys.joystick_0_button_back) then
-        if gotoMainMenu() then
-            return
-        end
-    end
-
     if player.isDead then
         if isKeyPressed(keys.Space) then
             loadMission("Survival")
@@ -126,39 +95,7 @@ end
 
 
 function Survival.onPlayerDied()
-    local gameObject = addGameObject("FadeOutImage")
-    gameObject.data.startTime = time
-    gameObject.data.fadeOutStartTime = -1
-    gameObject.data.fadeInDuration = 1.0
-    gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
-    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
-    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
-    gameObject.data.renderable:setTextSize(120.0)
-    gameObject:setPosition(Vec2.new(0, 50))
-    
-    gameObject = addGameObject("FadeOutImage")
-    gameObject.data.startTime = time
-    gameObject.data.fadeOutStartTime = -1
-    gameObject.data.fadeInDuration = 1.0
-    gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
-    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
-    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
-    gameObject.data.renderable:setTextSize(32.0)
-    gameObject:setPosition(Vec2.new(0, -40))
-    
-    gameObject = addGameObject("FadeOutImage")
-    gameObject.data.startTime = time
-    gameObject.data.fadeOutStartTime = -1
-    gameObject.data.fadeInDuration = 1.0
-    gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
-    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
-    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
-    gameObject.data.renderable:setTextSize(32.0)
-    gameObject:setPosition(Vec2.new(0, -80))
-    
+    showGameReset()
 end
 
 function Survival.onMonsterDied(monster)

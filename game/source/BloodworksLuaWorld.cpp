@@ -1011,6 +1011,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"globalMonsterSpeedMultiplier", &Player::globalMonsterSpeedMultiplier,
 		"clipCountMultiplier", &Player::clipCountMultiplier,
 		"gunSpreadMultiplier", &Player::gunSpreadMultiplier,
+		"accelerationMultiplier", &Player::accelerationMultiplier,
 		"setGun", &Player::setGun,
 		"level", sol::readonly(&Player::level),
 		"gun", sol::readonly(&Player::gun),
