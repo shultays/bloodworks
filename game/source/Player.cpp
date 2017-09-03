@@ -217,6 +217,7 @@ void Player::tick()
 	clipCountMultiplier.tick();
 	monsterExperienceMultiplier.tick();
 	gunSpreadMultiplier.tick();
+	accelerationMultiplier.tick();
 
 	bool colorChanged = colorMultiplier.tick();
 	if (colorChanged && renderable)
@@ -230,8 +231,8 @@ void Player::tick()
 
 	bool moving = false;
 	checkInput(moving, wantedAngle);
-	const float acceleration = 800.0f;
-	const float decceleration = 1000.0f;
+	const float acceleration = accelerationMultiplier.getBuffedValueFor(800.0f);
+	const float decceleration = accelerationMultiplier.getBuffedValueFor(1000.0f);
 
 	float dt = timer.getDt();
 	float currentMaxSpeed = maxSpeed.getBuffedValue();
@@ -815,6 +816,7 @@ void Player::reset()
 	globalMonsterSpeedMultiplier.clear();
 	clipCountMultiplier.clear();
 	gunSpreadMultiplier.clear();
+	accelerationMultiplier.clear();
 
 	maxSpeed.setBaseValue(150.0f);
 	maxRotateSpeed.setBaseValue(pi * 6.0f);

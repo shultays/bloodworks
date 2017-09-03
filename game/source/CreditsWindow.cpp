@@ -207,7 +207,7 @@ void CreditsWindow::tick()
 	{
 		speed = 40 + 20 * (screenSize.y - 600) / 200.0f;
 	}
-	textY += timer.getDt() * speed * 1.2f;
+	textY += timer.getDt() * speed;
 	if (textY > 4000.0f + screenSize.y)
 	{
 		resetTextPos();
@@ -240,7 +240,7 @@ bool CreditsWindow::isVisible() const
 
 void CreditsWindow::resetTextPos()
 {
-	textY = -350.0f;
-	float y = bloodworks->getScreenDimensions()[1] * 0.5f - 50;
+	textY = -450.0f;
+	float y = bloodworks->getScreenDimensions()[1] * 0.5f - 50.0f;
 	textY = max(textY, -y);
 }

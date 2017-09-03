@@ -1,7 +1,0 @@
-{
-  "type": "mission",
-  "name": "Test Mission",
-  
-  "scriptFile" : "test.lua",
-  "scriptName" : "TestMission"
-}

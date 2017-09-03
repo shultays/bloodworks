@@ -10,6 +10,11 @@ function ReflexBoost.spawn(bonus, pos)
     gameSpeed:setBuffDuration(ReflexBoost.buffId, duration)
     gameSpeed:setBuffFadeInFadeOut(ReflexBoost.buffId, 0.25, 0.25)
     
+    local b = player.accelerationMultiplier
+    b:addBuffWithId(ReflexBoost.buffId, 2.0)
+    b:setBuffDuration(ReflexBoost.buffId, duration)
+    b:setBuffFadeInFadeOut(ReflexBoost.buffId, 0.25, 0.25)
+    
     if bonus:isActive() == false then
         bonus:setActive(true)
         data.shaderStartTime = time
