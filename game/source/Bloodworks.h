@@ -51,6 +51,7 @@ class CollisionController;
 class GameObjectTemplate;
 class CrashReportWindow;
 class CreditsWindow;
+class CustomGameWindow;
 
 class Bloodworks : public cGame
 {
@@ -73,6 +74,7 @@ class Bloodworks : public cGame
 	OptionsPopup *optionsPopup;
 	ModWindow *modWindow;
 	CreditsWindow *creditsWindow;
+	CustomGameWindow *customGameWindow;
 
 	cVector<Gun*> guns;
 	cVector<Bonus*> bonuses;
