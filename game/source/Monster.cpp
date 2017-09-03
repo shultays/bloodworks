@@ -61,6 +61,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	healthRenderable->setTextAlignment(TextAlignment::center);
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
+	spriteAngle = FLT_MIN;
 	moveAngle = randFloat(-pi, pi);
 	moveDir = Vec2::fromAngle(moveAngle);
 	moveSpeed = 0.0f;
@@ -233,7 +234,14 @@ void Monster::tick()
 	Mat3 mat = Mat3::identity();
 	mat.scaleBy(textureSize);
 	mat.translateBy(textureShift);
-	mat.rotateBy(-pi_d2 - moveAngle);
+	if (spriteAngle > -1000.0f)
+	{
+		mat.rotateBy(-pi_d2 - spriteAngle);
+	}
+	else
+	{
+		mat.rotateBy(-pi_d2 - moveAngle);
+	}
 	mat.translateBy(position);
 	renderable->setWorldMatrix(mat);
 
@@ -480,6 +488,11 @@ void Monster::addKnockback(const Vec2& speed, float duration)
 	Knockback& k = knockbacks.insertAndGetReference();
 	k.speed = speed;
 	k.duration = duration;
+}
+
+void Monster::setDrawLevel(int level)
+{
+	renderable->setLevel(level);
 }
 
 void Monster::modifyDrawLevel(int level)

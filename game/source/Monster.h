@@ -30,6 +30,7 @@ class Monster
 	Vec2 prevPosition;
 	float moveSpeed;
 	float moveAngle;
+	float spriteAngle;
 	Vec2 moveDir;
 	Vec2 moveVelocity;
 
@@ -155,6 +156,7 @@ public:
 	void spawnParticleShiftedWithoutArgs(const Vec2& shift, cParticle *particle);
 
 	void addKnockback(const Vec2& speed, float duration);
+	void setDrawLevel(int level);
 	void modifyDrawLevel(int level);
 	void spawnBodyParts(const Vec2& blowDir);
 	void spawnBits(const Vec2& blowDir, int extraBits = 0);
