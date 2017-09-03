@@ -3,7 +3,7 @@
   "name": "Rise of Nar-Sie",
   "description": " NAR-SIE HAS RISEN\nSome cults have managed to tear the reality and summon Nar-Sie, can you beat a god?",
   
-  "icon": "",
+  "icon": "icon.png",
   
   "scriptFile" : "boss.lua",
   "scriptName" : "BossFight"
