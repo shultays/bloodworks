@@ -34,9 +34,19 @@ MainMenu::MainMenu(Bloodworks *b)
 	newGame->setSounds(click, hover);
 	bloodworks->addRenderable(newGame, GUI + 21);
 
+	customGames = new cButton(bloodworks);
+	customGames->setAlignment(RenderableAlignment::topLeft);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Custom Games", 32.0f);
+	text->setWorldMatrix(Mat3::identity());
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	customGames->addRenderable(text);
+	customGames->setHoverSpeed(10.0f);
+	customGames->setSounds(click, hover);
+	bloodworks->addRenderable(customGames, GUI + 21);
+
 	mods = new cButton(bloodworks);
 	mods->setAlignment(RenderableAlignment::topLeft);
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Mods", 32.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Manage Mods", 32.0f);
 	text->setWorldMatrix(Mat3::identity());
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	mods->addRenderable(text);
@@ -83,6 +93,7 @@ MainMenu::~MainMenu()
 {
 	SAFE_DELETE(bloodworksText);
 	SAFE_DELETE(newGame);
+	SAFE_DELETE(customGames);
 	SAFE_DELETE(mods);
 	SAFE_DELETE(options);
 	SAFE_DELETE(credits);
@@ -108,12 +119,17 @@ void MainMenu::resize()
 		scale *= remainingHeight / 400.0f;
 	}
 
-	float totalSize = 50.0f * scale * 6.0f;
+	float totalSize = 50.0f * scale * 7.0f;
 
 	Vec2 menuStart(50.0f * scale + (200.0f * (scale - 1.0f)), remainingHeight - gameSize.h - (remainingHeight - totalSize) * 0.5f);
 
 	newGame->setDefaultMatrix(menuStart, Vec2(scale), 0.0f);
 	newGame->setHoverMatrix(menuStart + Vec2(-10.0f, 0.0), Vec2(scale * 1.2f), 0.0f);
+
+	menuStart -= Vec2(0.0f, 50.0f * scale);
+
+	customGames->setDefaultMatrix(menuStart, Vec2(scale), 0.0f);
+	customGames->setHoverMatrix(menuStart + Vec2(-10.0f, 0.0), Vec2(scale * 1.2f), 0.0f);
 
 	menuStart -= Vec2(0.0f, 50.0f * scale);
 
@@ -138,6 +154,7 @@ void MainMenu::resize()
 	float h = 25 * scale;
 
 	newGame->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
+	customGames->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
 	mods->setHitArea(Vec2(-50.0f, -h), Vec2(120.0f * scale, h));
 	options->setHitArea(Vec2(-50.0f, -h), Vec2(200.0f * scale, h));
 	credits->setHitArea(Vec2(-50.0f, -h), Vec2(190.0f * scale, h));
@@ -153,12 +170,14 @@ void MainMenu::tick(bool hasPopup)
 
 	int enforceState = hasPopup ? cButton::enforce_not_hovering : cButton::no_enforce;
 	newGame->setEnforcedHovering(enforceState);
+	customGames->setEnforcedHovering(enforceState);
 	mods->setEnforcedHovering(enforceState);
 	options->setEnforcedHovering(enforceState);
 	credits->setEnforcedHovering(enforceState);
 	quit->setEnforcedHovering(enforceState);
 
 	newGame->check(input.getMousePos());
+	customGames->check(input.getMousePos());
 	mods->check(input.getMousePos());
 	options->check(input.getMousePos());
 	credits->check(input.getMousePos());
@@ -170,6 +189,10 @@ void MainMenu::tick(bool hasPopup)
 		{
 			mapper.clearKeyPress(GameKey::Select);
 			bloodworks->loadMission("Survival");
+		}
+		else if (customGames->isClicked())
+		{
+			bloodworks->showCustomGames();
 		}
 		else if (options->isClicked())
 		{
@@ -195,6 +218,7 @@ void MainMenu::setVisible(bool visible)
 	bloodworksText->setVisible(visible);
 
 	newGame->setVisible(visible);
+	customGames->setVisible(visible);
 	mods->setVisible(visible);
 	options->setVisible(visible);
 	credits->setVisible(visible);

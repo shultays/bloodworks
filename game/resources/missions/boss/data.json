@@ -1,0 +1,7 @@
+{
+  "type": "mission",
+  "name": "Boss Fight",
+  
+  "scriptFile" : "boss.lua",
+  "scriptName" : "BossFight"
+}

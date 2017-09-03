@@ -286,4 +286,5 @@ public:
 	void reload();
 	void showCredits();
 	void setMainMenuVisible();
+	void showCustomGames();
 };
