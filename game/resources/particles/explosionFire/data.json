@@ -1,6 +1,6 @@
 {
     "type" : "particle",
-    "maxLifeTime" : 5.0,
+    "maxLifeTime" : 3.0,
     
     "vertexShader" : "shader.vs",
     "pixelShader" : "shader.ps",
