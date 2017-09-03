@@ -31,7 +31,7 @@ Coral::Coral()
 	lastUpdateTime = 0.0f;
 
 	tempFrameBuffer[0] = -1;
-
+	noSleep = false;
 	cPackHelper::deleteFolder(TEMP_FOLDER, true, false);
 }
 
@@ -125,7 +125,7 @@ void Coral::tick()
 	resources.tick();
 	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
-	if (timeToSleep > 0.01f) 
+	if (timeToSleep > 0.01f && noSleep == false) 
 	{
 		SDL_Delay((Uint32)(timeToSleep * 1000));
 	}

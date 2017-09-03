@@ -38,6 +38,7 @@ class cPersistent
 	std::string endString;
 	std::string filePath;
 
+	bool addExtraNewLine;
 	bool isDirty;
 
 	int getDataIndex(const std::string& name);
@@ -92,7 +93,7 @@ class cPersistent
 	}
 
 	template <class T>
-	int setDataIfNotExistIndex(const std::string& name, const T& value)
+	int setDataIfNotExistIndex(const std::string& name, const T& value, const char* comment = nullptr)
 	{
 		int index = getDataIndex(name);
 		if (index == -1)
@@ -105,6 +106,16 @@ class cPersistent
 				data.betweenString += " ";
 			}
 			data.beforeString = "\n";
+			if (comment)
+			{
+				data.beforeString += "\n# " + std::string(comment) + "\n";
+				addExtraNewLine = true;
+			}
+			else if (addExtraNewLine)
+			{
+				data.beforeString += "\n";
+				addExtraNewLine = false;
+			}
 			clearData(data);
 			setValue(data, value);
 			return persistentData.size() - 1;
@@ -130,6 +141,7 @@ public:
 	cPersistent()
 	{
 		isDirty = false;
+		addExtraNewLine = false;
 		persistentData.reserve(256);
 	}
 
@@ -139,9 +151,9 @@ public:
 	}
 
 	template <class T>
-	Data& setDataIfNotExist(const std::string& name, const T& value)
+	Data& setDataIfNotExist(const std::string& name, const T& value, const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, value);
+		int index = setDataIfNotExistIndex(name, value, comment);
 		return persistentData[index];
 	}
 
@@ -161,69 +173,69 @@ public:
 		return index == -1 ? persistentData.size() - 1 : index;
 	}
 
-	int getInt(const std::string& name, int defaultValue = 0)
+	int getInt(const std::string& name, int defaultValue = 0, const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, defaultValue);
+		int index = setDataIfNotExistIndex(name, defaultValue, comment);
 		return getInt(index);
 	}
 
-	bool getBool(const std::string& name, bool defaultValue = false)
+	bool getBool(const std::string& name, bool defaultValue = false, const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, defaultValue);
+		int index = setDataIfNotExistIndex(name, defaultValue, comment);
 		return getBool(index);
 	}
 
-	float getFloat(const std::string& name, float defaultValue = 0.0f)
+	float getFloat(const std::string& name, float defaultValue = 0.0f, const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, defaultValue);
+		int index = setDataIfNotExistIndex(name, defaultValue, comment);
 		return getFloat(index);
 	}
 
-	Vec2 getVec2(const std::string& name, const Vec2& defaultValue = Vec2::zero())
+	Vec2 getVec2(const std::string& name, const Vec2& defaultValue = Vec2::zero(), const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, defaultValue);
+		int index = setDataIfNotExistIndex(name, defaultValue, comment);
 		return getVec2(index);
 	}
 
-	IntVec2 getIntVec2(const std::string& name, const IntVec2& defaultValue = IntVec2::zero())
+	IntVec2 getIntVec2(const std::string& name, const IntVec2& defaultValue = IntVec2::zero(), const char* comment = nullptr)
 	{
-		int index = setDataIfNotExistIndex(name, defaultValue);
+		int index = setDataIfNotExistIndex(name, defaultValue, comment);
 		return getIntVec2(index);
 	}
 
-	const std::string& getString(const std::string& name, const std::string& defaultValue = "")
+	const std::string& getString(const std::string& name, const std::string& defaultValue = "", const char* comment = nullptr)
 	{
-		return setDataIfNotExist(name, defaultValue).strValue;
+		return setDataIfNotExist(name, defaultValue, comment).strValue;
 	}
 
-	int getIndex(const std::string& name)
+	int getIndex(const std::string& name, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, 0);
+		return setDataIfNotExistIndex(name, 0, comment);
 	}
 
-	int getIndex(const std::string& name, int defaultValue)
+	int getIndex(const std::string& name, int defaultValue, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, defaultValue);
+		return setDataIfNotExistIndex(name, defaultValue, comment);
 	}
 
-	int getIndex(const std::string& name, float defaultValue)
+	int getIndex(const std::string& name, float defaultValue, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, defaultValue);
+		return setDataIfNotExistIndex(name, defaultValue, comment);
 	}
 
-	int getIndex(const std::string& name, const Vec2& defaultValue)
+	int getIndex(const std::string& name, const Vec2& defaultValue, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, defaultValue);
+		return setDataIfNotExistIndex(name, defaultValue, comment);
 	}
 
-	int getIndex(const std::string& name, const IntVec2& defaultValue)
+	int getIndex(const std::string& name, const IntVec2& defaultValue, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, defaultValue);
+		return setDataIfNotExistIndex(name, defaultValue, comment);
 	}
 
-	int getIndex(const std::string& name, const std::string& defaultValue)
+	int getIndex(const std::string& name, const std::string& defaultValue, const char* comment = nullptr)
 	{
-		return setDataIfNotExistIndex(name, defaultValue);
+		return setDataIfNotExistIndex(name, defaultValue, comment);
 	}
 
 	bool getBool(int index)

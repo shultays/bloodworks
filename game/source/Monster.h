@@ -99,6 +99,7 @@ class Monster
 	int debugVal;
 
 	bool hasCollision;
+	bool canGetOneShooted;
 public:
 	Monster(Bloodworks *bloodworks);
 	~Monster();
