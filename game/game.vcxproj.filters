@@ -234,6 +234,9 @@
     <ClCompile Include="source\CreditsWindow.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="source\CustomGameWindow.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">
@@ -495,6 +498,9 @@
       <Filter>Bloodworks</Filter>
     </ClInclude>
     <ClInclude Include="source\CreditsWindow.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CustomGameWindow.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
