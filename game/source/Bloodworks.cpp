@@ -291,7 +291,6 @@ Bloodworks::Bloodworks()
 	paused = false;
 
 	soundPaused = false;
-	cameraCenterPos.setZero();
 
 	config = nullptr;
 	crashReporterWindow = nullptr;
@@ -418,6 +417,9 @@ void Bloodworks::clearMission()
 	explosionController->reset();
 	levelUpPopup->reset();
 	luaWorld->reset();
+
+	cameraCenterPos.setZero();
+	setCameraPos(cameraCenterPos);
 
 	cVector<cPostProcess*> toRemove;
 
@@ -875,6 +877,11 @@ void Bloodworks::setMainMenuVisible()
 	mainMenu->setVisible(true);
 }
 
+void Bloodworks::showCustomGames()
+{
+	loadMission("BossFight");
+}
+
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
 {
 	if (j.count("type") == 0)
@@ -890,6 +897,15 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	if (loadOnlyModData || (j.count("disabled") && j["disabled"].get<bool>() == true) || modWindow->isPathDisabled(f.folder))
 	{
 		return;
+	}
+
+	static bool modsFolderDisabled = config->getBool("all_mods_disabled", false, "Set if you don't want to load mods");
+	if (modsFolderDisabled)
+	{
+		if (beginsWith(f.folder, std::string("resources/mods/")))
+		{
+			return;
+		}
 	}
 
 	if (type == "gun")
@@ -1082,29 +1098,36 @@ void Bloodworks::tick()
 
 	config->check();
 
-	if (input.isKeyPressed(key_j) && missionController->isLoaded() == false)
+	if (mapper.isKeyPressed(GameKey::Back))
 	{
-		reload();
+		if (missionController->canExit())
+		{
+			gotoMainMenu();
+		}
 	}
+
 }
 
 void Bloodworks::tickCamera()
 {
-	AARect playerRect(player->getPosition(), player->getPosition());
-	playerRect.addThreshold(50.0f);
-	playerRect.clampPos(cameraCenterPos);
-
-	Vec2 playerAimDir = player->getCrosshairPos();
-	float playerAimLength = playerAimDir.normalize();
-	if (playerAimLength > 30.0f)
+	if (player->isVisible())
 	{
-		float l = playerAimLength - 30.0f;
+		AARect playerRect(player->getPosition(), player->getPosition());
+		playerRect.addThreshold(50.0f);
+		playerRect.clampPos(cameraCenterPos);
 
-		cameraPos = cameraCenterPos + playerAimDir * l * 0.1f;
-	}
-	else
-	{
-		cameraPos = cameraCenterPos;
+		Vec2 playerAimDir = player->getCrosshairPos();
+		float playerAimLength = playerAimDir.normalize();
+		if (playerAimLength > 30.0f)
+		{
+			float l = playerAimLength - 30.0f;
+
+			cameraPos = cameraCenterPos + playerAimDir * l * 0.1f;
+		}
+		else
+		{
+			cameraPos = cameraCenterPos;
+		}
 	}
 
 	float approachToEdgeSize = 100.0f;

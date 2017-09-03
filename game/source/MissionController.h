@@ -69,4 +69,5 @@ public:
 	{
 		return gameSpeedMultiplier;
 	}
+	bool canExit();
 };
