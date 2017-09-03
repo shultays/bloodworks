@@ -63,6 +63,7 @@ class Player
 	BuffFloat globalMonsterSpeedMultiplier;
 	BuffFloat clipCountMultiplier;
 	BuffFloat gunSpreadMultiplier;
+	BuffFloat accelerationMultiplier;
 	BuffVec4 colorMultiplier;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
