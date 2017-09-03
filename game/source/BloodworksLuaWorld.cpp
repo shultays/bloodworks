@@ -918,9 +918,14 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"dropChance", &Monster::dropChance,
 		"hasCollision", &Monster::hasCollision,
 
+		"canGetOneShooted", &Monster::canGetOneShooted,
+
 		"killSelf", [&](Monster* monster)
 	{
-		monster->killSelf(Vec2::zero());
+		if (monster->canGetOneShooted == false)
+		{
+			monster->killSelf(Vec2::zero());
+		}
 	},
 		"killSelfWithDir", &Monster::killSelf,
 

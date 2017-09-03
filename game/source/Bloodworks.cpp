@@ -269,6 +269,12 @@ void Bloodworks::init()
 		}
 	}
 	initImplementation();
+
+	static bool noSleep = getConfig()->getBool("no_sleep", false, "Disables CPU going idle, set to 1 if there are performance problems (will make your CPU scream in pain)");
+	if (noSleep == true)
+	{
+		coral.setNoSleep(noSleep);
+	}
 }
 
 Bloodworks::Bloodworks()
@@ -948,7 +954,6 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 {
 	return mapRect.isOutside(pos);
 }
-
 
 void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime)
 {
