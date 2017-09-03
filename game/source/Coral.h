@@ -25,6 +25,8 @@ class Coral
 	GLuint tempFrameBuffer[3];
 	GLuint tempFrameBufferTexture[3];
 
+
+	bool noSleep;
 	bool fullScreen;
 	bool lastFullScreen;
 	void initFrameBuffers();
@@ -38,6 +40,10 @@ public:
 	void init();
 	void clear();
 	void tick();
+	void setNoSleep(bool noSleep)
+	{
+		this->noSleep = noSleep;
+	}
 	void setWindowSize(int width, int height);
 	void setFullScreen(bool fullScreen);
 	bool isFullScreen() const
