@@ -4,8 +4,8 @@ HomingOrb.homingOrbIdInitial = getGlobalUniqueId()
 
 function HomingOrb.spawn(bonus, pos)
     local monster = getClosestMonsterWithIgnoreId(pos, {HomingOrb.homingOrbIdInitial})
-    monster:addIgnoreId(HomingOrb.homingOrbIdInitial)
     if monster ~= nil then
+        monster:addIgnoreId(HomingOrb.homingOrbIdInitial)
         local bullet = addCustomBullet()
         bullet.damage = math.floor(math.random() * 30.0 + 30)
         bullet.position = Vec2.new(pos.x, pos.y)

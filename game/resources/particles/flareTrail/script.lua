@@ -15,7 +15,7 @@ function FlareTrailParticle.addParticle(params, pos)
     
     params.color = 0.2 + math.random() * 0.3
     
-    params.moveSpeed = Vec2.fromAngle(math.random() * math.pi * 2.0) * (2.0 + math.random() * 8.0)
+    params.moveSpeed = Vec2.randDir() * (2.0 + math.random() * 8.0)
     
     params.initialScale = 3.0 + math.random() * 2.0
     
