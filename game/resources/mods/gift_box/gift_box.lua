@@ -60,11 +60,7 @@ function GiftBox.onTick(monster)
     if data.particleTime < 0.0 then
         data.particleTime = data.particleTime + 0.01
 
-        local s = Vec2:new()
-        s:setAngle(math.random() * math.pi * 2.0)
-        s = s * 20
-
-        monster:spawnParticleShifted(s, data.particle, {initialScale = 15.0, moveSpeed = 150.0})
+        monster:spawnParticleShifted(Vec2.randDir() * 20.0, data.particle, {initialScale = 15.0, moveSpeed = 150.0})
     end
     monster.moveAngle = data.angle + math.sin(time * 6.0 + data.shift) * data.rotate
 end

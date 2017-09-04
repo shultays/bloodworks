@@ -275,6 +275,7 @@ public:
 	void cancelSlaveWork(cSlaveWork* work);
 	void showMods();
 	void loadMod(const std::string& path, bool loadOnlyModData = false);
+	void loadScript(const std::string& path);
 	void updateVolume();
 	void updateMusicVolume();
 	void addToActiveBonuses(Bonus* bonus);

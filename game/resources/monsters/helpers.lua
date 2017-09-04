@@ -56,6 +56,7 @@ function MeleeHitImage.build(monster)
     gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(20.0, 20.0))
     gameObject:setPosition(player.position)
     gameObject:setRotation(-math.pi * 0.5 - monster.moveAngle)
+    return gameObject
 end
 
 function MeleeHitImage.init(gameObject)
