@@ -2,7 +2,7 @@
 function Uzi.init(gun)
     gun.spreadAngle = 0.15
     gun.crosshairDistance = 550.0
-    ShootTimer.initGun(gun, 0.02)
+    ShootTimer.initGun(gun, 0.04)
 end
 
 
