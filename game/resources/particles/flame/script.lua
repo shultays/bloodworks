@@ -11,7 +11,9 @@ end
 
 function FlameParticle.setDefaultArgs(args)
     args.moveSpeed = 100.0
-    args.initialScale = 12.0
+    if args.initialScale ~= nil then
+        args.initialScale = 12.0
+    end
     args.rotateSpeed = 6.0
     args.lifeTime = 10.0
 end
@@ -21,9 +23,17 @@ function FlameParticle.addParticle(params, pos, args)
     
     params.color = Vec3.new(1.0, 1.0 - math.random() * 0.2, 1.0 - math.random() * 0.2)
     
+    
+    if params.bullet ~= nil then
+        params.moveSpeed = params.bullet.moveDir * 10.0
+    end
+    
     params.moveSpeed = params.moveSpeed * (1.0 + math.random() * 0.1)
     params.moveSpeed:rotateBy(-0.05 + math.random() * 0.1)
     
+    if args.initialScale == nil then
+        args.initialScale = 12 --todo fix why
+    end
     params.initialScale = args.initialScale * (1.0 + math.random())
     params.rotateSpeed = args.rotateSpeed * (1.0 + math.random())
     
