@@ -60,6 +60,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"fromAngle", [](float angle) { return Vec2::fromAngle(angle); },
 
+		"randDir", []() { return Vec2::fromAngle(randFloat(pi_2)); },
+
 		"rotateBy", [](Vec2& v, float angle) { v = v * Mat2::rotation(angle); },
 
 		"setAngle", [](Vec2& v, float angle) { v = Vec2::fromAngle(angle); },
@@ -645,6 +647,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMonsterController()->getClosestMonster(pos);
 	});
 
+	lua.set_function("loadScript",
+		[&](const std::string& path)
+	{
+		bloodworks->loadScript(path);
+	});
+
 	lua.set_function("getClosestMonsterWithIgnoreId",
 		[&](const Vec2& pos, const sol::table& ignoreIdList) -> Monster*
 	{
@@ -843,7 +851,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"hasBlood", sol::readonly(&MonsterTemplate::hasBlood),
 		"scriptPath", sol::readonly(&MonsterTemplate::scriptPath),
 		"scriptTable", sol::readonly(&MonsterTemplate::scriptTable),
-		"scriptArgs", sol::readonly(&MonsterTemplate::scriptArgs)
+		"scriptArgs", sol::readonly(&MonsterTemplate::scriptArgs),
+		"basePath", sol::readonly(&MonsterTemplate::basePath)
 	);
 
 #ifdef SHOW_TIMINGS
@@ -878,6 +887,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"scriptTable", &Monster::scriptTable,
 
 		"animationSpeed", &Monster::animationSpeed,
+
+		"setVisible", &Monster::setVisible,
+		"isVisible", &Monster::isVisible,
 
 		"position", sol::property(&Monster::getPosition, &Monster::setPosition),
 		"moveSpeed", &Monster::moveSpeed,

@@ -696,6 +696,11 @@ void Bloodworks::loadMod(const std::string& path, bool loadOnlyModData)
 	}
 }
 
+void Bloodworks::loadScript(const std::string& path)
+{
+	lua.script_file(path);
+}
+
 void Bloodworks::updateVolume()
 {
 	coral.getSoundManager()->setGlobalVolume(config->getVolume());

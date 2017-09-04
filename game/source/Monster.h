@@ -113,6 +113,8 @@ public:
 	void doDamage(int damage, const Vec2& dir);
 	void doDamageWithArgs(int damage, const Vec2& dir, sol::table& args);
 	Vec2 getPathPos(const Vec2& pos);
+	bool isVisible() const;
+	void setVisible(bool visible);
 	bool isRemoved() const
 	{
 		return isDead;
