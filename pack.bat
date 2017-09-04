@@ -26,4 +26,4 @@ mkdir .\temp\bloodworks\resources\temp
 
 del bloodworks.zip
 
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('temp\bloodworks', 'bloodworks.zip'); }"
+powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('temp', 'bloodworks.zip'); }"
