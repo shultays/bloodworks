@@ -35,7 +35,7 @@ function BananaBombObject.init(gameObject)
     
     gameObject.data.startTime = time
     gameObject.data.i = 0
-    gameObject.data.speed = Vec2.fromAngle(math.random() * math.pi * 2.0) * (math.random() * 30.0 + 100.0)
+    gameObject.data.speed = Vec2.randDir() * (math.random() * 30.0 + 100.0)
     gameObject.data.throwDuration = math.random() * 0.8 + 0.8
     gameObject:setRotation(math.random() * math.pi * 2.0)
     BananaBombObject.onTick(gameObject)
