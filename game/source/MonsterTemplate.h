@@ -23,6 +23,7 @@ class MonsterTemplate
 	float collisionRadius;
 	float bulletRadius;
 	bool hasBlood;
+	std::string basePath;
 	std::string scriptName;
 	std::string scriptPath;
 	sol::table scriptTable;
