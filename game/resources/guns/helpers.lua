@@ -91,8 +91,8 @@ function BurnMonsterObject.onTick(gameobject)
             local t = 0.0
             
             while t < data.monster.bulletRadius do
-                local speed = Vec2.fromAngle(math.random() * math.pi * 2.0) * (math.random() * 3.0 + 3.0)
-                local pos = Vec2.fromAngle(math.random() * math.pi * 2.0)
+                local speed = Vec2.randDir() * (math.random() * 3.0 + 3.0)
+                local pos = Vec2.randDir()
                 local r = math.random()
                 r = r * r
                 pos = pos * (data.monster.bulletRadius * r) 

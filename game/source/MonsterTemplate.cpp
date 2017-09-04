@@ -6,6 +6,7 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& fi
 {
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
+	basePath = file.folder;
 	if (j.count("textureShift"))
 	{
 		textureShift = Vec2(j["textureShift"].at(0).get<float>(), j["textureShift"].at(1).get<float>());

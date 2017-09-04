@@ -371,6 +371,16 @@ Vec2 Monster::getPathPos(const Vec2& target)
 	return target;
 }
 
+bool Monster::isVisible() const
+{
+	return renderable->isVisible();
+}
+
+void Monster::setVisible(bool visible)
+{
+	renderable->setVisible(visible);
+}
+
 void Monster::addIgnoreId(int id)
 {
 	if (ignoreIds.size() == 0 || ignoreIds[ignoreIds.size() - 1] < id)
