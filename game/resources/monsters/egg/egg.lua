@@ -16,6 +16,7 @@ function Egg.init(monster, min)
     
     data.cannotBecomeBoss = true
     data.cannotShootBullets = true
+    
     data.monsterType = "Alien"
     if math.random() < 0.07 then
         data.monsterType = "Spider"
@@ -24,6 +25,9 @@ function Egg.init(monster, min)
 end
 
 function Egg.spawnChanceInMission(missionData, min)
+    if missionData.isSurvival ~= true then
+        return 0.0
+    end
     return 0.05 + clamp(min * 0.3) * 0.04
 end
 
