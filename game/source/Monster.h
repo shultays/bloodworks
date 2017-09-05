@@ -43,6 +43,7 @@ class Monster
 	float lastBitTime;
 
 	bool isDead;
+	bool removeOnDead;
 	bool hasBlood;
 	bool hasGibs;
 	bool firstTick;
