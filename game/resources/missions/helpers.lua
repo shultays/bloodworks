@@ -1,4 +1,22 @@
 
+function calcRandomSpawns()
+    missionData.spawnRates = {}
+    local monsterTypeCount = getAllMonsterTypeCount()
+    missionData.totalChanceSpawn = 0.0
+    
+    local m = ""
+    for i = 0, monsterTypeCount - 1 do
+        local monsterType = getMonsterTypeAt(i)
+        if monsterType.scriptTable.spawnChanceInMission ~= nil then
+            local chance = monsterType.scriptTable.spawnChanceInMission(missionData, min)
+            if chance > 0.0 then
+                missionData.totalChanceSpawn = missionData.totalChanceSpawn + chance
+                missionData.spawnRates[monsterType.name] = chance
+            end
+        end
+    end
+end
+
 function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, levelReduce)
     local min = missionTime / 60.0 +  math.random() * 1.5
     
@@ -33,6 +51,9 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     monster.experienceMultiplier = math.random() * 0.4 + 0.8
     monster.experienceMultiplier = 0.9 + math.random() * 0.2
     monster.scoreMultiplier = 0.9 + math.random() * 0.2
+    
+    monster.data.cannotBecomeBoss = cannotBecomeBoss
+    monster.data.cannotShootBullets = cannotShootBullets
     
     if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 20.0 - clamp(min/7) * 10 < missionTime then
         missionData.lastBossSpawn = missionTime
@@ -365,20 +386,38 @@ function canSpawnMonster()
 end
 
 function canSpawnIgnoredMonster()
-    return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and missionData.ignoreMonsterCount < 50
+    return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and (missionData.ignoreMonsterCount == nil or missionData.ignoreMonsterCount < 50)
 end
 
-function showGameReset()
-local gameObject = addGameObject("FadeOutImage")
+function gameRestTick()
+    if missionData.enableRest == true then
+        if isKeyPressed(keys.Space) then
+            loadMission(missionScript)
+        end
+        
+        return
+    end
+end
+    
+function showGameReset(title)
+    if title == nil then
+        title = "You Died"
+    end
+    local space = 0.0
+    if string.match(title, "\n") then
+        space = 50.0
+    end
+    
+    local gameObject = addGameObject("FadeOutImage")
     gameObject.data.startTime = time
     gameObject.data.fadeOutStartTime = -1
     gameObject.data.fadeInDuration = 1.0
     gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("You Died", "resources/fontData.txt")
+    gameObject.data.renderable = gameObject:addText(title, "resources/fontData.txt")
     gameObject.data.renderable:setAlignment(RenderableAlignment.center)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(120.0)
-    gameObject:setPosition(Vec2.new(0, 50))
+    gameObject:setPosition(Vec2.new(0, 50 + space))
     
     gameObject = addGameObject("FadeOutImage")
     gameObject.data.startTime = time
@@ -389,7 +428,7 @@ local gameObject = addGameObject("FadeOutImage")
     gameObject.data.renderable:setAlignment(RenderableAlignment.center)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(32.0)
-    gameObject:setPosition(Vec2.new(0, -40))
+    gameObject:setPosition(Vec2.new(0, -40 -space))
     
     gameObject = addGameObject("FadeOutImage")
     gameObject.data.startTime = time
@@ -400,7 +439,12 @@ local gameObject = addGameObject("FadeOutImage")
     gameObject.data.renderable:setAlignment(RenderableAlignment.center)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(32.0)
-    gameObject:setPosition(Vec2.new(0, -80))
+    gameObject:setPosition(Vec2.new(0, -80-space))
+    missionData.enableRest = true
+end
+
+function missionInit(missionData)
+    missionData.ignoreMonsterCount = 0
 end
 
 function debugInit(missionData)
