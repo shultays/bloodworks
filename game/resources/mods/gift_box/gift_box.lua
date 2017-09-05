@@ -26,6 +26,9 @@ function GiftBox.init(monster, min)
 end
 
 function GiftBox.onMissionLoad(missionData)
+    if missionData.isSurvival ~= true then
+        return
+    end
     local m = addRandomMonster("GiftBox")
     
     local spawn
@@ -48,6 +51,9 @@ end
 
 
 function GiftBox.spawnChanceInMission(missionData, min)
+    if missionData.isSurvival ~= true then
+        return 0.0
+    end
     if time - missionData.giftBoxTime < 40.0 then
         return 0.00
     end
