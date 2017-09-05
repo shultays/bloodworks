@@ -312,10 +312,6 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 
 void BloodworksCheats::onRender()
 {
-	if (bloodworks->isMissionLoaded() == false)
-	{
-		return;
-	}
 	if (showFPS)
 	{
 		renderCount++;
@@ -328,6 +324,10 @@ void BloodworksCheats::onRender()
 
 			renderCount = 0;
 		}
+	}
+	if (bloodworks->isMissionLoaded() == false)
+	{
+		return;
 	}
 	if (hasCheats == false)
 	{

@@ -38,6 +38,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	experienceMultiplier = 1.0f;
 	scoreMultiplier = 1.0f;
 	isDead = false;
+	removeOnDead = true;
 	lastSoundTime = 0.0f;
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
@@ -61,7 +62,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	healthRenderable->setTextAlignment(TextAlignment::center);
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
-	spriteAngle = FLT_MIN;
+	spriteAngle = -100000.0f;
 	moveAngle = randFloat(-pi, pi);
 	moveDir = Vec2::fromAngle(moveAngle);
 	moveSpeed = 0.0f;
@@ -76,7 +77,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	prevPosition = position;
 	scale = 1.0f;
 	lastBitTime = timer.getTime();
-	canGetOneShooted = false;
+	canGetOneShooted = true;
 	hasCollision = true;
 
 	dropChance = 0.05f;
@@ -182,6 +183,10 @@ void Monster::tick()
 		}
 	}
 
+	if (isDead)
+	{
+		position = prevPosition;
+	}
 	if (hasCollision)
 	{
 		Vec2 newPosition = position;

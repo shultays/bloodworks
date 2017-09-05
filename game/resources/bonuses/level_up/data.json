@@ -1,0 +1,7 @@
+{
+  "type" : "bonus",
+  "name": "Level Up",
+  "iconFile" : "icon.png",
+  "scriptFile" : "level_up.lua",
+  "scriptName" : "LevelUp"
+}
