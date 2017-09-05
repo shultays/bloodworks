@@ -4,12 +4,13 @@ function Survival.init()
     math.randomseed( theSeed )
     missionData = {}
     debugInit(missionData)
-    missionData.ignoreMonsterCount = 0
+    missionInit(missionData)
     missionData.lastSpawnTime = 0.0
     missionData.lastBossSpawn = -500
     missionData.perkPerLevel = 3
     missionData.firstKill = true
     missionData.firstTick = true
+    missionData.isSurvival = true
     missionData.spawnWeaponOnFirstKill = true
     missionData.timeToCalcSpawn = -0.1
     if DEBUG then
@@ -41,20 +42,7 @@ function Survival.onTick()
     
     if missionData.timeToCalcSpawn < 0.0 then
         missionData.timeToCalcSpawn = math.random() * 0.5 + 0.5
-
-        missionData.spawnRates = {}
-        local monsterTypeCount = getAllMonsterTypeCount()
-        missionData.totalChanceSpawn = 0.0
-        
-        local m = ""
-        for i = 0, monsterTypeCount - 1 do
-            local monsterType = getMonsterTypeAt(i)
-            if monsterType.scriptTable.spawnChanceInMission ~= nil then
-                local chance = monsterType.scriptTable.spawnChanceInMission(missionData, min)
-                missionData.totalChanceSpawn = missionData.totalChanceSpawn + chance
-                missionData.spawnRates[monsterType.name] = chance
-            end
-        end
+        calcRandomSpawns()
     end
     
     if missionData.firstTick then
@@ -72,15 +60,9 @@ function Survival.onTick()
             monster.moveAngle =  math.random() * math.pi * 2.0
         end
     end
-
-    if player.isDead then
-        if isKeyPressed(keys.Space) then
-            loadMission("Survival")
-        end
-        
-        return
-    end
-
+    
+    gameRestTick()
+    
     missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
     if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.05) * 0.5) and canSpawnMonster() and player.isDead == false then
         missionData.lastSpawnTime = missionTime
@@ -124,7 +106,8 @@ function Survival.onDebugTick()
         for i = 0, count - 1 do
             local monster = getMonsterAtIndex(i)
             monster.experienceMultiplier = 0.0
-            monster:doDamage(10000, Vec2.new(1.0, 0.0))
+            monster.scoreMultiplier = 0.0
+            monster:doDamage(10000, Vec2.randDir())
         end
     end
     

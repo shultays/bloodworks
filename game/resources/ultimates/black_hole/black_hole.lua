@@ -58,7 +58,7 @@ function BlackHole.onTick(gun)
             
             runForEachMonsterInRadius( data.ppos, moveRange + 30.0, {}, function(monster)
                 local d = monster.position:distance(data.ppos) - monster.bulletRadius
-                if d < killRange  then
+                if d < killRange and monster.canGetOneShooted then
                     monster:killSelf()
                 elseif d < moveRange then
                     local m = (moveRange - d) * t / (moveRange - killRange)

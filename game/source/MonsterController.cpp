@@ -38,7 +38,7 @@ void MonsterController::tick()
 	for (int i = 0; i < monsters.size(); i++)
 	{
 		auto& monster = monsters[i];
-		if (monster->isDead)
+		if (monster->isDead && monster->removeOnDead)
 		{
 			grid.removeFromGrid(monster);
 			monstersMap.erase(monster->getId());
