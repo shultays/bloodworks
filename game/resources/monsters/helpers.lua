@@ -210,7 +210,7 @@ end
 function BulletShooter.buffStats(monster, min)
     local data = monster.data
     
-    if data.isBoss ~= true and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
+    if data.isBoss ~= true and data.cannotShootBullets ~= true and math.random() > 0.98 - clamp(min * 0.2) * 0.05 then
         data.shootsBullets = true
         data.bulletMinDamage = math.floor(data.bulletMinDamage * (1.0 + min * 0.3))
         data.bulletMaxDamage = math.floor(data.bulletMaxDamage * (1.0 + min * 0.4))
@@ -230,12 +230,11 @@ function BulletShooter.onTick(monster)
         if data.bulletTimer < 0.0 then
             data.bulletTimer = data.bulletRate + math.random() * 2.0
             
-            local bullet = addCustomBullet()
+            local bullet = addCustomBullet({monsterBullet = true})
             bullet.damage = math.floor(math.random(data.bulletMinDamage, data.bulletMaxDamage))
             bullet.position = monster.position + monster.moveDir * 6.0
             bullet.moveSpeed = data.bulletSpeed
             bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
-            bullet.monsterBullet = true
             bullet.radius = 6.0
             bullet:addRenderableTextureWithSize("~/resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
         end

@@ -201,7 +201,41 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setAlignment", &cTexturedQuadRenderable::setAlignment,
 		"setVisible", &cTexturedQuadRenderable::setVisible,
 		"setColor", &cTexturedQuadRenderable::setColor,
-		"setWorldMatrix", &cTexturedQuadRenderable::setWorldMatrix
+		"setWorldMatrix", &cTexturedQuadRenderable::setWorldMatrix,
+
+		"setUniformFloat", [](cTexturedQuadRenderable* particle, const std::string& name, float val)
+	{
+		particle->addUniformFloat(name, val);
+	},
+		"setUniformVec2", [](cTexturedQuadRenderable* particle, const std::string& name, const Vec2& val)
+	{
+		particle->addUniformVec2(name, val);
+	},
+		"setUniformVec3", [](cTexturedQuadRenderable* particle, const std::string& name, const Vec3& val)
+	{
+		particle->addUniformVec3(name, val);
+	},
+		"setUniformVec4", [](cTexturedQuadRenderable* particle, const std::string& name, const Vec4& val)
+	{
+		particle->addUniformVec4(name, val);
+	},
+
+		"setUniformInt", [](cTexturedQuadRenderable* particle, const std::string& name, int val)
+	{
+		particle->addUniformInt(name, val);
+	},
+		"setUniformIntVec2", [](cTexturedQuadRenderable* particle, const std::string& name, const IntVec2& val)
+	{
+		particle->addUniformIntVec2(name, val);
+	},
+		"setUniformIntVec3", [](cTexturedQuadRenderable* particle, const std::string& name, const IntVec3& val)
+	{
+		particle->addUniformIntVec3(name, val);
+	},
+		"setUniformIntVec4", [](cTexturedQuadRenderable* particle, const std::string& name, const IntVec4& val)
+	{
+		particle->addUniformIntVec4(name, val);
+	}
 		);
 
 	lua.new_usertype<cAnimatedTexturedQuadRenderable>("Animation",
@@ -337,7 +371,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"radius", &Bullet::radius,
 		"damage", &Bullet::damage,
 
-		"monsterBullet", &Bullet::monsterBullet,
+		"monsterBullet", sol::readonly(&Bullet::monsterBullet),
 
 		"penetrateCount", &Bullet::penetrateCount,
 		"penetrateUsed", sol::readonly(&Bullet::penetrateUsed),
@@ -801,6 +835,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->getMissionController()->getGameSpeedMultiplierBuff();
 	});
 
+	lua.set_function("getRandomGun",
+		[&]()
+	{
+		return bloodworks->getGuns()[randInt(bloodworks->getGuns().size())];
+	}
+	);
+	lua.set_function("getRandomBonus",
+		[&]()
+	{
+		return bloodworks->getBonuses()[randInt(bloodworks->getBonuses().size())];
+	}
+	);
 	lua.set_function("spawnGun",
 		[&](const Vec2& pos, const std::string& name)
 	{
@@ -918,6 +964,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"colorMultiplier", &Monster::colorMultiplier,
 
 		"isDead", sol::readonly(&Monster::isDead),
+		"removeOnDead", &Monster::removeOnDead,
 		"hasBlood", &Monster::hasBlood,
 		"hasGibs", &Monster::hasGibs,
 
@@ -935,10 +982,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"killSelf", [&](Monster* monster)
 	{
-		if (monster->canGetOneShooted == false)
-		{
-			monster->killSelf(Vec2::zero());
-		}
+		monster->killSelf(Vec2::zero());
 	},
 		"killSelfWithDir", &Monster::killSelf,
 
