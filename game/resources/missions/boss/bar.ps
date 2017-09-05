@@ -1,0 +1,15 @@
+#version 400
+uniform sampler2D uTexture0;
+varying vec4 vColor;
+varying vec2 vVertexUV;
+
+uniform float uScale;
+
+void main(void) 
+{
+    if (vVertexUV.x > uScale)
+    {
+        discard;
+    }
+	gl_FragColor = texture2D(uTexture0, vVertexUV) * vColor;
+}

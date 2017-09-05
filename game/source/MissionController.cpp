@@ -149,6 +149,7 @@ void MissionController::removeGameObject(int id)
 void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& file)
 {
 	MissionData data;
+	data.basePath = file.folder;
 	if (j.count("name"))
 	{
 		data.name = j["name"].get<std::string>();
@@ -188,6 +189,8 @@ void MissionController::loadMission(const std::string& name)
 
 			lua["missionTime"] = timer.getTime() - missionLoadTime;
 			lua["missionLoadTime"] = missionLoadTime;
+			lua["missionScript"] = mission.scriptName;
+			lua["missionPath"] = mission.basePath;
 
 			lua.script_file(mission.scriptFile);
 			scriptTable["init"]();
@@ -257,7 +260,7 @@ void MissionController::repositionGUI()
 		auto& gameObject = g.second;
 		if (lua[gameObject->script]["repositionGUI"])
 		{
-			lua[gameObject->script]["repositionGUI"](gameObject);
+			lua[gameObject->script]["repositionGUI"](gameObject, bloodworks->getScreenDimensions().toVec());
 		}
 	}
 }

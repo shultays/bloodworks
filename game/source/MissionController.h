@@ -32,6 +32,7 @@ class MissionController
 		std::string description;
 		std::string scriptName;
 		std::string scriptFile;
+		std::string basePath;
 	};
 
 	cVector<MissionData> missions;

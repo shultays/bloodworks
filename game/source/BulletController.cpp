@@ -27,7 +27,10 @@ void BulletController::addBullet(Bullet* bullet)
 {
 	bullets.push_back(bullet);
 	bulletMap[bullet->getId()] = bullet;
-	grid.insertToGrid(bullet);
+	if (bullet->monsterBullet == false)
+	{
+		grid.insertToGrid(bullet);
+	}
 }
 
 void BulletController::tick()
@@ -42,7 +45,10 @@ void BulletController::tick()
 
 		if (bullets[i]->isDead)
 		{
-			grid.removeFromGrid(bullets[i]);
+			if (bullets[i]->monsterBullet == false)
+			{
+				grid.removeFromGrid(bullets[i]);
+			}
 			int id = bullets[i]->getId();
 			SAFE_DELETE(bullets[i]);
 			bulletMap.erase(id);
@@ -52,7 +58,10 @@ void BulletController::tick()
 		}
 		else
 		{
-			grid.relocate(bullets[i]);
+			if (bullets[i]->monsterBullet == false)
+			{
+				grid.relocate(bullets[i]);
+			}
 		}
 	}
 
@@ -70,6 +79,13 @@ Bullet* BulletController::addCustomBullet(const sol::table& params)
 	bullet->moveAngle = player->getAimDir().toAngle();
 	bullet->radius = 2.0f;
 	bullet->damage = 10;
+	if (params)
+	{
+		if (params["monsterBullet"])
+		{
+			bullet->monsterBullet = params.get<bool>("monsterBullet");
+		}
+	}
 	bloodworks->getBulletController()->addBullet(bullet);
 
 	return bullet;
@@ -79,7 +95,10 @@ void BulletController::reset()
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		grid.removeFromGrid(bullets[i]);
+		if (bullets[i]->monsterBullet == false)
+		{
+			grid.removeFromGrid(bullets[i]);
+		}
 		SAFE_DELETE(bullets[i]);
 	}
 	bullets.clear();
@@ -88,7 +107,10 @@ void BulletController::reset()
 
 void BulletController::relocateBullet(Bullet* bullet)
 {
-	grid.relocate(bullet);
+	if (bullet->monsterBullet == false)
+	{
+		grid.relocate(bullet);
+	}
 }
 
 void BulletController::drawDebug()
