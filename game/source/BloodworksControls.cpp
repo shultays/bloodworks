@@ -8,11 +8,11 @@ void BloodworksControls::init()
 {
 	const Key GameKeyValues[][4] =
 	{
-		{ key_w,					joystick_0_button_left },
-		{ key_s,					joystick_0_button_right },
+		{ key_w,					joystick_0_button_up },
+		{ key_s,					joystick_0_button_down },
 
-		{ key_a,					joystick_0_button_up },
-		{ key_d,					joystick_0_button_down },
+		{ key_a,					joystick_0_button_left },
+		{ key_d,					joystick_0_button_right },
 
 		{ mouse_button_left,		joystick_0_button_rightshoulder },
 		{ mouse_button_right,		joystick_0_button_a },
