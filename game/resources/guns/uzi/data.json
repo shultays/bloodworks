@@ -16,7 +16,7 @@
   
   "firingSound" : {
     "path" : "uzi.ogg",
-    "volume" : 0.70
+    "volume" : 0.60
   },
   
   "scriptFile" : "uzi.lua",
