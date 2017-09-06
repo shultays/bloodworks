@@ -25,7 +25,7 @@ const float iconSize = 22.0f;
 
 int Player::calculateExperienceForLevel(int level)
 {
-	return (level - 1) * 150 + (level - 1)  * (level - 1) * 20 + 100;
+	return (level - 1) * 250 + (level - 1)  * (level - 1) * 20 + 100;
 }
 
 Player::Player(Bloodworks *bloodworks)
@@ -980,6 +980,8 @@ void Player::killSelf()
 {
 	isDead = true;
 	setVisible(false);
+	setGun(nullptr);
+	setSecondaryGun(nullptr);
 	bloodworks->onPlayerDied();
 }
 

@@ -14,10 +14,8 @@ if(isset($_POST['report']))
         exit();
     }
     $query = "INSERT INTO reports (ip, message, report) VALUES ('$ip', '$message', '$report')";
-    if (mysqli_query($link, $query)) 
-    {
+    if (mysqli_query($link, $query)) {
         $success = "Report has been received. Thanks!";
-
     } else {
         $success = "error sending report";
     }	

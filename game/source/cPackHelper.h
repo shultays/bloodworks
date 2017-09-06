@@ -39,7 +39,7 @@ class cPackHelper
 
 	static bool isTypeCorrect(const DirentHelper::File& f)
 	{
-		return f.isTypeOf("png") || f.isTypeOf("json") || f.isTypeOf("ogg") || f.isTypeOf("lua");
+		return f.isTypeOf("png") || f.isTypeOf("json") || f.isTypeOf("ogg") || f.isTypeOf("lua") || f.isTypeOf("ps") || f.isTypeOf("vs");
 	}
 public:
 	static bool cPackHelper::packFolder(const std::string& pathUnfixed, const std::string& file, bool checkTypes = true)
@@ -126,7 +126,7 @@ public:
 		return false;
 	}
 
-	static void cPackHelper::unpackFile(const std::string& f, const std::string& folder)
+	static bool cPackHelper::unpackFile(const std::string& f, const std::string& folder)
 	{
 		cVector<std::string> names;
 		cVector<int> sizes;
@@ -142,6 +142,14 @@ public:
 			len = getInt(fin);
 			names.push_back(s);
 			sizes.push_back(len);
+
+			DirentHelper::File f;
+			f.file = s;
+			if (isTypeCorrect(f) == false)
+			{
+				fclose(fin);
+				return false;
+			}
 		}
 		for (int i = 0; i < fileCount; i++)
 		{
@@ -176,6 +184,7 @@ public:
 
 		}
 		fclose(fin);
+		return true;
 	}
 
 	static int cPackHelper::deleteFolder(const std::string &refcstrRootDirectory, bool bDeleteSubdirectories /*= true*/, bool deleteRoot = true)
