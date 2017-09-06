@@ -74,7 +74,12 @@ void Bullet::tick()
 		}
 	}
 	moveDir = Vec2::fromAngle(moveAngle);
-	moveVelocity = moveDir * moveSpeed * bloodworks->getPlayer()->getBulletSpeedMultiplier();
+	float mult = 1.0f;
+	if (this->monsterBullet == false)
+	{
+		mult = bloodworks->getPlayer()->getBulletSpeedMultiplier();
+	}
+	moveVelocity = moveDir * moveSpeed * mult;
 
 	pos += moveVelocity * dt;
 	clampPos();

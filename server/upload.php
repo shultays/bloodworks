@@ -20,7 +20,8 @@ function endsWith($haystack, $needle)
 }
 
 function isValidFile($name) {
-	return endsWith($name, ".lua") or endsWith($name, ".png") or endsWith($name, ".json") or endsWith($name, ".ogg");
+	return endsWith($name, ".lua") or endsWith($name, ".png") or endsWith($name, ".json") or endsWith($name, ".ogg") 
+    or endsWith($name, ".vs") or endsWith($name, ".ps");
 } 
 
 $success = "error";
@@ -205,28 +206,46 @@ if($validHeader and $validUser and $validUpload and $validFile)
 
 		if ($allValid)
 		{
-			$fileName = addslashes($fileName);
-			$fileType = addslashes($fileType);
-			$content = addslashes($content);
-			$type = addslashes($type);
-	
-            if ($modid == -1)
+            
+            if ($modid != -1)
             {
-                $query = "INSERT INTO upload (name, description, version, creator, icon, folder, size, type, content, userid ) ".
-                "VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$folderName', '$fileSize', '$fileType', '$content', '$userid')";
+                $count = 0;
+            } 
+            else 
+            {
+                $query = "SELECT COUNT(*) FROM upload";
+                $result = mysqli_query($link, $query);
+                $count = mysqli_fetch_array($result)[0];
+            }
+			if ($count < 100)
+			{
+                $fileName = addslashes($fileName);
+                $fileType = addslashes($fileType);
+                $content = addslashes($content);
+                $type = addslashes($type);
+        
+                if ($modid == -1)
+                {
+                    $query = "INSERT INTO upload (name, description, version, creator, icon, folder, size, type, content, userid ) ".
+                    "VALUES ('$modname', '$description', '$version', '$creator', '$icon', '$folderName', '$fileSize', '$fileType', '$content', '$userid')";
+                }
+                else
+                {
+                    $query = "UPDATE upload SET name='$modname', description = '$description', version = '$version', creator = '$creator', icon = '$icon', folder = '$folderName', size = '$fileSize', type = '$fileType', content = '$content', userid = '$userid' WHERE id = '$modid' ";
+                }
+                if (mysqli_query($link, $query))
+                {
+                    $success = "true";
+                }
+                else
+                {
+                    $success = "sql error";
+                }
             }
             else
             {
-                $query = "UPDATE upload SET name='$modname', description = '$description', version = '$version', creator = '$creator', icon = '$icon', folder = '$folderName', size = '$fileSize', type = '$fileType', content = '$content', userid = '$userid' WHERE id = '$modid' ";
+                $success = "too many mods, come again later!";
             }
-			if (mysqli_query($link, $query))
-			{
-				$success = "true";
-			}
-			else
-			{
-				$success = "sql error";
-			}
 		}
 		else
 		{
