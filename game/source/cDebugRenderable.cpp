@@ -265,7 +265,7 @@ void cDebugRenderable::removeLine(int id)
 	{
 		if (lineData[i].id == id)
 		{
-			lineData.swapToTailRemove(i);;
+			lineData.swapToTailRemove(i);
 			return;
 		}
 	}

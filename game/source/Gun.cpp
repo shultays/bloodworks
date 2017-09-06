@@ -290,9 +290,9 @@ void Gun::tick(float dt)
 				currentAmmo = buffedMaxAmmo;
 			}
 
-			if (scriptTable["onReloadEnded"])
+			if (scriptTable["onReloadEnd"])
 			{
-				scriptTable["onReloadEnded"](this);
+				scriptTable["onReloadEnd"](this);
 			}
 		}
 	}
@@ -495,9 +495,9 @@ void Gun::reload()
 			bloodworks->addGameSound(reloadBeginSound.play());
 		}
 
-		if (scriptTable["onReloadStarted"])
+		if (scriptTable["onReloadStart"])
 		{
-			scriptTable["onReloadStarted"](this);
+			scriptTable["onReloadStart"](this);
 		}
 	}
 }
