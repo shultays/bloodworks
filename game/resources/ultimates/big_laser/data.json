@@ -28,6 +28,8 @@
   "laserTexture" : "laser.png",
   "laserShader" : "laser",
   
+  "bulletLevelModifier" : 1,
+  
   "laserThickness" : 480.0,
   
   "laserBeginShift" : 10.0,

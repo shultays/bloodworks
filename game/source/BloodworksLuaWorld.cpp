@@ -69,6 +69,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"normalize", [](Vec2& a) { return a.normalize(); },
 		"normalized", [](const Vec2& a) { return a.normalized(); },
+		"copy", [](const Vec2& a) { return Vec2(a.x, a.y); },
 
 		"safeNormalize", [](Vec2& a) { return a.safeNormalize(); },
 		"safeNormalized", [](const Vec2& a) { return a.safeNormalized(); },
@@ -490,9 +491,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addExplosion",
-		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime)
+		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer)
 	{
-		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime);
+		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer);
 	});
 
 	lua.set_function("playSound",

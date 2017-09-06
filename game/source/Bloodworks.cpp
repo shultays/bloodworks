@@ -468,7 +468,10 @@ bool Bloodworks::gotoMainMenu()
 	{
 		return false;
 	}
-	clearMission();
+	if (isMissionLoaded())
+	{
+		clearMission();
+	}
 	setMainMenuVisible();
 	return true;
 }
@@ -979,9 +982,9 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 	return mapRect.isOutside(pos);
 }
 
-void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime)
+void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer)
 {
-	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage, startTime);
+	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage, startTime, damagePlayer);
 }
 
 void Bloodworks::addDrop(const Vec2& position)
@@ -1101,7 +1104,7 @@ void Bloodworks::tick()
 		}
 		else
 		{
-			cameraZoom = 1.0f;
+			cameraZoom = 0.8f;
 		}
 	}
 

@@ -1,77 +1,124 @@
+BLOODWORKS
+
+Developed by Engin Mercan
+
+Huge thanks to artists that made their work available for free and made this game possible!
+
+Main Menu Music by
+Clearside
+www.clearsidemusic.com
+
+In-Game Music
+Matthew Pablo
+www.matthewpablo.com
+
+Title Font
+ModBlackmoon
+modblackmoon.com
+
+In-Game Fonts
+
+Clint Bellanger
+clintbellanger.net
+
+Robey Pointer
+robey.lag.net
+
+Window Backgrounds
+kindland
+via opengameart.org
+
+Player Sprite
+tatermand
+via opengameart.org
+
+Alien Sprites
+7Soul1
+via deviantart.com
+
+Spider Sprites
+Ari Feldman
+www.widgetworx.com
+
+Egg-Sack Model
+Danimal
+via opengameart.org
+
+Health Bar
+Paul Wortmann
+www.PhysHexGames.com
+
 Crosshairs
 fluxord
-http://opengameart.org/content/20-crosshairs-for-re
+via opengameart.org
 
-https://opengameart.org/content/animated-flame-texture
-https://opengameart.org/content/rpg-sound-pack
-Character
-Tatermand
-http://opengameart.org/content/top-down-sci-fi-shooter-characters-20
-
-Monster
-7Soul1
-http://lokicoder.deviantart.com/art/Spaceship-Game-Sprites-385923888
-
-Bullets
-Bonsaiheldin
-http://opengameart.org/content/sci-fi-space-simple-bullets
-
-Fonts
-cemkalyoncu
-http://opengameart.org/content/boxy-bold-font-split
-Robey Pointer
-http://opengameart.org/content/tom-thumb-tiny-ascii-font-3x5
-
-Blood
+Blood Decals
 knittel
-http://opengameart.org/content/blood-decals-32-in-zip-file
+via opengameart.org
 
-Weapons
-Drakojan14, Doberman, Bungie
-http://117649-m-i.deviantart.com/art/Halo-Weapon-sprites-174840024
-http://drakojan14.deviantart.com/art/Halo-Weapon-Sprite-Sheet-2-162109821
+Buildings / Bunkers
+chabull
+via opengameart.org
+
+Ground Textures
+Saroman
+via opengameart.org
+
+FabooGuy
+via deviantart.com
+
+demolitiondan
+via deviantart.com
+
+Weapon Sprites
+
+Drakojan14
+via deviantart.com
+
+Im-Not-Crying
+via deviantart.com
+
+unpurecoco
+via basilmarket.com
+
+sleepy_byte
+via opengameart.org
+
+Bonsaiheldin
+bonsaiheld.org
 
 Particles
-hc
-http://opengameart.org/content/lens-flares-and-particles
 
-Player 2
-rileygombart
-http://opengameart.org/content/animated-top-down-survivor-player
+hackcraft
+hackcraft.de
 
-gui
-StumpyStrust
-http://opengameart.org/content/ui-button
-http://opengameart.org/content/ui-button-and-extra
-http://opengameart.org/content/fantasy-ui-button
+tauran
+via opengameart.org
 
-p0ss
-http://opengameart.org/content/user-interface-element-pack-panels-buttons-sliders-tables-icons
+In-Game Audio Assets
 
-main menu font
-http://www.dafont.com/bloodblocks.font
-BloodBlocks - Font by ModBlackmoon. 
-
-main menu music
-clearside
-http://opengameart.org/content/music-dark-electronicrocksci-fi-rock-clearside-siste-viator
-
-gun sounds
 Michael Klier
-http://opengameart.org/content/futuristic-weapons-assault-rifle
+via opengameart.org
+
 Michel Baradari
-http://opengameart.org/content/4-projectile-launches
-http://opengameart.org/content/chaingun-pistol-rifle-shotgun-shots
-qubodup
-http://opengameart.org/content/wind-hit-time-morph
+via opengameart.org
+
+Little Robot Sound Factory
 www.littlerobotsoundfactory.com
-http://opengameart.org/content/sci-fi-sound-effects-library
+
 Stephen M. Cameron
-http://opengameart.org/content/action-shooter-soundset-wwvi
-Michel Baradari
-http://opengameart.org/content/2-high-quality-explosions
-!!
-http://opengameart.org/content/time-magic
-http://opengameart.org/content/magic-sfx-sample
-http://opengameart.org/content/handling-guns
-http://www.matthewpablo.com/services
+via opengameart.org
+
+Iwan 'qubodup' Gabovitch
+via opengameart.org
+
+ViRiX Dreamcore (David Mckee)
+www.soundcloud.com/virix
+
+Guns by Gary
+fossilrecords.net
+
+And big thanks to you for playing my game!
+
+Engin Mercan
+mail@enginmercan.com
