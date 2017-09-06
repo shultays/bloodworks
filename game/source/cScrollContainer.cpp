@@ -20,7 +20,12 @@ cScrollContainer::~cScrollContainer()
 
 void cScrollContainer::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
+	if (isVisible() == false)
+	{
+		return;
+	}
 	content->render(isIdentity, mat, this->crop);
+	slider->setVisible(maxScroll > (this->crop.getMax().y - this->crop.getMin().y));
 	slider->render(false, isIdentity ? worldMatrix : worldMatrix * mat, crop);
 }
 

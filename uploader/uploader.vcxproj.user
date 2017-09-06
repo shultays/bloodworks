@@ -3,11 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\game</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>resources\mods\gift_box</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>resources\mods\narsie_fight</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\..\..\game</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>resources\mods\gift_box</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>resources\mods\narsie_fight</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

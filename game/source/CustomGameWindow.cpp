@@ -28,6 +28,13 @@ CustomGameWindow::CustomGameWindow(Bloodworks *bloodworks)
 	title->setMaxLineCount(1);
 	window->addRenderable(title);
 
+	nomods = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "No custom game is available.\n\nYou can download custom games using \"Manage Mods\" window.", 18.0f, Vec4::fromColor(0xFFCCCCCC));
+	nomods->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -10.0f)));
+	nomods->setTextAlignment(TextAlignment::center);
+	nomods->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	nomods->setMaxLength(450.0f);
+	window->addRenderable(nomods);
+
 	currentDescription = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "", 14.0f);
 	currentDescription->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -130.0f)));
 	currentDescription->setTextAlignment(TextAlignment::center);
@@ -74,10 +81,16 @@ void CustomGameWindow::show()
 	window->setVisible(true);
 
 	loadMods();
+
+	nomods->setVisible(customGameNames.size() == 0);
 }
 
 void CustomGameWindow::tick()
 {
+	if (isVisible() == false)
+	{
+		return;
+	}
 	bool descriptionSet = false;
 	buttonContainer->check(input.getMousePos());
 	bool isInside = buttonContainer->isMouseInside(input.getMousePos());
