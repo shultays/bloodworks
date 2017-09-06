@@ -110,6 +110,7 @@ public:
 		int id;
 		bool valid;
 		std::string installPath;
+		bool success;
 		virtual void runOnSlave();
 		virtual void runOnMain();
 	} fetchMod;
