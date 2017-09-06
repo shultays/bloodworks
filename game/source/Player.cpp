@@ -237,7 +237,7 @@ void Player::tick()
 	float dt = timer.getDt();
 	float currentMaxSpeed = maxSpeed.getBuffedValue();
 
-	float minRotation = pi * 2.0f;
+	float minRotation = pi * 3.0f;
 	float maxRotation = pi * 10.0f;
 
 	if (moving)
