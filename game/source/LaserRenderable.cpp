@@ -116,10 +116,10 @@ LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j, const DirentHelper:
 	xUV = shader->addAttribute("xUV", TypeFloat);
 
 	beginX = shader->addUniform("beginX", TypeFloat);
-	width1 = shader->addUniform("width1", TypeFloat);;
-	width2 = shader->addUniform("width2", TypeFloat);;
-	width3 = shader->addUniform("width3", TypeFloat);;
-	laserWidth = shader->addUniform("laserWidth", TypeFloat);;
+	width1 = shader->addUniform("width1", TypeFloat);
+	width2 = shader->addUniform("width2", TypeFloat);
+	width3 = shader->addUniform("width3", TypeFloat);
+	laserWidth = shader->addUniform("laserWidth", TypeFloat);
 
 	if (laserQuad == -1)
 	{
