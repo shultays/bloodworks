@@ -375,8 +375,9 @@ void ModWindow::tick()
 					detailInstalled = true;
 					updateDetailInfo();
 					detailInstallText->setText("Installed");
-					if (fetchMod.valid)
+					if (fetchMod.valid && fetchMod.success )
 					{
+						detailInstallText->setText("Installed");
 						fetchMod.valid = false;
 						bool contains = false;
 						std::string name = detailedMod.jsonData["name"].get<std::string>();
@@ -399,6 +400,10 @@ void ModWindow::tick()
 						}
 						updateList();
 						detailInstalled = true;
+					}
+					else
+					{
+						detailInstallText->setText("Error");
 					}
 				}
 				else
@@ -783,6 +788,6 @@ void ModWindow::FetchMod::runOnMain()
 		}
 		fixFolderPath(folder);
 		installPath = folder;
-		cPackHelper::unpackFile(ss.str(), folder);
+		success = cPackHelper::unpackFile(ss.str(), folder);
 	}
 }

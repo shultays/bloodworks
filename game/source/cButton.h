@@ -123,6 +123,11 @@ public:
 		return pressedInside && !down && prevDown;
 	}
 
+	void clearPress()
+	{
+		pressedInside = false;
+	}
+
 	void setHoverShift(const Vec2& shift)
 	{
 		this->hoverShift = shift;

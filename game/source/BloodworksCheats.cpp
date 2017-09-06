@@ -394,7 +394,7 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 
 void BloodworksCheats::onInit()
 {
-	static std::string testGame = "NarSieFight";
+	static std::string testGame = "";
 	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);
