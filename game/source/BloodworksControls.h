@@ -7,10 +7,10 @@
 
 enum class GameKey : MappedKey
 {
-	Left = 0,
-	Right,
 	Up,
 	Down,
+	Left,
+	Right,
 	Attack,
 	Attack2,
 	Reload,
