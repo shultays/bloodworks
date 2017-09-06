@@ -134,19 +134,26 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	playGunShootSound = false;
 	gunShootSoundCurVolume = 0.0f;
 
+	bulletLevelModifier = 0;
+	if (j.count("bulletLevelModifier"))
+	{
+		bulletLevelModifier = j["bulletLevelModifier"].get<int>();
+	}
+
 	if (j.count("isLaser") && j["isLaser"].get<bool>() == true)
 	{
 		LaserTemplate *laserTemplate = new LaserTemplate(game, j, file);
 		bloodworks->addLaserTemplate(laserTemplate);
 		laser = new LaserRenderable(bloodworks, laserTemplate);
 		laser->setWorldMatrix(Mat3::identity());
-		bloodworks->addRenderable(laser, PLAYER + 1);
+		bloodworks->addRenderable(laser, PLAYER + 1 + bulletLevelModifier);
 		laser->setVisible(false);
 	}
 	else
 	{
 		laser = nullptr;
 	}
+
 
 	gunShootSoundContinuous = false;
 	if (j.count("firingSoundContinuous"))
@@ -255,7 +262,7 @@ void Gun::tick(float dt)
 		currentAmmo = newMaxAmmo;
 	}
 	buffedMaxAmmo = newMaxAmmo;
-	if (currentAmmo < buffedMaxAmmo && mapper.isKeyPressed(GameKey::Reload))
+	if (currentAmmo < buffedMaxAmmo && mapper.isKeyPressed(GameKey::Reload) && ultimate == false)
 	{
 		reload();
 	}
@@ -565,6 +572,10 @@ Bullet* Gun::addBullet()
 	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
+	if (bulletLevelModifier)
+	{
+		bullet->modifyDrawLevel(bulletLevelModifier);
+	}
 	if (bulletTexture != nullptr)
 	{
 		cTexturedQuadRenderable *renderable = new cTexturedQuadRenderable(bloodworks, bulletTexturePath, "resources/default");

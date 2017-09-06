@@ -154,8 +154,8 @@ void MainMenu::resize()
 	float h = 25 * scale;
 
 	newGame->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
-	customGames->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
-	mods->setHitArea(Vec2(-50.0f, -h), Vec2(120.0f * scale, h));
+	customGames->setHitArea(Vec2(-50.0f, -h), Vec2(350.0f * scale, h));
+	mods->setHitArea(Vec2(-50.0f, -h), Vec2(330.0f * scale, h));
 	options->setHitArea(Vec2(-50.0f, -h), Vec2(200.0f * scale, h));
 	credits->setHitArea(Vec2(-50.0f, -h), Vec2(190.0f * scale, h));
 	quit->setHitArea(Vec2(-50.0f, -h), Vec2(250.0f * scale, h));
@@ -225,15 +225,23 @@ void MainMenu::setVisible(bool visible)
 	quit->setVisible(visible);
 	if (visible)
 	{
-		handle = music->play();
-		handle.setLooped(true);
-		handle.setVolume(bloodworks->getConfig()->getMusicVolume() * MAIN_MENU_MUSIC_VOL);
+		if (handle.isValid() == false)
+		{
+			handle = music->play();
+			handle.setLooped(true);
+			handle.setVolume(bloodworks->getConfig()->getMusicVolume() * MAIN_MENU_MUSIC_VOL);
+		}
+		bool move = input.isMouseVisible() == false;
 		input.showMouse();
-		input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
+		if (move)
+		{
+			input.setMousePosition(bloodworks->getScreenDimensions().w / 2, bloodworks->getScreenDimensions().h / 2);
+		}
 	}
 	else
 	{
 		handle.stop();
+		handle = cSoundHandle();
 	}
 }
 

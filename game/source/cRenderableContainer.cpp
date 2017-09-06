@@ -7,6 +7,10 @@ cRenderableContainer::cRenderableContainer(cGame *game, int initialCapacity /*= 
 
 void cRenderableContainer::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
+	if (isVisible() == false)
+	{
+		return;
+	}
 	for (auto& childData : renderables)
 	{
 		if (childData.child->isVisible())

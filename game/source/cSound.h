@@ -39,6 +39,7 @@ public:
 		handle = -1;
 	}
 
+
 };
 namespace SoLoud {
 	class Wav;

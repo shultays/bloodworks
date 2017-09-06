@@ -4,6 +4,7 @@
 #include "cTextRenderable.h"
 #include "cTexturedQuadRenderable.h"
 #include "cTexture.h"
+#include "cGame.h"
 
 cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableContainer(game)
 {
@@ -31,7 +32,7 @@ cKeyMapButton::cKeyMapButton(cGame *game) : cRenderableContainer(game)
 
 void cKeyMapButton::check(const Vec2& mousePos, bool ignoreClick)
 {
-	Vec2 shiftedPos = mousePos - getPosition();
+	Vec2 shiftedPos = mousePos - getPosition() / game->getCameraZoom();
 	bgButton->check(shiftedPos, ignoreClick);
 
 	changed = false;
@@ -52,6 +53,7 @@ void cKeyMapButton::check(const Vec2& mousePos, bool ignoreClick)
 
 					changed = true;
 					inUse = false;
+					bgButton->clearPress();
 				}
 			}
 		}
