@@ -708,7 +708,6 @@ int Player::doDamageWithArgs(int damage, float angle, sol::table& params)
 		{
 			hitPoints = 0;
 			killSelf();
-			killSounds[randInt(killSounds.size())]->play();
 		}
 		else
 		{
@@ -978,6 +977,11 @@ void Player::updateExperience()
 
 void Player::killSelf()
 {
+	if (isDead)
+	{
+		return;
+	}
+	killSounds[randInt(killSounds.size())]->play();
 	isDead = true;
 	setVisible(false);
 	setGun(nullptr);
