@@ -1,0 +1,138 @@
+This is a temporary document to help modders, in future I am planning to create a better document.
+
+I tried to make Bloodworks as much as moddable as I can. Game content is under "resources" folder and it is writtent with json and lua.
+
+The game loads all json files under resourcers files. Each json file must have a "type" variable which represents the type of the file that is being loaded. These are the available types for json files:
+
+"gun" : gun templates
+"monster" : monster templates
+"bonus" : bonuses that randomly spawns around the map
+"perk" : level up perks
+"particle" : particle template that can be attached to variable in game objects (bullets, monsters, gameobject)
+"mission" : mission types
+"game_object_template" : game object template
+"animation_template" : animation template
+"json_list" : a list of json elements that will be loaded seperately
+
+
+-------------------------
+
+Guns:
+
+Each gun has 3 seperate entities
+
+json file: which defines the static things about the gun
+gun script: dynamic triggers for a gun
+lua object: stuff that stores the data and current state of the gun (usually filled by previous two)
+
+* json file
+
+There are many things about gun that you can define in json file. Some of them are mandatory and others have default values. Most of these things can be overridden in script file if necessarry. The things that can define on json file are:
+
+    "name" : Name of the gun (mandatory)
+    "scriptFile" : Path to lua file that contain the script for the gun (mandatory)
+    "scriptName" : Name of the lua object that contains gun's trigers (mandatory)
+    "icon" : Icon of the gun that is displayed on gui or on random spawns (mandatory)
+
+    "ultimate" : A gun can be defined as an "ultimate", in which case they are bound to secondary mouse button and have limited ammo
+    "hideSpread" : If you don't want to show the circle that represents gun spread, set to true
+
+    "showShootAnimation" : Set to false if you want to hide gun muzzle animation
+    "shootParticleColor" : Color of the gun muzzle animation
+
+    "bulletTexture" : Path to a texture that will be used for bullets of this gun 
+    "bulletMeshShift" : If your texture is not cented, use this to shift its center relative to bullet position
+    "bulletSize" : Size of the bullet texture
+
+    "bulletSpeed" : Speed of the bullets
+    "bulletDamage" : Min and max damage of bullets
+    "bulletRadius" : Hit radius for bullets
+
+    "maxAmmo" : Ammo count for gun for a full clip (or total ammo count for ultimates)
+    "reloadTime" : Time to reload a gun (or time between ultimate shoots)
+    "bulletLifeTime" : Life time of bullets, can be set to remove bullets after a duration they are created
+
+    "spawnChance" : Random spawn chance of this gun in mission
+
+    "firingSound" : Path to sound file that will be played on each trigger
+    "maxSoundPlayInterval" : An interval between playing sepearte firingSounds of this gun
+    "firingSoundContinuous" : Set to true if firingSound is not something trigerred for each bullet but a continous looping sound file that plays as long as the gun is trigerred
+    "firingSoundFadein" : Fade in value for continous firing sounds
+    "firingSoundFadeout" : Fade out value for continous firing sounds
+
+    "bulletHitSound" : Path to sound file that will be played when the bullet hits something
+    "reloadBeginSound" : Can be set to customize reloading sound for guns
+    "reloadEndSound" : Can be set to customize the sound that plays at the end of the reload
+
+    "isLaser" : set to true if gun has a laser texture, details of the laser texture can be specified by:
+        "laserThickness"
+        "laserBeginWidth"
+        "laserEndWidth"
+        "laserBeginShift"
+        "laserEndShift"
+        "laserTexture"
+        "laserShader"
+
+* gun script
+
+Each gun has a lua script file that contains the triggers for the gun. Possible trigers are:
+
+init : called once for each gun, use it to initialize stuff (mandatory)
+onTick : called once every game tick
+onBulletHit : called when a bullet of this gun hits something
+onReloadStart : called when gun starts reloading
+onReloadEnded : called when gun finishes reloading
+onPlayerDamaged : called when the player is damaged (guns are able to prevent damage if wanted)
+    
+* lua gun object
+
+Each gun have a lua object that contains the data and current state of the gun. Also this function have some methods to alter state of gun (add bullet for example)
+This object is passed to all gun triggers as an argument
+
+"id", (read only) unique integer for gun
+"name", sread only) name of the gun
+
+"bulletSpeed", same as the one in json file
+"bulletRadius", same as the one in json file
+"bulletSpeed", same as the one in json file
+"bulletLifeTime", same as the one in json file
+"showShootAnimation", same as the one in json file
+"shootParticleColor", same as the one in json file
+"firingSoundFadein", same as the one in json file
+"firingSoundFadeout", same as the one in json file
+"firingCurVolume",same as the one in json file
+"playFiringSound",same as the one in json file
+
+
+"scriptTable", table that contains trigers for gun 
+
+"data", a lua table that can store anything necessarry for gun to work
+
+"spreadAngle", "current spread of the gun in angles, bullet direction will be randomized within this threshold"
+"crosshairDistance", "maximum distance allowed for crosshair"
+
+"isTriggered", "is set to true when the gun is trigerred and the player wants to shoot bullet"
+
+"onBulletHit", "a custom function can be set for guns"
+
+"getRandomDamage", &Gun::getRandomDamage,
+
+"hasAmmo", &Gun::hasAmmo,
+"addAmmo", &Gun::addAmmo,
+"consumeAmmo", &Gun::consumeAmmo,
+"reload", &Gun::reload,
+"isReloading", &Gun::isReloading,
+"getReloadPercentage", &Gun::getReloadPercentage,
+"getMaxAmmo", &Gun::getMaxAmmo,
+"getCurrentAmmo", &Gun::getCurrentAmmo,
+"reloadSpeedMultiplier", &Gun::reloadSpeedMultiplier,
+
+"addBullet", &Gun::addBullet,
+"laser", &Gun::laser
+
+
+
+
+
+
+ 
