@@ -51,8 +51,9 @@ void cSlider::check(const Vec2& mousePos, bool ignoreClick)
 	valueChanged = false;
 
 	Vec2 shiftedPos = mousePos - getPosition();
+	shiftedPos /= game->getCameraZoom(); // todo fix
 	int axis = isVertical ? 1 : 0;
-	Vec2 relativeMouse = game->getRelativeMousePos(shiftedPos, getAlignment());
+	Vec2 relativeMouse = game->getRelativeMousePos(mousePos, getAlignment()) - getPosition();
 
 	float maxShift = bgSize[axis] - sliderSize[axis] - edgeShift;
 
@@ -63,8 +64,9 @@ void cSlider::check(const Vec2& mousePos, bool ignoreClick)
 		setSliderPos(pos);
 	}
 
-	bgButton->check(shiftedPos, ignoreClick);
-	sliderButton->check(shiftedPos, ignoreClick);
+	Vec2 childPos = mousePos - getPosition() / game->getCameraZoom();
+	bgButton->check(childPos, ignoreClick);
+	sliderButton->check(childPos, ignoreClick);
 
 	if (input.getMouseWheel() && bgButton->isHovering())
 	{

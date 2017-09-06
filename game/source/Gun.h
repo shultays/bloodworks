@@ -29,6 +29,8 @@ class Gun
 	float bulletRadius;
 	float bulletSpeed;
 
+	int bulletLevelModifier;
+
 	std::string path;
 
 	std::string scriptName;

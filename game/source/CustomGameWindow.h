@@ -14,6 +14,7 @@ class CustomGameWindow
 
 	cRenderableContainer *window;
 	cTextRenderable *title;
+	cTextRenderable *nomods;
 	cTextRenderable *currentDescription;
 
 	cScrollContainer *buttonContainer;

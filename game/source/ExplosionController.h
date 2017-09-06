@@ -22,6 +22,8 @@ class ExplosionController
 		int maxDamage;
 		float scaleSpeed;
 		Vec2 pos;
+		bool damagePlayer;
+		bool damagedPlayer;
 	};
 	cVector<ExplosionData> explosions;
 	cParticle *explosionParticles;
@@ -30,6 +32,6 @@ public:
 	ExplosionController(Bloodworks *bloodworks);
 	~ExplosionController();
 	void tick();
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f);
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false);
 	void reset();
 };
