@@ -1,7 +1,9 @@
 {
   "type" : "gun",
+  
   "name": "Pistol",
   "icon" : "icon.png",
+  
   "bulletTexture" : "bullet.png",
   "bulletSize" : [8.0, 8.0],
   "bulletMeshShift" : [0.0, 0.0],
@@ -9,6 +11,7 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [50, 90],
   
+  "crosshairDistance" : 350.0,
   "maxAmmo" : 12,
   "reloadTime" : 1.2,
   
