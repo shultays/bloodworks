@@ -1,10 +1,13 @@
 <?php
 $success = "error";
+
+include_once 'hasher.php';
+
 if(isset($_POST['report']))
 {
     $report = addslashes($_POST['report']);
     $message = addslashes($_POST['message']);
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = hashIP($_SERVER['REMOTE_ADDR']);
     include 'opendb.php';
     include 'check_spam.php';
 
@@ -14,8 +17,10 @@ if(isset($_POST['report']))
         exit();
     }
     $query = "INSERT INTO reports (ip, message, report) VALUES ('$ip', '$message', '$report')";
-    if (mysqli_query($link, $query)) {
+    if (mysqli_query($link, $query)) 
+    {
         $success = "Report has been received. Thanks!";
+
     } else {
         $success = "error sending report";
     }	
