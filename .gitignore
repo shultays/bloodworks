@@ -14,4 +14,3 @@ game.VC.db
 /.vs/
 /uploader/.vs/
 *.opendb
-server/opendb.php
