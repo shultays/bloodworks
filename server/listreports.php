@@ -11,14 +11,14 @@ if (isset($_GET["limit"]))
 	$limit = $_GET["limit"];
 }
 
-include 'opendb.php';
+include_once 'opendb.php';
 
 if ($_GET["pass"] == $reportPass)
 {
     $query = "SELECT id, ip, message, report, time FROM reports ORDER BY id DESC LIMIT ".$limit." OFFSET ".$start;
     $result = mysqli_query($link, $query);
 }
-include 'closedb.php';
+include_once 'closedb.php';
 
 
 while($row = $result->fetch_assoc()) 

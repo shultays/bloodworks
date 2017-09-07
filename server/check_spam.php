@@ -3,7 +3,7 @@
 function checkSpam($link, $timelimit, $allowed, $column)
 {
     $ret = false;
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = hashIP($_SERVER['REMOTE_ADDR']);
     
     $column_last_request = $column . "_last_request";
     $column_total_request = $column . "_total_request";
