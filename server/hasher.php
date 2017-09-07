@@ -3,7 +3,15 @@ function hashText($text)
 {
 	$options = [
 		'cost' => 11,
-		'salt' => 'salti_sugar431292CAKE!!',
+		'salt' => 'salt',
+	];
+	return password_hash($text, PASSWORD_BCRYPT, $options);
+}
+function hashIP($text)
+{
+	$options = [
+		'cost' => 11,
+		'salt' => 'salt',
 	];
 	return password_hash($text, PASSWORD_BCRYPT, $options);
 }

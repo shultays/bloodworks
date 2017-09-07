@@ -27,13 +27,13 @@ function isValidFile($name) {
 $success = "error";
 $validUser = false;
 
-include 'opendb.php';
-include 'hasher.php';
-include 'check_spam.php';
+include_once 'opendb.php';
+include_once 'hasher.php';
+include_once 'check_spam.php';
 
 if (checkSpam($link, 60, 2, "upload") == false) {
     echo "please dont kill my server";
-    include 'closedb.php';
+    include_once 'closedb.php';
     exit();
 }
 $userid = "-1";
@@ -255,5 +255,5 @@ if($validHeader and $validUser and $validUpload and $validFile)
 }
 
 echo $success;
-include 'closedb.php';
+include_once 'closedb.php';
 ?>
