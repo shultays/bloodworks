@@ -21,7 +21,6 @@ Version Information:
 
 0.8 - second public beta
 
-
 Known issues:
 
 There might be a problem with explosion particles, but I don't know If I was able to fix them or not. You can disable explosion particles by editing userconfig.txt if you get a performance drop off once things blow up.
@@ -29,6 +28,8 @@ There might be a problem with explosion particles, but I don't know If I was abl
 My shader-fu is not so strong, the shaders may not work on all machines and likely to crash the game if they don't. I fixed some non-standard things by there are still some deprecated stuff I should fix.
 
 If the game crashes by any means, it will ask you to confirm for sending a crash report. There is no personal information in this report, it only includes a stack trace and console logs and any other information you provide in your crash message. It would be very helpful if you send these reports to me! The game will not post any information without your confirmation first. 
+
+If you don't want to send a report, please send me an email or open a ticket in github with details and attach stdout.txt along with it.
 
 Cheats:
 
