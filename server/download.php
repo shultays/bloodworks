@@ -4,7 +4,7 @@ if(isset($_GET['id']))
 {
 	// if id is set then get the file with the id from database
 
-	include 'opendb.php';
+	include_once 'opendb.php';
 
 	$id    = $_GET['id'];
 	$query = "SELECT name, type, size, content " .
@@ -20,7 +20,7 @@ if(isset($_GET['id']))
 	flush();
 	echo $content;
 
-	include 'closedb.php';
+	include_once 'closedb.php';
 	exit;
 }
 ?>
