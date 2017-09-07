@@ -2,7 +2,7 @@
 $success = "error";
 if(isset($_POST['username']) and isset($_POST['password']))
 {
-	include 'hasher.php';
+	include_once 'hasher.php';
 
 	$username = $_POST['username'];
 	$username = addslashes($username);
@@ -11,11 +11,11 @@ if(isset($_POST['username']) and isset($_POST['password']))
 	
 	if(validUsername($username) and validPassword($password)) 
 	{
-		include 'opendb.php';
-        include 'check_spam.php';
+		include_once 'opendb.php';
+        include_once 'check_spam.php';
         if (checkSpam($link, 30, 0, "register") == false) {
             echo "you can only register once 30 secs";
-            include 'closedb.php';
+            include_once 'closedb.php';
             exit();
         }
 		$query = "SELECT password FROM users WHERE username = '$username' LIMIT 1";
@@ -36,7 +36,7 @@ if(isset($_POST['username']) and isset($_POST['password']))
 		{
 			$success = "username already exists";	
 		}
-		include 'closedb.php';
+		include_once 'closedb.php';
 	}
 	else
 	{
