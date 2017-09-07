@@ -11,10 +11,10 @@ if (isset($_GET["limit"]))
 	$limit = $_GET["limit"];
 }
 
-include 'opendb.php';
+include_once 'opendb.php';
 $query = "SELECT id, name, description, version, creator, folder FROM upload LIMIT ".$limit." OFFSET ".$start;
 $result = mysqli_query($link, $query);
-include 'closedb.php';
+include_once 'closedb.php';
 echo '"count" : ' . mysqli_num_rows ($result) . ',';
 echo '"mods" : [';
 $first = true;
