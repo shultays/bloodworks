@@ -126,6 +126,10 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 
 	spreadAngle = 0.0f;
 	crosshairDistance = 400.0f;
+	if (j.count("crosshairDistance"))
+	{
+		crosshairDistance = j["crosshairDistance"].get<float>();
+	}
 
 	lua.script_file(scriptFilePath);
 

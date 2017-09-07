@@ -568,8 +568,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"isTriggered", &Gun::isTriggered,
 
-		"onBulletHit", &Gun::onBulletHit,
-
 		"getRandomDamage", &Gun::getRandomDamage,
 
 		"hasAmmo", &Gun::hasAmmo,
