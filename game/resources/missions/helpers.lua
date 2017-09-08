@@ -389,7 +389,7 @@ function canSpawnIgnoredMonster()
     return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and (missionData.ignoreMonsterCount == nil or missionData.ignoreMonsterCount < 50)
 end
 
-function gameRestTick()
+function gameResetTick()
     if missionData.enableReset == true then
         if missionData.scoreText ~= nil then
             missionData.scoreText:setText("Score : " .. getScore())
