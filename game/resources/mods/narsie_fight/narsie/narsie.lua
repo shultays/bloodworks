@@ -24,7 +24,7 @@ function NarSie.init(monster, min)
     NarSie.resetTarget(monster)
     data.attacks = { NarSie.ringBullets, NarSie.arcBullets, NarSie.fireballs, NarSie.spawnSpiders, NarSie.explosions, NarSie.explosionsAroundPlayer }
     
-    --data.attacks = { NarSie.arcBullets }
+    --data.attacks = { NarSie.fireballs2 }
     --data.currentAttackTimer = 0.0
     
     data.timeToNextHit = 0.0
@@ -56,6 +56,7 @@ function NarSie.onCustomHit(monster, damage, dir, args)
     if data.spawning then
         return 0
     end
+    addScore(math.floor(damage / 10))
     return damage
 end
 
@@ -326,7 +327,7 @@ function ExpAroundPlayerObject.onTick(gameObject)
         playSound({path = missionPath .. "~/resources/sounds/explode.ogg", position = gameObject.data.pos, volume = 0.1 + d })
         
     end
-    gameObject.data.ring:setColor(Vec4.new(1.0, 0.5, 0.3, alpha * 0.6))
+    gameObject.data.ring:setColor(Vec4.new(1.0, 1.0, 0.3, alpha * 0.6))
     gameObject:setPosition(gameObject.data.pos)
     gameObject:setScale(Vec2.new(1.0 - t * 0.8, 1.0 - t * 0.8))
 end
@@ -427,7 +428,7 @@ function NarSie.fireballs(monster, init)
         local b = NarSie.sendFireBall(monster, data.s)
     
         b.moveAngle = b.moveAngle + (data.iter - half) * math.pi * 0.3 / data.numBullets
-        b.damage = math.floor(b.damage / 3)
+        b.damage = math.floor(b.damage / 2)
         
         data.iter = data.iter + 1
         
@@ -447,6 +448,39 @@ function NarSie.fireballs(monster, init)
         end
     end
 end
+
+
+
+function NarSie.fireballs2(monster, init)
+    if init then
+        data.timeToShoot = 0.0
+        data.shift = 0.0
+        data.interval = lerp(0.2, 0.12, clamp(min * 0.1))
+        data.totalCount = lerp(20, 30, clamp(min * 0.1))
+    end
+    
+    data.timeToShoot = data.timeToShoot - dt
+    
+    if data.timeToShoot < 0.0 then
+        if data.totalCount > 0 then
+            
+            data.timeToShoot = data.timeToShoot + data.interval
+            local b = NarSie.sendFireBall(monster)
+            b.damage = math.floor(b.damage / 2)
+            b.moveAngle = b.moveAngle + (math.random() * 0.5 - 0.25) * lerp(1.0, 0.3, clamp(min * 0.15))
+            
+            data.totalCount = data.totalCount - 1
+        end
+    end
+    
+    
+    if data.timeToShoot < -1.0 and data.totalCount <= 0 then
+        data.currentAttack = nil
+    end
+end
+
+
+
 
 function NarSie.sendFireBall(monster, s)
     local bullet = addCustomBullet({monsterBullet = true})
