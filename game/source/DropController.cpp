@@ -102,7 +102,7 @@ void DropController::tick()
 	if (timer.getDt() > 0.0f)
 	{
 		float timeSinceLastDrop = timer.getTime() - lastRandomDropSpawn;
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 50.0f;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 30.0f;
 		float r = randFloat();
 		if (r < extraDropChance)
 		{

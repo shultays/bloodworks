@@ -64,7 +64,7 @@ function NarSie.onKilled(monster)
     NarSieFight.onNarSieKilled(monster)
     monster.data.deathTimer = time
     
-    playSound({path = missionPath .. "narsie/laugh.ogg", position = monster.position, volume = 1.5})
+    playSound({path = missionPath .. "narsie/laugh.ogg", position = monster.position, volume = 1.1})
 end
 
 function NarSie.onTick(monster)
@@ -79,7 +79,7 @@ function NarSie.onTick(monster)
         data.blackHole = addPostProcess("resources/post_process/blackhole.ps")
         data.blackHole:setEnabled(true)
         
-        playSound({path = BlackHole.basePath .. "black_hole.ogg", position = monster.position, volume = 1.5})
+        playSound({path = BlackHole.basePath .. "black_hole.ogg", position = monster.position, volume = 0.8})
         data.spawning = true
     end
     

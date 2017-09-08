@@ -6,10 +6,6 @@
 #include "cGlobals.h"
 #include <sstream>
 
-#define blood_size (2048)
-
-
-
 void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
@@ -29,7 +25,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 	shader->setTexture0(0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture[0]);
-	shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
+	shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glDisableVertexAttribArray(0);
@@ -122,7 +118,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 			float halfWidth = windowSize.w * 0.5f;
 			float halfHeight = windowSize.h * 0.5f;
 
-			glViewport(0, 0, blood_size, blood_size);
+			glViewport(0, 0, bloodSize, bloodSize);
 
 			bodyPart = bodyParts.begin();
 			while (bodyPart != bodyParts.end())
@@ -132,8 +128,8 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 				shader->begin();
 
 				shader->setViewMatrix(
-					Mat3::translationMatrix(-blood_size * 0.5f, -blood_size * 0.5f)
-					.scaleBy(1.0f / blood_size)
+					Mat3::translationMatrix(-bloodSize * 0.5f, -bloodSize * 0.5f)
+					.scaleBy(1.0f / bloodSize)
 					.translateBy(0.5f)
 					.scaleBy(2.0f));
 
@@ -186,7 +182,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		shader->setTexture0(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, frameBufferTexture[1]);
-		shader->setWorldMatrix(Mat3::scaleMatrix(blood_size * 0.5f, -blood_size * 0.5f));
+		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 		glDisableVertexAttribArray(0);
@@ -261,6 +257,12 @@ void BloodRenderable::init()
 		ss << "resources/blood/blood" << i << ".png";
 		cachedBloods.push_back(resources.getTexture(ss.str(), true));
 	}
+	bloodSize = 128;
+	float t = max(bloodworks->getMapSize().x, bloodworks->getMapSize().y) + 50;
+	while (bloodSize < t)
+	{
+		bloodSize += 128;
+	}
 	bloodBg = resources.getTexture("resources/blood/blood_bg.png", true);
 	
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
@@ -275,7 +277,7 @@ void BloodRenderable::init()
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[i]);
 
 		glBindTexture(GL_TEXTURE_2D, frameBufferTexture[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, blood_size, blood_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bloodSize, bloodSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
