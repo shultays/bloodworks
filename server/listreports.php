@@ -4,6 +4,13 @@ $start = 0;
 $limit = 100;
 include_once 'opendb.php';
 
+$feedback = 0;
+
+if (isset($_GET["feedback"]))
+{
+    $feedback = 1;
+}
+
 if (isset($_GET["start"]))
 {
 	$start = $link->real_escape_string($_GET["start"]);
@@ -15,7 +22,7 @@ if (isset($_GET["limit"]))
 
 if ($_GET["pass"] == $reportPass)
 {
-    $query = "SELECT id, ip, message, report, time FROM reports ORDER BY id DESC LIMIT ".$limit." OFFSET ".$start;
+    $query = "SELECT id, ip, message, report, time FROM reports WHERE feedback = $feedback ORDER BY id DESC LIMIT ".$limit." OFFSET ".$start;
     $result = mysqli_query($link, $query);
 }
 include_once 'closedb.php';
