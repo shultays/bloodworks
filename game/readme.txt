@@ -10,7 +10,8 @@ I am always looking for help and feedback. I don't know how active I will be onc
 
 If you don't want to bother with git hub, you can always upload mods to my server which will be available for downloading. The system is not fully mature yet but it is functional. You can read modding_help.html to get some idea how scripting works and there are some binaries that come with the game to upload mods to my server.
 
-Thanks for reading so far and playing my game!
+Thanks for reading so far and playing my game! And again, please give some feedback. If you are feeling shy or want to remain anonymous, you can use this link to give feedback:
+http://bloodworks.enginmercan.com/feedback.html
 
 Engin Mercan
 

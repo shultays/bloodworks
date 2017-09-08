@@ -10,6 +10,7 @@ class GroundRenderable : public cRenderable
 	GLuint frameBufferTexture;
 
 	Bloodworks *bloodworks;
+	int groundSize;
 public:
 	GroundRenderable(Bloodworks *bloodworks);
 	virtual ~GroundRenderable();

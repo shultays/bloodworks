@@ -10,7 +10,9 @@ function NarSieFight.init()
     missionData.firstTick = true
     missionData.levelUpBonusChance = 1.0
     
-    addRandomColliders(35, 400.0)
+    local mapSize = getMapSize()
+    local colliderCount = math.floor((mapSize.x * mapSize.y) / 300000 + 20 )
+    addRandomColliders(colliderCount, 400.0)
 end
 
 function NarSieFight.onTick()
@@ -35,7 +37,12 @@ function NarSieFight.onTick()
         missionData.maxHitPoint = m.hitPoint
         missionData.spawnTimer = 0.0
         calcRandomSpawns()
-        for i = 1, 50 do
+        local spawn = 50
+        
+        local rateMult = 1.0 + (getMapSize().x - 3000.0) / 3000.0
+        spawn = math.floor(rateMult * spawn)
+        
+        for i = 1, spawn do
             NarSieFight.addMonster()
         end
         
@@ -56,7 +63,8 @@ function NarSieFight.onTick()
         missionData.spawnTimer = missionData.spawnTimer - dt
         
         if missionData.spawnTimer < 0.0 then
-            missionData.spawnTimer = 2.0
+            local rateMult = 1.0 + (getMapSize().x - 3000.0) / 5000.0
+            missionData.spawnTimer = 1.5 / rateMult
             NarSieFight.addMonster()
         end
         
