@@ -390,12 +390,13 @@ function canSpawnIgnoredMonster()
 end
 
 function gameRestTick()
-    if missionData.enableRest == true then
+    if missionData.enableReset == true then
+        if missionData.scoreText ~= nil then
+            missionData.scoreText:setText("Score : " .. getScore())
+        end
         if isKeyPressed(keys.Space) then
             loadMission(missionScript)
         end
-        
-        return
     end
 end
     
@@ -440,7 +441,21 @@ function showGameReset(title)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(32.0)
     gameObject:setPosition(Vec2.new(0, -80-space))
-    missionData.enableRest = true
+    
+    gameObject = addGameObject("FadeOutImage")
+    gameObject.data.startTime = time
+    gameObject.data.fadeOutStartTime = -1
+    gameObject.data.fadeInDuration = 1.0
+    gameObject:setLevel(RenderableLevel.GUI + 5)
+    gameObject.data.renderable = gameObject:addText("Score : " .. getScore(), "resources/fontData.txt")
+    gameObject.data.renderable:setAlignment(RenderableAlignment.center)
+    gameObject.data.renderable:setTextAlignment(TextAlignment.center)
+    gameObject.data.renderable:setTextSize(32.0)
+    gameObject:setPosition(Vec2.new(0, -160-space))
+    
+    missionData.scoreText = gameObject.data.renderable
+    
+    missionData.enableReset = true
 end
 
 function missionInit(missionData)
