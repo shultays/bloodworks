@@ -3,10 +3,10 @@ AmmoManiac.buffId = getGlobalUniqueId()
 
 function AmmoManiac.spawn(bonus, pos)
     local duration = 6.0 * player.data.bonusDurationMultiplier
-    player.gunSpreadMultiplier:addBuffWithId(AmmoManiac.buffId, 4.5)
+    player.gunSpreadMultiplier:addBuffWithId(AmmoManiac.buffId, 3.5)
     player.clipCountMultiplier:addBuffWithId(AmmoManiac.buffId, 4.0)
-    player.reloadSpeedMultiplier:addBuffWithId(AmmoManiac.buffId, 4.0)
-    player.shootSpeedMultiplier:addBuffWithId(AmmoManiac.buffId, 0.25)
+    player.reloadSpeedMultiplier:addBuffWithId(AmmoManiac.buffId, 2.5)
+    player.shootSpeedMultiplier:addBuffWithId(AmmoManiac.buffId, 0.35)
     player.damageMultiplier:addBuffWithId(AmmoManiac.buffId, 0.75)
     
     player.clipCountMultiplier:setBuffDuration(AmmoManiac.buffId, duration)

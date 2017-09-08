@@ -6,7 +6,7 @@
   "bulletSize" : [15.0, 15.0],
   "bulletRadius" : 4.0,
   "bulletSpeed" : 500.0,
-  "bulletDamage" : [10, 20],
+  "bulletDamage" : [25, 35],
   
   "scriptFile" : "laser.lua",
   "scriptName" : "Laser",

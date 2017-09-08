@@ -552,6 +552,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"id", sol::readonly(&Gun::id),
 		"data", &Gun::data,
 		"name", sol::readonly(&Gun::name),
+		"ultimate", sol::readonly(&Gun::ultimate),
 		"bulletRadius", &Gun::bulletRadius,
 		"bulletSpeed", &Gun::bulletSpeed,
 		"scriptTable", &Gun::scriptTable,
