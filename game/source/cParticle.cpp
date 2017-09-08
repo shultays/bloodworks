@@ -5,6 +5,9 @@
 #include "cTexture.h"
 #include "cTools.h"
 
+
+bool disableParticle;
+
 cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
 	shader = resources.getShader(file.folder + j["vertexShader"].get<std::string>(), file.folder + j["pixelShader"].get<std::string>());
@@ -316,6 +319,11 @@ void cParticle::addTexture(const std::string& path)
 
 void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, cParticleRandomizer* randomizer)
 {
+	if (disableParticle)
+	{
+		return;
+	}
+
 	Vec2 pos = posInput;
 	if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD * 4)
 	{
