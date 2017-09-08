@@ -4,11 +4,9 @@
 #include "cShader.h"
 #include "cGlobals.h"
 
-#define GROUND_SIZE 2048
 
 GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodworks)
 {
-
 	this->bloodworks = bloodworks;
 
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
@@ -22,13 +20,19 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	bg->setUniform(uvBegin, Vec2(0.0f));
 	bg->setUniform(uvSize, Vec2(4.0f));
 
+	groundSize = 128;
+	float t = max(bloodworks->getMapSize().x, bloodworks->getMapSize().y) + 50;
+	while (groundSize < t)
+	{
+		groundSize += 128;
+	}
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
 	glGenTextures(1, &frameBufferTexture);
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GROUND_SIZE, GROUND_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, groundSize, groundSize, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -44,7 +48,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glViewport(0, 0, GROUND_SIZE, GROUND_SIZE);
+	glViewport(0, 0, groundSize, groundSize);
 	bloodworks->lastShader = nullptr;
 
 	{
@@ -52,8 +56,8 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		shader->begin();
 
 		shader->setViewMatrix(
-			Mat3::translationMatrix(-GROUND_SIZE * 0.5f, -GROUND_SIZE * 0.5f)
-			.scaleBy(1.0f / GROUND_SIZE)
+			Mat3::translationMatrix(-groundSize * 0.5f, -groundSize * 0.5f)
+			.scaleBy(1.0f / groundSize)
 			.translateBy(0.5f)
 			.scaleBy(2.0f));
 
@@ -87,7 +91,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	shader->begin();
 
 
-	int max = 40;
+	int max = (groundSize * groundSize) / 150000 + 20;
 
 	float grassChance = 0.3f;
 	float grass2Chance = 0.5f + grassChance;
@@ -138,8 +142,8 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		brushRenderable->setColor(Vec4(randFloat(colorMin, colorMax), randFloat(colorMin, colorMax), randFloat(colorMin, colorMax), randFloat(0.9f, 1.0f)));
 
 		shader->setViewMatrix(
-			Mat3::translationMatrix(-GROUND_SIZE * 0.5f, -GROUND_SIZE * 0.5f)
-			.scaleBy(1.0f / GROUND_SIZE)
+			Mat3::translationMatrix(-groundSize * 0.5f, -groundSize * 0.5f)
+			.scaleBy(1.0f / groundSize)
 			.translateBy(0.5f)
 			.scaleBy(2.0f));
 		
@@ -181,7 +185,7 @@ void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cr
 	shader->setTexture0(0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	shader->setWorldMatrix(Mat3::scaleMatrix(GROUND_SIZE * 0.5f, -GROUND_SIZE * 0.5f));
+	shader->setWorldMatrix(Mat3::scaleMatrix(groundSize * 0.5f, -groundSize * 0.5f));
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glDisableVertexAttribArray(0);

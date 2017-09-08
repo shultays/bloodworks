@@ -716,6 +716,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 
+	lua.set_function("getMapSize",
+		[&](sol::table args) -> Vec2
+	{
+		return bloodworks->getMapSize();
+	});
+
 	lua.set_function("getRandomPosition",
 		[&](sol::table args) -> Vec2
 	{

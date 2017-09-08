@@ -46,6 +46,7 @@ class BloodRenderable : public cRenderable
 	cShaderShr defaultPostProcessShader;
 
 	Vec4 bloodColor;
+	int bloodSize;
 public:
 	BloodRenderable(Bloodworks *bloodworks);
 	~BloodRenderable();

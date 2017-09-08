@@ -80,6 +80,28 @@ void Bloodworks::initImplementation()
 		config = new BloodworksConfig();
 	}
 
+	int tempSize = getConfig()->getInt("map_size", 3000, "Size of the map, reduce if there are crashes");
+	if (tempSize > 10000)
+	{
+		tempSize = 10000;
+	}
+	int maxTextureSize = -1;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+	if (maxTextureSize > 0)
+	{
+		maxTextureSize -= 200;
+		if (tempSize > maxTextureSize)
+		{
+			tempSize = maxTextureSize;
+		}
+	}
+	if (tempSize < 500)
+	{
+		tempSize = 500;
+	}
+	mapSize = (float)tempSize;
+	mapRect.set(-mapSize * 0.5f, +mapSize * 0.5f);
+
 	coral.setWindowSize(config->getWindowWidth(), config->getWindowHeight());
 
 	luaWorld = new BloodworksLuaWorld(this);
@@ -290,9 +312,6 @@ Bloodworks::Bloodworks()
 {
 	nextUniqueId = 1000;
 	nextGlobalUniqueId = 1;
-
-	mapSize = 2000.0f;
-	mapRect.set(-mapSize * 0.5f, +mapSize * 0.5f);
 
 	postProcessEndLevel = (GUI + FOREGROUND) / 2;
 
