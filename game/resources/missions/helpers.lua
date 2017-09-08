@@ -132,7 +132,7 @@ function makeBossDefault(monster)
     elseif t == 6 then -- spawns 2 on death
         monster.data.remainingLife = 3
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-        monster:setScale(0.8 + math.random() * 0.3)
+        monster:setScale(1.0 + math.random() * 0.2)
         monster.experienceMultiplier = monster.experienceMultiplier * 0.3
         monster.scoreMultiplier = monster.scoreMultiplier * 0.3
         monster.data.hitPoint = monster.hitPoint
@@ -143,7 +143,7 @@ function makeBossDefault(monster)
                     local newMonster = addMonster(monster.monsterTemplate.name)
                     newMonster.data.remainingLife = monster.data.remainingLife
                     newMonster.position = monster.position
-                    newMonster:setScale(math.max(0.3, monster.scale * 0.80))
+                    newMonster:setScale(math.max(0.35, monster.scale * 0.80))
                     newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
                     newMonster:copyIgnoreId(monster)
                     
@@ -170,7 +170,7 @@ function makeBossDefault(monster)
         addCustomOnKill(monster, monster.data.onKillFuncSplit)
     elseif t == 7 then -- spawns 8 on death
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
-        monster:setScale(0.8 + math.random() * 0.3)
+        monster:setScale(1.0 + math.random() * 0.2)
         monster.experienceMultiplier = monster.experienceMultiplier * 0.5
         monster.scoreMultiplier = monster.scoreMultiplier * 0.5
         monster.data.hitPoint = monster.hitPoint
@@ -178,7 +178,7 @@ function makeBossDefault(monster)
             for i = 1,8 do
                 local newMonster = addMonster(monster.monsterTemplate.name)
                 newMonster.position = monster.position
-                newMonster:setScale(math.max(0.3, monster.scale * 0.50))
+                newMonster:setScale(math.max(0.35, monster.scale * 0.50))
                 newMonster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
                 newMonster:copyIgnoreId(monster)
                 
