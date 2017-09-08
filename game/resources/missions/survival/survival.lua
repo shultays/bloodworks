@@ -21,7 +21,9 @@ function Survival.init()
     end
     missionData.curMaxMonster = missionData.maxMonster
     
-    addRandomColliders(25)
+    local mapSize = getMapSize()
+    local colliderCount = math.floor((mapSize.x * mapSize.y) / 300000 + 10 )
+    addRandomColliders(colliderCount, 300)
 end
 
 function Survival.onTick()
@@ -50,9 +52,12 @@ function Survival.onTick()
         if DEBUG then
             spawn = 10
         else
-            spawn = 50
+            spawn = 80
         end
         
+        local rateMult = 1.0 + (getMapSize().x - 3000.0) / 3000.0
+        spawn = math.floor(rateMult * spawn)
+        print(spawn)
         for i = 1, spawn do
             local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
             local monster = addRandomMonster()
@@ -64,7 +69,9 @@ function Survival.onTick()
     gameRestTick()
     
     missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
-    if missionTime - missionData.lastSpawnTime > (0.7 - clamp(min * 0.05) * 0.5) and canSpawnMonster() and player.isDead == false then
+    local rateMult = 1.0 + (getMapSize().x - 3000.0) / 5000.0
+    local rate =  (0.6 - clamp(min * 0.05) * 0.4)  / rateMult
+    if missionTime - missionData.lastSpawnTime > rate and canSpawnMonster() and player.isDead == false then
         missionData.lastSpawnTime = missionTime
         local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
