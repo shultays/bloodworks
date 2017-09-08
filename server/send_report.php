@@ -5,12 +5,13 @@ include_once 'hasher.php';
 
 if(isset($_POST['report']))
 {
-    $report = addslashes($_POST['report']);
-    $message = addslashes($_POST['message']);
     $ip = hashIP($_SERVER['REMOTE_ADDR']);
     include 'opendb.php';
     include 'check_spam.php';
 
+    $report = $link->real_escape_string($_POST['report']);
+    $message = $link->real_escape_string($_POST['message']);
+    
     if (checkSpam($link, 60, 10, "report") == false) {
         echo "please dont kill my server";
         include 'closedb.php';

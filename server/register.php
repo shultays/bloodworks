@@ -5,13 +5,15 @@ if(isset($_POST['username']) and isset($_POST['password']))
 	include_once 'hasher.php';
 
 	$username = $_POST['username'];
-	$username = addslashes($username);
 	$password = $_POST['password'];
-	$password = addslashes($password);
 	
 	if(validUsername($username) and validPassword($password)) 
 	{
 		include_once 'opendb.php';
+        
+        $username = $link->real_escape_string($_POST['username']);
+        $password = $link->real_escape_string($_POST['password']);
+        
         include_once 'check_spam.php';
         if (checkSpam($link, 30, 0, "register") == false) {
             echo "you can only register once 30 secs";
