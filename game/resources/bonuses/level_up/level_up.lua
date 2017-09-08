@@ -8,5 +8,5 @@ function LevelUp.variableBonusChance()
     if missionData.levelUpBonusChance ~= nil then
         return missionData.levelUpBonusChance
     end
-    return 0.05
+    return 0.0
 end
