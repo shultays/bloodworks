@@ -135,7 +135,7 @@ void BloodworksCheats::onTick()
 		{
 			for (int i = 0; i < perks.size(); i++)
 			{
-				if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "FasterBullets")
+				if (perks[i]->isTakenFully() == false && perks[i]->getScriptName() == "RandomWeapon")
 				{
 					perks[i]->takeLevel();
 					bloodworks->onPerkUsed(perks[i]);

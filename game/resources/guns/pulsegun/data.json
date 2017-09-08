@@ -14,7 +14,7 @@
   
   "firingSound" : {
     "path" : "pulse.ogg",
-    "volume" : 0.55
+    "volume" : 0.20
   },
   
   "scriptFile" : "pulsegun.lua",

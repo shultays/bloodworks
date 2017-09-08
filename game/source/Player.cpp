@@ -1005,3 +1005,8 @@ void Player::addKnockback(const Vec2& speed, float duration)
 	k.speed = speed;
 	k.duration = duration;
 }
+
+float Player::getBulletSpreadMultiplier()
+{
+	return gunSpreadMultiplier.getBuffedValue();
+}
