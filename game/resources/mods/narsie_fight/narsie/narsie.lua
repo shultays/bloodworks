@@ -170,9 +170,10 @@ function NarSie.onTick(monster)
             data.pulling = false
         end
     else
-        if distanceToPlayer > 800.0 then
+        local range = 800.0 - min * 30.0 
+        if distanceToPlayer > range then
         
-            data.pullTimer = data.pullTimer + dt * clamp((distanceToPlayer - 800.0) / 50.0)
+            data.pullTimer = data.pullTimer + dt * clamp((distanceToPlayer - range) / 50.0)
             
             local maxStay = 0.8
             local c = 1.0 - data.pullTimer / maxStay
