@@ -46,20 +46,20 @@ if(isset($_POST['foldername']))
 	$folderName = $_POST['foldername'];
 	$folderName = preg_replace('/ /i', '_', $folderName);
 	$folderName = preg_replace('/[^a-z0-9A-Z_]/i', '', $folderName);
-	$folderName = clearForJson(addslashes($folderName));
+	$folderName = clearForJson($link->real_escape_string($folderName));
 }
 	
 if(isset($_POST['name']) and strlen($_POST['name']) > 0 and validUsername($_POST['name']))
 {
 	$validHeader = true;
 	$modname = $_POST['name'];
-	$modname = clearForJson(addslashes($modname));
+	$modname = clearForJson($link->real_escape_string($modname));
 	$description = (isset($_POST['description']) ? $_POST['description'] : "");
-	$description = clearForJson(addslashes($description));
+	$description = clearForJson($link->real_escape_string($description));
 	$version = (isset($_POST['version']) ? $_POST['version'] : "0");
-	$version = clearForJson(addslashes($version));
+	$version = clearForJson($link->real_escape_string($version));
 	$creator = (isset($_POST['creator']) ? $_POST['creator'] : "");
-	$creator = clearForJson(addslashes($creator));
+	$creator = clearForJson($link->real_escape_string($creator));
 	
 	if (isset($_FILES['icon']))
 	{
@@ -69,7 +69,7 @@ if(isset($_POST['name']) and strlen($_POST['name']) > 0 and validUsername($_POST
 
 			$fp      = fopen($tmpName, 'r');
 			$icon = fread($fp, filesize($tmpName));
-			$icon = addslashes($icon);
+			$icon = $link->real_escape_string($icon);
 			fclose($fp);
 		}
 		else
@@ -91,9 +91,9 @@ else
 if(isset($_POST['username']) and isset($_POST['password']))
 {
 	$username = $_POST['username'];
-	$username = addslashes($username);
+	$username = $link->real_escape_string($username);
 	$password = $_POST['password'];
-	$password = addslashes($password);
+	$password = $link->real_escape_string($password);
 
 	if(validUsername($username) and validPassword($password)) 
 	{ 
@@ -199,11 +199,6 @@ if($validHeader and $validUser and $validUpload and $validFile)
 
 		// echo $allValid . "\n";
 		
-		if(!get_magic_quotes_gpc())
-		{
-			$fileName = addslashes($fileName);
-		}
-
 		if ($allValid)
 		{
             
@@ -219,10 +214,10 @@ if($validHeader and $validUser and $validUpload and $validFile)
             }
 			if ($count < 100)
 			{
-                $fileName = addslashes($fileName);
-                $fileType = addslashes($fileType);
-                $content = addslashes($content);
-                $type = addslashes($type);
+                $fileName = $link->real_escape_string($fileName);
+                $fileType = $link->real_escape_string($fileType);
+                $content = $link->real_escape_string($content);
+                $type = $link->real_escape_string($type);
         
                 if ($modid == -1)
                 {

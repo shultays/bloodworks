@@ -6,7 +6,7 @@ if(isset($_GET['id']))
 
 	include_once 'opendb.php';
 
-	$id    = $_GET['id'];
+	$id    = $link->real_escape_string($_GET['id']);
 	$query = "SELECT name, type, size, content " .
 			 "FROM upload WHERE id = '$id'";
 

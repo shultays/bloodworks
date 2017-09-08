@@ -277,6 +277,13 @@ void Bloodworks::init()
 	{
 		coral.setNoSleep(noSleep);
 	}
+
+	static bool disableParticlesConfig = getConfig()->getBool("disable_particles", false, "disables all particles");
+	if (disableParticlesConfig)
+	{
+		extern bool disableParticle;
+		disableParticle = true;
+	}
 }
 
 Bloodworks::Bloodworks()
