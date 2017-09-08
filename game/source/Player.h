@@ -206,4 +206,5 @@ public:
 	float getBulletRadius() const;
 	float getCollisionRadius() const;
 	void addKnockback(const Vec2& speed, float duration);
+	float getBulletSpreadMultiplier();
 };

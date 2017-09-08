@@ -573,7 +573,7 @@ Bullet* Gun::addBullet()
 	Player *player = bloodworks->getPlayer();
 	bullet->pos = player->getGunPos();
 	bullet->moveSpeed = bulletSpeed;
-	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle);
+	bullet->moveAngle = player->getAimDir().toAngle() + randFloat(-spreadAngle, spreadAngle) * player->getBulletSpreadMultiplier();
 	bullet->radius = bulletRadius;
 	bullet->damage = randInt(damage.x, damage.y);
 	if (bulletLevelModifier)
