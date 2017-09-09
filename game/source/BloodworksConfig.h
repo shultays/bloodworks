@@ -27,7 +27,7 @@ public:
 
 		gore = getBool("gore", true);
 		screenShake = getBool("screenShake", true);
-		lockCrosshair = getBool("lockCrosshair", true);
+		lockCrosshair = getBool("lockCrosshair", false);
 		autoOpenLevelupPopup = getBool("autoOpenLevelupPopup", true);
 
 		sensitivity = getInt("sensitivity", 50) / 100.0f;
