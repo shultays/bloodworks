@@ -55,7 +55,7 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     monster.data.cannotBecomeBoss = cannotBecomeBoss
     monster.data.cannotShootBullets = cannotShootBullets
     
-    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 20.0 - clamp(min/7) * 10 < missionTime then
+    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 16.0 - clamp(min/7) * 10 < missionTime then
         missionData.lastBossSpawn = missionTime
         monster.data.isBoss = true
         monster.scriptTable.makeBoss(monster, min)
@@ -467,18 +467,20 @@ function debugInit(missionData)
 end
 
 function debugTick(missionData)
-    if isKeyReleased(keys.PageUp) then
-        missionData.extraMin = missionData.extraMin + 0.5
-        print("Extra Min " .. missionData.extraMin)
-    end
-    if isKeyReleased(keys.PageDown) then
-        missionData.extraMin = missionData.extraMin - 0.5
-        if missionData.extraMin < 0.0 then
-            missionData.extraMin = 0.0
-        end
-        print("Extra Min " .. missionData.extraMin)
-    end
 
+    if hasCheats() then
+        if isKeyReleased(keys.PageUp) then
+            missionData.extraMin = missionData.extraMin + 0.5
+            print("Extra Min " .. missionData.extraMin)
+        end
+        if isKeyReleased(keys.PageDown) then
+            missionData.extraMin = missionData.extraMin - 0.5
+            if missionData.extraMin < 0.0 then
+                missionData.extraMin = 0.0
+            end
+            print("Extra Min " .. missionData.extraMin)
+        end
+    end
 end
 
 

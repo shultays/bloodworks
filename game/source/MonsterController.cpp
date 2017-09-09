@@ -190,11 +190,6 @@ bool MonsterController::runForNode(const Vec2& begin, const Vec2& ray, float rad
 	{
 		return true;
 	}
-	bool renderDebug = input.isKeyDown(key_f);
-	if (renderDebug)
-	{
-		grid.drawDebug(index, 0xFF0000FF);
-	}
 
 	const cVector<Monster*>& node = grid.getNodeAtIndex(index);
 	for (int m = 0; m < node.size(); m++)
@@ -238,8 +233,6 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 			}
 		}
 	}
-
-	bool renderDebug = input.isKeyDown(key_f);
 
 	int searchId = bloodworks->getUniqueId();
 
@@ -297,10 +290,6 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 			}
 
 			Vec2 nextPos = grid.getStartPos() + grid.getNodeSize() * (current + posShift).toVec();
-			if (renderDebug)
-			{
-				debugRenderer.addCircle(currentPos, 3.0f, 0.0f, 0xFF00FFFF);
-			}
 			if (hasRadius)
 			{
 				Vec2 curPos = grid.getStartPos() + grid.getNodeSize() * (current).toVec();
@@ -468,18 +457,9 @@ bool MonsterController::runForRayWithoutCollision(const Vec2& begin, const Vec2&
 				}
 			}
 		}
-		if (renderDebug)
-		{
-			Vec2 perp = ray.normalized().sideVec();
-			//debugRenderer.addLine(begin, begin + ray, 0.0f, 0xFFFF0000);
-			debugRenderer.addCircle(begin, radius, 0.0f, 0xFFFF0000);
-			debugRenderer.addCircle(begin + ray, radius, 0.0f, 0xFFFF0000);
-			debugRenderer.addLine(begin + perp * radius, begin + perp * radius + ray, 0.0f, 0xFFFF0000);
-			debugRenderer.addLine(begin - perp * radius, begin - perp * radius + ray, 0.0f, 0xFFFF0000);
-		}
 		if (maxTry <= 0)
 		{
-			out << "Reached maxtry on ray cast, error?\n";
+			out << "Reached max try on ray cast, error?\n";
 		}
 	}
 	return false;

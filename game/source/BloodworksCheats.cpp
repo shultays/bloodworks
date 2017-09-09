@@ -34,7 +34,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	moveMonsters = true;
 	slowdownBuff = bloodworks->getGlobalUniqueId();
 
-	hasCheats = bloodworks->getConfig()->getBool("cheats", true);
+	hasCheats = bloodworks->getConfig()->getBool("cheats", Coral::isDebuggerPresent());
 
 #ifdef DEBUG
 	showFPS = true;
@@ -45,6 +45,11 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 
 BloodworksCheats::~BloodworksCheats()
 {
+}
+
+bool BloodworksCheats::cheatsEnabled()
+{
+	return hasCheats;
 }
 
 void BloodworksCheats::onTick()
@@ -190,6 +195,11 @@ void BloodworksCheats::onTick()
 			} while (v.distanceSquared(bloodworks->getPlayer()->getPosition()) < 20.0f);
 			dropController->spawnDrop(v);
 		}
+	}
+
+	if (input.isKeyPressed(key_v))
+	{
+		dropController->clearButHighlighted();
 	}
 
 	if (input.isKeyPressed(key_7))

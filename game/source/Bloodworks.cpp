@@ -293,7 +293,7 @@ void Bloodworks::init()
 		}
 	}
 	initImplementation();
-
+	updateZoom();
 	static bool noSleep = getConfig()->getBool("no_sleep", false, "Disables CPU going idle, set to 1 if there are performance problems (will make your CPU scream in pain)");
 	if (noSleep == true)
 	{
@@ -414,6 +414,7 @@ bool Bloodworks::isLevelUpPopupVisible() const
 
 void Bloodworks::windowResized(int width, int height)
 {
+	updateZoom();
 	cGame::windowResized(width, height);
 	mainMenu->resize();
 	player->resize();
@@ -685,7 +686,7 @@ bool Bloodworks::isOptionsVisible() const
 void Bloodworks::onLevelUp()
 {
 	levelUpPopup->addLevel();
-	if (config->getAutoOpenLevelupPopup())
+	if (config->getAutoOpenLevelupPopup() && levelUpPopup->getWaitingLevels() == 1)
 	{
 		levelUpPopup->show();
 	}
@@ -919,6 +920,22 @@ void Bloodworks::showCustomGames()
 	customGameWindow->show();
 }
 
+void Bloodworks::updateZoom()
+{
+	float w = max(getScreenDimensions().x / 1920.0f, getScreenDimensions().y / 1080.0f);
+
+	w = 0.5f + 0.5f * w;
+	cameraZoom = 0.8f / w;
+}
+
+bool Bloodworks::hasCheats()
+{
+#ifdef HAS_BLOODWORKS_CHEATS
+	return bloodworksCheats || bloodworksCheats->cheatsEnabled();
+#endif
+	return false;
+}
+
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
 {
 	if (j.count("type") == 0)
@@ -1124,14 +1141,7 @@ void Bloodworks::tick()
 	{
 		coral.setFullScreen(!coral.isFullScreen());
 		config->setFullScreen(coral.isFullScreen());
-		if (coral.isFullScreen())
-		{
-			cameraZoom = 0.8f;
-		}
-		else
-		{
-			cameraZoom = 0.8f;
-		}
+		updateZoom();
 	}
 
 	config->check();
