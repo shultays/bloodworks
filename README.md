@@ -31,7 +31,7 @@ Enjoy!
 
 <img src="https://raw.githubusercontent.com/shultays/bloodworks/master/itch.io/0.gif" width="350">
 
-Check "progress" folder for more!
+<a href="https://www.youtube.com/watch?v=Fjxbh8k15z8">Gameplay video (YouTube)</>
 
 ## Documentation
 
