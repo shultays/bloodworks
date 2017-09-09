@@ -8,9 +8,7 @@ Bloodworks is still in early development. Once it is finished, it will be comple
 
 ## Sneak peak
 
-<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/game2.gif" width="600">
-
-<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/game.gif" width="600">
+<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/itchio/0.gif" width="600">
 
 Check "progress" folder for more!
 
