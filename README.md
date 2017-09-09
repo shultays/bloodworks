@@ -46,7 +46,7 @@ Documentation for scripting part will be here.
 - json reader of nlohmann (https://github.com/nlohmann/json)
 - sol2 for C++ & Lua interaction (https://github.com/ThePhD/sol2/)
 - soloud for sounds (http://sol.gfxile.net/soloud/)
-- Art is mostly from http://opengameart.org/. Check "game/thanks.txt" for more information.
+- Art is mostly from http://opengameart.org/. Check credits for more information.
 
 ## License
 
