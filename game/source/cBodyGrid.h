@@ -458,8 +458,6 @@ public:
 
 	bool runForRay(const Vec2& begin, const Vec2& ray, float radius, int ignoreFlags, std::function<bool(int)>& func)
 	{
-		bool renderDebug = input.isKeyDown(key_g);
-
 		if (radius * radius > nodeSize.lengthSquared())
 		{
 			for (int i=0; i<bodies.size(); i++)
@@ -513,10 +511,6 @@ public:
 				}
 
 				Vec2 nextPos = gridStart + nodeSize * (current + posShift).toVec();
-				if (renderDebug)
-				{
-					debugRenderer.addCircle(currentPos, 3.0f, 0.0f, 0xFF00FFFF);
-				}
 				if (hasRadius)
 				{
 					Vec2 curPos = gridStart + nodeSize * (current).toVec();
@@ -687,16 +681,7 @@ public:
 
 			if (maxTry <= 0)
 			{
-				out << "Reached maxtry on ray cast, error?\n";
-			}
-			if (renderDebug)
-			{
-				Vec2 perp = ray.normalized().sideVec();
-				//debugRenderer.addLine(begin, begin + ray, 0.0f, 0xFFFF0000);
-				debugRenderer.addCircle(begin, radius, 0.0f, 0xFFFF0000);
-				debugRenderer.addCircle(begin + ray, radius, 0.0f, 0xFFFF0000);
-				debugRenderer.addLine(begin + perp * radius, begin + perp * radius + ray, 0.0f, 0xFFFF0000);
-				debugRenderer.addLine(begin - perp * radius, begin - perp * radius + ray, 0.0f, 0xFFFF0000);
+				out << "Reached max try on ray cast, error?\n";
 			}
 		}
 		return false;

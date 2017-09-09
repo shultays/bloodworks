@@ -1204,6 +1204,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		);
 
 
+	lua.set_function("hasCheats",
+		[&]()
+	{
+		return bloodworks->hasCheats();
+	});
+
 	lua.set_function("addCircleCollider",
 		[&](const Vec2& pos, float radius)
 	{

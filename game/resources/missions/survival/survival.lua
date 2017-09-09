@@ -104,26 +104,28 @@ function Survival.onDebugTick()
 
     debugTick(missionData)
     
-    if isKeyReleased(keys.Delete) then    
-        local count = getMonsterCount()
-        
-        for i = 0, count - 1 do
-            local monster = getMonsterAtIndex(i)
-            monster.experienceMultiplier = 0.0
-            monster.scoreMultiplier = 0.0
-            monster:doDamage(10000, Vec2.randDir())
+    if hasCheats() then
+        if isKeyReleased(keys.Delete) then    
+            local count = getMonsterCount()
+            
+            for i = 0, count - 1 do
+                local monster = getMonsterAtIndex(i)
+                monster.experienceMultiplier = 0.0
+                monster.scoreMultiplier = 0.0
+                monster:doDamage(10000, Vec2.randDir())
+            end
         end
-    end
-    
-    if isKeyReleased(keys.Insert) then
-        local t = missionData.maxMonster * 0.2
-        t = math.min(missionData.maxMonster - getMonsterCount(), t)
-        if t > 1 then
-            for i = 1, t - 10 do
-                local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
-                local monster = addRandomMonster()
-                monster.position = pos
-                monster.moveAngle =  math.random() * math.pi * 2.0
+        
+        if isKeyReleased(keys.Insert) then
+            local t = missionData.maxMonster * 0.2
+            t = math.min(missionData.maxMonster - getMonsterCount(), t)
+            if t > 1 then
+                for i = 1, t - 10 do
+                    local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
+                    local monster = addRandomMonster()
+                    monster.position = pos
+                    monster.moveAngle =  math.random() * math.pi * 2.0
+                end
             end
         end
     end

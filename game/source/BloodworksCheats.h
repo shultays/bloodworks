@@ -27,6 +27,7 @@ public:
 	void onLoadMission();
 	void onMonsterPreTick(Monster* monster);
 	void onInit();
+	bool cheatsEnabled();
 };
 
 #endif
