@@ -29,7 +29,7 @@ Enjoy!
 
 ## Sneak peak
 
-<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/itch.io/0.gif" width="600">
+<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/itch.io/0.gif" width="350">
 
 Check "progress" folder for more!
 
