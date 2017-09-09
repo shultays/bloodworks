@@ -252,10 +252,6 @@ function NarSie.onTick(monster)
         data.currentAttack(monster, false)
     end
     
-    
-    if isKeyPressed(keys.F) then
-        loadScript("resources/missions/boss/narsie/narsie.lua")
-    end
 end
 
 function NarSie.resetTarget(monster)

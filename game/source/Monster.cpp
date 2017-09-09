@@ -60,6 +60,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setTextAlignment(TextAlignment::center);
+	healthRenderable->setVisible(false);
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
 
 	spriteAngle = -100000.0f;
@@ -134,7 +135,7 @@ void Monster::tick()
 	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
-	healthRenderable->setVisible(input.isKeyDown(key_space));
+	//healthRenderable->setVisible(input.isKeyDown(key_space));
 	cVector<int> toTrigger;
 	for (int i = timers.size() - 1; i >= 0; i--)
 	{

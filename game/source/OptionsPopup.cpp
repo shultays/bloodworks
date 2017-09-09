@@ -485,6 +485,7 @@ void OptionsPopup::tick()
 		{
 			config->setFullScreen(fullScreen->isChecked());
 			coral.setFullScreen(fullScreen->isChecked());
+			bloodworks->updateZoom();
 		}
 
 		if (vsync->isChanged())

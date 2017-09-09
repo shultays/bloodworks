@@ -15,7 +15,6 @@ http://bloodworks.enginmercan.com/feedback.html
 
 Engin Mercan
 
-
 ----------------------------------------------
 
 Version Information:
@@ -24,7 +23,7 @@ Version Information:
 
 Known issues:
 
-There might be a problem with explosion particles, but I don't know If I was able to fix them or not. You can disable explosion particles by editing userconfig.txt if you get a performance drop off once things blow up.
+There might be a problem with explosion particles, but I don't know If I was able to fix them or not. You can disable explosion particles by editing config.txt if you get a performance drop off once things blow up.
 
 My shader-fu is not so strong, the shaders may not work on all machines and likely to crash the game if they don't. I fixed some non-standard things by there are still some deprecated stuff I should fix.
 
@@ -34,7 +33,7 @@ If you don't want to send a report, please send me an email or open a ticket in 
 
 Cheats:
 
-There are some cheats I implemented to make testing stuff easier. You can enable them by setting cheats to 1 in userconfig.txt (which is created once you run the game.). Here are some of the cheats that you can use while playing the game, some of them are more cheaty, some of them are for debugging:
+There are some cheats I implemented to make testing stuff easier. You can enable them by setting cheats to 1 in config.txt (which is created once you run the game.). Here are some of the cheats that you can use while playing the game, some of them are more cheaty, some of them are for debugging:
 
 n               toggle FPS
 numpad +-       Increase/Decrease volume

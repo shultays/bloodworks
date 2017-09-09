@@ -549,7 +549,7 @@ void Player::tick()
 
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
-	healthRenderable->setVisible(input.isKeyDown(key_space));
+	//healthRenderable->setVisible(input.isKeyDown(key_space));
 	gunPos = pos + aimDir * 24.0f - aimDir.sideVec() * 6.0f;
 
 	Mat3 mat = Mat3::identity();
@@ -787,7 +787,7 @@ void Player::setVisible(bool visible)
 	crosshair->setVisible(visible);
 	renderable->setVisible(visible);
 	spread->setVisible(visible);
-	healthRenderable->setVisible(visible);
+	healthRenderable->setVisible(false);
 	scoreText->setVisible(visible);
 
 	healthBarBG->setVisible(visible);
