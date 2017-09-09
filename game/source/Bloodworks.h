@@ -290,4 +290,6 @@ public:
 	void showCredits();
 	void setMainMenuVisible();
 	void showCustomGames();
+	void updateZoom();
+	bool hasCheats();
 };

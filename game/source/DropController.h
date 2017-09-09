@@ -43,4 +43,5 @@ public:
 	void reset();
 	void onMonsterDied(Monster* monster, float dropChance);
 	float getLastSpawnTime() const;
+	void clearButHighlighted();
 };

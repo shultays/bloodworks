@@ -27,7 +27,7 @@ function BlackHole.onTick(gun)
     
     if data.started then
         data.shooting = data.shooting + dt
-        if data.shooting > duration or isKeyDown(keys.F) then
+        if data.shooting > duration then
             data.started = false
             data.postprocess:setEnabled(false)
             removeCollider(data.bodyIndex)
