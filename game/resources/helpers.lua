@@ -38,12 +38,12 @@ CollisionFlags = {
     NoBulletCollision = 4,
 }
 
-function printTable(myTable)
+function logTable(myTable)
     if myTable == nil then
-        print("nil")
+        log("nil")
     else 
         for k, v in pairs( myTable ) do
-           print(k, v)
+           log(k, v)
         end
     end
  end
@@ -65,10 +65,12 @@ function dump(t,i)
         n=n+1 s[n]=k
     end
     for k,v in ipairs(s) do
-        print(i,v)
+        log(v .. " " .. tostring(t[v]))
         v=t[v]
         if type(v)=="table" and not seen[v] then
             dump(v,i.."\t")
+        --elseif type(v)=="userdata" and not seen[v] then
+        --    dump(getmetatable(v),i.."\t")
         end
     end
 end
