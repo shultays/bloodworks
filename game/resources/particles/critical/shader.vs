@@ -1,4 +1,4 @@
-#version 150
+#version 110
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
@@ -34,7 +34,7 @@ void main(void)
 	vec3 finalColor = color;
 	
 	
-	vColor = vec4(finalColor, 0.2 - dt * 2  + sin(dt * 12) * 1.0);
+	vColor = vec4(finalColor, 0.2 - dt * 2.0  + sin(dt * 12.0) * 1.0);
 	
 	vVertexUV = uv * 0.25 + uvStart;
 }

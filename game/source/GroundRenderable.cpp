@@ -160,6 +160,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	bloodworks->lastShader = nullptr;
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 	glGenerateMipmap(GL_TEXTURE_2D);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 GroundRenderable::~GroundRenderable()

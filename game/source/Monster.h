@@ -17,6 +17,7 @@ class Monster
 {
 	friend class MonsterController;
 	friend class BloodworksLuaWorld;
+	friend class BloodworksCheats;
 	friend class Bloodworks;
 
 	cAnimatedTexturedQuadRenderable *renderable;

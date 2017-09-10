@@ -1,4 +1,4 @@
-#version 150
+#version 110
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;
@@ -37,7 +37,7 @@ void main(void)
 	vec3 finalColor = vec3(color);
 	vColor.rgb = finalColor;
 	
-	if (dt < 0.2f)
+	if (dt < 0.2)
 	{
 		vColor.a = dt / 0.2;
 	}
@@ -47,7 +47,7 @@ void main(void)
 	}
 	else
 	{
-		vColor.a = 1.0f;
+		vColor.a = 1.0;
 	}
 	vColor.a = max(0.0, vColor.a * 0.3);
 	

@@ -1,11 +1,11 @@
 
-function Sprint.init()
+function sprint.init()
     player.data.sprintOldHp = player.hitPoints
     player.data.sprinting = false
 end
 
 
-function Sprint.onTick()
+function sprint.onTick()
     if player.data.sprintOldHp > player.hitPoints and player.hitPoints < 40 then
         local id = player.maxSpeed:addBuff(1.5)
         player.maxSpeed:getBuffInfo(id):setBuffDuration(0.8)

@@ -1,4 +1,4 @@
-#version 150
+#version 110
 uniform sampler2D uTexture0;
 uniform float width1;
 uniform float width2;
@@ -16,10 +16,10 @@ void main(void)
 {
 	float t = maxRange - curLength;
 	vec4 color = vColor;
-	if (t < 50.0f)
+	if (t < 50.0)
 	{
-		color.a = ( t + 20.0) / 70.0f;
+		color.a = ( t + 20.0) / 70.0;
 	}
 	gl_FragColor = texture2D(uTexture0, vVertexUV) * color;
-	gl_FragColor.a *= abs(sin((curLength - time * 200)/ 10.0)) * 0.4 + 0.6;
+	gl_FragColor.a *= abs(sin((curLength - time * 200.0)/ 10.0)) * 0.4 + 0.6;
 }

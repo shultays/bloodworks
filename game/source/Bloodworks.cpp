@@ -80,7 +80,7 @@ void Bloodworks::initImplementation()
 		config = new BloodworksConfig();
 	}
 
-	int tempSize = getConfig()->getInt("map_size", 3000, "Size of the map, reduce if there are crashes");
+	int tempSize = getConfig()->getInt("map_size", 2500, "Size of the map, reduce if there are crashes");
 	if (tempSize > 10000)
 	{
 		tempSize = 10000;

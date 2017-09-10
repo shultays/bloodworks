@@ -58,6 +58,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		sol::meta_function::division, [](const Vec2& a, float b) { return a / b; },
 		sol::meta_function::unary_minus, [](const Vec2& a) { return -a; },
 
+		"tostr", [](const Vec2& a) -> std::string {
+		std::stringstream s;
+		s << a.x << " " << a.y;
+		return s.str();
+		},
+
 		"fromAngle", [](float angle) { return Vec2::fromAngle(angle); },
 
 		"randDir", []() { return Vec2::fromAngle(randFloat(pi_2)); },
@@ -460,6 +466,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](int key) -> bool
 	{
 		return input.isKeyDown(key);
+	});
+
+	lua.set_function("log",
+		[&](const std::string& str)
+	{
+		out << str << "\n";
 	});
 
 	lua.set_function("angleDiff",
