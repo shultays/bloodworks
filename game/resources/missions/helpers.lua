@@ -40,7 +40,7 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
         end
 
         if m == "" then
-            print("error not picked mon type")
+            log("error not picked mon type")
             m = "Alien"
         end
     end
@@ -55,7 +55,7 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     monster.data.cannotBecomeBoss = cannotBecomeBoss
     monster.data.cannotShootBullets = cannotShootBullets
     
-    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 16.0 - clamp(min/7) * 10 < missionTime then
+    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 15.0 - clamp(min/7) * 6 < missionTime then
         missionData.lastBossSpawn = missionTime
         monster.data.isBoss = true
         monster.scriptTable.makeBoss(monster, min)
@@ -90,12 +90,13 @@ function makeBossDefault(monster)
     monster.data.maxDamage = math.floor(monster.data.maxDamage * 1.1)
     
     monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.05
-    monster.data.randomMove = false
+    monster.data.randomMove = monster.data.randomMove or math.random() > 0.3
     monster.data.playerSeeRange = monster.data.playerSeeRange * 1.5
     
     monster.experienceMultiplier = 5.0 + math.random() * 2.0
     monster.scoreMultiplier = 5.0 + math.random() * 2.0
     monster:modifyDrawLevel(3)
+    
     local t = math.random(11)
     --t = 1
     
@@ -121,6 +122,7 @@ function makeBossDefault(monster)
         monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.85
         monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
+        monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
         monster.knockbackResistance:addBuff(0.4)
     elseif t == 5 then -- shoots bullets (fast)
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
@@ -162,8 +164,17 @@ function makeBossDefault(monster)
                     newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
                     newMonster.data.hitPoint = newMonster.hitPoint
                     newMonster.moveAngle = monster.moveAngle + math.pi * (i - 0.5)
-                    
+                    newMonster.data.onKillFuncSplit = monster.data.onKillFuncSplit
                     addCustomOnKill(newMonster, monster.data.onKillFuncSplit)
+                    
+                    newMonster.data.invulTime = time + 0.3
+                    
+                    addCustomOnHit(newMonster, function(monster, damage, args)
+                        if time < monster.data.invulTime then
+                            return 0
+                        end
+                        return damage
+                    end)
                 end
             end
         end
@@ -199,6 +210,14 @@ function makeBossDefault(monster)
                     
                 newMonster.data.randomMove = true
                 newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
+                
+                newMonster.data.invulTime = time + 0.3
+                addCustomOnHit(newMonster, function(monster, damage, args)
+                    if time < monster.data.invulTime then
+                        return 0
+                    end
+                    return damage
+                end)
             end
         end)
     elseif t == 8 then -- angel
@@ -208,8 +227,11 @@ function makeBossDefault(monster)
         monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
         monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
             
+        monster.data.minDamage = math.floor(monster.data.minDamage * 0.5)
+        monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.5)
+        
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
-        monster.data.hitInterval = monster.data.hitInterval * 0.2
+        monster.data.hitInterval = monster.data.hitInterval * 0.3
         monster.data.targetShift = Vec2.new(0.0, 0.0)
         monster.knockbackResistance:addBuff(0.0)
         addCustomOnTick(monster, function (monster)
@@ -471,14 +493,14 @@ function debugTick(missionData)
     if hasCheats() then
         if isKeyReleased(keys.PageUp) then
             missionData.extraMin = missionData.extraMin + 0.5
-            print("Extra Min " .. missionData.extraMin)
+            log("Extra Min " .. missionData.extraMin)
         end
         if isKeyReleased(keys.PageDown) then
             missionData.extraMin = missionData.extraMin - 0.5
             if missionData.extraMin < 0.0 then
                 missionData.extraMin = 0.0
             end
-            print("Extra Min " .. missionData.extraMin)
+            log("Extra Min " .. missionData.extraMin)
         end
     end
 end

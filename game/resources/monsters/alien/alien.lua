@@ -14,7 +14,7 @@ function Alien.init(monster)
     
     data.maxMoveSpeed = 95.0
     data.maxRotateSpeed = 0.03
-    data.playerSeeRange = 200.0
+    data.playerSeeRange = 300.0
     
     StunController.init(monster)
     MonsterGroupHelper.init(monster)
@@ -38,7 +38,9 @@ function Alien.buffStats(monster, min)
     MonsterMeleeHelper.buffStats(monster, min)
     BulletShooter.buffStats(monster, min)
     
-    monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
+    if monster.data.randomMove ~= false then
+        monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
+    end
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
     monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
@@ -63,7 +65,7 @@ function Alien.onTick(monster)
     if data.tickWaitTime < 0.0 then
         data.tickWaitTime = 0.2 + math.random() * 0.2 + lerp(0.0, 1.2, clamp((distanceToPlayer - 100) / 1500))
         
-        local t = distanceToPlayer / 200.0
+        local t = clamp(distanceToPlayer / 200.0)
         local playerPosShift = player.position + data.targetShift * t
         local posToMove = playerPosShift
         
@@ -73,17 +75,19 @@ function Alien.onTick(monster)
                 posToMove = getRandomMapPosition()
                 data.randomPos = posToMove
             end
-        end
+            
         
-        
-        if distanceToPlayer < data.playerSeeRange and player.isDead == false then
-            local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
-            if c < 0.0 then
-                c = 0.0
+            if distanceToPlayer < data.playerSeeRange and player.isDead == false then
+                local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
+                if c < 0.0 then
+                    c = 0.0
+                end
+                posToMove = posToMove * c + player.position * (1.0 - c) 
             end
-            posToMove = posToMove * c + player.position * (1.0 - c) 
+            
         end
         
+        data.posToMove = posToMove
         local oldPosToMove = posToMove
         posToMove = monster:getPathPos(posToMove)
         

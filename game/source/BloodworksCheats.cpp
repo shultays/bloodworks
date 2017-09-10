@@ -238,6 +238,30 @@ void BloodworksCheats::onTick()
 		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
 	}
 
+	{
+		static bool zommed = false;
+		static float z = 1.0f;
+		if (input.isKeyPressed(key_b))
+		{
+			z = bloodworks->getCameraZoom();
+			zommed = !zommed;
+			if (zommed == false)
+			{
+				bloodworks->updateZoom();
+			}
+		}
+
+		if (input.isKeyDown(key_b) && zommed)
+		{
+			z += timer.getDt();
+			if (z > 4.0f)
+			{
+				z = 4.0f;
+			}
+			bloodworks->setCameraZoom(z);
+		}
+	}
+
 	if (input.isKeyDown(key_f1))
 	{
 		bulletController->drawDebug();
@@ -316,6 +340,27 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 		if (input.isKeyDown(key_f2) || moveMonsters == false || monster->getDebug() != -1)
 		{
 			debugRenderer.addCircle(monster->getPosition(), monster->getRadius(), 0.0f, monster->getDebug() == -1 ? 0xFFFFFF00 : 0xFF00FFFF);
+		}
+
+
+		if (moveMonsters == false)
+		{
+			if (monster->data["posToMove"])
+			{
+				Vec2 v = monster->data["posToMove"];
+				debugRenderer.addCircle(v, 10.0f);
+			}
+		}
+
+		if (monster->getDebug() == -1)
+		{
+			if (input.isKeyDown(key_space) && input.isKeyPressed(key_f1))
+			{
+				out << "----------------------------\n";
+				out << "dumping data for monster" << monster->id << "\n";
+				lua["dumpTable"](monster->data);
+				out << "----------------------------\n";
+			}
 		}
 	}
 }
@@ -399,6 +444,7 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 		{
 			doBreak();
 		}
+
 	}
 }
 

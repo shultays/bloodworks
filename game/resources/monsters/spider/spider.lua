@@ -32,7 +32,7 @@ function Spider.init(monster)
     
     data.maxMoveSpeed = 150.0
     data.maxRotateSpeed = 0.04
-    data.playerSeeRange = 150.0
+    data.playerSeeRange = 250.0
     
     data.tickWaitTime = 0.0
     
@@ -85,16 +85,17 @@ function Spider.onTick(monster)
                 posToMove = getRandomMapPosition()
                 data.randomPos = posToMove
             end
-        end
-        
-        
-        if distanceToPlayer < data.playerSeeRange and player.isDead == false then
-            local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
-            if c < 0.0 then
-                c = 0.0
+                
+            if distanceToPlayer < data.playerSeeRange and player.isDead == false then
+                local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
+                if c < 0.0 then
+                    c = 0.0
+                end
+                posToMove = posToMove * c + player.position * (1.0 - c)
             end
-            posToMove = posToMove * c + player.position * (1.0 - c)
+            
         end
+        
         
         posToMove = monster:getPathPos(posToMove)
         
@@ -103,6 +104,7 @@ function Spider.onTick(monster)
         angleToMovePos = diffToMovePos:getAngle()
         
         data.targetAngleToMovePos = angleToMovePos
+        data.posToMove = posToMove
     end
 
     MonsterMeleeHelper.onTick(monster)
