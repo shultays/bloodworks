@@ -1,4 +1,4 @@
-#version 150
+#version 110
 attribute float yShift;
 attribute float widthMult1;
 attribute float widthMult2;
@@ -31,7 +31,7 @@ void main(void)
 	vec3 viewPos = uViewMatrix * worldPos;
 	gl_Position = vec4(viewPos.x, viewPos.y, 0.0, 1.0);
 
-	vColor = vec4(1.0f);
+	vColor = vec4(1.0);
 	vVertexUV = vec2(xUV, yShift + 0.5);
 	
 	xPos = xUV;
