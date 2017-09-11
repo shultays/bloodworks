@@ -1,4 +1,4 @@
-#version 110
+#version 150
 attribute vec2 aVertexUV;
 
 uniform sampler2D uTexture0;

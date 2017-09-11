@@ -1,4 +1,4 @@
-#version 110
+#version 150
 attribute vec2 aVertexPosition;
 attribute vec2 aVertexUV;
 attribute vec4 aVertexColor;
