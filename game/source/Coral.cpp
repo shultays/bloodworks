@@ -216,6 +216,12 @@ void Coral::initFrameBuffers()
 
 void Coral::init()
 {
+	const char* str;
+	printf("Vendor: %s\n", (str = (const char*)glGetString(GL_VENDOR)) ? str : "");
+	printf("Renderer: %s\n", (str = (const char*)glGetString(GL_RENDERER)) ? str : "");
+	printf("OpenGL version: %s\n", (str = (const char*)glGetString(GL_VERSION)) ? str : "");
+	printf("GLSL : %s\n", (str = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)) ? str : "");
+
 	slaveController = new cSlaveController();
 	slaveController->startSlaves(3);
 

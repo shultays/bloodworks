@@ -1,4 +1,4 @@
-#version 110
+#version 150
 attribute vec2 pos;
 attribute vec2 uv;
 attribute float time;

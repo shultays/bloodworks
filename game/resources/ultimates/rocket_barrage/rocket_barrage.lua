@@ -27,7 +27,7 @@ function RocketBarrage.onTick(gun)
         while data.shootDt > 0.0 do
             data.shootDt = data.shootDt - 1
             local bullet = gun:addBullet()
-            bullet.damage = math.floor(110 + math.random() * 40)
+            bullet.damage = math.floor(150 + math.random() * 40)
             bullet.moveSpeed = 400
             bullet.lifeTime = 0.2 + math.random() * 0.2
             bullet.moveSpeed = 750 + math.random() * 200.0

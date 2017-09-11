@@ -348,7 +348,7 @@ function NarSie.explosions(monster, init)
     if explosionsData.timeToShoot < 0.0 and explosionsData.count > 0 then
         explosionsData.timeToShoot = explosionsData.timeToShoot + explosionsData.interval
     
-        addExplosion(monster.position, 500.0, 110.0 * explosionsData.shootSpeed, 30 - explosionsData.count * 3, 40 - explosionsData.count * 3, 0.0, true)
+        addExplosion(monster.position, 500.0, 150.0 * explosionsData.shootSpeed, 30 - explosionsData.count * 3, 40 - explosionsData.count * 3, 0.0, true)
         
         playSound({path = missionPath .. "narsie/explosion07.ogg", position = monster.position, volume = 1.5})
         explosionsData.count = explosionsData.count - 1
