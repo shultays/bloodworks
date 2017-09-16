@@ -12,9 +12,9 @@ function Alien.init(monster)
     
     monster:playAnimation("walk", math.random())
     
-    data.maxMoveSpeed = 95.0
+    data.maxMoveSpeed = 115.0
     data.maxRotateSpeed = 0.03
-    data.playerSeeRange = 300.0
+    data.playerSeeRange = 100.0
     
     StunController.init(monster)
     MonsterGroupHelper.init(monster)
@@ -39,7 +39,7 @@ function Alien.buffStats(monster, min)
     BulletShooter.buffStats(monster, min)
     
     if monster.data.randomMove ~= false then
-        monster.data.randomMove = (math.random() > (0.25 + clamp(min * 0.2) * 0.35))
+        monster.data.randomMove = (math.random() > (0.15 + clamp(min * 0.2) * 0.15))
     end
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
     monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)

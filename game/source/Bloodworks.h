@@ -292,4 +292,6 @@ public:
 	void showCustomGames();
 	void updateZoom();
 	bool hasCheats();
+	void HideGui(bool bHidden);
+	bool IsGUIHidden() const;
 };

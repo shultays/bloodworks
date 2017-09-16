@@ -94,7 +94,7 @@ void cGame::renderInternal()
 	cRenderable *cur = first->next;
 	while(cur)
 	{
-		if (cur->visible)
+		if (cur->visible && cur->getLevel() < maxRenderLevel)
 		{
 			cur->render();
 		}
@@ -133,13 +133,17 @@ void cGame::renderInternal()
 		}
 	}
 
-	debugRenderer.render();
+	if (maxRenderLevel == INT_MAX)
+	{
+		debugRenderer.render();
+	}
 
 	render();
 }
 
 cGame::cGame()
 {
+	maxRenderLevel = INT_MAX;
 	cameraPos.setZero();
 	cameraZoom = 1.0f;
 	cameraAngle = 0.0f;
