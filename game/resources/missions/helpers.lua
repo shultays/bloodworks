@@ -124,6 +124,7 @@ function makeBossDefault(monster)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
         monster.knockbackResistance:addBuff(0.4)
+        monster.hitPoint = math.floor(monster.hitPoint * 0.7)
     elseif t == 5 then -- shoots bullets (fast)
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
         monster.data.shootsBullets = true
@@ -222,7 +223,7 @@ function makeBossDefault(monster)
         end)
     elseif t == 8 then -- angel
         monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 3.5
+        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 2.5
         monster.data.originalSpeed = monster.data.maxMoveSpeed
         monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
         monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
@@ -231,7 +232,7 @@ function makeBossDefault(monster)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.5)
         
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
-        monster.data.hitInterval = monster.data.hitInterval * 0.3
+        monster.data.hitInterval = monster.data.hitInterval * 0.4
         monster.data.targetShift = Vec2.new(0.0, 0.0)
         monster.knockbackResistance:addBuff(0.0)
         addCustomOnTick(monster, function (monster)
@@ -241,7 +242,7 @@ function makeBossDefault(monster)
             local a = fixAngle(angleToPlayer - player.aimAngle)
             local angle = 0.2
             if distanceToPlayer < 100 then
-                angle = angle + 0.2 * (1.0 - distanceToPlayer / 100.0)
+                angle = angle + 0.3 * (1.0 - distanceToPlayer / 100.0)
             end
             
             if math.abs(a) > math.pi - angle then
