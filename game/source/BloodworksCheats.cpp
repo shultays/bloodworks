@@ -33,6 +33,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	tickCount = renderCount = 0;
 	moveMonsters = true;
 	slowdownBuff = bloodworks->getGlobalUniqueId();
+	stopBuff = bloodworks->getGlobalUniqueId();
 
 	hasCheats = bloodworks->getConfig()->getBool("cheats", Coral::isDebuggerPresent());
 
@@ -79,6 +80,14 @@ void BloodworksCheats::onTick()
 	{
 		return;
 	}
+
+	if (input.isKeyPressed(key_f8))
+	{
+		static bool bHidden = false;
+		bHidden = !bHidden;
+		bloodworks->HideGui(bHidden);
+	}
+
 	if (bloodworks->isMissionLoaded() == false)
 	{
 		return;
@@ -229,13 +238,32 @@ void BloodworksCheats::onTick()
 		bloodworks->getBloodRenderable()->reset();
 	}
 
+
 	if (input.isKeyPressed(key_z))
 	{
-		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().addBuff(slowdownBuff, 0.1f, BuffFloat::multiply_buff);
+		static bool slowdown = false;
+		slowdown = !slowdown;
+		if (slowdown)
+		{
+			bloodworks->getMissionController()->getGameSpeedMultiplierBuff().addBuff(slowdownBuff, 0.1f, BuffFloat::multiply_buff);
+		}
+		else
+		{
+			bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
+		}
 	}
 	if (input.isKeyPressed(key_x))
 	{
-		bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
+		static bool stop = false;
+		stop = !stop;
+		if (stop)
+		{
+			bloodworks->getMissionController()->getGameSpeedMultiplierBuff().addBuff(slowdownBuff, 0.0f, BuffFloat::multiply_buff);
+		}
+		else
+		{
+			bloodworks->getMissionController()->getGameSpeedMultiplierBuff().removeBuff(slowdownBuff);
+		}
 	}
 
 	{
@@ -349,6 +377,24 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 			{
 				Vec2 v = monster->data["posToMove"];
 				debugRenderer.addCircle(v, 10.0f);
+			}
+
+			bool showRange = false;
+			if (monster->data["randomMove"])
+			{
+				bool b = monster->data["randomMove"];
+				if (b == true)
+				{
+					showRange = true;
+				}
+			}
+			if (showRange)
+			{
+				if (monster->data["playerSeeRange"])
+				{
+					float t = monster->data["playerSeeRange"];
+					debugRenderer.addCircle(monster->position, t);
+				}
 			}
 		}
 
