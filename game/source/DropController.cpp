@@ -275,7 +275,7 @@ void DropController::clearButHighlighted()
 	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (auto& drop : drops)
 	{
-		if (drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f)
+		if (drop.pos.distanceSquared(crosshairPos) > 30.0f * 30.0f)
 		{
 			drop.time -= 50.0f;
 		}
