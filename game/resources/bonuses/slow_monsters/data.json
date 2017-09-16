@@ -3,5 +3,6 @@
   "name": "Slowdown Monsters",
   "iconFile" : "icon.png",
   "scriptFile" : "slow_monsters.lua",
-  "scriptName" : "SlowMonsters"
+  "scriptName" : "SlowMonsters", 
+  "spawnChance" : 1.2
 }

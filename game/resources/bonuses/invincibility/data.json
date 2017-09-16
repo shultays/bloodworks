@@ -4,5 +4,5 @@
   "iconFile" : "icon.png",
   "scriptFile" : "invincibility.lua",
   "scriptName" : "Invincibility", 
-  "spawnChance" : 1.2
+  "spawnChance" : 1.4
 }
