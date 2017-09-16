@@ -7,7 +7,7 @@
   "scriptName" : "PhoenixDive",
   
   "maxAmmo" : 6,
-  "reloadTime" : 30,
+  "reloadTime" : 15,
   
   "ultimate" : true,
   

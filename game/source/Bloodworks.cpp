@@ -936,6 +936,23 @@ bool Bloodworks::hasCheats()
 	return false;
 }
 
+void Bloodworks::HideGui(bool bHidden)
+{
+	if (bHidden)
+	{
+		maxRenderLevel = GUI - 100;
+	}
+	else
+	{
+		maxRenderLevel = INT_MAX;
+	}
+}
+
+bool Bloodworks::IsGUIHidden() const
+{
+	return maxRenderLevel != INT_MAX;
+}
+
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
 {
 	if (j.count("type") == 0)

@@ -102,7 +102,7 @@ void DropController::tick()
 	if (timer.getDt() > 0.0f)
 	{
 		float timeSinceLastDrop = timer.getTime() - lastRandomDropSpawn;
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 15.0f;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 12.0f;
 		float r = randFloat();
 		if (r < extraDropChance)
 		{
@@ -129,7 +129,7 @@ void DropController::tick()
 			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
-		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f);
+		drop.text->setVisible(drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f && bloodworks->IsGUIHidden() == false);
 
 		if (drop.pos.distanceSquared(playerPos) < 30.0f * 30.0f)
 		{
@@ -254,7 +254,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 			return;
 		}
 
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 30.0f;
+		float extraDropChance = (timeSinceLastDrop - 10.0f) / 20.0f;
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
@@ -271,9 +271,11 @@ float DropController::getLastSpawnTime() const
 
 void DropController::clearButHighlighted()
 {
+	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
+	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (auto& drop : drops)
 	{
-		if (drop.text->isVisible() == false)
+		if (drop.pos.distanceSquared(crosshairPos) < 30.0f * 30.0f)
 		{
 			drop.time -= 50.0f;
 		}

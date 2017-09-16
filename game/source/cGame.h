@@ -47,6 +47,7 @@ protected:
 	GLuint backBuffer;
 
 	int postProcessEndLevel;
+	int maxRenderLevel;
 
 	cPriorityVector<cPostProcess*> postProcesses;
 public:
