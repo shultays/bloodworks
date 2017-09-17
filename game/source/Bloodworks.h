@@ -52,6 +52,7 @@ class GameObjectTemplate;
 class CrashReportWindow;
 class CreditsWindow;
 class CustomGameWindow;
+class PlayerTemplate;
 
 class Bloodworks : public cGame
 {
@@ -113,6 +114,7 @@ class Bloodworks : public cGame
 
 	std::map<std::string, cAnimationTemplate*> animationTemplates;
 	std::map<std::string, GameObjectTemplate*> gameObjectTemplates;
+	std::map<std::string, PlayerTemplate*> playerTemplates;
 
 	void parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData = false);
 

@@ -12,6 +12,7 @@
   "maxAmmo" : 8,
   "reloadTime" : 2.0,
   
+  "showShootAnimation" : false,
   
   "firingSound" : {
     "path" : "throw.ogg",
