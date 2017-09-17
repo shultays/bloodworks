@@ -40,7 +40,6 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	float shift = 120.0f;
 
 	send = new cButton(bloodworks);
-	send->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 	cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, "resources/ui/slider_bg.png", "resources/default");
 	Vec2 bgSize = quad->getTexture()->getDimensions().toVec();
 	quad->setWorldMatrix(Mat3::scaleMatrix(bgSize));
@@ -54,12 +53,11 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	text->setTextAlignment(TextAlignment::center);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
 	send->addRenderable(text);
-	send->setHoverSpeed(4.0f);
+	send->setHoverSpeed(8.0f);
 
 	window->addRenderable(send);
 
 	cancel = new cButton(bloodworks);
-	cancel->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 	quad = new cTexturedQuadRenderable(bloodworks, "resources/ui/slider_bg.png", "resources/default");
 	bgSize = quad->getTexture()->getDimensions().toVec();
 	quad->setWorldMatrix(Mat3::scaleMatrix(bgSize));
@@ -67,7 +65,7 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	cancel->setDefaultMatrix(Vec2(shift, -150.0f), 1.0f, 0.0f);
 	cancel->setHoverMatrix(Vec2(shift, -150.0f), 1.1f, 0.0f);
 	cancel->setHitArea(-bgSize, bgSize);
-	cancel->setHoverSpeed(4.0f);
+	cancel->setHoverSpeed(8.0f);
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Cancel", 18.0f);
 	text->setWorldMatrix(Mat3::translationMatrix(0.0f, bgSize.h * 0.7f));
@@ -79,7 +77,7 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 
 
 	Vec2 p(55.0f, -110.0f);
-	remember = new cTickBox(bloodworks);
+	remember = new cTickBox(bloodworks, "");
 	remember->setWorldMatrix(Mat3::translationMatrix(p));
 	remember->setDefaultMatrix(p, Vec2(20.0f), 0.0f);
 	remember->setHoverMatrix(p, Vec2(20.0f), 0.0f);

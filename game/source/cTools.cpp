@@ -57,14 +57,26 @@ public:
 
 #endif
 
+void fixAngle(float& a)
+{
+	while (a > pi)
+	{
+		a -= pi_2;
+	}
+	while (a < -pi)
+	{
+		a += pi_2;
+	}
+}
+
 float angleDiff(float a, float b)
 {
 	float diff = a - b;
-	if (diff > pi)
+	while (diff > pi)
 	{
 		diff -= pi_2;
 	}
-	else if (diff < -pi)
+	while (diff < -pi)
 	{
 		diff += pi_2;
 	}
