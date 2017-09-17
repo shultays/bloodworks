@@ -7,6 +7,9 @@ function Spider.init(monster)
     
     monster.moveSpeed = 0
     monster.moveAngle = math.random() * math.pi * 2.0
+    
+    monster.pathCheckDistance = 300.0
+    
     data.targetAngle = monster.moveAngle - 0.4 + math.random() * 0.8
     data.moving = true
     data.lastHitTime = 0.0
@@ -30,9 +33,9 @@ function Spider.init(monster)
     data.minDamage = 10
     data.maxDamage = 16
     
-    data.maxMoveSpeed = 180.0
+    data.maxMoveSpeed = 195.0
     data.maxRotateSpeed = 0.04
-    data.playerSeeRange = 150.0
+    data.playerSeeRange = 250.0
     
     data.tickWaitTime = 0.0
     
@@ -44,7 +47,7 @@ function Spider.init(monster)
 end
 
 function Spider.spawnChanceInMission(missionData, min)
-    return 0.1 + clamp(min * 0.3) * 0.2
+    return 0.15 + clamp(min * 0.3) * 0.15
 end
  
 function Spider.buffStats(monster, min)
@@ -87,13 +90,12 @@ function Spider.onTick(monster)
             end
                 
             if distanceToPlayer < data.playerSeeRange and player.isDead == false then
-                local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
+                local c = (distanceToPlayer - data.playerSeeRange * 0.8) / data.playerSeeRange * 0.2
                 if c < 0.0 then
                     c = 0.0
                 end
                 posToMove = posToMove * c + player.position * (1.0 - c)
             end
-            
         end
         
         
@@ -113,7 +115,7 @@ function Spider.onTick(monster)
     if data.moveTimer > 0.0 then
         local moveNewAngle = MonsterGroupHelper.fixAngle(monster, data.targetAngleToMovePos)
         local cPlayer = clamp((distanceToPlayer - 100.0) / 100.0)
-        monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, (data.maxRotateSpeed * (1.0 - cPlayer) + 0.01) * timeScale)
+        monster.moveAngle = approachAngle(monster.moveAngle, moveNewAngle, (data.maxRotateSpeed * (1.1 - cPlayer) ) * timeScale)
         data.moveTimer = data.moveTimer - dt
         if data.moveTimer <= 0.0 then
             monster:playAnimation("stand", math.random())

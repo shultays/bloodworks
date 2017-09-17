@@ -49,6 +49,7 @@ class Monster
 	bool hasGibs;
 	bool firstTick;
 	float animationSpeed;
+	float pathCheckDistance;
 
 	const MonsterTemplate* monsterTemplate;
 

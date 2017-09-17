@@ -95,6 +95,11 @@ inline const T& saturate(T& a)
 }
 
 template <class T>
+inline const T& saturated(const T& a)
+{
+	return clamped(a, 0.0f, 1.0f);
+}
+template <class T>
 inline const T& abs(const T& a)
 {
 	return a > 0 ? a : -a;
@@ -106,8 +111,8 @@ inline T lerp(const T& a, const T& b, float lerpAmount)
 	return a + (b - a) * lerpAmount;
 }
 
+void fixAngle(float& a);
 float angleDiff(float a, float b);
-
 float approachAngle(float moveAngle, float wantedAngle, float rotation);
 
 inline bool textFileRead(std::string path, std::string &data)

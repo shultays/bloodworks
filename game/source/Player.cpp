@@ -32,17 +32,40 @@ Player::Player(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 	Mat3 mat = Mat3::identity();
-	mat.scaleBy(15.7f, 22.9f);
-	mat.translateBy(0.0f, 14.0f);
 
 	renderable = new cRenderableContainer(bloodworks);
-	cTexturedQuadRenderable *body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
+	body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
+
+	mat.scaleBy(body->getTexture()->getDimensions().toVec() * 0.21f);
+	mat.translateBy(0.0f, 12.0f);
+
 	body->setWorldMatrix(mat);
+
+	bodyMat = mat;
+
+	mat.scaleBy(1.0f, 0.1f);
+
+	leftLegFront = new cTexturedQuadRenderable(bloodworks, "resources/assault/left_front.png", "resources/default");
+	leftLegFront->setWorldMatrix(mat);
+	renderable->addRenderable(leftLegFront);
+
+	leftLegBack = new cTexturedQuadRenderable(bloodworks, "resources/assault/left_back.png", "resources/default");
+	leftLegBack->setWorldMatrix(mat);
+	renderable->addRenderable(leftLegBack);
+
+
+	rightLegFront = new cTexturedQuadRenderable(bloodworks, "resources/assault/right_front.png", "resources/default");
+	rightLegFront->setWorldMatrix(mat);
+	renderable->addRenderable(rightLegFront);
+
+	rightLegBack = new cTexturedQuadRenderable(bloodworks, "resources/assault/right_back.png", "resources/default");
+	rightLegBack->setWorldMatrix(mat);
+	renderable->addRenderable(rightLegBack);
+
+	legTimer = 0.0f;
+
 	renderable->addRenderable(body);
 
-	//cTexturedQuadRenderable *hands = new cTexturedQuadRenderable(bloodworks, "resources/assault/hands.png", "resources/default");
-	//hands->setWorldMatrix(mat);
-	//renderable->addRenderable(hands);
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setTextAlignment(TextAlignment::center);
@@ -590,6 +613,94 @@ void Player::tick()
 			oldGuns[i].gun->updateLaser(gunPos, -aimAngle);
 		}
 	}
+
+
+	float legSpeed = dt * 2.0f;
+
+	if (moving)
+	{
+		legTimer += legSpeed;
+	}
+	else
+	{
+		if (legTimer < 1.0)
+		{
+			if (legTimer > 0.05f - legSpeed)
+			{
+				legTimer += legSpeed;
+			}
+			else
+			{
+				legTimer = 0.0f;
+			}
+		}
+		else if(legTimer < 2.0)
+		{
+			if (legTimer > 1.05f - legSpeed)
+			{
+				legTimer += legSpeed;
+			}
+			else
+			{
+				legTimer = 1.0f;
+			}
+		}
+	}
+	if (legTimer >= 2.0f)
+	{
+		legTimer -= 2.0f;
+	}
+
+
+	float leftFront = saturated(1.0f - fabs(legTimer - 0.5f) * 2.0f);
+	float rightBack = saturated(1.0f - fabs(legTimer - 0.5f) * 2.0f);
+
+	float rightFront = saturated(1.0f - fabs(legTimer - 1.5f) * 2.0f);
+	float leftBack = saturated(1.0f - fabs(legTimer - 1.5f) * 2.0f);
+
+	mat = bodyMat;
+	float a = aimAngle - moveAngle;
+	if (abs(angleDiff(a, 0.0f)) > pi * 0.6f)
+	{
+		a += pi;
+	}
+	fixAngle(a);
+
+	float absAngle = abs(a);
+
+	float maxA = pi * 0.25f;
+	if (absAngle > maxA)
+	{
+		float t = 1.0f - saturated((absAngle - maxA) / maxA);
+
+		leftFront *= t;
+		rightBack *= t;
+		rightFront *= t;
+		leftBack *= t;
+	}
+
+	if (a > maxA)
+	{
+		a = maxA;
+	}
+	else if (a < -maxA)
+	{
+		a = -maxA;
+	}
+	float minScale = 0.1f;
+	float maxScale = 1.0f;
+
+	leftFront = lerp(minScale, maxScale, leftFront);
+	rightBack = lerp(minScale, maxScale, rightBack);
+	rightFront = lerp(minScale, maxScale, rightFront);
+	leftBack = lerp(minScale, maxScale, leftBack);
+
+	leftLegFront->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, leftFront) * Mat3::rotationMatrix(a));
+	leftLegBack->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, leftBack) * Mat3::rotationMatrix(a));
+
+	rightLegFront->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, rightFront) * Mat3::rotationMatrix(a));
+	rightLegBack->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, rightBack) * Mat3::rotationMatrix(a));
+
 }
 
 void Player::setGun(Gun *gun)

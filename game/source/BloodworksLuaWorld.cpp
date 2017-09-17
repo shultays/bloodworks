@@ -950,6 +950,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"scriptTable", &Monster::scriptTable,
 
 		"animationSpeed", &Monster::animationSpeed,
+		"pathCheckDistance", &Monster::pathCheckDistance,
 
 		"setVisible", &Monster::setVisible,
 		"isVisible", &Monster::isVisible,
