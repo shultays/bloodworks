@@ -12,7 +12,7 @@ function Alien.init(monster)
     
     monster:playAnimation("walk", math.random())
     
-    data.maxMoveSpeed = 110.0
+    data.maxMoveSpeed = 120.0 * (math.random() * 0.2 + 1.0 - 0.1)
     data.maxRotateSpeed = 0.03
     data.playerSeeRange =  150.0
     
@@ -42,7 +42,7 @@ function Alien.buffStats(monster, min)
         monster.data.randomMove = (math.random() > (0.15 + clamp(min * 0.2) * 0.15))
     end
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
-    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min  / 10) * 0.30)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
 end
 

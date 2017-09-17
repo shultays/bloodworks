@@ -158,7 +158,6 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		laser = nullptr;
 	}
 
-
 	gunShootSoundContinuous = false;
 	if (j.count("firingSoundContinuous"))
 	{
