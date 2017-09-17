@@ -349,7 +349,10 @@ void LevelUpPopup::clearPerks()
 
 void LevelUpPopup::showLevelUpText()
 {
-	levelUpSound->play();
+	if (bloodworks->IsGUIHidden() == false)
+	{
+		levelUpSound->play();
+	}
 	levelUpText->setVisible(true);
 	levelUpShowTime = 1.0f;
 }
