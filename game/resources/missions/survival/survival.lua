@@ -73,6 +73,10 @@ function Survival.onTick()
         local monster = addRandomMonster()
         monster.position = pos
         monster.moveAngle =  math.random() * math.pi * 2.0
+        
+        local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.0))
+        monster.colorMultiplier:setBuffDuration(buffId, 0.3)
+        monster.colorMultiplier:setBuffFadeInFadeOut(buffId, 0.0, 0.3)
     end
     
     missionData.firstTick = false

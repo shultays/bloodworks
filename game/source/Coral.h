@@ -79,4 +79,5 @@ public:
 	}
 
 	static cAccumulatedTimeProfiler& createAccumulatedTimeProfile(const char *name);
+	void clearWindow();
 };
