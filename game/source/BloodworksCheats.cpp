@@ -83,9 +83,9 @@ void BloodworksCheats::onTick()
 
 	if (input.isKeyPressed(key_f8))
 	{
-		static bool bHidden = false;
-		bHidden = !bHidden;
-		bloodworks->HideGui(bHidden);
+		static bool hidden = false;
+		hidden = !hidden;
+		bloodworks->HideGui(hidden);
 	}
 
 	if (bloodworks->isMissionLoaded() == false)
@@ -376,7 +376,7 @@ void BloodworksCheats::onMonsterTick(Monster *monster)
 			if (monster->data["posToMove"])
 			{
 				Vec2 v = monster->data["posToMove"];
-				debugRenderer.addCircle(v, 10.0f);
+				debugRenderer.addLine(v, monster->position);
 			}
 
 			bool showRange = false;
@@ -490,7 +490,6 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 		{
 			doBreak();
 		}
-
 	}
 }
 

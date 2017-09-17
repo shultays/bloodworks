@@ -112,11 +112,32 @@ LONG WINAPI ExpFilter(EXCEPTION_POINTERS* pExp, DWORD dwExpCode)
 }
 #endif
 
-int runMain()
+void ShowConsole()
+{
+#ifdef _WIN32
+#ifndef DEBUG
+	static bool ConsoleShown = false;
+	if (ConsoleShown == false)
+	{
+		ConsoleShown = true;
+		AllocConsole();
+		FILE *stream = nullptr;
+		freopen_s(&stream, "CONOUT$", "w", stdout);
+		freopen_s(&stream, "CONOUT$", "w", stderr);
+		freopen_s(&stream, "CONIN$", "r", stdin);
+	}
+#endif
+#endif
+}
+
+int RunMain()
 {
 	printStack(true);
 	bool hasException = false;
-
+	if (Coral::isDebuggerPresent())
+	{
+		ShowConsole();
+	}
 #ifdef _WIN32
 	__try
 	{
@@ -153,6 +174,7 @@ int runMain()
 		if (mainWindow)
 		{
 			SDL_HideWindow(mainWindow);
+			ShowConsole();
 		}
 		return -1;
 	}
@@ -178,7 +200,7 @@ int main(int argc, char *argv[])
 {
 	checkOldOutput();
 	out.open(STD_OUTPUT);
-	int ret = runMain();
+	int ret = RunMain();
 	out.close();
 	if (ret == 0 && hasError == false)
 	{
@@ -194,7 +216,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			fflush(stdin);
-			printf("Looks like we have a problem, do you want to send log file? (Y/N)\n");
+			printf("Looks like game crashed, do you want to send log file (It would really help)? (Y/N)\n");
 			char c = getc(stdin);
 			if (c == 'Y' || c == 'y')
 			{
@@ -254,6 +276,7 @@ void RunGame()
 				{
 				case SDL_WINDOWEVENT_RESIZED:
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					coral.clearWindow();
 					coral.windowResized(event.window.data1, event.window.data2);
 					game->windowResized(event.window.data1, event.window.data2);
 					break;

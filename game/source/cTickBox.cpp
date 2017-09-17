@@ -3,7 +3,7 @@
 #include "cTexture.h"
 #include "cGlobals.h"
 
-cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)
+cTickBox::cTickBox(cGame *game, const std::string &clickSound, const std::string &checked, const std::string &unchecked, bool isChecked /*= false*/) : cButton(game)
 {
 	checkedRenderable = new cTexturedQuadRenderable(game, checked, "resources/default");
 	checkedRenderable->setWorldMatrix(Mat3::identity());
@@ -15,7 +15,10 @@ cTickBox::cTickBox(cGame *game, const std::string &checked, const std::string &u
 	uncheckedRenderable->setAlignment(getAlignment());
 	addRenderable(uncheckedRenderable);
 
-	setSounds(resources.getSoundSample("resources/sounds/click.ogg"), nullptr);
+	if (clickSound.size())
+	{
+		setSounds(resources.getSoundSample(clickSound), nullptr);
+	}
 	setChecked(isChecked);
 }
 
