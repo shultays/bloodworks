@@ -27,7 +27,7 @@ function BulletTrailParticle.setDefaultArgs(args)
         args.fadeOutSpeed = 2.0
     end
     if args.startFadeinSpeed == nil then
-        args.startFadeinSpeed = 30.0
+        args.startFadeinSpeed = 100.0
     end
 end
 

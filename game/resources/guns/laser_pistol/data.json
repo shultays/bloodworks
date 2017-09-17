@@ -16,6 +16,8 @@
     "volume" : 0.85
   },
   
+  "shootParticleColor" : [0.8, 0.8, 0.3],
+  
   "scriptFile" : "laser_pistol.lua",
   "scriptName" : "LaserPistol"
 }
