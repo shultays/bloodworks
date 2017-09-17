@@ -20,6 +20,8 @@
     "volume" : 0.55
   },
   
+  "showShootAnimation" : false,
+  
   "isLaser" : true,
   "laserTexture" : "laser.png",
   "laserShader" : "laser",

@@ -12,6 +12,8 @@
   "maxAmmo" : 16,
   "reloadTime" : 1.8,
   
+  "showShootAnimation" : false,
+  
   "firingSound" : {
     "path" : "shrink_shoot.ogg",
     "volume" : 1.0
