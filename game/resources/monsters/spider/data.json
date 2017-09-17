@@ -4,7 +4,7 @@
   "hitPoint": 100,
   "size" : [30.0, 30.0],
   "textureShift" : [0.0, 0.0],
-  "bulletRadius" : 16.0,
+  "bulletRadius" : 19.0,
   "collisionRadius" : 12.0,
   "hasBlood" : true,
   

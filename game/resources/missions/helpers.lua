@@ -97,7 +97,11 @@ function makeBossDefault(monster)
     monster.scoreMultiplier = 5.0 + math.random() * 2.0
     monster:modifyDrawLevel(3)
     
-    local t = math.random(11)
+    local t = 0
+    repeat
+        t = math.random(11)
+    until time < 20.0 or time > 20.0 
+    
     --t = 1
     
     if t == 1 then -- huge & tank
@@ -135,7 +139,7 @@ function makeBossDefault(monster)
     elseif t == 6 then -- spawns 2 on death
         monster.data.remainingLife = 3
         monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-        monster:setScale(1.0 + math.random() * 0.2)
+        monster:setScale(monster.scale * (1.0 + math.random() * 0.2))
         monster.experienceMultiplier = monster.experienceMultiplier * 0.3
         monster.scoreMultiplier = monster.scoreMultiplier * 0.3
         monster.data.hitPoint = monster.hitPoint
@@ -223,7 +227,7 @@ function makeBossDefault(monster)
         end)
     elseif t == 8 then -- angel
         monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 2.5
+        monster.data.maxMoveSpeed = math.min(500.0, monster.data.maxMoveSpeed * 3.0)
         monster.data.originalSpeed = monster.data.maxMoveSpeed
         monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
         monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
@@ -234,18 +238,18 @@ function makeBossDefault(monster)
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
         monster.data.hitInterval = monster.data.hitInterval * 0.4
         monster.data.targetShift = Vec2.new(0.0, 0.0)
+        monster.data.randomMove = false
         monster.knockbackResistance:addBuff(0.0)
         addCustomOnTick(monster, function (monster)
             local diffToPlayer = player.position - monster.position 
             local distanceToPlayer = diffToPlayer:length()
-            local angleToPlayer = diffToPlayer:getAngle()
-            local a = fixAngle(angleToPlayer - player.aimAngle)
+            local angleToPlayer = diffToPlayer:getAngle() - math.pi
             local angle = 0.2
-            if distanceToPlayer < 100 then
-                angle = angle + 0.3 * (1.0 - distanceToPlayer / 100.0)
+            if distanceToPlayer < 150 then
+                angle = angle + 1.4 * (1.0 - distanceToPlayer / 150.0)
             end
             
-            if math.abs(a) > math.pi - angle then
+            if math.abs(angleDiff(angleToPlayer, player.aimAngle)) < angle then
                 monster.data.maxMoveSpeed = 0.0
                 monster.animationSpeed = 0.0
                 monster.moveSpeed = 0.0
@@ -265,7 +269,10 @@ function makeBossDefault(monster)
                 damage = 0
             end
             
-            local buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
+            local buffId = monster.moveSpeedMultiplier:addBuffWithId(monster.id, 0.3)
+            monster.moveSpeedMultiplier:setBuffDuration(buffId, 1.0)
+            
+            buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
             monster.colorMultiplier:setBuffDuration(buffId, 1.0)
             monster.data.lastHitTime = time
             return damage
