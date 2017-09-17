@@ -27,16 +27,17 @@ function Egg.init(monster, min)
         missionData.eggCount = 0
     end
     missionData.eggCount = missionData.eggCount + 1
+    calcRandomSpawns()
 end
 
 function Egg.spawnChanceInMission(missionData, min)
     if missionData.isSurvival ~= true  then
         return 0.0
     end
-    if missionData.eggCount ~= nil and missionData.eggCount > 4 then
+    if missionData.eggCount ~= nil and missionData.eggCount > 1 + math.min(min, 4.0) then
         return 0.0
     end
-    return 0.05 + clamp(min * 0.3) * 0.04
+    return 0.03 + clamp(min * 0.3) * 0.04
 end
 
 function Egg.buffStats(monster, min)
