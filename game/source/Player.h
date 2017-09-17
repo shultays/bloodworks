@@ -29,8 +29,6 @@ class Player
 	cTexturedQuadRenderable *body;
 	Mat3 bodyMat;
 
-	cRenderableContainer *leftLegRenderable;
-
 	cTexturedQuadRenderable *leftLegFront;
 	cTexturedQuadRenderable *leftLegBack;
 
