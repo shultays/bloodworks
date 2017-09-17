@@ -40,6 +40,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	isDead = false;
 	removeOnDead = true;
 	lastSoundTime = 0.0f;
+	pathCheckDistance = 150.0f;
 	textureSize = monsterTemplate->size;
 	textureShift = monsterTemplate->textureShift;
 	hitPoint = monsterTemplate->hitPoint;
@@ -343,10 +344,9 @@ Vec2 Monster::getPathPos(const Vec2& target)
 	Vec2 dir = target - this->position;
 	float len = dir.normalize();
 	const float radius = collisionRadius * 0.5f;
-	const float checkDistance = 120.0f;
-	float t = bloodworks->getCollisionController()->getRayDistance(position + dir * radius * 0.5f, dir * checkDistance, 0.0f, CollisionController::no_monster_collision);
+	float t = bloodworks->getCollisionController()->getRayDistance(position + dir * radius * 0.5f, dir * pathCheckDistance, 0.0f, CollisionController::no_monster_collision);
 	//debugRenderer.addLine(position + dir * 10.0f, position + dir * checkDistance);
-	if (t > checkDistance - 10.0f)
+	if (t > pathCheckDistance - 10.0f)
 	{
 		return target;
 	}
@@ -357,21 +357,21 @@ Vec2 Monster::getPathPos(const Vec2& target)
 
 		Vec2 dirRotated;
 		dirRotated = Vec2::fromAngle(angle + shift);
-		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * radius * 0.5f, dirRotated * checkDistance, 0.0f, CollisionController::no_monster_collision);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * radius * 0.5f, dirRotated * pathCheckDistance, 0.0f, CollisionController::no_monster_collision);
 		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
-		if (t > checkDistance - 10.0f)
+		if (t > pathCheckDistance - 10.0f)
 		{
 			//debugRenderer.addLine(position, position + dirRotated * checkDistance, 0.0f, 0xFFFF0000);
-			return position + dirRotated * checkDistance;
+			return position + dirRotated * pathCheckDistance;
 		}
 
 		dirRotated = Vec2::fromAngle(angle - shift);
-		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * 5.0f, dirRotated * checkDistance, 0.0f, CollisionController::no_monster_collision);
+		t = bloodworks->getCollisionController()->getRayDistance(position + dirRotated * 5.0f, dirRotated * pathCheckDistance, 0.0f, CollisionController::no_monster_collision);
 		//debugRenderer.addLine(position, position + dirRotated * checkDistance);
-		if (t > checkDistance - 10.0f)
+		if (t > pathCheckDistance - 10.0f)
 		{
 			//debugRenderer.addLine(position, position + dirRotated * checkDistance, 0.0f, 0xFFFF0000);
-			return position + dirRotated * checkDistance;
+			return position + dirRotated * pathCheckDistance;
 		}
 	}
 	return target;

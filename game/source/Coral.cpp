@@ -184,6 +184,12 @@ cAccumulatedTimeProfiler& Coral::createAccumulatedTimeProfile(const char *name)
 #endif
 }
 
+void Coral::clearWindow()
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Coral::initFrameBuffers()
 {
 	if (tempFrameBuffer[0] != -1)

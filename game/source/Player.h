@@ -26,6 +26,17 @@ class Player
 
 	Bloodworks *bloodworks;
 	cRenderableContainer *renderable;
+	cTexturedQuadRenderable *body;
+	Mat3 bodyMat;
+
+	cRenderableContainer *leftLegRenderable;
+
+	cTexturedQuadRenderable *leftLegFront;
+	cTexturedQuadRenderable *leftLegBack;
+
+	cTexturedQuadRenderable *rightLegFront;
+	cTexturedQuadRenderable *rightLegBack;
+
 	cRenderable *crosshair;
 	cRenderableWithShader *ammo;
 
@@ -49,6 +60,8 @@ class Player
 	float oldSpreadAngle;
 	int hitPoints;
 	int maxHitPoints;
+
+	float legTimer;
 
 	cTextRenderable *healthRenderable;
 	cAnimatedTexturedQuadRenderable *shootRenderable;
