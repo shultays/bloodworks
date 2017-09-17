@@ -112,7 +112,7 @@ function makeBossDefault(monster)
         monster.data.stunDuration = 0.0
         monster.data.slowDuration = 0.0
     elseif t == 2 then -- ghost
-        monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.5))
+        monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.7))
         monster:setScale(monster.scale * 0.85)
         monster.hasCollision = false
         monster.hasBlood = false
@@ -123,7 +123,7 @@ function makeBossDefault(monster)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
     elseif t == 4 then -- fast
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.85
+        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.75
         monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
@@ -199,7 +199,7 @@ function makeBossDefault(monster)
                 newMonster:copyIgnoreId(monster)
                 
                 newMonster.data.playerSeeRange = monster.data.playerSeeRange
-                newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.3
+                newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.2
                 newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
 
                 newMonster.data.hitWaitTime = monster.data.hitWaitTime
