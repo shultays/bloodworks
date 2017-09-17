@@ -16,6 +16,8 @@
     "volume" : 2.55
   },
   
+  "shootParticleColor" : [0.0, 0.6, 0.8],
+  
   "scriptFile" : "laser_machine.lua",
   "scriptName" : "LaserMachineGun"
 }

@@ -12,6 +12,8 @@
   "maxAmmo" : 20,
   "reloadTime" : 1.2,
   
+  "showShootAnimation" : false,
+  
   "firingSound" : {
     "path" : "pulse.ogg",
     "volume" : 0.20

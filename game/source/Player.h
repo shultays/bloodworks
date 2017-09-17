@@ -4,6 +4,7 @@
 #include "sol.h"
 #include "cResources.h"
 #include "BuffFloat.h"
+#include "DirentHelper.h"
 
 class Bloodworks;
 class Gun;
@@ -13,6 +14,60 @@ class cRenderableContainer;
 class cAnimatedTexturedQuadRenderable;
 class cTexturedQuadRenderable;
 class cRenderableWithShader;
+
+class PlayerTemplate
+{
+	friend class Player;
+
+	std::string name;
+
+	int startHitPoint;
+
+	float maxSpeed;
+	float maxRotateSpeed;
+
+	float bulletRadius;
+	float collisionRadius;
+
+	float acceleration;
+	float decceleration;
+
+	float minRotationSpeed;
+	float maxRotationSpeed;
+
+	float playerScale;
+
+	std::string body;
+	Vec2 shift;
+	Vec2 scale;
+
+	std::string gunFire;
+
+	Vec2 gunFireShift;
+	Vec2 gunFireScale;
+
+	Vec2 bulletStartShift;
+
+	float legSpeed;
+
+	float legMinScale;
+	float legMaxScale;
+
+	float legMaxRotate;
+
+	std::string leftLegFront;
+	std::string rightLegFront;
+	std::string leftLegBack;
+	std::string rightLegBack;
+
+public:
+	PlayerTemplate(nlohmann::json& j, const DirentHelper::File& file);
+
+	const std::string& getName() const 
+	{
+		return name;
+	}
+};
 
 class Player
 {
@@ -27,8 +82,9 @@ class Player
 	Bloodworks *bloodworks;
 	cRenderableContainer *renderable;
 	cTexturedQuadRenderable *body;
-	Mat3 bodyMat;
 
+	cRenderableContainer *legRenderable;
+	Mat3 bodyMat;
 	cTexturedQuadRenderable *leftLegFront;
 	cTexturedQuadRenderable *leftLegBack;
 
@@ -75,6 +131,7 @@ class Player
 	BuffFloat clipCountMultiplier;
 	BuffFloat gunSpreadMultiplier;
 	BuffFloat accelerationMultiplier;
+	BuffFloat scaleMultiplier;
 	BuffVec4 colorMultiplier;
 
 	cRenderable *healthBarActive, *healthBarBG, *healthBarFG;
@@ -85,6 +142,7 @@ class Player
 
 	cTextRenderable *scoreText;
 
+	float lastScale;
 	int score;
 	int level;
 	int experience;
@@ -124,6 +182,8 @@ class Player
 		float duration;
 	};
 	cVector<Knockback> knockbacks;
+
+	const PlayerTemplate *playerTemplate;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();
@@ -218,4 +278,5 @@ public:
 	float getCollisionRadius() const;
 	void addKnockback(const Vec2& speed, float duration);
 	float getBulletSpreadMultiplier();
+	void buildBody(const PlayerTemplate* playerTemplate);
 };
