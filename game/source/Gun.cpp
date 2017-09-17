@@ -55,7 +55,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	{
 		spawnChance = 1.0f;
 	}
-	showShootAnimation = false;
+	showShootAnimation = true;
 	if (j.count("showShootAnimation"))
 	{
 		showShootAnimation = j["showShootAnimation"].get<bool>();
@@ -74,7 +74,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	}
 	else
 	{
-		shootParticleColor = Vec4(1.0f, 0.4f, 0.2f, 1.0f);
+		shootParticleColor = Vec4(1.0f, 0.4f, 0.2f, 0.6f);
 	}
 	if (j.count("bulletTexture"))
 	{
@@ -150,7 +150,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		bloodworks->addLaserTemplate(laserTemplate);
 		laser = new LaserRenderable(bloodworks, laserTemplate);
 		laser->setWorldMatrix(Mat3::identity());
-		bloodworks->addRenderable(laser, PLAYER + 1 + bulletLevelModifier);
+		bloodworks->addRenderable(laser, PLAYER - 1 + bulletLevelModifier);
 		laser->setVisible(false);
 	}
 	else
