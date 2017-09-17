@@ -33,7 +33,7 @@ function Spider.init(monster)
     data.minDamage = 10
     data.maxDamage = 16
     
-    data.maxMoveSpeed = 195.0
+    data.maxMoveSpeed = 195.0 * (math.random() * 0.1 + 1.0)
     data.maxRotateSpeed = 0.04
     data.playerSeeRange = 250.0
     
@@ -57,7 +57,7 @@ function Spider.buffStats(monster, min)
     
     monster.data.randomMove = (math.random() > (0.15 + clamp(min * 0.2) * 0.15))
     monster.data.playerSeeRange = monster.data.playerSeeRange * (1.0 +  clamp(min * 0.1) * 2.0)
-    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min * 0.05) * 0.75)
+    monster.data.maxMoveSpeed =  monster.data.maxMoveSpeed * (1.0 + clamp(min  / 10) * 0.20)
     monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * (1.0 + clamp(min * 0.05) * 1.0)
 end
 

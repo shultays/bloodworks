@@ -54,7 +54,6 @@ public:
 
 	Vec2 getSolver(const Circle& circle) const
 	{
-
 		float r = radius + circle.radius;
 		float t = r * r - circle.origin.distanceSquared(origin);
 		if (t > 0.0f)
