@@ -522,6 +522,12 @@ bool Bloodworks::loadMission(const std::string& mission)
 		}
 	}
 	missionController->loadMission(mission);
+	std::string playerTemplate = missionController->getMissionData()["playerTemplate"];
+	if (playerTemplate.size() == 0)
+	{
+		playerTemplate = "assault";
+	}
+	player->buildBody(playerTemplates[playerTemplate]);
 	player->setVisible(true);
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksCheats->onLoadMission();
@@ -988,6 +994,11 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	{
 		Bonus *bonus = new Bonus(this, j, f);
 		bonuses.push_back(bonus);
+	}
+	else if (type == "player")
+	{
+		PlayerTemplate *player = new PlayerTemplate(j, f);
+		playerTemplates[player->getName()] = player;
 	}
 	else if (type == "particle")
 	{

@@ -33,47 +33,24 @@ Player::Player(Bloodworks *bloodworks)
 	this->bloodworks = bloodworks;
 	Mat3 mat = Mat3::identity();
 
-	renderable = new cRenderableContainer(bloodworks);
-	body = new cTexturedQuadRenderable(bloodworks, "resources/assault/body.png", "resources/default");
+	renderable = nullptr;
+	legRenderable = nullptr;
+	shootRenderable = nullptr;
 
-	mat.scaleBy(body->getTexture()->getDimensions().toVec() * 0.21f);
-	mat.translateBy(0.0f, 12.0f);
+	body = nullptr;
+	leftLegFront = nullptr;
+	rightLegFront = nullptr;
+	leftLegBack = nullptr;
+	rightLegBack = nullptr;
 
-	body->setWorldMatrix(mat);
-
-	bodyMat = mat;
-
-	mat.scaleBy(1.0f, 0.1f);
-
-	leftLegFront = new cTexturedQuadRenderable(bloodworks, "resources/assault/left_front.png", "resources/default");
-	leftLegFront->setWorldMatrix(mat);
-	renderable->addRenderable(leftLegFront);
-
-	leftLegBack = new cTexturedQuadRenderable(bloodworks, "resources/assault/left_back.png", "resources/default");
-	leftLegBack->setWorldMatrix(mat);
-	renderable->addRenderable(leftLegBack);
-
-
-	rightLegFront = new cTexturedQuadRenderable(bloodworks, "resources/assault/right_front.png", "resources/default");
-	rightLegFront->setWorldMatrix(mat);
-	renderable->addRenderable(rightLegFront);
-
-	rightLegBack = new cTexturedQuadRenderable(bloodworks, "resources/assault/right_back.png", "resources/default");
-	rightLegBack->setWorldMatrix(mat);
-	renderable->addRenderable(rightLegBack);
+	playerTemplate = nullptr;
 
 	legTimer = 0.0f;
-
-	renderable->addRenderable(body);
-
 
 	healthRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontSmallData.txt"), "", 10);
 	healthRenderable->setTextAlignment(TextAlignment::center);
 	healthRenderable->setWorldMatrix(Mat3::identity());
 	bloodworks->addRenderable(healthRenderable, OBJECT_GUI);
-
-	renderable->setWorldMatrix(Mat3::identity());
-	bloodworks->addRenderable(renderable, PLAYER);
 
 	crosshair = new cTexturedQuadRenderable(bloodworks, "resources/crosshair.png", "resources/default");
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(40.0f).translateBy(0.0f, 50.0f));
@@ -118,31 +95,31 @@ Player::Player(Bloodworks *bloodworks)
 	barSize.x = round(barSize.x);
 	barSize.y = round(barSize.y);
 
-	healthBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_bg.png", "resources/default");
+	healthBarBG = new cTexturedQuadRenderable(bloodworks, "resources/player/bar_bg.png", "resources/default");
 	healthBarBG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(healthBarBG, GUI + 10);
 
-	healthBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_active.png", "resources/default");
+	healthBarActive = new cTexturedQuadRenderable(bloodworks, "resources/player/bar_active.png", "resources/default");
 	healthBarActive->setAlignment(RenderableAlignment::top);
 	healthBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.6f));
 	bloodworks->addRenderable(healthBarActive, GUI + 11);
 
-	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/bar_fg.png", "resources/default");
+	healthBarFG = new cTexturedQuadRenderable(bloodworks, "resources/player/bar_fg.png", "resources/default");
 	healthBarFG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(healthBarFG, GUI + 17);
 
-	experienceBarBG = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_bg.png", "resources/default");
+	experienceBarBG = new cTexturedQuadRenderable(bloodworks, "resources/player/exp_bar_bg.png", "resources/default");
 	experienceBarBG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(experienceBarBG, GUI + 12);
 	experienceBarBG->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
 
-	experienceBarActive = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_active.png", "resources/default");
+	experienceBarActive = new cTexturedQuadRenderable(bloodworks, "resources/player/exp_bar_active.png", "resources/default");
 	experienceBarActive->setAlignment(RenderableAlignment::top);
 	experienceBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.6f));
 	bloodworks->addRenderable(experienceBarActive, GUI + 13);
 	experienceBarActive->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
 
-	experienceBarFG = new cTexturedQuadRenderable(bloodworks, "resources/assault/exp_bar_fg.png", "resources/default");
+	experienceBarFG = new cTexturedQuadRenderable(bloodworks, "resources/player/exp_bar_fg.png", "resources/default");
 	experienceBarFG->setAlignment(RenderableAlignment::top);
 	bloodworks->addRenderable(experienceBarFG, GUI + 18);
 	experienceBarFG->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
@@ -153,12 +130,6 @@ Player::Player(Bloodworks *bloodworks)
 	scoreText->setWorldMatrix(Mat3::translationMatrix(-20, -50));
 	bloodworks->addRenderable(scoreText, GUI + 13);
 
-	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
-	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
-	
-	shootRenderable->addAnimation(getAnimationData(DirentHelper::File("resources/assault/gun_fire/", "data.json")));
-	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(7.0f).rotateBy(-pi_d2).translateBy(4.0f, 32.0f));
-	renderable->addRenderable(shootRenderable);
 
 	resize();
 	DirentHelper::Folder f("resources/sounds/player_hit");
@@ -241,11 +212,18 @@ void Player::tick()
 	monsterExperienceMultiplier.tick();
 	gunSpreadMultiplier.tick();
 	accelerationMultiplier.tick();
+	scaleMultiplier.tick();
+	lastScale = scaleMultiplier.getBuffedValue();
 
 	bool colorChanged = colorMultiplier.tick();
 	if (colorChanged && renderable)
 	{
 		renderable->setColor(colorMultiplier.getBuffedValue());
+
+		if (shootRenderable && gun)
+		{
+			shootRenderable->setColor(gun->getShootingParticleColor());
+		}
 	}
 
 	oldPos = pos;
@@ -254,14 +232,14 @@ void Player::tick()
 
 	bool moving = false;
 	checkInput(moving, wantedAngle);
-	const float acceleration = accelerationMultiplier.getBuffedValueFor(800.0f);
-	const float decceleration = accelerationMultiplier.getBuffedValueFor(1000.0f);
+	const float acceleration = accelerationMultiplier.getBuffedValueFor(playerTemplate->acceleration);
+	const float decceleration = accelerationMultiplier.getBuffedValueFor(playerTemplate->decceleration);
 
 	float dt = timer.getDt();
 	float currentMaxSpeed = maxSpeed.getBuffedValue();
 
-	float minRotation = pi * 3.0f;
-	float maxRotation = pi * 10.0f;
+	float minRotation = pi * playerTemplate->minRotationSpeed;
+	float maxRotation = pi * playerTemplate->maxRotationSpeed;
 
 	if (moving)
 	{
@@ -573,9 +551,10 @@ void Player::tick()
 	healthRenderable->setWorldMatrix(Mat3::translationMatrix(pos + Vec2(0.0f, 30.0f)));
 
 	//healthRenderable->setVisible(input.isKeyDown(key_space));
-	gunPos = pos + aimDir * 24.0f - aimDir.sideVec() * 6.0f;
+	gunPos = pos + (aimDir * playerTemplate->bulletStartShift[1] - aimDir.sideVec() * playerTemplate->bulletStartShift[0]) * lastScale;
 
 	Mat3 mat = Mat3::identity();
+	mat.scaleBy(lastScale);
 	mat.rotateBy(pi_d2 - aimAngle);
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
@@ -615,7 +594,7 @@ void Player::tick()
 	}
 
 
-	float legSpeed = dt * 2.0f;
+	float legSpeed = dt * playerTemplate->legSpeed;
 
 	if (moving)
 	{
@@ -651,14 +630,12 @@ void Player::tick()
 		legTimer -= 2.0f;
 	}
 
-
 	float leftFront = saturated(1.0f - fabs(legTimer - 0.5f) * 2.0f);
 	float rightBack = saturated(1.0f - fabs(legTimer - 0.5f) * 2.0f);
 
 	float rightFront = saturated(1.0f - fabs(legTimer - 1.5f) * 2.0f);
 	float leftBack = saturated(1.0f - fabs(legTimer - 1.5f) * 2.0f);
 
-	mat = bodyMat;
 	float a = aimAngle - moveAngle;
 	if (abs(angleDiff(a, 0.0f)) > pi * 0.6f)
 	{
@@ -668,16 +645,7 @@ void Player::tick()
 
 	float absAngle = abs(a);
 
-	float maxA = pi * 0.25f;
-	if (absAngle > maxA)
-	{
-		float t = 1.0f - saturated((absAngle - maxA) / maxA);
-
-		leftFront *= t;
-		rightBack *= t;
-		rightFront *= t;
-		leftBack *= t;
-	}
+	float maxA = pi * playerTemplate->legMaxRotate;
 
 	if (a > maxA)
 	{
@@ -687,20 +655,32 @@ void Player::tick()
 	{
 		a = -maxA;
 	}
-	float minScale = 0.1f;
-	float maxScale = 1.0f;
 
-	leftFront = lerp(minScale, maxScale, leftFront);
-	rightBack = lerp(minScale, maxScale, rightBack);
-	rightFront = lerp(minScale, maxScale, rightFront);
-	leftBack = lerp(minScale, maxScale, leftBack);
+	mat = Mat3::identity();
+	mat.rotateBy(a);
+	legRenderable->setWorldMatrix(mat);
 
-	leftLegFront->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, leftFront) * Mat3::rotationMatrix(a));
-	leftLegBack->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, leftBack) * Mat3::rotationMatrix(a));
+	if (leftLegFront)
+	{
+		float minScale = playerTemplate->legMinScale;
+		float maxScale = playerTemplate->legMaxScale;
 
-	rightLegFront->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, rightFront) * Mat3::rotationMatrix(a));
-	rightLegBack->setWorldMatrix(mat * Mat3::scaleMatrix(1.0f, rightBack) * Mat3::rotationMatrix(a));
+		leftFront = leftFront * leftFront;
+		rightBack = rightBack * rightBack;
+		rightFront = rightFront * rightFront;
+		leftBack = leftBack * leftBack;
 
+		leftFront = lerp(minScale, maxScale, leftFront);
+		rightBack = lerp(minScale, maxScale, rightBack);
+		rightFront = lerp(minScale, maxScale, rightFront);
+		leftBack = lerp(minScale, maxScale, leftBack);
+
+		leftLegFront->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, leftFront));
+		leftLegBack->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, leftBack));
+
+		rightLegFront->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, rightFront));
+		rightLegBack->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, rightBack));
+	}
 }
 
 void Player::setGun(Gun *gun)
@@ -724,7 +704,10 @@ void Player::setGun(Gun *gun)
 	}
 	if (this->gun)
 	{
-		shootRenderable->setColor(this->gun->getShootingParticleColor());
+		if (shootRenderable)
+		{
+			shootRenderable->setColor(this->gun->getShootingParticleColor());
+		}
 		this->gun->start();
 		primaryIcon->setTexture(this->gun->getIconPath());
 		Vec2 textureSize = primaryIcon->getTexture()->getDimensions().toVec();
@@ -812,7 +795,7 @@ int Player::doDamageWithArgs(int damage, float angle, sol::table& params)
 	if (damage > 0)
 	{
 		Vec2 dir = Vec2::fromAngle(angle);
-		bloodworks->getBloodRenderable()->addBlood(pos, dir * clamped(damage * 2.7f, 0.0f, 20.0f), 10.0f + randFloat(10.0f));
+		bloodworks->getBloodRenderable()->addBlood(pos, dir * clamped(damage * 2.7f, 0.0f, 20.0f) * lastScale, (10.0f + randFloat(10.0f) * lastScale));
 
 		hitPoints -= damage;
 		if (hitPoints <= 0)
@@ -882,7 +865,10 @@ int Player::getLevel() const
 
 void Player::playShootAnimation()
 {
-	shootRenderable->playAnimation(1);
+	if (shootRenderable)
+	{
+		shootRenderable->playAnimation(1);
+	}
 }
 
 const Vec2& Player::getGunPos() const
@@ -896,7 +882,10 @@ void Player::setVisible(bool visible)
 
 	ammo->setVisible(visible);
 	crosshair->setVisible(visible);
-	renderable->setVisible(visible);
+	if (renderable)
+	{
+		renderable->setVisible(visible);
+	}
 	spread->setVisible(visible);
 	healthRenderable->setVisible(false);
 	scoreText->setVisible(visible);
@@ -916,6 +905,18 @@ void Player::setVisible(bool visible)
 
 void Player::reset()
 {
+	SAFE_DELETE(renderable);
+	legRenderable = nullptr;
+	shootRenderable = nullptr;
+
+	body = nullptr;
+	leftLegFront = nullptr;
+	rightLegFront = nullptr;
+	leftLegBack = nullptr;
+	rightLegBack = nullptr;
+
+	playerTemplate = nullptr;
+
 	knockbacks.clear();
 	maxSpeed.clear();
 	monsterExperienceMultiplier.clear();
@@ -927,12 +928,14 @@ void Player::reset()
 	clipCountMultiplier.clear();
 	gunSpreadMultiplier.clear();
 	accelerationMultiplier.clear();
+	scaleMultiplier.clear();
 
 	maxSpeed.setBaseValue(150.0f);
 	maxRotateSpeed.setBaseValue(pi * 6.0f);
-
+	scaleMultiplier.setBaseValue(1.0f);
+	lastScale = 1.0f;
 	isDead = false;
-
+	legTimer = 1.0f;
 	reloadAlpha = 0.0f;
 	secondaryReloadAlpha = 0.0f;
 
@@ -955,7 +958,10 @@ void Player::reset()
 	level = 1;
 	updateExperience();
 	experienceForNextLevel = calculateExperienceForLevel(level + 1);
-	shootRenderable->playAnimation(0);
+	if (shootRenderable)
+	{
+		shootRenderable->playAnimation(0);
+	}
 
 	joystickCheckTimer = 0.0f;
 	setScore(0);
@@ -1102,12 +1108,12 @@ void Player::killSelf()
 
 float Player::getBulletRadius() const
 {
-	return 10.0f;
+	return playerTemplate->bulletRadius * lastScale;
 }
 
 float Player::getCollisionRadius() const
 {
-	return 15.0f;
+	return playerTemplate->collisionRadius * lastScale;
 }
 
 void Player::addKnockback(const Vec2& speed, float duration)
@@ -1120,4 +1126,110 @@ void Player::addKnockback(const Vec2& speed, float duration)
 float Player::getBulletSpreadMultiplier()
 {
 	return gunSpreadMultiplier.getBuffedValue();
+}
+
+void Player::buildBody(const PlayerTemplate* playerTemplate)
+{
+	this->playerTemplate = playerTemplate;
+
+	renderable = new cRenderableContainer(bloodworks);
+
+	legRenderable = new cRenderableContainer(bloodworks);
+
+	renderable->addRenderable(legRenderable);
+	renderable->setWorldMatrix(Mat3::identity());
+	bloodworks->addRenderable(renderable, PLAYER);
+
+	maxHitPoints = hitPoints = playerTemplate->startHitPoint;
+	lastScale = playerTemplate->playerScale;
+	scaleMultiplier.setBaseValue(lastScale);
+	maxSpeed.setBaseValue(playerTemplate->maxSpeed);
+	maxRotateSpeed.setBaseValue(pi * playerTemplate->maxRotateSpeed);
+
+	body = new cTexturedQuadRenderable(bloodworks, playerTemplate->body, "resources/default");
+
+	bodyMat = Mat3::identity();
+	bodyMat.scaleBy(body->getTexture()->getDimensions().toVec() * playerTemplate->scale);
+	bodyMat.translateBy(playerTemplate->shift);
+
+	body->setWorldMatrix(bodyMat);
+
+	leftLegFront = new cTexturedQuadRenderable(bloodworks, playerTemplate->leftLegFront, "resources/default");
+	leftLegFront->setWorldMatrix(bodyMat);
+	legRenderable->addRenderable(leftLegFront);
+
+	leftLegBack = new cTexturedQuadRenderable(bloodworks, playerTemplate->leftLegBack, "resources/default");
+	leftLegBack->setWorldMatrix(bodyMat);
+	legRenderable->addRenderable(leftLegBack);
+
+	rightLegFront = new cTexturedQuadRenderable(bloodworks, playerTemplate->rightLegFront, "resources/default");
+	rightLegFront->setWorldMatrix(bodyMat);
+	legRenderable->addRenderable(rightLegFront);
+
+	rightLegBack = new cTexturedQuadRenderable(bloodworks, playerTemplate->rightLegBack, "resources/default");
+	rightLegBack->setWorldMatrix(bodyMat);
+	legRenderable->addRenderable(rightLegBack);
+
+	shootRenderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
+	shootRenderable->addAnimation(cAnimatedTexturedQuadRenderable::AnimationData());
+
+	shootRenderable->addAnimation(getAnimationData(DirentHelper::File("resources/player/gun_fire/", "data.json")));
+	shootRenderable->setWorldMatrix(Mat3::scaleMatrix(playerTemplate->gunFireScale).rotateBy(-pi_d2).translateBy(playerTemplate->gunFireShift));
+
+	renderable->addRenderable(shootRenderable);
+	renderable->addRenderable(body);
+
+	if (shootRenderable && gun)
+	{
+		shootRenderable->setColor(gun->getShootingParticleColor());
+	}
+}
+
+PlayerTemplate::PlayerTemplate(nlohmann::json& j, const DirentHelper::File& file)
+{
+	std::string path = file.folder;
+
+	name = j["name"].get<std::string>();
+	body = path + j["body"].get<std::string>();
+
+
+	startHitPoint = j["hitpoint"].get<int>();
+
+	acceleration = j["acceleration"].get<float>();
+
+	decceleration = j["decceleration"].get<float>();
+
+	minRotationSpeed = j["minRotationSpeed"].get<float>();
+	maxRotationSpeed = j["maxRotationSpeed"].get<float>();
+
+	bulletRadius = j["bulletRadius"].get<float>();
+	collisionRadius = j["collisionRadius"].get<float>();
+
+	maxSpeed = j["maxSpeed"].get<float>();
+	maxRotateSpeed = j["maxRotateSpeed"].get<float>();
+
+	scale = Vec2(j["bodyScale"].at(0).get<float>(), j["bodyScale"].at(1).get<float>());
+
+	shift = Vec2(j["bodyShift"].at(0).get<float>(), j["bodyShift"].at(1).get<float>());
+
+	gunFire = j["gunFireAnim"].get<std::string>();
+
+	gunFireScale = Vec2(j["gunFireScale"].at(0).get<float>(), j["gunFireScale"].at(1).get<float>());
+	gunFireShift = Vec2(j["gunFireShift"].at(0).get<float>(), j["gunFireShift"].at(1).get<float>());
+
+	bulletStartShift = Vec2(j["bulletStartShift"].at(0).get<float>(), j["bulletStartShift"].at(1).get<float>());
+
+	legSpeed = j["legSpeed"].get<float>();
+
+	legMinScale = j["legMinScale"].get<float>();
+	legMaxScale = j["legMaxScale"].get<float>();
+
+	legMaxRotate = j["legMaxRotate"].get<float>();
+
+	playerScale = j["scale"].get<float>();
+
+	leftLegFront = path + j["leftLegFront"].get<std::string>();
+	rightLegFront = path + j["rightLegFront"].get<std::string>();
+	leftLegBack = path + j["leftLegback"].get<std::string>();
+	rightLegBack = path + j["rightLegback"].get<std::string>();
 }
