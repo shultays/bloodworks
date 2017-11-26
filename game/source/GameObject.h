@@ -34,6 +34,7 @@ class GameObject
 	sol::function onBulletCollision; // todo implement these
 	sol::function onPlayerCollision;
 	sol::function onMonsterCollision;
+	sol::function onReposition;
 
 	std::string script;
 	sol::table data;
