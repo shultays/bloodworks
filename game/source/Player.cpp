@@ -429,6 +429,16 @@ void Player::tick()
 		}
 	}
 	
+	if (bloodworks->IsGUIHidden())
+	{
+		if (input.isMouseVisible() == false)
+		{
+			input.showMouse();
+		}
+		crosshairPos = (game->getRelativeMousePos(input.getMousePos() , RenderableAlignment::world)  - pos )* bloodworks->getCameraZoom();
+	}
+
+
 	crosshairDistance = 0.0f;
 
 	if (crosshairPos.lengthSquared() > 0.01f)

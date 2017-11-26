@@ -86,6 +86,10 @@ void BloodworksCheats::onTick()
 		static bool hidden = false;
 		hidden = !hidden;
 		bloodworks->HideGui(hidden);
+		if (hidden)
+		{
+			input.showMouse();
+		}
 	}
 
 	if (bloodworks->isMissionLoaded() == false)
