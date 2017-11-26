@@ -398,7 +398,7 @@ end
 BuffIcons = {}
 function BuffIcons.init()
 end
-function BuffIcons.repositionGUI(gameObject)
+function BuffIcons.repositionGUI(gameObject, size)
     gameObject:setPosition(Vec2.new(0, -90 / getCameraZoom()))
     gameObject:setScale(Vec2.new(1.0 / getCameraZoom(), 1.0 / getCameraZoom()))
 end
