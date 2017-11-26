@@ -108,7 +108,10 @@ void DropController::tick()
 		{
 			const Vec2& pos = bloodworks->getMonsterController()->getRandomPos(lua.create_table()); // todo this shouldnt be in monstercontroller
 			lastRandomDropSpawn = timer.getTime();
-			spawnDrop(pos);
+			if (!bloodworks->IsGUIHidden())
+			{
+				spawnDrop(pos);
+			}
 		}
 	}
 
@@ -258,8 +261,11 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
-			lastDropSpawn = timer.getTime();
-			spawnDrop(pos);
+			lastDropSpawn = timer.getTime();			
+			if (!bloodworks->IsGUIHidden())
+			{
+				spawnDrop(pos);
+			}
 		}
 	}
 }

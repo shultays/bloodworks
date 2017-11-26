@@ -142,7 +142,7 @@ function HealthBar.init(gameObject)
     HealthBar.repositionGUI(gameObject)
 end
 
-function HealthBar.repositionGUI(gameObject)
+function HealthBar.repositionGUI(gameObject, size)
     gameObject:setPosition(Vec2.new(0, 60 / getCameraZoom()))
     gameObject:setScale(Vec2.new(0.5 / getCameraZoom(), 0.5 / getCameraZoom()))
 end

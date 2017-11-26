@@ -217,6 +217,8 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		reloadTime = 2.0f;
 	}
 
+	reloadTime = 0.0f;
+
 	if (j.count("bulletLifeTime"))
 	{
 		bulletLifeTime = j["bulletLifeTime"].get<float>();
@@ -507,6 +509,10 @@ void Gun::reload()
 
 int Gun::getMaxAmmo() const
 {
+	if (bloodworks->IsGUIHidden())
+	{
+		return 1000;
+	}
 	return ultimate ? maxAmmo : bloodworks->getPlayer()->getBuffedClipSize(maxAmmo);
 }
 
