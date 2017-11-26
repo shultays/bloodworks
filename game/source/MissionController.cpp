@@ -121,6 +121,7 @@ GameObject* MissionController::addGameObject(const std::string& script, GameObje
 		object->onBulletCollision = lua[script]["onBulletCollision"];
 		object->onPlayerCollision = lua[script]["onPlayerCollision"];
 		object->onMonsterCollision = lua[script]["onMonsterCollision"];
+		object->onReposition = lua[script]["repositionGUI"];
 
 		if (lua[script]["init"])
 		{
@@ -258,9 +259,10 @@ void MissionController::repositionGUI()
 	for (auto& g : gameObjects)
 	{
 		auto& gameObject = g.second;
-		if (lua[gameObject->script]["repositionGUI"])
+
+		if (gameObject->onReposition )
 		{
-			lua[gameObject->script]["repositionGUI"](gameObject, bloodworks->getScreenDimensions().toVec());
+			gameObject->onReposition(gameObject, bloodworks->getScreenDimensions().toVec());
 		}
 	}
 }
