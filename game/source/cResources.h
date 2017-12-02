@@ -172,10 +172,5 @@ public:
 
 	void freeAll();
 
-	static void deleteObject(cShader* object);
-	static void deleteObject(cTexture* object);
-	static void deleteObject(cFont* object);
-	static void deleteObject(cSoundSample* object);
-
 	void tick();
 };

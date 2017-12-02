@@ -70,7 +70,7 @@ class cSharedPtr
 				}
 				else 
 				{
-					cResources::deleteObject(object);
+					deleteObject(object);
 					SAFE_DELETE(counter);
 				}
 			}
@@ -80,6 +80,7 @@ class cSharedPtr
 		deallocator = nullptr;
 	}
 
+	void deleteObject( T* object) ;
 public:
 	cSharedPtr() 
 	{
@@ -199,3 +200,4 @@ public:
 		return this->object != other.object;
 	}
 };
+
