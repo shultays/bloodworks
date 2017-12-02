@@ -89,3 +89,6 @@ function PhoenixDive.onPlayerDamaged(gun, damage, dir, params)
     return damage
 end
 
+function PhoenixDive.spawnChance(gun)
+    return ultimateSpawnChance()
+end

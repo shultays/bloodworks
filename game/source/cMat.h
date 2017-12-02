@@ -410,6 +410,8 @@ public:
 		_31 = other._31;
 		_32 = other._32;
 		_33 = other._33;
+
+		return *this;
 	}
 
 	Vec4 operator*(const Vec4 &v) const
