@@ -122,4 +122,5 @@ public:
 	void tick();
 	void addInstalledMod(nlohmann::json& j, DirentHelper::File& f);
 	bool isPathDisabled(const std::string& path) const;
+	bool isModDisabled(const std::string& mod) const;
 };
