@@ -17,7 +17,7 @@ public:
 
 	void removeElement(const T& value)
 	{
-		erase(std::remove(begin(), end(), value), end());
+		erase(std::remove(T::begin(), T::end(), value), T::end());
 	}
 
 	void swapToTailRemoveElement(const T& value)

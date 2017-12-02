@@ -25,6 +25,10 @@ function BananaBomb.onTick(gun)
     end
 end
 
+function BananaBomb.spawnChance(gun)
+    return ultimateSpawnChance()
+end
+
 BananaBombObject = {}
 
 
