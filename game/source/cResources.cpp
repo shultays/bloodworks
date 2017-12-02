@@ -79,26 +79,6 @@ std::string cResources::soundSampleID(const std::string& sampleName) const
 	return ID;
 }
 
-void cResources::deleteObject(cShader* object)
-{
-	delete object;
-}
-
-void cResources::deleteObject(cFont* object)
-{
-	delete object;
-}
-
-void cResources::deleteObject(cTexture* object)
-{
-	delete object;
-}
-
-void cResources::deleteObject(cSoundSample* object)
-{
-	delete object;
-}
-
 void cResources::tick()
 {
 	float time = timer.getRenderTime();

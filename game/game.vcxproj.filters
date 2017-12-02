@@ -186,12 +186,6 @@
     <ClCompile Include="source\cSlave.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
-    <ClCompile Include="source\cSlaveWindows.cpp">
-      <Filter>Coral</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cMutexWindows.cpp">
-      <Filter>Coral</Filter>
-    </ClCompile>
     <ClCompile Include="source\BloodworksConfig.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
@@ -236,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="source\CustomGameWindow.cpp">
       <Filter>Bloodworks</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSharedPtr.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMutex.cpp">
+      <Filter>Coral</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

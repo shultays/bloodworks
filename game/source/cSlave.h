@@ -19,7 +19,7 @@ public:
 struct ThreadData 
 {
 	cSlave* slave;
-	int slaveIndex;
+	std::thread thread;
 	bool freed;
 	cSlaveWork* workToDo;
 	cSlaveController* controller;
@@ -28,7 +28,6 @@ struct ThreadData
 class cSlave 
 {
 	ThreadData* sharedData;
-	void startSlaveThreadNative();
 	cSlaveController* controller;
 public:
 	cSlave() 
