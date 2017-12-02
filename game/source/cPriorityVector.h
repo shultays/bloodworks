@@ -103,7 +103,7 @@ public:
 
 	void changePriority(T item, int newPriority) 
 	{
-		for (int i = 0; i < size; i++) 
+		for (int i = 0; i < size(); i++) 
 		{
 			if (elements[i].item == item)
 			{
