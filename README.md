@@ -29,7 +29,7 @@ Enjoy!
 
 ## Sneak peak
 
-<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/itch.io/0.gif" width="350">
+<img src="https://raw.githubusercontent.com/shultays/bloodworks/master/0.gif" width="350">
 
 <a href="https://www.youtube.com/watch?v=Fjxbh8k15z8">Gameplay video (YouTube)</>
 
