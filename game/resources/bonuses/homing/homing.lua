@@ -38,7 +38,6 @@ end
 HomingOrbBullet = {}
 
 function HomingOrbBullet.onTick(bullet)
-
     if bullet.data.monster ~= nil then
         local toMonster = (bullet.data.monster.position - bullet.position)
         local m = 1.0 - clamp(toMonster:length() / 60)
@@ -47,6 +46,7 @@ function HomingOrbBullet.onTick(bullet)
             bullet.data.monster = getClosestMonsterWithIgnoreId(bullet.position, {HomingOrb.homingOrbIdInitial, HomingOrb.homingOrbId, bullet.id})
         end
     end
+    return false
 end
 
 function HomingOrbBullet.onHit(bullet, monster)

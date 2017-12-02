@@ -33,7 +33,7 @@ function Spider.init(monster)
     data.minDamage = 10
     data.maxDamage = 16
     
-    data.maxMoveSpeed = 195.0 * (math.random() * 0.1 + 1.0)
+    data.maxMoveSpeed = 230.0 * (math.random() * 0.1 + 1.0)
     data.maxRotateSpeed = 0.04
     data.playerSeeRange = 250.0
     
@@ -47,7 +47,7 @@ function Spider.init(monster)
 end
 
 function Spider.spawnChanceInMission(missionData, min)
-    return 0.15 + clamp(min * 0.3) * 0.15
+    return 0.15 + clamp(min * 0.3) * 0.10
 end
  
 function Spider.buffStats(monster, min)

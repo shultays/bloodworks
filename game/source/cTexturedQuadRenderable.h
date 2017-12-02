@@ -43,7 +43,7 @@ public:
 		return getTexture(0);
 	}
 
-	const cTextureShr& cTexturedQuadRenderable::getTexture(int i)
+	const cTextureShr& getTexture(int i)
 	{
 		return texture[i];
 	}
