@@ -26,6 +26,7 @@ void ModWindow::showModDetails(struct ModData& modData)
 	detailCreator->setText("Creator: " + modData.jsonData["creator"].get<std::string>());
 	detailDescription->setText(modData.jsonData["description"].get<std::string>());
 
+
 	detailedMod = modData;
 
 	std::stringstream ss;
@@ -48,7 +49,10 @@ void ModWindow::showModDetails(struct ModData& modData)
 
 	std::string name = modData.jsonData["name"].get<std::string>();
 	detailInstalled = installedModIndices.count(name) > 0;
-
+	detailEnabled = false;
+	if (detailInstalled) {
+		detailEnabled = isPathDisabled(installedMods[installedModIndices[name]].filePath.folder) == false;
+	}
 
 	updateDetailInfo();
 }
@@ -436,6 +440,18 @@ bool ModWindow::isPathDisabled(const std::string& path) const
 	for (auto& s : disabledModsFullPaths)
 	{
 		if (beginsWith(path, s))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ModWindow::isModDisabled(const std::string& mod) const
+{
+	for (auto& s : disabledMods)
+	{
+		if ( s == mod )
 		{
 			return true;
 		}
