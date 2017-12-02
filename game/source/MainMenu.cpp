@@ -91,6 +91,7 @@ MainMenu::MainMenu(Bloodworks *b)
 
 MainMenu::~MainMenu()
 {
+	handle.stop();
 	SAFE_DELETE(bloodworksText);
 	SAFE_DELETE(newGame);
 	SAFE_DELETE(customGames);
