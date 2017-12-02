@@ -103,3 +103,11 @@ function BurnMonsterObject.onTick(gameobject)
     end
     
 end
+
+
+function ultimateSpawnChance()
+    if player.ultimate == nil and player.gun ~= nil and player.gun.name ~= "Pistol" then
+        return 4.0
+    end
+    return 1.0
+end

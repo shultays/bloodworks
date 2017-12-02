@@ -541,3 +541,4 @@ function addRandomColliders(count, distanceToMid)
         end
     end
 end
+

@@ -63,14 +63,19 @@ void Bullet::tick()
 	Vec2 oldPos = pos;
 	if (onTickCallback)
 	{
-		onTickCallback(this);
+		if (onTickCallback(this))
+		{
+			removeSelf();
+			return;
+		}
 	}
 
 	if (gun != nullptr)
 	{
-		if (gun->getScriptTable()["onBulletTick"])
+		if (gun->onBulletTick(this))
 		{
-			gun->getScriptTable()["onBulletTick"](gun, this);
+			removeSelf();
+			return;
 		}
 	}
 	moveDir = Vec2::fromAngle(moveAngle);

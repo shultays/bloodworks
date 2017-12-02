@@ -217,7 +217,10 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		reloadTime = 2.0f;
 	}
 
-	reloadTime = 0.0f;
+	if (bloodworks->IsGUIHidden())
+	{
+		reloadTime = 0.0f;
+	}
 
 	if (j.count("bulletLifeTime"))
 	{
@@ -227,6 +230,19 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	{
 		bulletLifeTime = -1.0f;
 	}
+
+
+	dynamicSpawnChanceCall = scriptTable["spawnChance"];
+
+	onTickCall = scriptTable["onTick"];
+	onBulletTickCall = scriptTable["onBulletTick"];
+	onBulletHitCall = scriptTable["onBulletHit"];
+	onReloadStartCall = scriptTable["onReloadStart"];
+	onReloadEndCall = scriptTable["onReloadEnd"];
+	onPlayerDamagedCall = scriptTable["onPlayerDamaged"];
+
+	
+	sol::function onReloadStart;
 
 	buffedMaxAmmo = currentAmmo = getMaxAmmo();
 	reloading = false;
@@ -281,7 +297,7 @@ void Gun::tick(float dt)
 		{
 			reloadEnding = true;
 
-			if (ultimate == false && reloadEndSound.isValid())
+			if (ultimate == false && reloadEndSound.isValid() && !bloodworks->IsGUIHidden() )
 			{
 				bloodworks->addGameSound(reloadEndSound.play());
 			}
@@ -295,14 +311,17 @@ void Gun::tick(float dt)
 				currentAmmo = buffedMaxAmmo;
 			}
 
-			if (scriptTable["onReloadEnd"])
+			if (onReloadEndCall)
 			{
-				scriptTable["onReloadEnd"](this);
+				onReloadEndCall(this);
 			}
 		}
 	}
 
-	scriptTable["onTick"](this);
+	if (onTickCall)
+	{
+		onTickCall(this);
+	}
 
 	if (gunShootSoundContinuous && gunShootSound.isValid())
 	{
@@ -438,9 +457,9 @@ void Gun::reset()
 
 void Gun::onBulletHit(Bullet *bullet, Monster* monster)
 {
-	if (scriptTable["onBulletHit"])
+	if (onBulletHitCall)
 	{
-		scriptTable["onBulletHit"](this, bullet, monster);
+		onBulletHitCall(this, bullet, monster);
 	}
 
 	if (bulletHitSound.isValid())
@@ -495,14 +514,14 @@ void Gun::reload()
 		reloading = true;
 		reloadEnding = false;
 		remainingReload = reloadTime;
-		if (ultimate == false && reloadBeginSound.isValid())
+		if (ultimate == false && reloadBeginSound.isValid() && !bloodworks->IsGUIHidden())
 		{
 			bloodworks->addGameSound(reloadBeginSound.play());
 		}
 
-		if (scriptTable["onReloadStart"])
+		if (onReloadStartCall)
 		{
-			scriptTable["onReloadStart"](this);
+			onReloadStartCall(this);
 		}
 	}
 }
@@ -519,9 +538,10 @@ int Gun::getMaxAmmo() const
 float Gun::getSpawnChance()
 {
 	float chance = spawnChance;
-	if (dynamicSpawnChance)
+	if (dynamicSpawnChanceCall)
 	{
-		chance = dynamicSpawnChance();
+		float mul = dynamicSpawnChanceCall(this);
+		chance *= mul;
 	}
 
 	if (bloodworks->getPlayer()->getGun() == this || bloodworks->getPlayer()->getSecondaryGun() == this)
@@ -543,11 +563,20 @@ const std::string& Gun::getScriptName() const
 
 int Gun::onPlayerDamaged(int damage, float dir, sol::table& params)
 {
-	if (scriptTable["onPlayerDamaged"])
+	if (onPlayerDamagedCall)
 	{
-		return scriptTable["onPlayerDamaged"](this, damage, dir, params);
+		return onPlayerDamagedCall(this, damage, dir, params);
 	}
 	return damage;
+}
+
+bool Gun::onBulletTick(Bullet* bullet)
+{
+	if (onBulletTickCall)
+	{
+		return onBulletTickCall(this, bullet);
+	}
+	return false;
 }
 
 int Gun::getCurrentAmmo() const
