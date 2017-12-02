@@ -1,7 +1,9 @@
 #pragma once
 
+#include <mutex>
+
 class gMutex {
-	void* mutex;
+	std::timed_mutex mutex;
 
 public:
 	gMutex();
