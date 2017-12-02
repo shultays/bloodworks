@@ -38,12 +38,7 @@ public:
 
 	void startSlaveThread(cSlaveController* controller);
 
-	void freeSlaveThread() 
-	{
-		assert(sharedData);
-		sharedData->freed = true;
-		sharedData = nullptr;
-	}
+	void freeSlaveThread();
 
 	bool isWorking() 
 	{

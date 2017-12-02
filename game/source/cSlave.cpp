@@ -21,8 +21,6 @@ void SlaveThreadFunc(ThreadData* data)
 
 		sleepMS(10);
 	}
-
-	SAFE_DELETE(data);
 }
 
 void cSlave::startSlaveThread(cSlaveController* controller) 
@@ -38,6 +36,14 @@ void cSlave::startSlaveThread(cSlaveController* controller)
 	sharedData = data;
 
 	data->thread = std::thread(SlaveThreadFunc, sharedData);
+}
+
+void cSlave::freeSlaveThread()
+{
+	assert(sharedData);
+	sharedData->freed = true;
+	sharedData->thread.join();
+	delete sharedData;
 }
 
 cSlaveController::cSlaveController()
