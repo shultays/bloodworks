@@ -100,12 +100,13 @@ function makeBossDefault(monster)
     local t = 0
     repeat
         t = math.random(11)
-    until time < 20.0 or time > 20.0 
+    until time > 30.0 or t ~= 8 
     
     --t = 1
     
     if t == 1 then -- huge & tank
-        monster.hitPoint = monster.hitPoint * 7
+        monster.hitPoint = monster.hitPoint * 6
+        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.7
         monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
         monster:setScale(1.0 + math.random() * 0.3)
         monster.knockbackResistance:addBuff(0.07)
@@ -248,8 +249,7 @@ function makeBossDefault(monster)
             if distanceToPlayer < 150 then
                 angle = angle + 1.4 * (1.0 - distanceToPlayer / 150.0)
             end
-            
-            if math.abs(angleDiff(angleToPlayer, player.aimAngle)) < angle then
+            if distanceToPlayer > 1000 or math.abs(angleDiff(angleToPlayer, player.aimAngle)) < angle then
                 monster.data.maxMoveSpeed = 0.0
                 monster.animationSpeed = 0.0
                 monster.moveSpeed = 0.0
