@@ -2,19 +2,42 @@
 
 int slaveIndex = 0;
 
+
+void SlaveThreadFunc(ThreadData* data)
+{
+	while (data->freed == false)
+	{
+		if (!data->workToDo)
+		{
+			data->workToDo = data->slave->getNextJobForSlave();
+		}
+
+		if (data->workToDo)
+		{
+			data->workToDo->runOnSlave();
+			data->slave->slaveWorkDone(data->workToDo);
+			data->workToDo = nullptr;
+		}
+
+		sleepMS(10);
+	}
+
+	SAFE_DELETE(data);
+}
+
 void cSlave::startSlaveThread(cSlaveController* controller) 
 {
 	assert(!sharedData);
 	ThreadData* data = new ThreadData;
 	data->slave = this;
-	data->slaveIndex = ++slaveIndex;
+
 	data->freed = false;
 	data->workToDo = nullptr;
 	data->controller = controller;
 	this->controller = controller;
 	sharedData = data;
 
-	startSlaveThreadNative();
+	data->thread = std::thread(SlaveThreadFunc, sharedData);
 }
 
 cSlaveController::cSlaveController()
@@ -85,3 +108,6 @@ void cSlaveController::addWork(cSlaveWork* work)
 	workForSlavesQueue.push(work);
 	controllerMutex.releaseMutex();
 }
+
+
+

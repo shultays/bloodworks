@@ -198,7 +198,7 @@
     <ClCompile Include="source\cKeyMapButton.cpp" />
     <ClCompile Include="source\cLuaWorld.cpp" />
     <ClCompile Include="source\cMath.cpp" />
-    <ClCompile Include="source\cMutexWindows.cpp" />
+    <ClCompile Include="source\cMutex.cpp" />
     <ClCompile Include="source\CollisionController.cpp" />
     <ClCompile Include="source\cParticle.cpp" />
     <ClCompile Include="source\cPostProcess.cpp" />
@@ -206,8 +206,8 @@
     <ClCompile Include="source\cRect.cpp" />
     <ClCompile Include="source\CreditsWindow.cpp" />
     <ClCompile Include="source\cShader.cpp" />
+    <ClCompile Include="source\cSharedPtr.cpp" />
     <ClCompile Include="source\cSlave.cpp" />
-    <ClCompile Include="source\cSlaveWindows.cpp" />
     <ClCompile Include="source\cTexture.cpp" />
     <ClCompile Include="source\cTimeProfiler.cpp" />
     <ClCompile Include="source\CustomGameWindow.cpp" />
