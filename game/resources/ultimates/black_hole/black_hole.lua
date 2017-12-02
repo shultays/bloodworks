@@ -82,3 +82,6 @@ function BlackHole.onTick(gun)
     end
 end
 
+function BlackHole.spawnChance(gun)
+    return ultimateSpawnChance()
+end

@@ -59,3 +59,8 @@ function RocketBarrage.onBulletTick(gun, bullet)
     local a = 1.0 - (time - bullet.startTime - bullet.lifeTime + 0.1) / 0.1
     bullet:setColor(Vec4:new(1.0, 1.0, 1.0, a))
 end
+
+
+function RocketBarrage.spawnChance(gun)
+    return ultimateSpawnChance()
+end

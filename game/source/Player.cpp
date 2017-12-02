@@ -940,7 +940,7 @@ void Player::reset()
 	accelerationMultiplier.clear();
 	scaleMultiplier.clear();
 
-	maxSpeed.setBaseValue(150.0f);
+	maxSpeed.setBaseValue(180.0f);
 	maxRotateSpeed.setBaseValue(pi * 6.0f);
 	scaleMultiplier.setBaseValue(1.0f);
 	lastScale = 1.0f;
