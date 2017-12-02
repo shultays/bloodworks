@@ -12,9 +12,10 @@ function Alien.init(monster)
     
     monster:playAnimation("walk", math.random())
     
-    data.maxMoveSpeed = 130.0 * (math.random() * 0.2 + 1.0 - 0.1)
-    data.maxRotateSpeed = 0.03
+    data.maxMoveSpeed = 110.0 * (math.random() * 0.2 + 0.9)
+    data.maxRotateSpeed = 0.02
     data.playerSeeRange =  150.0
+    
     
     StunController.init(monster)
     MonsterGroupHelper.init(monster)
@@ -76,12 +77,12 @@ function Alien.onTick(monster)
                 data.randomPos = posToMove
             end
             
-            if distanceToPlayer < data.playerSeeRange and player.isDead == false then
+            if distanceToPlayer < data.playerSeeRange and player.isDead == false  then
                 local c = (distanceToPlayer - data.playerSeeRange * 0.5) / data.playerSeeRange * 0.5
                 if c < 0.0 then
                     c = 0.0
                 end
-                posToMove = posToMove * c + playerPosShift * (1.0 - c) 
+                posToMove = posToMove * c + playerPosShift * (1.0 - c)
             end
         end
         
