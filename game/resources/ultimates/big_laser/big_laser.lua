@@ -38,3 +38,7 @@ function BigLaser.onTick(gun)
         end
     end
 end
+
+function BigLaser.spawnChance(gun)
+    return ultimateSpawnChance()
+end

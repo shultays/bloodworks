@@ -74,8 +74,15 @@ class Gun
 
 	BuffFloat reloadSpeedMultiplier;
 
+	sol::function dynamicSpawnChanceCall;
+	sol::function onTickCall;
+	sol::function onBulletTickCall;
+	sol::function onBulletHitCall;
+	sol::function onReloadStartCall;
+	sol::function onReloadEndCall;
+	sol::function onPlayerDamagedCall;
+
 	float spawnChance;
-	sol::function dynamicSpawnChance;
 	float bulletLifeTime;
 
 	float maxSoundPlayInterval;
@@ -141,4 +148,5 @@ public:
 		return ultimate;
 	}
 	int onPlayerDamaged(int damage, float dir, sol::table& params);
+	bool onBulletTick(Bullet* bullet);
 };

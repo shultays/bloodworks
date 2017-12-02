@@ -12,7 +12,7 @@ function Alien.init(monster)
     
     monster:playAnimation("walk", math.random())
     
-    data.maxMoveSpeed = 120.0 * (math.random() * 0.2 + 1.0 - 0.1)
+    data.maxMoveSpeed = 130.0 * (math.random() * 0.2 + 1.0 - 0.1)
     data.maxRotateSpeed = 0.03
     data.playerSeeRange =  150.0
     
