@@ -198,6 +198,10 @@ public:
 	{
 		return aimDir;
 	}
+	float getAimAngle() const
+	{
+		return aimAngle;
+	}
 
 	void setGun(Gun* gun);
 	Gun* getGun();

@@ -24,6 +24,7 @@ Bullet::Bullet(Bloodworks *bloodworks, Gun *gun)
 	damage = 10;
 	penetrateCount = 0;
 	penetrateUsed = 0;
+	hitsMultipleTimes = false;
 	scale = 1.0f;
 	meshScale = Vec2(1.0f);
 	data = lua.create_table();
@@ -147,7 +148,7 @@ void Bullet::tick()
 			Vec2 monsterPos = monster->getPosition();
 			float radiusToCheck = monster->getRadius() + radius * scale;
 
-			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (penetrateCount == 0 || monster->hasIgnoreId(id) == false))
+			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (hitsMultipleTimes || penetrateCount == 0 || monster->hasIgnoreId(id) == false))
 			{
 				if (monster->shouldHit(this) == false)
 				{
@@ -163,13 +164,16 @@ void Bullet::tick()
 
 				penetrateUsed++;
 
-				if (penetrateUsed > penetrateCount)
+				if (penetrateUsed > penetrateCount && penetrateCount != -1)
 				{
 					removeSelf();
 				}
 				else
 				{
-					monster->addIgnoreId(id);
+					if (hitsMultipleTimes == false)
+					{
+						monster->addIgnoreId(id);
+					}
 				}
 
 				monster->doDamageWithArgs(damage, moveDir, onDamageArgs);
