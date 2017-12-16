@@ -1,0 +1,11 @@
+{
+  "type" : "particle",
+  "maxLifeTime" : 1.0,
+  "isStripLaser" : true,
+  
+  "vertexShader" : "shader.vs",
+  "pixelShader" : "shader.ps",
+  
+  "scriptFile" : "script.lua",
+  "scriptName" : "RainbowStrip"
+}

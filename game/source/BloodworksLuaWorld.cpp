@@ -32,6 +32,7 @@
 #include "cRect.h"
 #include "cCapsule.h"
 #include "Perk.h"
+#include "StripLaserRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -380,6 +381,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"monsterBullet", sol::readonly(&Bullet::monsterBullet),
 
+		"hitsMultipleTimes", &Bullet::hitsMultipleTimes,
 		"penetrateCount", &Bullet::penetrateCount,
 		"penetrateUsed", sol::readonly(&Bullet::penetrateUsed),
 
@@ -560,6 +562,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"maxLevel", sol::readonly(&Perk::maxLevel)
 		);
 
+	lua.new_usertype<StripLaserRenderable>("StripLaser",
+		"setShooting", &StripLaserRenderable::setShooting,
+		"setSpeed", &StripLaserRenderable::setSpeed,
+		"setPos", &StripLaserRenderable::setPos,
+		"stop", &StripLaserRenderable::stop
+		);
+
 	lua.new_usertype<Gun>("Gun",
 		"id", sol::readonly(&Gun::id),
 		"data", &Gun::data,
@@ -580,6 +589,8 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"crosshairDistance", &Gun::crosshairDistance,
 
 		"isTriggered", &Gun::isTriggered,
+
+		"stripLaser", &Gun::stripLaser,
 
 		"getRandomDamage", &Gun::getRandomDamage,
 
