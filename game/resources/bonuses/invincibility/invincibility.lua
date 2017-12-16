@@ -13,6 +13,7 @@ function Invincibility.spawn(bonus, pos)
         gameObject.data.renderable:setAlignment(RenderableAlignment.world)
         gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(34.0, 34.0))
         gameObject.data.renderable:setColor(Vec4.fromColor(0x4488AAFF))
+        Invincibility.onTick(bonus)
     end
     bonus:setActive(true)
 end

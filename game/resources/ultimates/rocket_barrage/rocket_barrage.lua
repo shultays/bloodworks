@@ -3,6 +3,7 @@ function RocketBarrage.init(gun)
     gun.spreadAngle = 0.0
     gun.crosshairDistance = 350.0
     gun.data.shooting = -1.0
+    gun.newBulletData.cannotBeBuffed = true
 end
 
 
@@ -21,6 +22,7 @@ function RocketBarrage.onTick(gun)
     end
     
     if data.shooting > 0.0 then
+        player.canFireNextFrame = false
         data.shooting = data.shooting - dt
         data.shootDt = data.shootDt + dt * 180
         player:addKnockback(-player.aimDir * 30.0, -1.0)

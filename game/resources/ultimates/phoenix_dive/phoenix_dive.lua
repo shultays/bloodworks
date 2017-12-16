@@ -36,6 +36,7 @@ function PhoenixDive.onTick(gun)
     end
     
     if data.started then
+        player.canFireNextFrame = false
         if data.shooting < 0.0 then
             data.started = false
             addExplosion(player.position, 160.0, 230.0, 250, 350, 0.1)
