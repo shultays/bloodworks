@@ -156,11 +156,11 @@ void DropController::tick()
 			remove = true;
 		}
 
-		if (drop.time + 30.0f < timer.getTime())
+		if (drop.time + 45.0f < timer.getTime())
 		{
 			remove = true;
 		}
-		else if (drop.time + 25.0f < timer.getTime())
+		else if (drop.time + 35.0f < timer.getTime())
 		{
 			bool isFadeout = ((int)(timer.getTime() * 3)) % 2 != 0;
 			if (isFadeout == false)
