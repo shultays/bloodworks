@@ -1,8 +1,5 @@
 #include "cSlave.h"
 
-int slaveIndex = 0;
-
-
 void SlaveThreadFunc(ThreadData* data)
 {
 	while (data->freed == false)
