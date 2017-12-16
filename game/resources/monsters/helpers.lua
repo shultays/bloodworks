@@ -216,6 +216,7 @@ function BulletShooter.buffStats(monster, min)
         data.bulletMaxDamage = math.floor(data.bulletMaxDamage * (1.0 + min * 0.4))
         data.bulletRate = data.bulletRate - clamp(min * 0.1) * 2.0
         data.bulletRandom = data.bulletRandom - clamp(min * 0.15) * 0.2
+        data.bulletCount = 1
         monster.colorMultiplier:addBuff(Vec4.new(0.8, 0.95, 0.8, 1.0))
         monster:modifyDrawLevel(1)
     end
@@ -230,13 +231,17 @@ function BulletShooter.onTick(monster)
         if data.bulletTimer < 0.0 then
             data.bulletTimer = data.bulletRate + math.random() * 2.0
             
-            local bullet = addCustomBullet({monsterBullet = true})
-            bullet.damage = math.floor(math.random(data.bulletMinDamage, data.bulletMaxDamage))
-            bullet.position = monster.position + monster.moveDir * 6.0
-            bullet.moveSpeed = data.bulletSpeed
-            bullet.moveAngle = monster.moveAngle + math.random() * data.bulletRandom * 2.0 - data.bulletRandom
-            bullet.radius = 6.0
-            bullet:addRenderableTextureWithSize("~/resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
+            local r = math.random() * ( data.bulletRandom * 2.0 - data.bulletRandom)
+            for i = 1, monster.data.bulletCount do 
+            
+                local bullet = addCustomBullet({monsterBullet = true})
+                bullet.damage = math.floor(math.random(data.bulletMinDamage, data.bulletMaxDamage))
+                bullet.position = monster.position + monster.moveDir * 6.0
+                bullet.moveSpeed = data.bulletSpeed
+                bullet.moveAngle = monster.moveAngle + r  + ( -monster.data.bulletCount * 0.5 + i  - 0.5 ) * math.pi / 14.0
+                bullet.radius = 6.0
+                bullet:addRenderableTextureWithSize("~/resources/monsters/bullet.png", Vec2.new(18.0, 18.0))
+            end
         end
     end
 end
