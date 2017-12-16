@@ -68,5 +68,5 @@ end
 
 
 function Egg.getRandomSpawnPos()
-    return getRandomPosition( {canBeEdge=false, notNearPlayer=true, playerRange=800.0})
+    return getRandomPosition( {canBeEdge=false, notNearPlayer=true, notNearMonsters=true, playerRange=800.0})
 end

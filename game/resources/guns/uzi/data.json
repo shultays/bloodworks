@@ -10,7 +10,7 @@
   "bulletDamage" : [15, 20],
   
   "maxAmmo" : 32,
-  "reloadTime" : 1.5,
+  "reloadTime" : 2.2,
   
   "maxSoundPlayInterval" : 0.0,
   
