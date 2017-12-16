@@ -14,6 +14,7 @@ class Bloodworks;
 class Bullet;
 class LaserRenderable;
 class Monster;
+class StripLaserRenderable;
 
 class Gun
 {
@@ -51,6 +52,8 @@ class Gun
 
 	Vec4 shootParticleColor;
 	LaserRenderable *laser;
+
+	StripLaserRenderable *stripLaser;
 
 	cSoundSampleWithParams gunShootSound;
 	cSoundHandle gunShootSoundHandle;
