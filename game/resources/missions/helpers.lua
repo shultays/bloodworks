@@ -55,7 +55,7 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     monster.data.cannotBecomeBoss = cannotBecomeBoss
     monster.data.cannotShootBullets = cannotShootBullets
     
-    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 15.0 - clamp(min/7) * 6 < missionTime then
+    if cannotBecomeBoss ~= true and monster.scriptTable.makeBoss ~= nil and missionData.lastBossSpawn + 15.0 - clamp(min/7) * 6 < missionTime and missionTime > 1.0 then
         missionData.lastBossSpawn = missionTime
         monster.data.isBoss = true
         monster.scriptTable.makeBoss(monster, min)

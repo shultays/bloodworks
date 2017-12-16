@@ -183,7 +183,7 @@ public:
 	}
 
 	void addDrop(const Vec2& position);
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false);
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = nullptr);
 
 	int getUniqueId()
 	{

@@ -184,6 +184,8 @@ class Player
 	cVector<Knockback> knockbacks;
 
 	const PlayerTemplate *playerTemplate;
+
+	bool canFireNextFrame;
 public:
 	Player(Bloodworks *bloodworks);
 	~Player();

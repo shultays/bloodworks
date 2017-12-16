@@ -505,9 +505,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addExplosion",
-		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer)
+		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit )
 	{
-		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer);
+		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer, onHit);
 	});
 
 	lua.set_function("playSound",
@@ -572,6 +572,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.new_usertype<Gun>("Gun",
 		"id", sol::readonly(&Gun::id),
 		"data", &Gun::data,
+		"newBulletData", &Gun::newBulletData,
 		"name", sol::readonly(&Gun::name),
 		"ultimate", sol::readonly(&Gun::ultimate),
 		"bulletRadius", &Gun::bulletRadius,
@@ -1099,6 +1100,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"clipCountMultiplier", &Player::clipCountMultiplier,
 		"gunSpreadMultiplier", &Player::gunSpreadMultiplier,
 		"accelerationMultiplier", &Player::accelerationMultiplier,
+		"canFireNextFrame", &Player::canFireNextFrame,
 		"gun", sol::readonly(&Player::gun),
 		"setGun", &Player::setGun,
 		"ultimate", sol::readonly(&Player::secondaryGun),
