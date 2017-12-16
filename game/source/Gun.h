@@ -39,6 +39,7 @@ class Gun
 	int id;
 
 	sol::table data;
+	sol::table newBulletData;
 
 	Bullet* addBullet();
 
