@@ -1053,9 +1053,9 @@ bool Bloodworks::isCoorOutside(const Vec2& pos) const
 	return mapRect.isOutside(pos);
 }
 
-void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer)
+void Bloodworks::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit)
 {
-	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage, startTime, damagePlayer);
+	explosionController->addExplosion(pos, maxScale, scaleSpeed, minDamage, maxDamage, startTime, damagePlayer, onHit);
 }
 
 void Bloodworks::addDrop(const Vec2& position)

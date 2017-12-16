@@ -571,11 +571,12 @@ void Player::tick()
 
 	if (gun)
 	{
-		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack);
+		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack) && canFireNextFrame;
 		gun->setTriggered(trigerred);
 		gun->tick(dt);
 		gun->updateLaser(gunPos, -aimAngle);
 	}
+	canFireNextFrame = true;
 
 	if (secondaryGun)
 	{
@@ -926,6 +927,7 @@ void Player::reset()
 	rightLegBack = nullptr;
 
 	playerTemplate = nullptr;
+	canFireNextFrame = true;
 
 	knockbacks.clear();
 	maxSpeed.clear();
