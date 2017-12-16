@@ -30,8 +30,8 @@ function Spider.init(monster)
     MonsterMeleeHelper.init(monster)
     data.hitWaitTime = 0.1
     data.hitInterval = 0.9
-    data.minDamage = 10
-    data.maxDamage = 16
+    data.minDamage = 8
+    data.maxDamage = 14
     
     data.maxMoveSpeed = 200.0 * (math.random() * 0.1 + 1.0)
     data.maxRotateSpeed = 0.04

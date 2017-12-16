@@ -20,8 +20,8 @@ function Alien.init(monster)
     StunController.init(monster)
     MonsterGroupHelper.init(monster)
     MonsterMeleeHelper.init(monster)
-    data.minDamage = 8
-    data.maxDamage = 12
+    data.minDamage = 10
+    data.maxDamage = 16
     
     data.targetShift = Vec2.randDir() * (math.random() * 400.0 - 200.0)
     
