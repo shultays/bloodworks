@@ -63,6 +63,10 @@ function Survival.onTick()
             end
             monster.position = pos
             monster.moveAngle =  math.random() * math.pi * 2.0
+            
+            if monster.data.time ~= nil then
+                data.time = data.time - math.random() * 20
+            end
         end
     end
     

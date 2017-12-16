@@ -542,6 +542,7 @@ void Player::tick()
 		oldSpreadAngle = newSpreadAngle;
 
 		float scale = sin(oldSpreadAngle) * crosshairDistance + 10.0f;
+		scale = min(scale, 130.0f);
 		spread->setWorldMatrix(Mat3::scaleMatrix(scale).translateBy(pos + crosshairPos));
 		spread->setColor(Vec4(1.0f, 1.0f, 1.0f, clamped(oldSpreadAngle * 4.0f, 0.0f, 0.4f)));
 
