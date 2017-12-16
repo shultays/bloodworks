@@ -10,6 +10,7 @@
 #include "cSound.h"
 #include "Monster.h"
 #include "BloodworksControls.h"
+#include "StripLaserRenderable.h"
 
 Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
@@ -158,6 +159,15 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		laser = nullptr;
 	}
 
+	if (j.count("stripLaserParticle"))
+	{
+		stripLaser = new StripLaserRenderable(bloodworks, j["stripLaserParticle"].get<std::string>(), PLAYER - 1 + bulletLevelModifier);
+	}
+	else
+	{
+		stripLaser = nullptr;
+	}
+
 	gunShootSoundContinuous = false;
 	if (j.count("firingSoundContinuous"))
 	{
@@ -241,7 +251,6 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	onReloadEndCall = scriptTable["onReloadEnd"];
 	onPlayerDamagedCall = scriptTable["onPlayerDamaged"];
 
-	
 	sol::function onReloadStart;
 
 	buffedMaxAmmo = currentAmmo = getMaxAmmo();
@@ -260,6 +269,10 @@ void Gun::stop()
 			gunShootSoundHandle.stop();
 			gunShootSoundCurVolume = 0.0f;
 		}
+	}
+	if (stripLaser)
+	{
+		stripLaser->stop();
 	}
 }
 
@@ -380,6 +393,14 @@ void Gun::tick(float dt)
 
 		}
 	}
+
+	if (stripLaser)
+	{
+		Vec2 pos = bloodworks->getPlayer()->getGunPos();
+		Vec2 speed = bloodworks->getPlayer()->getAimDir() * bulletSpeed;
+
+		stripLaser->tick(pos, speed);
+	}
 }
 
 float Gun::getMaxCrosshairDistance() const
@@ -452,6 +473,10 @@ void Gun::reset()
 	if (laser)
 	{
 		laser->setVisible(false);
+	}
+	if (stripLaser)
+	{
+		stripLaser->clear();
 	}
 }
 
@@ -598,6 +623,7 @@ Gun::~Gun()
 {
 	bulletTexture = nullptr;
 	SAFE_DELETE(laser);
+	SAFE_DELETE(stripLaser);
 }
 
 Bullet* Gun::addBullet()

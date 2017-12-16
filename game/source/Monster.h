@@ -79,6 +79,7 @@ class Monster
 	float scoreMultiplier;
 
 	float lastHitSoundPlayTime;
+	float lastBloodTime;
 
 	void killSelf(const Vec2& blowDir);
 

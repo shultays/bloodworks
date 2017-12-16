@@ -309,6 +309,24 @@ void BloodworksCheats::onTick()
 		bloodworks->getCollisionController()->drawDebug(true);
 	}
 
+	static bool fill = true;
+	if (input.isKeyDown(key_f4))
+	{
+		if (fill)
+		{
+			fill = false;
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+	}
+	else
+	{
+		if (!fill)
+		{
+			fill = true;
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+	}
+
 	if (input.isKeyPressed(key_g))
 	{
 		if (player->getMaxHitpoints() < 100000000)
@@ -451,9 +469,9 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Uzi")
+		if (gun->getScriptName() == "RainbowGun")
 		{
-			//player->setGun(gun);
+			player->setGun(gun);
 		}
 		if (gun->getScriptName() == "BananaBomb")
 		{
@@ -464,10 +482,6 @@ void BloodworksCheats::onLoadMission()
 			//player->setSecondaryGun(gun);
 		}
 		if (gun->getScriptName() == "BigLaser")
-		{
-			//player->setSecondaryGun(gun);
-		}
-		if (gun->getScriptName() == "BlackHole")
 		{
 			//player->setSecondaryGun(gun);
 		}
