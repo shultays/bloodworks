@@ -48,6 +48,10 @@ Egg-Sack Model
 Danimal
 via opengameart.org
 
+Black-Hole Shader
+Yaniel
+via shadertoy.com
+
 Health Bar
 Paul Wortmann
 www.PhysHexGames.com

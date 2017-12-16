@@ -95,9 +95,9 @@ inline const T& saturate(T& a)
 }
 
 template <class T>
-inline const T& saturated(const T& a)
+inline T saturated(const T& a)
 {
-	return clamped(a, 0.0f, 1.0f);
+	return a < (T)0 ? (T)0 : (a > (T)1 ? (T)1 : a);
 }
 template <class T>
 inline const T& abs(const T& a)

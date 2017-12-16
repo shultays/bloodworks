@@ -50,7 +50,7 @@ void Monster::init(const MonsterTemplate* monsterTemplate)
 	animationSpeed = 1.0f;
 
 	lastHitSoundPlayTime = timer.getTime();
-
+	lastBloodTime = timer.getTime();
 	renderable = new cAnimatedTexturedQuadRenderable(bloodworks, "resources/default");
 	renderable->addAnimation(monsterTemplate->animationData);
 	bloodworks->addRenderable(renderable, MONSTERS);
@@ -320,11 +320,16 @@ void Monster::doDamageWithArgs(int damage, const Vec2& dirInput, sol::table& arg
 			r = sqrtf(r);
 			Vec2 shift = spawnDir * r * collisionRadius * 2.0f;
 
-			if (hasBlood)
+			if (lastBloodTime + 0.1f < timer.getTime())
 			{
-				bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+				lastBloodTime = timer.getTime();
+
+				if (hasBlood)
+				{
+					bloodworks->getBloodRenderable()->addBlood(position + shift, dir * clamped(damage * 0.3f, 0.0f, 20.0f), 10.0f);
+				}
+				spawnBits(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 			}
-			spawnBits(dir * clamped(damage * 0.3f, 0.0f, 20.0f));
 			if (monsterTemplate->hitSounds.size() && lastHitSoundPlayTime + 0.3f < timer.getTime() && (damage > 15 || randFloat() < 0.3f))
 			{
 				lastHitSoundPlayTime = timer.getTime();

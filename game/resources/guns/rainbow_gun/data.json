@@ -1,0 +1,25 @@
+{
+  "type" : "gun",
+  
+  "name": "Rainbow Gun",
+  "icon" : "icon.png",
+  
+  "bulletRadius" : 16.0,
+  "bulletSpeed" : 450.0,
+  "bulletDamage" : [2, 5],
+  "bulletLifeTime" : 0.90,
+  
+  "crosshairDistance" : 350.0,
+  "maxAmmo" : 8,
+  "reloadTime" : 3.2,
+  
+  "firingSound" : {
+    "path" : "fire.ogg",
+    "volume" : 0.85
+  },
+  
+  "stripLaserParticle" : "RainbowStrip",
+  
+  "scriptFile" : "rainbowgun.lua",
+  "scriptName" : "RainbowGun"
+}
