@@ -24,6 +24,7 @@ class ExplosionController
 		Vec2 pos;
 		bool damagePlayer;
 		bool damagedPlayer;
+		sol::function onHit;
 	};
 	cVector<ExplosionData> explosions;
 	cParticle *explosionParticles;
@@ -32,6 +33,6 @@ public:
 	ExplosionController(Bloodworks *bloodworks);
 	~ExplosionController();
 	void tick();
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false);
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = nullptr );
 	void reset();
 };

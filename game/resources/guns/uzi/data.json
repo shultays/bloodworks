@@ -5,9 +5,9 @@
   "bulletTexture" : "bullet.png",
   "bulletSize" : [6.0, 6.0],
   "bulletMeshShift" : [0.0, 0.0],
-  "bulletRadius" : 1.0,
+  "bulletRadius" : 2.0,
   "bulletSpeed" : 750.0,
-  "bulletDamage" : [20, 30],
+  "bulletDamage" : [15, 20],
   
   "maxAmmo" : 32,
   "reloadTime" : 1.5,

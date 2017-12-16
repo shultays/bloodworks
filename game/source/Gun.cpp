@@ -123,6 +123,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 	fixFolderPath(folder);
 	scriptTable["basePath"] = folder;
 	data = lua.create_table();
+	newBulletData = lua.create_table();
 	id = bloodworks->getUniqueId();
 
 	spreadAngle = 0.0f;
@@ -647,6 +648,11 @@ Bullet* Gun::addBullet()
 		bullet->addRenderable(renderable);
 	}
 	bloodworks->getBulletController()->addBullet(bullet);
+
+	for (auto t : newBulletData)
+	{
+		bullet->data[t.first] = t.second;
+	}
 
 	bloodworks->onAddedGunBullet(this, bullet);
 

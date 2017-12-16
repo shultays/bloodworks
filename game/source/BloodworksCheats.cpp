@@ -35,7 +35,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	slowdownBuff = bloodworks->getGlobalUniqueId();
 	stopBuff = bloodworks->getGlobalUniqueId();
 
-	hasCheats = bloodworks->getConfig()->getBool("cheats", Coral::isDebuggerPresent());
+	hasCheats = bloodworks->getConfig()->getBool("cheats", Coral::isDebuggerPresent()) || coral.isDebuggerPresent();
 
 #ifdef DEBUG
 	showFPS = true;
@@ -471,7 +471,7 @@ void BloodworksCheats::onLoadMission()
 	{
 		if (gun->getScriptName() == "RainbowGun")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
 		if (gun->getScriptName() == "BananaBomb")
 		{
