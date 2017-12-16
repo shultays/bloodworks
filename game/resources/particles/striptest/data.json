@@ -1,0 +1,11 @@
+{
+  "type" : "particle",
+  "maxLifeTime" : 10.0,
+  "isStripLaser" : true,
+  
+  "vertexShader" : "shader.vs",
+  "pixelShader" : "shader.ps",
+  
+  "scriptFile" : "script.lua",
+  "scriptName" : "StripTestParticle"
+}

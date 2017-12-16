@@ -22,6 +22,28 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 	maxLifeTime = j["maxLifeTime"].get<float>();
 	attributeSize = 0;
 
+	if (j.count("isStrip"))
+	{
+		isStrip = j["isStrip"].get<bool>();
+	}
+	else
+	{
+		isStrip = false;
+	}
+	
+
+	isStripLaser = false;
+
+	if (j.count("isStripLaser"))
+	{
+		isStripLaser = j["isStripLaser"].get<bool>();
+	}
+
+	if (isStripLaser)
+	{
+		isStrip = true;
+	}
+
 	auto addAtribute = [&](const std::string& attributeName, const std::string& attributeType)
 	{
 		Attribute attribute;
@@ -58,12 +80,20 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 		attributesMap[attributeName] = attributes.size() - 1;
 	};
 	addAtribute("pos", "vec2");
-	addAtribute("uv", "vec2");
 	addAtribute("time", "float");
+	addAtribute("uv", "vec2");
 
 	posIndex = attributesMap["pos"];
-	uvIndex = attributesMap["uv"];
 	timeIndex = attributesMap["time"];
+	uvIndex = attributesMap["uv"];
+
+	if (isStripLaser) 
+	{
+		addAtribute("speed", "vec2");
+		addAtribute("prevpos", "vec2");
+		addAtribute("prevspeed", "vec2");
+		addAtribute("prevtime", "float");
+	}
 
 	uCurrentTime = shader->addUniform("uCurrentTime", TypeFloat).index;
 
@@ -99,15 +129,6 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 	};
 
 	lua.set_function("addUniform", addUniform);
-
-	if (j.count("isStrip"))
-	{
-		isStrip = j["isStrip"].get<bool>();
-	}
-	else
-	{
-		isStrip = false;
-	}
 
 	if (j.count("textures"))
 	{
@@ -317,7 +338,7 @@ void cParticle::addTexture(const std::string& path)
 	textures.push_back(texture);
 }
 
-void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, cParticleRandomizer* randomizer)
+void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, cParticleRandomizer* randomizer, bool replaceLastParticle)
 {
 	if (disableParticle)
 	{
@@ -325,25 +346,28 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 	}
 
 	Vec2 pos = posInput;
-	if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD * 4)
+	if (replaceLastParticle == false)
 	{
-		QuadBufferData bufferData;
-		bufferData.count = 0;
-
-		if (particleTemplate->emptyBuffers.size() == 0)
+		if (quadBuffers.size() == 0 || quadBuffers[quadBuffers.size() - 1].count == MAX_QUAD * 4)
 		{
-			glGenBuffers(1, &bufferData.quadBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-			glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
-		}
-		else
-		{
-			bufferData.quadBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1];
-			particleTemplate->emptyBuffers.resize(particleTemplate->emptyBuffers.size() - 1);
-		}
+			QuadBufferData bufferData;
+			bufferData.count = 0;
+
+			if (particleTemplate->emptyBuffers.size() == 0)
+			{
+				glGenBuffers(1, &bufferData.quadBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+				glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
+			}
+			else
+			{
+				bufferData.quadBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1];
+				particleTemplate->emptyBuffers.resize(particleTemplate->emptyBuffers.size() - 1);
+			}
 
 
-		quadBuffers.push_back(bufferData);
+			quadBuffers.push_back(bufferData);
+		}
 	}
 
 	QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
@@ -456,16 +480,24 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		memcpy(buff + vertexSize * 2, buff, vertexSize);
 		memcpy(buff + vertexSize * 3, buff, vertexSize);
 
-		*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
-		*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
-		*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
-		*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+		if (particleTemplate->textures.size())
+		{
+			*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
+			*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
+			*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
+			*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+		}
 	}
 	else
 	{
 		memcpy(buff + vertexSize * 1, buff, vertexSize);
 
-		if (nextIsStripBegining)
+		if (replaceLastParticle == false)
+		{
+			nextIsStripBegining = !nextIsStripBegining;
+		}
+
+		if (!nextIsStripBegining)
 		{
 			*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
 			*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
@@ -475,14 +507,21 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 			*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
 			*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
 		}
-		nextIsStripBegining = !nextIsStripBegining;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, vertexSize * bufferData.count, vertexSize * particleNumToAdd, buff);
+	if (replaceLastParticle)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, vertexSize * ( bufferData.count - particleNumToAdd), vertexSize * particleNumToAdd, buff);
+		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
+	}
+	else
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, vertexSize * bufferData.count, vertexSize * particleNumToAdd, buff);
 
-	bufferData.count += particleNumToAdd;
-	bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
+		bufferData.count += particleNumToAdd;
+		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
+	}
 }
 
 void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)

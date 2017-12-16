@@ -7,6 +7,7 @@
 #include "DirentHelper.h"
 
 #define MAX_QUAD 256
+class cParticle;
 
 class cParticleRandomizer
 {
@@ -174,6 +175,7 @@ class cParticleTemplate : public cUniformDataWithShader
 	int attributeSize;
 
 	bool isStrip;
+	bool isStripLaser;
 
 	struct Attribute
 	{
@@ -273,7 +275,7 @@ public:
 		clear();
 	}
 
-	void addParticleInternal(const Vec2& pos, sol::table* params, cParticleRandomizer* randomizer = nullptr);
+	void addParticleInternal(const Vec2& pos, sol::table* params, cParticleRandomizer* randomizer = nullptr, bool bReplaceLast = false);
 	void addParticle(const Vec2& pos, sol::table& params)
 	{
 		addParticleInternal(pos, &params, nullptr);
@@ -359,5 +361,10 @@ public:
 	void setPosShiftAngular(float min, float max, float minAngle, float maxAngle)
 	{
 		randomizer.setPosShiftAngular(min, max, minAngle, maxAngle);
+	}
+
+	float getStartTime() const
+	{
+		return time;
 	}
 };
