@@ -6,6 +6,7 @@
 #include "BloodworksConfig.h"
 #include "cTools.h"
 #include "Player.h"
+#include "Monster.h"
 
 ExplosionController::ExplosionController(Bloodworks *bloodworks)
 {
@@ -43,15 +44,34 @@ void ExplosionController::tick()
 				explosionData.damagedPlayer = true;
 				bloodworks->getPlayer()->doDamage(randInt(explosionData.minDamage, explosionData.maxDamage), diff.toAngle());
 			}
+
+			if (explosionData.onHit)
+			{
+				explosionData.onHit(bloodworks->getPlayer());
+			}
 		}
 		else
 		{
-
 			if (newScale > explosionData.lastDamageScale || newScale > explosionData.maxScale)
 			{
 				explosionData.lastDamageScale = newScale + 15.0f;
 				float damageScale = min(newScale + 15.0f, explosionData.maxScale);
-				bloodworks->getMonsterController()->damageMonstersInRangeWithIgnoreId(explosionData.pos, damageScale, explosionData.minDamage, explosionData.maxDamage, true, explosionData.id);
+
+				cVector<Monster*> found;
+				bloodworks->getMonsterController()->getAllMonstersInRange(explosionData.pos, damageScale, found);
+				for (int m = 0; m < found.size(); m++)
+				{
+					Monster* monster = found[m];
+					if ( monster->hasIgnoreId(explosionData.id) == false)
+					{
+						if (explosionData.onHit)
+						{
+							explosionData.onHit(monster);
+						}
+						monster->doDamage(randInt(explosionData.minDamage, explosionData.maxDamage), (monster->getPosition() - explosionData.pos).normalized());
+						monster->addIgnoreId(explosionData.id);
+					}
+				}
 			}
 		}
 
@@ -89,7 +109,7 @@ void ExplosionController::tick()
 	}
 }
 
-void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer)
+void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit)
 {
 	float particleScale = maxScale * 0.67f;
 	float duration = maxScale / scaleSpeed;
@@ -125,6 +145,7 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	explosionData.startTime = timer.getTime() - startTime;
 	explosionData.minDamage = minDamage;
 	explosionData.maxDamage = maxDamage;
+	explosionData.onHit = onHit;
 
 	explosionData.pos = pos;
 	explosionData.id = bloodworks->getUniqueId();

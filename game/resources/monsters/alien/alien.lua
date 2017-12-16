@@ -26,7 +26,7 @@ function Alien.init(monster)
     data.targetShift = Vec2.randDir() * (math.random() * 400.0 - 200.0)
     
     data.tickWaitTime = 0.0
-    
+    data.time = time + math.random() * 10.0
     BulletShooter.init(monster)
 end
 
@@ -57,7 +57,9 @@ end
 
 function Alien.onTick(monster)
     data = monster.data
-    
+    if data.randomMove and time - data.time > 60.0 then
+        data.randomMove = false
+    end
     diffToPlayer = player.position - monster.position 
     distanceToPlayer = diffToPlayer:length()
     angleToPlayer = diffToPlayer:getAngle()

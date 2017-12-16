@@ -21,6 +21,7 @@ function BigLaser.onTick(gun)
     end
 
     if data.shooting > 0.0 then
+        player.canFireNextFrame = false
         data.shooting = data.shooting - dt
         gun.laser:setVisible(true)
         local range = 430.0

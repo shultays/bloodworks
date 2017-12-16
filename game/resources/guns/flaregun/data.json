@@ -5,7 +5,7 @@
   "bulletTexture" : "bullet.png",
   "bulletSize" : [5.0, 3.0],
   "bulletMeshShift" : [-5.0, 0.0],
-  "bulletRadius" : 3.0,
+  "bulletRadius" : 6.0,
   "bulletSpeed" : 320.0,
   "bulletDamage" : [65, 85],
   
