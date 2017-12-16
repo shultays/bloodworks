@@ -9,14 +9,14 @@
   "bulletSpeed" : 650.0,
   "bulletDamage" : [30,40],
   
-  "maxAmmo" : 20,
-  "reloadTime" : 1.2,
+  "maxAmmo" : 16,
+  "reloadTime" : 2.0,
   
   "showShootAnimation" : false,
   
   "firingSound" : {
     "path" : "pulse.ogg",
-    "volume" : 0.20
+    "volume" : 0.30
   },
   
   "scriptFile" : "pulsegun.lua",
