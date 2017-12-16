@@ -65,38 +65,6 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	x = -200.0f;
 	y = 40.0f;
 
-	
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
-	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAlignment(TextAlignment::left);
-	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
-	gameplayGroup->addRenderable(text);
-	gore = new cTickBox(bloodworks);
-	gore->setWorldMatrix(Mat3::translationMatrix(x, y));
-	gore->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
-	gore->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
-	gore->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	gameplayGroup->addRenderable(gore);
-
-	gore->setChecked(config->getGore());
-	y -= rowShift;
-
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
-	text->setWorldMatrix(Mat3::translationMatrix(x, y));
-	text->setTextAlignment(TextAlignment::left);
-	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
-	gameplayGroup->addRenderable(text);
-
-	screenShake = new cTickBox(bloodworks);
-	screenShake->setWorldMatrix(Mat3::translationMatrix(x, y));
-	screenShake->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
-	screenShake->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
-	screenShake->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	screenShake->setChecked(config->getScreenShake());
-	gameplayGroup->addRenderable(screenShake);
-
-	y -= rowShift;
-
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Lock Crosshair", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
 	text->setTextAlignment(TextAlignment::left);
@@ -126,6 +94,44 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	autoLevelUp->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
 	autoLevelUp->setChecked(config->getAutoOpenLevelupPopup());
 	gameplayGroup->addRenderable(autoLevelUp);
+
+	y -= rowShift;
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	gameplayGroup->addRenderable(text);
+	gore = new cTickBox(bloodworks);
+	gore->setWorldMatrix(Mat3::translationMatrix(x, y));
+	gore->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	gore->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	gore->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	gameplayGroup->addRenderable(gore);
+
+	gore->setChecked(config->getGore());
+	y -= rowShift;
+	text->setVisible(false);
+	gore->setVisible(false);
+
+
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Screen Shake", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	gameplayGroup->addRenderable(text);
+
+	screenShake = new cTickBox(bloodworks);
+	screenShake->setWorldMatrix(Mat3::translationMatrix(x, y));
+	screenShake->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	screenShake->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	screenShake->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	screenShake->setChecked(config->getScreenShake());
+	gameplayGroup->addRenderable(screenShake);
+
+	y -= rowShift;
+	text->setVisible(false);
+	screenShake->setVisible(false);
 
 
 	optionsGroup->addRenderable(gameplayGroup);

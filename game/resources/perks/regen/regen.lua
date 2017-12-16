@@ -1,6 +1,6 @@
 
 function Regen.init(level)
-    player.data.regenTimer = 1.25 - (level - 1) * 0.25
+    player.data.regenTimer = 1.75 - (level - 1) * 0.25
     player.data.lastRegenTick = time
 end
 
