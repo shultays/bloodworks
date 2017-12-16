@@ -82,6 +82,8 @@ function addRandomMonster(forceType, cannotBecomeBoss, cannotShootBullets, level
     return monster
 end
 
+GhostBuffId = getGlobalUniqueId()
+
 function makeBossDefault(monster)
     local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
     monster.hitPoint = math.floor(monster.hitPoint * 1.5)
@@ -101,7 +103,7 @@ function makeBossDefault(monster)
     repeat
         t = math.random(11)
     until time > 30.0 or t ~= 8 
-    
+
     --t = 1
     
     if t == 1 then -- huge & tank
@@ -113,15 +115,25 @@ function makeBossDefault(monster)
         monster.data.stunDuration = 0.0
         monster.data.slowDuration = 0.0
     elseif t == 2 then -- ghost
-        monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.5, 0.5, 0.7))
+        monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.0))
         monster:setScale(monster.scale * 0.85)
         monster.hasCollision = false
         monster.hasBlood = false
         monster.hasGibs = false
+        monster.data.randomMove = false
+        addCustomOnTick(monster, function (monster)
+            local diffToPlayer = player.position - monster.position 
+            local distanceToPlayer = diffToPlayer:length()
+            monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.7 * clamp( 1.0 - (distanceToPlayer - 150.0) / 300 ) ) )
+        end)
     elseif t == 3 then -- hits hard
         monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
-        monster.data.minDamage = math.floor(monster.data.minDamage * 2.0)
-        monster.data.maxDamage = math.floor(monster.data.maxDamage * 2.0)
+        monster.data.minDamage = math.floor(monster.data.minDamage * 3.0)
+        monster.data.maxDamage = math.floor(monster.data.maxDamage * 4.0)
+        monster.data.hitWaitTime = monster.data.hitWaitTime * 0.5
+        monster.hitPoint = math.floor(monster.hitPoint * 1.1)
+        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.1
+        monster.data.randomMove = false
     elseif t == 4 then -- fast
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
         monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.75

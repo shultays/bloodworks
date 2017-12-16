@@ -65,3 +65,8 @@ function Egg.onTick(monster)
         end
     end
 end
+
+
+function Egg.getRandomSpawnPos()
+    return getRandomPosition( {canBeEdge=false, notNearPlayer=true, playerRange=800.0})
+end

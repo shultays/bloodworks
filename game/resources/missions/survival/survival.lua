@@ -56,8 +56,11 @@ function Survival.onTick()
         local rateMult = 1.0 + (getMapSize().x - 3000.0) / 3000.0
         spawn = math.floor(rateMult * spawn)
         for i = 1, spawn do
-            local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
             local monster = addRandomMonster()
+            local pos = getRandomPosition( {canBeEdge=true, notOnScreen=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
+            if monster.scriptTable.getRandomSpawnPos then
+                pos = monster.scriptTable.getRandomSpawnPos()
+            end
             monster.position = pos
             monster.moveAngle =  math.random() * math.pi * 2.0
         end
@@ -69,8 +72,11 @@ function Survival.onTick()
     local rate =  (0.7 - clamp(min * 0.05) * 0.4)  / rateMult
     if missionTime - missionData.lastSpawnTime > rate and canSpawnMonster() and player.isDead == false then
         missionData.lastSpawnTime = missionTime
-        local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
         local monster = addRandomMonster()
+        local pos = getRandomPosition({canBeEdge=true, notNearPlayer=true, notNearMonsters=true, notOnScreen=true})
+        if monster.scriptTable.getRandomSpawnPos then
+                pos = monster.scriptTable.getRandomSpawnPos()
+        end
         monster.position = pos
         monster.moveAngle =  math.random() * math.pi * 2.0
         
@@ -127,6 +133,9 @@ function Survival.onDebugTick()
                 for i = 1, t - 10 do
                     local pos = getRandomPosition( {canBeEdge=true, notNearPlayer=true, notNearMonsters=true, playerRange=400.0})
                     local monster = addRandomMonster()
+                    if monster.scriptTable.getRandomSpawnPos then
+                            pos = monster.scriptTable.getRandomSpawnPos()
+                    end
                     monster.position = pos
                     monster.moveAngle =  math.random() * math.pi * 2.0
                 end
