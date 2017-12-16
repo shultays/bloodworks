@@ -209,6 +209,7 @@ public:
 			out << "shader_error: " << name << " " << infoLog << "\n";
 			hasError = true;
 			free(infoLog);
+			assert(false);
 		}
 	}
 

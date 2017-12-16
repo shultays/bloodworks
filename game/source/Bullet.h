@@ -54,6 +54,8 @@ class Bullet
 	int penetrateCount;
 	int penetrateUsed;
 
+	bool hitsMultipleTimes;
+
 	struct Particledata
 	{
 		cParticle* particle;

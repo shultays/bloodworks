@@ -244,6 +244,7 @@
     <ClCompile Include="source\MonsterController.cpp" />
     <ClCompile Include="source\OneShotSoundManager.cpp" />
     <ClCompile Include="source\OptionsPopup.cpp" />
+    <ClCompile Include="source\StripLaserRenderable.cpp" />
     <ClCompile Include="source\Perk.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Bonus.cpp" />
@@ -333,6 +334,7 @@
     <ClInclude Include="source\MonsterTemplate.h" />
     <ClInclude Include="source\OneShotSoundManager.h" />
     <ClInclude Include="source\OptionsPopup.h" />
+    <ClInclude Include="source\StripLaserRenderable.h" />
     <ClInclude Include="source\Perk.h" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\Sol.h" />
