@@ -53,6 +53,7 @@ class CrashReportWindow;
 class CreditsWindow;
 class CustomGameWindow;
 class PlayerTemplate;
+class BloodworksSteam;
 
 class Bloodworks : public cGame
 {
@@ -119,6 +120,8 @@ class Bloodworks : public cGame
 	void parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData = false);
 
 	void initImplementation();
+
+	BloodworksSteam* bloodworksSteam;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -243,6 +246,11 @@ public:
 	BloodworksConfig* getConfig()
 	{
 		return config;
+	}
+
+	BloodworksSteam* getSteam() const
+	{
+		return bloodworksSteam;
 	}
 
 	virtual void windowResized(int width, int height);

@@ -243,6 +243,9 @@
     <ClCompile Include="source\cSteam.cpp">
       <Filter>Coral</Filter>
     </ClCompile>
+    <ClCompile Include="source\BloodworksSteam.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="source\cSteam.h">
       <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BloodworksSteam.h">
+      <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -29,9 +29,6 @@ struct Stat_t
 	float m_flAvgDenominator; 
 };
 
-enum EAchievements { ACH_TEST = 0 };
-enum EStats { STA_TEST = 0 };
-
 class CSteamAchievements
 {
 private: 
@@ -46,11 +43,11 @@ private:
 public:
 	CSteamAchievements(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
 	~CSteamAchievements();
-	bool RequestStats();
-	bool SetAchievement(EAchievements achivement);
-	bool StoreStats();
+	bool requestStats();
+	bool setAchievement(const char* ID);
+	bool storeStats();
 
-	bool AddStat(EStats stat, int val);
+	bool setStat(const char* ID, int val);
 
 	STEAM_CALLBACK(CSteamAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
 	STEAM_CALLBACK(CSteamAchievements, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
@@ -64,14 +61,19 @@ class CSteam
 private:
 	CSteamAchievements* achivements;
 
+	bool steamInited;
 public:
 	CSteam();
 	~CSteam();
 
 	void tick();
-
+	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
 	CSteamAchievements* getAchievements() const
 	{
 		return achivements;
+	}
+	bool isInited() const
+	{
+		return steamInited;
 	}
 };

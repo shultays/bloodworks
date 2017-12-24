@@ -41,6 +41,7 @@
 #include "CrashReporterWindow.h"
 #include "CreditsWindow.h"
 #include "CustomGameWindow.h"
+#include "BloodworksSteam.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -323,11 +324,13 @@ Bloodworks::Bloodworks()
 	config = nullptr;
 	crashReporterWindow = nullptr;
 
+	bloodworksSteam = new BloodworksSteam();
 	BloodworksControls::init();
 }
 
 Bloodworks::~Bloodworks()
 {
+	SAFE_DELETE(bloodworksSteam);
 	clear();
 }
 

@@ -184,6 +184,7 @@
     <ClCompile Include="source\BloodworksControls.cpp" />
     <ClCompile Include="source\BloodworksCheats.cpp" />
     <ClCompile Include="source\BloodworksLuaWorld.cpp" />
+    <ClCompile Include="source\BloodworksSteam.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\BulletController.cpp" />
     <ClCompile Include="source\cAARect.cpp" />
@@ -253,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="source\BloodworksSteam.h" />
     <ClInclude Include="source\cAnimationTemplate.h" />
     <ClInclude Include="source\Array2d.h" />
     <ClInclude Include="source\BloodRenderable.h" />
