@@ -244,8 +244,8 @@ BloodRenderable::~BloodRenderable()
 	bloodShader = nullptr;
 	defaultShader = nullptr;
 	bloodBg = nullptr;
-	glDeleteTextures(BUFFER_COUNT, frameBufferTexture);
-	glDeleteFramebuffers(BUFFER_COUNT, frameBuffer);
+	glDeleteTextures(BLOOD_BUFFER_COUNT, frameBufferTexture);
+	glDeleteFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer);
 }
 
 
@@ -269,10 +269,10 @@ void BloodRenderable::init()
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
 	defaultPostProcessShader = resources.getShader("resources/post_process/default.vs", "resources/post_process/default.ps");
 
-	glGenFramebuffers(BUFFER_COUNT, frameBuffer);
-	glGenTextures(BUFFER_COUNT, frameBufferTexture);
+	glGenFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer);
+	glGenTextures(BLOOD_BUFFER_COUNT, frameBufferTexture);
 
-	for (int i = 0; i < BUFFER_COUNT; i++)
+	for (int i = 0; i < BLOOD_BUFFER_COUNT; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[i]);
 

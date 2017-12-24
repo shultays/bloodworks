@@ -329,7 +329,7 @@ function makeBossDefault(monster)
             if monster.data.spawnTimer < 0.0 then
                 monster.data.spawnTimer = monster.data.spawnTimer + 3.0
                 
-                if missionData.ignoreMonsterCount < 50 then
+                if missionData.ignoreMonsterCount < 100 then
                     local newMonster = addMonster(monster.monsterTemplate.name)
                     newMonster.position = monster.position
                     newMonster:setScale(math.max(0.3, monster.scale * 0.60))
@@ -428,7 +428,7 @@ function canSpawnMonster()
 end
 
 function canSpawnIgnoredMonster()
-    return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and (missionData.ignoreMonsterCount == nil or missionData.ignoreMonsterCount < 50)
+    return (missionData.maxMonster == nil or getMonsterCount() < missionData.maxMonster) and (missionData.ignoreMonsterCount == nil or missionData.ignoreMonsterCount < 100)
 end
 
 function gameResetTick()

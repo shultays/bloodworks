@@ -10,9 +10,9 @@ class cRenderableWithShader;
 
 #define USE_TEMP_BUFFER
 #ifdef USE_TEMP_BUFFER
-#define BUFFER_COUNT 2
+#define BLOOD_BUFFER_COUNT 2
 #else
-#define BUFFER_COUNT 1
+#define BLOOD_BUFFER_COUNT 1
 #endif
 
 class BloodRenderable : public cRenderable
@@ -41,8 +41,8 @@ class BloodRenderable : public cRenderable
 	cShaderShr defaultShader;
 	Bloodworks *bloodworks;
 
-	GLuint frameBuffer[BUFFER_COUNT];
-	GLuint frameBufferTexture[BUFFER_COUNT];
+	GLuint frameBuffer[BLOOD_BUFFER_COUNT];
+	GLuint frameBufferTexture[BLOOD_BUFFER_COUNT];
 	cShaderShr defaultPostProcessShader;
 
 	Vec4 bloodColor;

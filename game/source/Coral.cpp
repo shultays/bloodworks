@@ -9,6 +9,7 @@
 #include "cSlave.h"
 #include "cPackHelper.h"
 #include "cTimeProfiler.h"
+#include "cSteam.h"
 
 #define CURL_STATICLIB 
 #include <curl/curl.h>
@@ -124,6 +125,7 @@ void Coral::tick()
 	}
 #endif
 	resources.tick();
+	steam->tick();
 	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.01f && noSleep == false) 
@@ -258,6 +260,8 @@ void Coral::init()
 	initFrameBuffers();
 
 	soundManager = new cSoundManager();
+
+	steam = new CSteam();
 }
 
 void Coral::clear()
@@ -265,6 +269,8 @@ void Coral::clear()
 	glDeleteTextures(3, tempFrameBufferTexture);
 	glDeleteFramebuffers(3, tempFrameBuffer);
 	glDeleteBuffers(1, &postProcessQuad);
+
+	SAFE_DELETE(steam);
 
 	SAFE_DELETE(soundManager);
 	SAFE_DELETE(slaveController);

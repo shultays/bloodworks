@@ -55,7 +55,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             newBullet.moveAngle = bullet.moveAngle + math.pi * 0.1
             newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
             monster:addIgnoreId(newBullet.id)
-            
+            newBullet.damage = math.floor( bullet.damage * 0.6 )
             
             playSound({path = SplitGun.basePath .. "split_gun.ogg", position = bullet.position, volume = 0.5})
         end

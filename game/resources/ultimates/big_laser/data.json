@@ -11,7 +11,7 @@
   "scriptFile" : "big_laser.lua",
   "scriptName" : "BigLaser",
   
-  "maxAmmo" : 6,
+  "maxAmmo" : 5,
   "reloadTime" : 15,
   
   "firingSoundContinuous" : true,

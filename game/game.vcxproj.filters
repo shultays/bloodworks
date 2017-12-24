@@ -240,6 +240,9 @@
     <ClCompile Include="source\StripLaserRenderable.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="source\cSteam.cpp">
+      <Filter>Coral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">
@@ -464,9 +467,6 @@
     <ClInclude Include="source\cTimeProfiler.h">
       <Filter>Coral</Filter>
     </ClInclude>
-    <ClInclude Include="source\cAnimationTemplate.h">
-      <Filter>Bloodworks</Filter>
-    </ClInclude>
     <ClInclude Include="source\GroundRenderable.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
@@ -509,6 +509,12 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="source\StripLaserRenderable.h">
       <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cAnimationTemplate.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cSteam.h">
+      <Filter>Coral</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

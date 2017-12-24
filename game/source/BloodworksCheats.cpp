@@ -17,6 +17,7 @@
 #include "MissionController.h"
 #include "CollisionController.h"
 #include "cPostProcess.h"
+#include "cSteam.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -373,6 +374,32 @@ void BloodworksCheats::onTick()
 		}
 	}
 	missionController->onDebugTick();
+
+
+
+	if (input.isKeyPressed(key_num_1))
+	{
+		if (coral.getSteam() && coral.getSteam()->getAchievements())
+		{
+			coral.getSteam()->getAchievements()->AddStat(STA_TEST, 1);
+		}
+	}
+
+	if (input.isKeyPressed(key_num_4))
+	{
+		if (coral.getSteam() && coral.getSteam()->getAchievements())
+		{
+			coral.getSteam()->getAchievements()->SetAchievement(ACH_TEST);
+		}
+	}
+
+	if (input.isKeyPressed(key_num_9))
+	{
+		if (coral.getSteam() && coral.getSteam()->getAchievements())
+		{
+			coral.getSteam()->getAchievements()->resetUser();
+		}
+	}
 }
 
 void BloodworksCheats::onMonsterTick(Monster *monster)

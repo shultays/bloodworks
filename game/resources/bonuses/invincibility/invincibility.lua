@@ -3,7 +3,7 @@ function Invincibility.spawn(bonus, pos)
     
     addBuffIcon("Invincibility", Invincibility.basePath .. "icon.png")
     
-    local duration = 6.0 * player.data.bonusDurationMultiplier
+    local duration = 12.0 * player.data.bonusDurationMultiplier
     Invincibility.data.timeToDie = time + duration
     if Invincibility.data.gameObject == nil then
         local gameObject = addGameObject("")

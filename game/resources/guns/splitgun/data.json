@@ -7,7 +7,7 @@
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 550.0,
-  "bulletDamage" : [30, 60],
+  "bulletDamage" : [30, 50],
   
   "maxAmmo" : 8,
   "reloadTime" : 1.2,

@@ -5,7 +5,7 @@
   
   "bulletRadius" : 10.0,
   "bulletSpeed" : 300.0,
-  "bulletDamage" : [6, 12],
+  "bulletDamage" : [10, 16],
   "hideSpread" : true,
   
   "maxAmmo" : 100,

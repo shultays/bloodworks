@@ -11,8 +11,9 @@ class cSoundManager;
 class StackWalkerToConsole;
 class cSlaveController;
 class cAccumulatedTimeProfiler;
+class CSteam;
 
-class Coral 
+class Coral
 {
 	friend class cGame;
 	friend void RunGame();
@@ -35,6 +36,7 @@ class Coral
 	cSoundManager *soundManager;
 	cSlaveController *slaveController;
 
+	CSteam *steam;
 public:
 	Coral();
 	void init();
@@ -76,6 +78,11 @@ public:
 	GLuint getTempFrameBufferTexture() const
 	{
 		return tempFrameBufferTexture[2];
+	}
+
+	CSteam* getSteam() const
+	{
+		return steam;
 	}
 
 	static cAccumulatedTimeProfiler& createAccumulatedTimeProfile(const char *name);
