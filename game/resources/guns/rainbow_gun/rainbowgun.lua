@@ -19,6 +19,7 @@ function RainbowGun.onTick(gun)
             gun:consumeAmmo()
             local bullet = gun:addBullet()
             bullet.penetrateCount = -1
+            bullet.hasCollision = false
             bullet.hitsMultipleTimes = true
         end
     end

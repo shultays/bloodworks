@@ -10,9 +10,7 @@ function BananaBomb.onTick(gun)
         gun:consumeAmmo()
         data.shooting = 0.5
         
-        local gameObject = addGameObject("BananaBombObject")
-        gameObject.data.speed = player.aimDir
-        gameObject.data.speed = gameObject.data.speed * (math.random() * 30.0 + 100.0)
+        local gameObject = addGameObject("BananaBombObject", { i = 0, dir = player.aimDir } )
         gameObject.data.throwDuration = gameObject.data.throwDuration * 0.8
         gameObject:setPosition(player.position)
         playSound({path = BananaBomb.basePath .. "swish.ogg"})
@@ -32,15 +30,21 @@ end
 BananaBombObject = {}
 
 
-function BananaBombObject.init(gameObject)
+function BananaBombObject.init(gameObject, args)
     local renderable = gameObject:addAnimation("BananaAnimation")
     renderable:playAnimation("rotate", math.random() * 0.8)
     gameObject.data.renderable = renderable
     
     gameObject.data.startTime = time
-    gameObject.data.i = 0
-    gameObject.data.speed = Vec2.randDir() * (math.random() * 30.0 + 100.0)
+    gameObject.data.i = args.i
     gameObject.data.throwDuration = math.random() * 0.8 + 0.8
+    if args.dir ~= nil then
+        gameObject.data.speed = args.dir
+        gameObject.data.throwDuration = gameObject.data.throwDuration * 0.6
+    else
+        gameObject.data.speed = Vec2.fromAngle(math.random() * math.pi * 2.0)
+    end
+    gameObject.data.speed = gameObject.data.speed * (math.random() * 60.0 + 100.0 - args.i * 15)
     gameObject:setRotation(math.random() * math.pi * 2.0)
     BananaBombObject.onTick(gameObject)
 end
@@ -62,10 +66,7 @@ function BananaBombObject.onTick(gameObject)
         if data.i < 3 then
             local r = math.random(2) + 4 - data.i
             for i = 1,r do 
-                
-                local child = addGameObject("BananaBombObject")
-                child.data.i = data.i + 1
-                child:setRotation(math.random() * math.pi * 2.0)
+                local child = addGameObject("BananaBombObject", { i = data.i + 1 } )
                 child:setPosition(gameObject:getPosition())
             end
         end

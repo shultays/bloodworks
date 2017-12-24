@@ -6,12 +6,12 @@
   
   "bulletRadius" : 16.0,
   "bulletSpeed" : 450.0,
-  "bulletDamage" : [2, 5],
+  "bulletDamage" : [4, 6],
   "bulletLifeTime" : 0.90,
   
   "crosshairDistance" : 350.0,
   "maxAmmo" : 8,
-  "reloadTime" : 3.2,
+  "reloadTime" : 2.5,
   
   "firingSound" : {
     "path" : "fire.ogg",

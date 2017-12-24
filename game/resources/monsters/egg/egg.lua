@@ -12,7 +12,7 @@ function Egg.init(monster, min)
     monster.colorMultiplier:addBuff(Vec4.new(0.6, 0.6, 0.6, 1.0))
     
     data.spawnInterval = 3.0 + math.random() * 0.5
-    data.spawnTime = data.spawnInterval * (1.0 + math.random())
+    data.spawnTime = data.spawnInterval * (3.0 + math.random())
     
     data.cannotBecomeBoss = true
     data.cannotShootBullets = true

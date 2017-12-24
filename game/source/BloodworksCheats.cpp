@@ -35,12 +35,12 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	slowdownBuff = bloodworks->getGlobalUniqueId();
 	stopBuff = bloodworks->getGlobalUniqueId();
 
-	hasCheats = bloodworks->getConfig()->getBool("cheats", Coral::isDebuggerPresent()) || coral.isDebuggerPresent();
+	hasCheats = bloodworks->getConfig()->getBool("cheats", false) || Coral::isDebuggerPresent();
 
 #ifdef DEBUG
 	showFPS = true;
 #else
-	showFPS = Coral::isDebuggerPresent();
+	showFPS = bloodworks->getConfig()->getBool("showfps", false, "show fps count") || Coral::isDebuggerPresent();
 #endif
 }
 
@@ -62,6 +62,16 @@ void BloodworksCheats::onTick()
 		*a = 42;
 	}
 
+	if (input.isKeyPressed(key_n))
+	{
+		showFPS = !showFPS;
+		if (showFPS == false)
+		{
+			debugRenderer.removeText(0);
+			debugRenderer.removeText(1);
+		}
+	}
+
 	if (showFPS)
 	{
 		tickCount++;
@@ -69,7 +79,7 @@ void BloodworksCheats::onTick()
 		{
 			lastSetTickTime += 1.0f;
 			std::stringstream ss;
-			ss << "FPS " << tickCount << " Monster " << bloodworks->getMonsterController()->getMonsterCount();
+			ss << "FPS " << tickCount << " Monster " << bloodworks->getMonsterController()->getMonsterCount() << " Time : " << (int)timer.getTime();
 			debugRenderer.addText(0, ss.str(), 5.0f, -24.0f, FLT_MAX, 0xFFFFFFFF, 24.0f, TextAlignment::left, RenderableAlignment::topLeft);
 
 			tickCount = 0;
@@ -106,15 +116,6 @@ void BloodworksCheats::onTick()
 	BulletController *bulletController = bloodworks->getBulletController();
 	MissionController *missionController = bloodworks->getMissionController();
 
-	if (input.isKeyPressed(key_n))
-	{
-		showFPS = !showFPS;
-		if (showFPS == false)
-		{
-			debugRenderer.removeText(0);
-			debugRenderer.removeText(1);
-		}
-	}
 	if (input.isKeyDown(key_num_minus) || input.isKeyDown(key_num_plus))
 	{
 		float globalVolume = coral.getSoundManager()->getGlobalVolume();
