@@ -50,9 +50,6 @@ function Flamethrower.onBulletHit(gun, bullet, monster)
             monster.data.flamethrowerObject.data.damageMin = 2
             monster.data.flamethrowerObject.data.damageVar = 3
         end
-        if monster.data.burnParticle == nil then
-            monster.data.burnParticle = monster:addParticleSpawner("FlameParticle", {})
-        end
         monster.data.flamethrowerObject.data.count = 4
     end
 end

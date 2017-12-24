@@ -84,6 +84,11 @@ function BurnMonsterObject.onTick(gameobject)
     if data.monster.isDead then
         gameobject.toBeRemoved = true
     else
+
+        if data.monster.data.burnParticle == nil then
+            data.monster.data.burnParticle = data.monster:addParticleSpawner("FlameParticle", {})
+        end
+        
         gameobject.data.particletime = gameobject.data.particletime - dt
         while gameobject.data.particletime < 0.0 do
             gameobject.data.particletime = gameobject.data.particletime + 0.01

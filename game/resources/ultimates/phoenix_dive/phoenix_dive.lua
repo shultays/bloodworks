@@ -65,9 +65,7 @@ function PhoenixDive.onTick(gun)
                     monster.data.flamethrowerObject.data.damageMin = 4
                     monster.data.flamethrowerObject.data.damageVar = 6
                 end
-                if monster.data.burnParticle == nil then
-                    monster.data.burnParticle = monster:addParticleSpawner("FlameParticle", {})
-                end
+                
                 monster.data.flamethrowerObject.data.count = 4
             end)
         end
