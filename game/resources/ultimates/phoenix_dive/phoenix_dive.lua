@@ -90,7 +90,6 @@ function PhoenixDive.onTick(gun)
                 data.checkAchievement = false
             end
         end
-        print(data.achievementProcess)
         
         data.particleTime = data.particleTime - dt
         while data.particleTime < 0.0 do

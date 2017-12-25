@@ -11,7 +11,7 @@ function calcRandomSpawns()
             local chance = monsterType.scriptTable.spawnChanceInMission(missionData, min)
             if chance > 0.0 then
                 missionData.totalChanceSpawn = missionData.totalChanceSpawn + chance
-                missionData.spawnRates[monsterType.name] = chance
+                missionData.spawnRates[monsterType.scriptName] = chance
             end
         end
     end

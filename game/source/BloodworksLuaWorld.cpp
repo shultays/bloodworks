@@ -918,6 +918,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 	lua.new_usertype<MonsterTemplate>("MonsterTemplate",
 		"name", sol::readonly(&MonsterTemplate::name),
+		"scriptName", sol::readonly(&MonsterTemplate::scriptName),
 		"experience", sol::readonly(&MonsterTemplate::experience),
 		"textureSize", sol::readonly(&MonsterTemplate::size),
 		"textureShift", sol::readonly(&MonsterTemplate::textureShift),

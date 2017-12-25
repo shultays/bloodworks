@@ -477,9 +477,9 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "FrostLaser")
+		if (gun->getScriptName() == "MiniGun")
 		{
-			//player->setGun(gun);
+			player->setGun(gun);
 		}
 		if (gun->getScriptName() == "PhoenixDive")
 		{

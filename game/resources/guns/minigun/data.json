@@ -1,0 +1,26 @@
+{
+  "type" : "gun",
+  "name": "Gatling Gun",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [5.0, 5.0],
+  "bulletMeshShift" : [0.0, 0.0],
+  "bulletRadius" : 3.0,
+  "bulletSpeed" : 550.0,
+  "bulletDamage" : [30, 45],
+  
+  "maxAmmo" : 400,
+  "reloadTime" : 3.5,
+  
+  "firingSoundContinuous" : true,
+  "firingSound" : {
+    "path" : "shoot.ogg",
+    "volume" : 0.8
+  },
+  
+  "firingSoundFadein" : 0.05,
+  "firingSoundFadeout" : 0.3,
+  
+  "scriptFile" : "minigun.lua",
+  "scriptName" : "MiniGun"
+}

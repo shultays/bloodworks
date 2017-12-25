@@ -75,7 +75,7 @@ bool Init()
 		addController(0);
 	}
 
-	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os);
+	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os, sol::lib::debug);
 
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
@@ -107,6 +107,7 @@ void InitGame()
 
 LONG WINAPI ExpFilter(EXCEPTION_POINTERS* pExp, DWORD dwExpCode)
 {
+	lua["printStack"]();
 	printExceptionStack(pExp);
 	return EXCEPTION_EXECUTE_HANDLER;
 }

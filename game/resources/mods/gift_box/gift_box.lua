@@ -57,7 +57,7 @@ function GiftBox.spawnChanceInMission(missionData, min)
     if missionData.giftBoxTime ==  nil or time - missionData.giftBoxTime < 40.0 then
         return 0.00
     end
-    return 0.05
+    return 0.1
 end
 
 function GiftBox.onTick(monster)

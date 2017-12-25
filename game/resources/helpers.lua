@@ -177,6 +177,10 @@ function deleteAll()
     end
 end
 
+function printStack()
+    print(debug.traceback())
+end
+
 function fillDoNotDelete()
     doNotDelete = {}
     for k in pairs (_G) do

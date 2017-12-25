@@ -15,7 +15,7 @@ function Uzi.onTick(gun)
             bullet.onDamageArgs.slowdownOnly = true
             bullet.lifeTime = 0.5 + math.random() * 0.1
             
-            local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 10.0), 15.0, {})
+            local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 10.0), 15.0, { color =  Vec3.new(0.9, 0.8, 0.3)})
             particle.args.initialScale = 1.5
             particle.args.fadeOutSpeed = 1.8
         end
