@@ -7,6 +7,10 @@ function MiniGun.init(gun)
     
     gun.data.waitTime = 0.0
     gun.data.cooldown = false
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
+    gun.data.achievementKillCounts = {}
 end
 
 
@@ -70,7 +74,48 @@ function MiniGun.onTick(gun)
         player.maxSpeed:addBuffWithId(MiniGun.buffId, 1.0)
     end
     player.maxRotateSpeed:getBuffInfo( MiniGun.buffId ) : setBuffAmount(1.0 - 0.95 * t)
-    
     player.maxSpeed:getBuffInfo( MiniGun.buffId ) : setBuffAmount(1.0 - 0.5 * t)
     
+    
+    if data.checkAchievement then
+    
+        if hasAchievement( "ACH_MINIGUN" ) or player.isDead or missionData.isSurvival ~= true then
+            data.checkAchievement = false
+            return
+        end
+        if data.achievementProcess >= 40 then
+            addAchievement( "ACH_MINIGUN" )
+            data.checkAchievement = false
+            return
+        end
+    
+        local t = math.floor(time) - 5
+        
+        for key,kill in pairs(data.achievementKillCounts) do
+            if t >= key then
+                data.achievementProcess = data.achievementProcess - kill
+                data.achievementKillCounts[ key ] = nil
+            end
+        end
+    end
 end
+
+
+function MiniGun.onBulletHit(gun, bullet, monster)
+    local data = gun.data
+    if data.checkAchievement then
+        if  monster ~= nil and monster.isDead == true then
+            data.achievementProcess = data.achievementProcess + 1
+            local t = math.floor(time)
+            
+            local k = data.achievementKillCounts
+            
+            if k[t] == nil then
+                k[t] = 1
+            else
+                k[t] =  k[t] + 1
+            end
+        end
+    end
+ end
+

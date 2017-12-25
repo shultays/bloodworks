@@ -3,11 +3,11 @@
   "name": "Shotgun",
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
-  "bulletSize" : [8.0, 8.0],
+  "bulletSize" : [6.0, 6.0],
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 2.0,
   "bulletSpeed" : 850.0,
-  "bulletDamage" : [20, 40],
+  "bulletDamage" : [20, 35],
   
   "maxAmmo" : 6,
   "reloadTime" : 1.9,

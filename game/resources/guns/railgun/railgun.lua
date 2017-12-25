@@ -9,7 +9,6 @@ function Railgun.init(gun)
     gun.data.spreadDecreaseSpeed = 0.40
     gun.data.spreadIncreasePerShoot = 0.03
     
-    
     gun.data.checkAchievement = true
     gun.data.achievementProcess = 0
 end

@@ -33,6 +33,7 @@ Achievement_t g_Achievements[] = {
 	_ACH_ID(ACH_CARNAGE),
 	_ACH_ID(ACH_MERCILESS),
 	_ACH_ID(ACH_ROCKET_LAUNCHER),
+	_ACH_ID(ACH_MINIGUN),
 };
 
 #define _STAT_ID( id,type ) { id, #id, type, 0, 0, 0, 0 }
