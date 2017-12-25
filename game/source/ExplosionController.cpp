@@ -64,12 +64,13 @@ void ExplosionController::tick()
 					Monster* monster = found[m];
 					if ( monster->hasIgnoreId(explosionData.id) == false)
 					{
+						monster->doDamage(randInt(explosionData.minDamage, explosionData.maxDamage), (monster->getPosition() - explosionData.pos).normalized());
+						monster->addIgnoreId(explosionData.id);
+
 						if (explosionData.onHit)
 						{
 							explosionData.onHit(monster);
 						}
-						monster->doDamage(randInt(explosionData.minDamage, explosionData.maxDamage), (monster->getPosition() - explosionData.pos).normalized());
-						monster->addIgnoreId(explosionData.id);
 					}
 				}
 			}

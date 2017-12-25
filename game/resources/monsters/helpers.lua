@@ -214,6 +214,7 @@ function BulletShooter.buffStats(monster, min)
         data.shootsBullets = true
         data.bulletMinDamage = math.floor(data.bulletMinDamage * (1.0 + min * 0.3))
         data.bulletMaxDamage = math.floor(data.bulletMaxDamage * (1.0 + min * 0.4))
+        
         data.bulletRate = data.bulletRate - clamp(min * 0.1) * 2.0
         data.bulletRandom = data.bulletRandom - clamp(min * 0.15) * 0.2
         data.bulletCount = 1

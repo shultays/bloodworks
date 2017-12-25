@@ -681,6 +681,7 @@ void Bloodworks::onMonsterDied(Monster* monster, float dropChance)
 	monsterController->onMonsterDied(monster);
 	missionController->onMonsterDied(monster);
 	dropController->onMonsterDied(monster, dropChance);
+	bloodworksSteam->onMonsterDied(monster);
 }
 
 void Bloodworks::showOptions()

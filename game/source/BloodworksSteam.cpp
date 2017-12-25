@@ -13,7 +13,6 @@
 
 #define _ACH_ID( id ) { id, #id, false } 
 Achievement_t g_Achievements[] = {
-	_ACH_ID(ACH_TEST),
 	_ACH_ID(ACH_BRONZE),
 	_ACH_ID(ACH_SILVER),
 	_ACH_ID(ACH_GOLD),
@@ -23,15 +22,23 @@ Achievement_t g_Achievements[] = {
 	_ACH_ID(ACH_RAIL_GUN),
 	_ACH_ID(ACH_SHRINK_GUN),
 	_ACH_ID(ACH_FLAME_THROWER),
-	_ACH_ID(ACH_FREEZE_GUN),
+	_ACH_ID(ACH_FROST_LASER),
 	_ACH_ID(ACH_PLASMA_GUN),
 	_ACH_ID(ACH_BLACK_HOLE),
 	_ACH_ID(ACH_PHOENIX_DIVE),
 	_ACH_ID(ACH_NAR_SIE),
 	_ACH_ID(ACH_SHOTGUN),
+	_ACH_ID(ACH_BLOODBATH),
+	_ACH_ID(ACH_LIVING_ON_THE_EDGE),
+	_ACH_ID(ACH_CARNAGE),
+	_ACH_ID(ACH_MERCILESS),
+	_ACH_ID(ACH_ROCKET_LAUNCHER),
 };
+
 #define _STAT_ID( id,type ) { id, #id, type, 0, 0, 0, 0 }
-Stat_t g_Stats[] = { _STAT_ID(STA_TEST, STAT_INT), };
+Stat_t g_Stats[] = {
+	_STAT_ID(STA_BLOODBATH, STAT_INT),
+};
 
 BloodworksSteam::BloodworksSteam(Bloodworks* bloodworks)
 {
@@ -48,6 +55,8 @@ BloodworksSteam::BloodworksSteam(Bloodworks* bloodworks)
 	{
 		nameMap[g_Achievements[n].m_pchAchievementID] = (EAchievement) n;
 	}
+	assert(sizeof(g_Achievements) / sizeof(g_Achievements[0]) == ACH_COUNT);
+	assert(sizeof(g_Stats) / sizeof(g_Stats[0]) == STA_COUNT);
 	reset();
 }
 
@@ -126,6 +135,11 @@ void BloodworksSteam::tick()
 		return;
 	}
 
+	if (!(bool)bloodworks->getMissionController()->getMissionData()["isSurvival"])
+	{
+		return;
+	}
+
 	float time = timer.getTime();
 	if (time > 2 * 60.0f && !g_Achievements[ACH_BRONZE].m_bAchieved)
 	{
@@ -139,8 +153,47 @@ void BloodworksSteam::tick()
 	{
 		addAchievement(ACH_GOLD);
 	}
+
+	if (killedMonster > 0 && !g_Achievements[ACH_BLOODBATH].m_bAchieved)
+	{
+		addStat(STA_BLOODBATH, killedMonster);
+		killedMonster = 0;
+	}
+
+	if (!g_Achievements[ACH_LIVING_ON_THE_EDGE].m_bAchieved)
+	{
+		int count = 0;
+		std::function<bool(Monster *monster)> func = [&](Monster *monster) -> bool
+		{
+			count++;
+			return count < 5;
+		};
+		bloodworks->getMonsterController()->runForEachMonsterInRadius(bloodworks->getPlayer()->getPosition(), 140.0f, func);
+
+		if (count >= 5)
+		{
+			edgeTime += timer.getDt();
+			if (edgeTime >= 30.0f)
+			{
+				addAchievement(ACH_LIVING_ON_THE_EDGE);
+			}
+		}
+		else
+		{
+			edgeTime -= timer.getDt() * 5.0f;
+			edgeTime = max(edgeTime, 0.0f);
+		}
+
+	}
 }
 
 void BloodworksSteam::reset()
 {
+	killedMonster = 0;
+	edgeTime = 0.0f;
+}
+
+void BloodworksSteam::onMonsterDied(Monster* monster)
+{
+	killedMonster++;
 }

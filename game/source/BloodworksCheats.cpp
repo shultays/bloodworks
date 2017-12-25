@@ -56,13 +56,12 @@ bool BloodworksCheats::cheatsEnabled()
 
 void BloodworksCheats::onTick()
 {
-	if (input.isKeyDown(key_p) && input.isKeyDown(key_q) && input.isKeyDown(key_space))
+	if (input.isKeyDown(key_p) && input.isKeyDown(key_q) && input.isKeyPressed(key_space))
 	{
 		out << "Intentional crash\n";
 		int *a = nullptr;
 		*a = 42;
 	}
-
 	if (input.isKeyPressed(key_n))
 	{
 		showFPS = !showFPS;
@@ -90,6 +89,12 @@ void BloodworksCheats::onTick()
 	if (hasCheats == false)
 	{
 		return;
+	}
+
+
+	if (input.isKeyDown(key_p) && input.isKeyDown(key_q) && input.isKeyPressed(key_v))
+	{
+		bloodworks->getSteam()->resetUser();
 	}
 
 	if (input.isKeyPressed(key_f8))
@@ -375,20 +380,6 @@ void BloodworksCheats::onTick()
 	}
 	missionController->onDebugTick();
 
-	if (input.isKeyPressed(key_num_1))
-	{
-		bloodworks->getSteam()->addStat(STA_TEST, 1);
-	}
-
-	if (input.isKeyPressed(key_num_4))
-	{
-		bloodworks->getSteam()->addAchievement(ACH_TEST);
-	}
-
-	if (input.isKeyPressed(key_num_9))
-	{
-		bloodworks->getSteam()->resetUser();
-	}
 }
 
 void BloodworksCheats::onMonsterTick(Monster *monster)
@@ -486,13 +477,13 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "PlasmaGun")
+		if (gun->getScriptName() == "FrostLaser")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
 		if (gun->getScriptName() == "PhoenixDive")
 		{
-			player->setSecondaryGun(gun);
+			//player->setSecondaryGun(gun);
 		}
 		if (gun->getScriptName() == "RocketBarrage")
 		{

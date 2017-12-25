@@ -6,7 +6,7 @@
   "bulletSize" : [15.0, 15.0],
   "bulletRadius" : 4.0,
   "bulletSpeed" : 350.0,
-  "bulletDamage" : [20, 28],
+  "bulletDamage" : [5, 10],
   
   "scriptFile" : "frost_laser.lua",
   "scriptName" : "FrostLaser",

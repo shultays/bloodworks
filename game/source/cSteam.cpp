@@ -101,13 +101,14 @@ void CSteamAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
 	{
 		if (k_EResultOK == pCallback->m_eResult)
 		{
+			bool b = false;
 			out << ("Received stats and achievements from Steam\n");
 			m_bInitialized = true;
 			// load achievements 
 			for (int iAch = 0; iAch < m_iNumAchievements; ++iAch)
 			{
 				Achievement_t &ach = m_pAchievements[iAch];
-				SteamUserStats()->GetAchievement(ach.m_pchAchievementID, &ach.m_bAchieved);
+				b = SteamUserStats()->GetAchievement(ach.m_pchAchievementID, &ach.m_bAchieved);
 			}
 
 			// load stats 
@@ -117,11 +118,11 @@ void CSteamAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
 				switch (stat.m_eStatType)
 				{
 				case STAT_INT:
-					SteamUserStats()->GetStat(stat.m_pchID, &stat.m_iValue);
+					b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_iValue);
 					break;
 				case STAT_FLOAT:
 				case STAT_AVGRATE:
-					SteamUserStats()->GetStat(stat.m_pchID, &stat.m_flValue);
+					b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_flValue);
 					break;
 				default:
 					break;
