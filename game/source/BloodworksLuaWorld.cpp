@@ -33,6 +33,7 @@
 #include "cCapsule.h"
 #include "Perk.h"
 #include "StripLaserRenderable.h"
+#include "BloodworksSteam.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -1300,6 +1301,18 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](int index, int flag, bool isSet)
 	{
 		return bloodworks->getCollisionController()->getFlags(index);
+	});
+
+	lua.set_function("hasAchievement",
+		[&](const std::string& achievement)
+	{
+		return bloodworks->getSteam()->hasAchievement(achievement);
+	});
+
+	lua.set_function("addAchievement",
+		[&](const std::string& achievement)
+	{
+		return bloodworks->getSteam()->addAchievement(achievement);
 	});
 }
 

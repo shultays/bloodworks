@@ -324,7 +324,7 @@ Bloodworks::Bloodworks()
 	config = nullptr;
 	crashReporterWindow = nullptr;
 
-	bloodworksSteam = new BloodworksSteam();
+	bloodworksSteam = new BloodworksSteam(this);
 	BloodworksControls::init();
 }
 
@@ -439,6 +439,7 @@ void Bloodworks::clearMission()
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
+	bloodworksSteam->reset();
 	missionController->reset();
 	collisionController->reset();
 	player->reset();
@@ -991,6 +992,7 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	if (type == "gun")
 	{
 		Gun *gun = new Gun(this, j, f);
+		gun->setIndex(guns.size());
 		guns.push_back(gun);
 	}
 	else if (type == "bonus")
@@ -1176,7 +1178,7 @@ void Bloodworks::tick()
 	}
 
 	config->check();
-
+	bloodworksSteam->tick();
 	if (mapper.isKeyPressed(GameKey::Back))
 	{
 		if (missionController->canExit())

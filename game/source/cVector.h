@@ -43,4 +43,12 @@ public:
 		resize(size() + 1);
 		return (*this)[size() - 1];
 	}
+
+	void setAll(const T& value)
+	{
+		for (int i = 0; i < size(); i++)
+		{
+			(*this)[i] = value;
+		}
+	}
 };

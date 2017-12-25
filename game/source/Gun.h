@@ -97,6 +97,7 @@ class Gun
 	bool gunShootSoundContinuous;
 	bool showShootAnimation;
 	bool ultimate;
+	int index;
 public:
 	Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	~Gun();
@@ -153,4 +154,13 @@ public:
 	}
 	int onPlayerDamaged(int damage, float dir, sol::table& params);
 	bool onBulletTick(Bullet* bullet);
+
+	void setIndex(int index)
+	{
+		this->index = index;
+	}
+	int getIndex() const
+	{
+		return index;
+	}
 };
