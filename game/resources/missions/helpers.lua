@@ -104,7 +104,6 @@ function makeBossDefault(monster)
         t = math.random(11)
     until time > 30.0 or t ~= 8 
     
-    
     if t == 1 then -- huge & tank
         monster.hitPoint = monster.hitPoint * 6
         monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.7
@@ -144,8 +143,9 @@ function makeBossDefault(monster)
     elseif t == 5 then -- shoots bullets (fast)
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
         monster.data.shootsBullets = true
-        monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (2.0 + min * 1.5))
-        monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (2.0 + min * 1.5))
+        monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.2))
+        monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.2))
+        
         monster.data.bulletRate = 1.0 - clamp(min * 0.1) * 0.4
         monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
         monster.data.bulletCount = 5 + math.floor( min / 2 ) * 2
