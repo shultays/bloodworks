@@ -275,6 +275,17 @@ void Gun::stop()
 	{
 		stripLaser->stop();
 	}
+
+	if (playGunShootSound)
+	{
+		if (gunShootSoundHandle.isValid())
+		{
+			gunShootSoundCurVolume = 0.0f;
+			gunShootSoundHandle.setVolume(gunShootSoundCurVolume);
+			gunShootSoundHandle.stop();
+			gunShootSoundHandle.clear();
+		}
+	}
 }
 
 void Gun::start()
