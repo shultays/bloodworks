@@ -7,6 +7,9 @@ function PlasmaGun.init(gun)
     gun.data.maxSpread = 0.10
     gun.data.spreadDecreaseStartTime = 0.0
     gun.data.spreadDecreaseSpeed = 0.05
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
 end
 
 
@@ -24,12 +27,17 @@ function PlasmaGun.onTick(gun)
 end
 
 function PlasmaGun.onBulletHit(gun, bullet, monster)
+    local data = gun.data
     if monster ~= nil then
         local m = monster
         local oldGameObjectPos = nil
+        local count = 0
+        
+        if monster.isDead then
+            count = count + 1
+        end
         while m ~= nill do
             m:addIgnoreId(bullet.id)
-        
             local gameObject = addGameObject("FadeOutImage")
             gameObject.data.startTime = time
             gameObject.data.fadeOutStartTime = 0.0
@@ -60,6 +68,9 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
                 local args = {doNotStun = true}
                 m:doDamageWithArgs(10 + math.floor(10 * math.random()), (m.position - oldGameObjectPos):normalized(), args)
             
+                if m.isDead then
+                    count = count + 1
+                end
                 if math.random() < 0.5 then
                     oldGameObjectPos = m.position
                 end
@@ -69,6 +80,21 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
             end
             
             m = getClosestMonsterInRangeWithIgnoreId(bullet.position, 80.0, {bullet.id})
+        end
+
+        if data.checkAchievement then
+            if hasAchievement( "ACH_PLASMA_GUN" ) or player.isDead or missionData.isSurvival ~= true then
+                data.checkAchievement = false
+                return
+            end
+            if count >= 3 then 
+                data.achievementProcess = data.achievementProcess + 1
+                
+                if data.achievementProcess >= 20 then
+                    addAchievement( "ACH_PLASMA_GUN" )
+                    data.checkAchievement = false
+                end
+            end
         end
     end
 end

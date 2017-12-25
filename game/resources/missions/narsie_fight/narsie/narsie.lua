@@ -65,6 +65,10 @@ function NarSie.onKilled(monster)
     monster.data.deathTimer = time
     
     playSound({path = missionPath .. "narsie/laugh.ogg", position = monster.position, volume = 1.1})
+    
+    if hasAchievement( "ACH_NAR_SIE" ) == false and player.isDead == false then
+        addAchievement( "ACH_NAR_SIE" ) 
+    end
 end
 
 function NarSie.onTick(monster)

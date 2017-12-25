@@ -1,7 +1,7 @@
 {
   "type" : "monster",
   "name": "Nar-Sie",
-  "hitPoint": 66666,
+  "hitPoint": 4,
   "size" : [80.0, 80.0],
   "textureShift" : [0.0, -10.0],
   "bulletRadius" : 40.0,

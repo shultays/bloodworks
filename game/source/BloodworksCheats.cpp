@@ -486,13 +486,13 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "Flamethrower")
+		if (gun->getScriptName() == "PlasmaGun")
 		{
 			player->setGun(gun);
 		}
-		if (gun->getScriptName() == "BananaBomb")
+		if (gun->getScriptName() == "PhoenixDive")
 		{
-			//player->setSecondaryGun(gun);
+			player->setSecondaryGun(gun);
 		}
 		if (gun->getScriptName() == "RocketBarrage")
 		{

@@ -3,6 +3,9 @@ BlackHole.buffId = getGlobalUniqueId()
 function BlackHole.init(gun)
     gun.data.shooting = -1.0
     gun.data.started = false
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
 end
 
 function BlackHole.onTick(gun)
@@ -23,6 +26,7 @@ function BlackHole.onTick(gun)
         data.bulletBodyIndex = addCircleCollider(data.ppos, 1.0)
         setColliderFlags(data.bulletBodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoPlayerCollision)
         playSound({path = BlackHole.basePath .. "black_hole.ogg", position = data.ppos, volume = 1.2})
+        gun.data.achievementProcess = 0
     end
     
     if data.started then
@@ -56,10 +60,12 @@ function BlackHole.onTick(gun)
                 relocateCircleCollider(data.bulletBodyIndex, data.ppos, moveRange - bulletRadius)
             end
             
+            local killCount = 0
             runForEachMonsterInRadius( data.ppos, moveRange + 30.0, {}, function(monster)
                 local d = monster.position:distance(data.ppos) - monster.bulletRadius
                 if d < killRange and monster.canGetOneShooted then
                     monster:killSelf()
+                    killCount = killCount + 1
                 elseif d < moveRange then
                     local m = (moveRange - d) * t / (moveRange - killRange)
                     local a = (monster.position - data.ppos):getAngle()
@@ -69,6 +75,18 @@ function BlackHole.onTick(gun)
                 end
             end)
         
+            if data.checkAchievement then
+                if hasAchievement( "ACH_BLACK_HOLE" ) or player.isDead or missionData.isSurvival ~= true then
+                    data.checkAchievement = false
+                end
+                data.achievementProcess = data.achievementProcess + killCount
+                
+                if data.achievementProcess >= 40 then
+                    addAchievement( "ACH_BLACK_HOLE" )
+                    data.checkAchievement = false
+                end
+            end
+            
             moveRange = moveRange + 30
             local d = player.position:distance(data.ppos)
             if d < moveRange then

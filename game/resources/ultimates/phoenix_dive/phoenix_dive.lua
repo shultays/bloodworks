@@ -6,6 +6,9 @@ function PhoenixDive.init(gun)
     gun.data.gameObject:setLevel(RenderableLevel.player + 2)
     gun.data.particle = gun.data.gameObject:addParticle("FlameParticle", {})
     gun.data.started = false
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
 end
 
 function PhoenixDive.onTick(gun)
@@ -28,6 +31,7 @@ function PhoenixDive.onTick(gun)
         data.started = true
         playSound({path = PhoenixDive.basePath .."dive.ogg", volume = 0.9})
         player:addKnockback(Vec2.fromAngle(data.moveAngle) * 500.0, data.shooting)
+        data.achievementProcess = 0 
     end
     
     if data.shooting >= 0.0 then
@@ -43,6 +47,7 @@ function PhoenixDive.onTick(gun)
             playSound({path = "~/resources/sounds/explode.ogg"})
         end
         
+        local count = 0
         data.hitTime = data.hitTime - dt
         if data.hitTime < 0.0 then
             data.hitTime = data.hitTime + 0.02
@@ -65,10 +70,27 @@ function PhoenixDive.onTick(gun)
                     monster.data.flamethrowerObject.data.damageMin = 4
                     monster.data.flamethrowerObject.data.damageVar = 6
                 end
-                
+                if monster.data.countedForPhoenixDiveAchievement == nil then
+                    monster.data.countedForPhoenixDiveAchievement = true
+                    count = count + 1
+                end
                 monster.data.flamethrowerObject.data.count = 4
             end)
         end
+        
+        
+        if data.checkAchievement then
+            if hasAchievement( "ACH_PHOENIX_DIVE" ) or player.isDead or missionData.isSurvival ~= true then
+                data.checkAchievement = false
+            end
+            data.achievementProcess = data.achievementProcess + count
+            
+            if data.achievementProcess >= 15 then
+                addAchievement( "ACH_PHOENIX_DIVE" )
+                data.checkAchievement = false
+            end
+        end
+        print(data.achievementProcess)
         
         data.particleTime = data.particleTime - dt
         while data.particleTime < 0.0 do
