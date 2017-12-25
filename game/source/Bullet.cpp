@@ -148,7 +148,7 @@ void Bullet::tick()
 			Vec2 monsterPos = monster->getPosition();
 			float radiusToCheck = monster->getRadius() + radius * scale;
 
-			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && (hitsMultipleTimes || penetrateCount == 0 || monster->hasIgnoreId(id) == false))
+			if (monster->isRemoved() == false && pos.distanceSquared(monsterPos) < radiusToCheck * radiusToCheck && monster->hasIgnoreId(id) == false)
 			{
 				if (monster->shouldHit(this) == false)
 				{

@@ -13,7 +13,7 @@ function PulseGun.onTick(gun)
             local bullet = gun:addBullet()
             bullet.data.t = 0.3
             bullet:setScale(bullet.data.t)
-            bullet.penetrateCount = 1000
+            bullet.penetrateCount = -1
             bullet.data.toKillTime = 1000.0
             bullet:setColor(Vec4.new(1.0, 1.0, 1.0, 0.4))
         end

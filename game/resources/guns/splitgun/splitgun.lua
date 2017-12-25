@@ -12,7 +12,6 @@ function SplitGun.init(gun)
     
     gun.data.checkAchievement = true
     gun.data.achievementProcess = 0
-    gun.data.achievementHitCount = {}
 end
 
 
@@ -27,7 +26,6 @@ function SplitGun.onTick(gun)
             bullet.data.remainingSplit = 2
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
-            bullet.data.splitID = bullet.id
             playSound({path = SplitGun.basePath .. "split_gun.ogg"})
         end
     end
@@ -43,11 +41,12 @@ end
 function SplitGun.onBulletHit(gun, bullet, monster)
     local data = gun.data
     if monster ~= nil then
+        if data.splitID ~= nil then
+            monster:addIgnoreId(data.splitID)
+        end
         if bullet.data.remainingSplit > 0 then
             local newBullet = gun:addBullet()
-            local splitID = newBullet.id
             local particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-            newBullet.penetrateCount = 2 - bullet.penetrateUsed
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
             particle.args.startFadeinSpeed = 10000.0
@@ -56,11 +55,12 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
             monster:addIgnoreId(newBullet.id)
             newBullet.damage = math.floor( bullet.damage * 0.6 )
-            newBullet.data.splitID = splitID
+            newBullet.data.splitHit = {}
+            newBullet.lifeTime = 0.6 - ( 1 - newBullet.data.remainingSplit ) * 0.3
+            local prevBullet = newBullet
             
             newBullet = gun:addBullet()
             particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-            newBullet.penetrateCount = 2 - bullet.penetrateUsed
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
             particle.args.startFadeinSpeed = 10000.0
@@ -69,7 +69,11 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             newBullet.data.remainingSplit = bullet.data.remainingSplit - 1
             monster:addIgnoreId(newBullet.id)
             newBullet.damage = math.floor( bullet.damage * 0.6 )
-            newBullet.data.splitID = splitID
+            newBullet.data.splitHit = prevBullet.data.splitHit
+            newBullet.lifeTime = 0.6 - ( 1 - newBullet.data.remainingSplit ) * 0.3
+            
+            newBullet.data.splitID = prevBullet.data.id
+            prevBullet.data.splitID = newBullet.data.id
             
             playSound({path = SplitGun.basePath .. "split_gun.ogg", position = bullet.position, volume = 0.5})
         end
@@ -81,21 +85,18 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             data.checkAchievement = false
             return
         end
-        if monster ~= nil then
-            local id = bullet.data.splitID
-            if  data.achievementHitCount[id] == nil then
-                data.achievementHitCount[id] = 1
+        if monster ~= nil and bullet.data.splitHit ~= nil then
+        
+            if  bullet.data.splitHit[0] == nil then
+                bullet.data.splitHit[0] = true
             else
-                data.achievementHitCount[id] = data.achievementHitCount[id] + 1
-                if data.achievementHitCount[id] == 2 then
-                    data.achievementProcess = data.achievementProcess + 1
-                    
-                    if data.achievementProcess >= 50 then
-                        addAchievement( "ACH_SPLIT_GUN" ) 
-                        data.checkAchievement = false
-                    end
+                data.achievementProcess = data.achievementProcess + 1
+                if data.achievementProcess >= 50 then
+                    addAchievement( "ACH_SPLIT_GUN" ) 
+                    data.checkAchievement = false
                 end
             end
+            bullet.data.splitHit = nil
         end
     end
     

@@ -8,6 +8,10 @@ function Railgun.init(gun)
     gun.data.spreadDecreaseStartTime = 0.35
     gun.data.spreadDecreaseSpeed = 0.40
     gun.data.spreadIncreasePerShoot = 0.03
+    
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
 end
 
 
@@ -27,6 +31,31 @@ function Railgun.onTick(gun)
             particle.args.initialAlpha = 0.2
             particle.args.fadeOutSpeed = 0.3
             particle.args.color = Vec3.new(1.0, 1.0, 1.0)
+            
+            bullet.data.killCount = 0
         end
     end
 end
+
+
+
+function Railgun.onBulletHit(gun, bullet, monster)
+    local data = gun.data
+    if data.checkAchievement then
+        if hasAchievement( "ACH_RAIL_GUN" ) or player.isDead or missionData.isSurvival ~= true then
+            data.checkAchievement = false
+            return
+        end
+            
+        if  monster ~= nil and monster.isDead == true then
+            bullet.data.killCount = bullet.data.killCount + 1
+            if bullet.data.killCount == 3 then
+                data.achievementProcess = data.achievementProcess + 1
+                if data.achievementProcess >= 50 then
+                    addAchievement( "ACH_RAIL_GUN" ) 
+                    data.checkAchievement = false
+                end
+             end
+        end
+    end
+ end

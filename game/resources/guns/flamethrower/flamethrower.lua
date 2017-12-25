@@ -19,7 +19,7 @@ function Flamethrower.onTick(gun)
             bullet.moveSpeed = totalSpeed:length()
             bullet.moveAngle = totalSpeed:getAngle()
             bullet.onDamageArgs.noSlowdown = true
-            bullet.penetrateCount = 100
+            bullet.penetrateCount = -1
         end
         
         local bulletSpeed =  gun.bulletSpeed * player.bulletSpeedMultiplier:getBuffedValue()
