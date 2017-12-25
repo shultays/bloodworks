@@ -9,6 +9,9 @@ function ShrinkGun.init(gun)
     gun.data.maxSpread = 0.1
     gun.data.spreadDecreaseSpeed = 0.25
     gun.data.spreadIncreasePerShoot = 0.025
+    
+    gun.data.checkAchievement = true
+    gun.data.achievementProcess = 0
 end
 
 
@@ -40,6 +43,7 @@ end
 
 
 function ShrinkGun.onBulletHit(gun, bullet, monster)
+    local data = gun.data
     if monster ~= nil and monster.canGetOneShooted == true then
         monster:setScale(monster.scale * 0.7)
         
@@ -60,4 +64,19 @@ function ShrinkGun.onBulletHit(gun, bullet, monster)
             monster:spawnParticle(monster.data.shrinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
         end
     end
+    
+    if data.checkAchievement then
+        if hasAchievement( "ACH_SHRINK_GUN" ) or player.isDead or missionData.isSurvival ~= true then
+            data.checkAchievement = false
+            return
+        end
+        if monster ~= nil and monster.data.isBoss == true and monster.isDead == true then
+            data.achievementProcess = data.achievementProcess + 1
+            if data.achievementProcess >= 10 then
+                addAchievement( "ACH_SHRINK_GUN" ) 
+                data.checkAchievement = false
+            end
+        end
+    end
+    
 end
