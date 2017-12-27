@@ -143,7 +143,7 @@ void CSteamAchievements::OnUserStatsStored(UserStatsStored_t *pCallback)
 	{
 		if (k_EResultOK == pCallback->m_eResult)
 		{
-			out << "Stored stats for Steam\n";
+			//out << "Stored stats for Steam\n";
 		}
 		else if (k_EResultInvalidParam == pCallback->m_eResult)
 		{

@@ -10,7 +10,7 @@
   "bulletDamage" : [30, 50],
   
   "maxAmmo" : 8,
-  "reloadTime" : 1.2,
+  "reloadTime" : 1.6,
   
   "scriptFile" : "splitgun.lua",
   "scriptName" : "SplitGun"

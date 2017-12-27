@@ -479,7 +479,7 @@ void BloodworksCheats::onLoadMission()
 	{
 		if (gun->getScriptName() == "MiniGun")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
 		if (gun->getScriptName() == "PhoenixDive")
 		{

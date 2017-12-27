@@ -11,19 +11,29 @@ function MiniGun.init(gun)
     gun.data.checkAchievement = true
     gun.data.achievementProcess = 0
     gun.data.achievementKillCounts = {}
+    
+    gun.data.shootStarted = false
 end
 
 
 function MiniGun.onTick(gun)
     local data = gun.data
     local shoot = false
-    if gun.isTriggered and gun:hasAmmo() and gun.data.cooldown == false then
+    if gun.isTriggered and gun:hasAmmo() and data.cooldown == false then
         shoot = true
     end
     
+    if data.shootStarted then
+        if data.waitTime < 0.38 then
+            shoot = true
+        else
+            data.shootStarted = false
+        end
+    end
     if shoot then
         if data.waitTime == 0.0 then
-            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.7})
+            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.4})
+            data.shootStarted = true
         end
         data.waitTime = data.waitTime + dt
         if data.waitTime > 0.4 then
@@ -47,11 +57,11 @@ function MiniGun.onTick(gun)
          data.waitTime = data.waitTime - dt * 2.0
          if data.waitTime < 0.0 then
             data.waitTime = 0.0
-            gun.data.cooldown = false
+            data.cooldown = false
          else 
-            if gun.data.cooldown == false then
-                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.6})
-                gun.data.cooldown = true
+            if data.cooldown == false then
+                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.4})
+                data.cooldown = true
             end
          end
          

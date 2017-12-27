@@ -246,6 +246,9 @@
     <ClCompile Include="source\BloodworksSteam.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="source\PauseMenu.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">
@@ -520,6 +523,9 @@
       <Filter>Coral</Filter>
     </ClInclude>
     <ClInclude Include="source\BloodworksSteam.h">
+      <Filter>Bloodworks</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PauseMenu.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
   </ItemGroup>

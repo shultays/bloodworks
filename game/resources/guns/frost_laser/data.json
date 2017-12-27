@@ -1,12 +1,12 @@
 {
   "type" : "gun",
-  "name": "Freeze Laser",
+  "name": "Frost Laser",
   "icon" : "icon.png",
   "bulletTexture" : "laser.png",
   "bulletSize" : [15.0, 15.0],
   "bulletRadius" : 4.0,
   "bulletSpeed" : 350.0,
-  "bulletDamage" : [5, 10],
+  "bulletDamage" : [8, 12],
   
   "scriptFile" : "frost_laser.lua",
   "scriptName" : "FrostLaser",

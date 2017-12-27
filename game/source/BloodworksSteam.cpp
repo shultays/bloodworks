@@ -34,6 +34,7 @@ Achievement_t g_Achievements[] = {
 	_ACH_ID(ACH_MERCILESS),
 	_ACH_ID(ACH_ROCKET_LAUNCHER),
 	_ACH_ID(ACH_MINIGUN),
+	_ACH_ID(ACH_MOD),
 };
 
 #define _STAT_ID( id,type ) { id, #id, type, 0, 0, 0, 0 }
@@ -141,7 +142,7 @@ void BloodworksSteam::tick()
 		return;
 	}
 
-	float time = timer.getTime();
+	float time = timer.getTime() - bloodworks->getMissionController()->getMissionStartTime();
 	if (time > 2 * 60.0f && !g_Achievements[ACH_BRONZE].m_bAchieved)
 	{
 		addAchievement(ACH_BRONZE);
@@ -171,7 +172,7 @@ void BloodworksSteam::tick()
 		};
 		bloodworks->getMonsterController()->runForEachMonsterInRadius(bloodworks->getPlayer()->getPosition(), 140.0f, func);
 
-		if (count >= 5)
+		if (count >= 4)
 		{
 			edgeTime += timer.getDt();
 			if (edgeTime >= 30.0f)

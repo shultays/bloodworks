@@ -54,6 +54,7 @@ class CreditsWindow;
 class CustomGameWindow;
 class PlayerTemplate;
 class BloodworksSteam;
+class PauseMenu;
 
 class Bloodworks : public cGame
 {
@@ -77,6 +78,7 @@ class Bloodworks : public cGame
 	ModWindow *modWindow;
 	CreditsWindow *creditsWindow;
 	CustomGameWindow *customGameWindow;
+	PauseMenu *pauseMenu;
 
 	cVector<Gun*> guns;
 	cVector<Bonus*> bonuses;
@@ -106,6 +108,7 @@ class Bloodworks : public cGame
 	bool paused;
 
 	MainMenu *mainMenu;
+
 
 	float soundSpeed;
 	bool soundPaused;
@@ -213,14 +216,6 @@ public:
 		return mapRect;
 	}
 
-	//const Vec2& getMapMin() const
-	//{
-	//	return mapBegin;
-	//}
-	//const Vec2& getMapMax() const
-	//{
-	//	return mapEnd;
-	//}
 	bool isCoorOutside(const Vec2& pos, float radius) const;
 	bool isCoorOutside(const Vec2& pos) const;
 
@@ -232,7 +227,7 @@ public:
 	}
 
 	void doPause();
-	void doUnpause();
+	void doUnpause( bool instant = false );
 	cVector<Perk*> getAvailablePerks() const;
 	void onPerkUsed(Perk *levelupPerks);
 	int onPlayerDamaged(int damage, float dir, sol::table& params);
@@ -304,4 +299,5 @@ public:
 	bool hasCheats();
 	void HideGui(bool bHidden);
 	bool IsGUIHidden() const;
+	void restartMission();
 };

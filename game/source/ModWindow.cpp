@@ -9,6 +9,7 @@
 #include "cScrollContainer.h"
 #include "BloodworksControls.h"
 #include "cTickBox.h"
+#include "BloodworksSteam.h"
 
 float buttonHeight = 30.0f;
 float height = 35.0f;
@@ -378,9 +379,12 @@ void ModWindow::tick()
 					detailEnabled = true;
 					detailInstalled = true;
 					updateDetailInfo();
-					detailInstallText->setText("Installed");
 					if (fetchMod.valid && fetchMod.success )
 					{
+						if (!bloodworks->getSteam()->hasAchievement(ACH_MOD))
+						{
+							bloodworks->getSteam()->addAchievement(ACH_MOD);
+						}
 						detailInstallText->setText("Installed");
 						fetchMod.valid = false;
 						bool contains = false;

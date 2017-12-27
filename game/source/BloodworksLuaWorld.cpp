@@ -640,12 +640,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		return bloodworks->loadMission(mission);
 	});
 
-	lua.set_function("gotoMainMenu",
-		[&]() -> bool
-	{
-		return bloodworks->gotoMainMenu();
-	});
-
 	lua.set_function("addGameObject",
 		[&](const std::string& script, const sol::table& params) -> GameObject*
 	{

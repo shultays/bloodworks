@@ -220,7 +220,7 @@ void LevelUpPopup::tick()
 		joyPadFree = false;
 		for (int i = 0; i < levelupPerks.size(); i++)
 		{
-			levelupPerksRenderables[i]->setEnforcedHovering(1 == i ? cButton::enforce_hovering : cButton::enforce_not_hovering);
+			levelupPerksRenderables[i]->setEnforcedHovering(1 == levelupPerks.size() / 2 ? cButton::enforce_hovering : cButton::enforce_not_hovering);
 		}
 	}
 

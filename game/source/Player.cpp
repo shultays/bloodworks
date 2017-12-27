@@ -336,6 +336,11 @@ void Player::tick()
 		moveAmount.y = moveAmount.y * max(0.0f, (boundaries.getMax().y + boundaryAmount - newPos.y) / boundaryAmount);
 	}
 
+
+	if (bloodworks->getConfig()->getLockCrosshair())
+	{
+		crosshairPos -= moveAmount;
+	}
 	pos += moveAmount;
 	Vec2 afterPos = pos;
 
@@ -410,23 +415,11 @@ void Player::tick()
 			crosshairPos += input.getDeltaMousePos() * bloodworks->getPauseSlowdown() * sensitivityMult;
 		}
 
-		if (bloodworks->getConfig()->getLockCrosshair())
-		{
-			float maxCrosshairDistance = gun ? gun->getMaxCrosshairDistance() : 400.0f;
-			float lengthSquared = crosshairPos.lengthSquared();
-			if (lengthSquared > maxCrosshairDistance * maxCrosshairDistance)
-			{
-				crosshairPos = crosshairPos.normalized() * maxCrosshairDistance;
-			}
-		}
-		else
-		{
-			Vec2 shift = bloodworks->getCameraPos() - pos;
-			Vec2 screenMin = shift - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 40.0f;
-			Vec2 screenMax = shift + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 40.0f;
-			clamp(crosshairPos.x, screenMin.x, screenMax.x);
-			clamp(crosshairPos.y, screenMin.y, screenMax.y);
-		}
+		Vec2 shift = bloodworks->getCameraPos() - pos;
+		Vec2 screenMin = shift - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 40.0f;
+		Vec2 screenMax = shift + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 40.0f;
+		clamp(crosshairPos.x, screenMin.x, screenMax.x);
+		clamp(crosshairPos.y, screenMin.y, screenMax.y);
 	}
 	
 	if (bloodworks->IsGUIHidden())

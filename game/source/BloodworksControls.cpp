@@ -20,8 +20,6 @@ void BloodworksControls::init()
 		{ key_r,					joystick_0_button_leftshoulder },
 		{ key_tab,					joystick_0_button_y },
 
-		{ key_p,					joystick_0_button_start },
-
 		{ key_return,				joystick_0_button_x },
 		{ key_escape,				joystick_0_button_back },
 		{ key_f10,					key_invalid},
@@ -38,7 +36,6 @@ void BloodworksControls::init()
 		"Ultimate",
 		"Reload",
 		"Level_Up",
-		"Pause",
 		"Select",
 		"Back",
 		"Toggle_Fullscreen",

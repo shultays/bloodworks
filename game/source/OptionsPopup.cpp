@@ -314,7 +314,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	optionsGroup->addRenderable(audioVideoGroup);
 
 	//
-	bloodworks->addRenderable(optionsGroup, GUI + 22);
+	bloodworks->addRenderable(optionsGroup, GUI + 120);
 
 	lastClickedTitle = nullptr;
 	prevClickedGroup = nullptr;
@@ -519,6 +519,7 @@ void OptionsPopup::tick()
 	if (mapper.isKeyPressed(GameKey::Back) && inUseKey == nullptr)
 	{
 		optionsGroup->setVisible(false);
+		mapper.clearKeyPress(GameKey::Back);
 	}
 }
 

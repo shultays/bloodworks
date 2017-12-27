@@ -7,7 +7,7 @@
   "bulletMeshShift" : [0.0, 0.0],
   "bulletRadius" : 3.0,
   "bulletSpeed" : 550.0,
-  "bulletDamage" : [30, 45],
+  "bulletDamage" : [30, 40],
   
   "maxAmmo" : 400,
   "reloadTime" : 3.5,
@@ -15,7 +15,7 @@
   "firingSoundContinuous" : true,
   "firingSound" : {
     "path" : "shoot.ogg",
-    "volume" : 0.8
+    "volume" : 0.5
   },
   
   "firingSoundFadein" : 0.05,

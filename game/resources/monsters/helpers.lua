@@ -199,8 +199,8 @@ end
 BulletShooter = {}
 
 function BulletShooter.init(monster)
-    data.bulletMinDamage = 15
-    data.bulletMaxDamage = 30
+    data.bulletMinDamage = 10
+    data.bulletMaxDamage = 18
     data.bulletSpeed = 300
     data.bulletRate = 3.0
     data.bulletRandom = 0.3

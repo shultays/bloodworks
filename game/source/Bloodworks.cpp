@@ -42,6 +42,7 @@
 #include "CreditsWindow.h"
 #include "CustomGameWindow.h"
 #include "BloodworksSteam.h"
+#include "PauseMenu.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -253,6 +254,8 @@ void Bloodworks::initImplementation()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	pauseMenu = new PauseMenu(this);
+
 	mainMenu = new MainMenu(this);
 
 	levelUpPopup = new LevelUpPopup(this);
@@ -330,6 +333,11 @@ Bloodworks::Bloodworks()
 
 Bloodworks::~Bloodworks()
 {
+	if (missionController->isLoaded())
+	{
+		clearMission();
+	}
+
 	SAFE_DELETE(bloodworksSteam);
 	clear();
 }
@@ -355,9 +363,15 @@ void Bloodworks::doPause()
 	pausePostProcess->setEnabled(true);
 }
 
-void Bloodworks::doUnpause()
+void Bloodworks::doUnpause(bool instant)
 {
 	paused = false;
+
+	if (instant)
+	{
+		pauseSlowdown = 1.0f;
+		pausePostProcess->setEnabled(false);
+	}
 }
 
 cVector<Perk*> Bloodworks::getAvailablePerks() const
@@ -894,6 +908,7 @@ void Bloodworks::clear()
 	SAFE_DELETE(optionsPopup);
 	SAFE_DELETE(levelUpPopup);
 	SAFE_DELETE(mainMenu);
+	SAFE_DELETE(pauseMenu);
 	SAFE_DELETE(dropController);
 
 	SAFE_DELETE(monsterController);
@@ -962,6 +977,15 @@ void Bloodworks::HideGui(bool bHidden)
 bool Bloodworks::IsGUIHidden() const
 {
 	return maxRenderLevel != INT_MAX;
+}
+
+void Bloodworks::restartMission()
+{
+	std::string mission = missionController->getCurrentMissionScript();
+	if (mission.size())
+	{
+		loadMission(mission);
+	}
 }
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
@@ -1114,10 +1138,14 @@ void Bloodworks::tick()
 	if (isMissionLoaded() == false)
 	{
 		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible() || customGameWindow->isVisible());
-		optionsPopup->tick();
 		modWindow->tick();
 		creditsWindow->tick();
 		customGameWindow->tick();
+	}
+
+	if (optionsPopup->isVisible())
+	{
+		optionsPopup->tick();
 	}
 
 	oneShotSoundManager->tick();
@@ -1180,14 +1208,7 @@ void Bloodworks::tick()
 
 	config->check();
 	bloodworksSteam->tick();
-	if (mapper.isKeyPressed(GameKey::Back))
-	{
-		if (missionController->canExit())
-		{
-			gotoMainMenu();
-		}
-	}
-
+	pauseMenu->tick();
 }
 
 void Bloodworks::tickCamera()
@@ -1229,12 +1250,19 @@ void Bloodworks::tickCamera()
 
 void Bloodworks::tickGameSlowdown()
 {
-	if (levelUpPopup->isVisible() == false && missionController->isLoaded() && mapper.isKeyPressed(GameKey::Pause))
+	if (levelUpPopup->isVisible() == false && missionController->isLoaded() && mapper.isKeyPressed(GameKey::Back))
 	{
-		paused = !paused;
-		if (paused)
+		if (missionController->getMissionData()["enableReset"])
 		{
-			pausePostProcess->setEnabled(true);
+			gotoMainMenu();
+		}
+		else
+		{
+			paused = !paused;
+			if (paused)
+			{
+				pausePostProcess->setEnabled(true);
+			}
 		}
 	}
 

@@ -79,6 +79,11 @@ public:
 		return missions.size();
 	}
 
+	float getMissionStartTime() const
+	{
+		return missionLoadTime;
+	}
+
 	const std::string& GetMissionName(int index) const
 	{
 		return missions[index].name;
@@ -95,4 +100,6 @@ public:
 	{
 		return missions[index].scriptName;
 	}
+
+	std::string getCurrentMissionScript();
 };

@@ -15,7 +15,6 @@ enum class GameKey : MappedKey
 	Attack2,
 	Reload,
 	LevelUp,
-	Pause,
 	Select,
 	Back,
 	Fullscreen,

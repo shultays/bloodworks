@@ -26,6 +26,7 @@ enum EAchievement {
 	ACH_MERCILESS,
 	ACH_ROCKET_LAUNCHER,
 	ACH_MINIGUN,
+	ACH_MOD,
 	
 	ACH_COUNT
 };

@@ -299,3 +299,12 @@ bool MissionController::canExit()
 	return true;
 }
 
+std::string MissionController::getCurrentMissionScript()
+{
+	if (loadedMission != -1)
+	{
+		return missions[loadedMission].scriptName;
+	}
+	return "";
+}
+
