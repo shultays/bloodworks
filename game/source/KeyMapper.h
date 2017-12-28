@@ -20,12 +20,15 @@ class KeyMapper
 	std::unordered_map<std::string, int> mappedIndices;
 	cVector<struct KeyInfo> mappedKeys;
 	cPersistent persistent;
+
+	int keyCount;
+	const char** gameKeyNames;
 public:
 	KeyMapper()
 	{
 	}
 
-	void setSavePath(const std::string& file);
+	void setSavePath(int keyCount, const char** gameKeyNames, const std::string& file);
 
 	void check()
 	{

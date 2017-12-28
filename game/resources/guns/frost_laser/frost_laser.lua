@@ -50,7 +50,7 @@ function FrostLaser.onTick(gun)
                 local colorbuff = monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
               
                 local amount = buff:getCurrentBuffAmount()
-                amount = amount * 0.80
+                amount = amount * 0.70
                 
                 if amount < 0.2 and monster.data.iceBlock == nil and monster.isDead == false then
                     monster.data.iceBlock = addGameObject("IceBlock", { monster = monster, gun = gun })

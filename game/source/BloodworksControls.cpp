@@ -41,7 +41,7 @@ void BloodworksControls::init()
 		"Toggle_Fullscreen",
 	};
 
-	mapper.setSavePath("keys.txt");
+	mapper.setSavePath( (int)GameKey::Count, GameKeyNames, "keys.txt");
 	for (int i = 0; i < (int)GameKey::Count; i++)
 	{
 		BloodworksControls::KeyData keyData;

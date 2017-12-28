@@ -5,8 +5,11 @@
 
 #define CONFIG_COUNT 2
 
-void KeyMapper::setSavePath(const std::string& file)
+void KeyMapper::setSavePath(int keyCount, const char** gameKeyNames, const std::string& file)
 {
+	this->keyCount = keyCount;
+	this->gameKeyNames = gameKeyNames;
+
 	for (auto& data : mappedKeys)
 	{
 		cVector<std::string> keyNames;
@@ -20,6 +23,22 @@ void KeyMapper::setSavePath(const std::string& file)
 	for (int i = 0; i < persistent.size(); i++)
 	{
 		const std::string name = persistent.getName(i);
+
+		bool valid = false;
+		for (int j = 0; j < keyCount; j++)
+		{
+			if (name == gameKeyNames[j])
+			{
+				valid = true;
+				break;
+			}
+		}
+
+		if (!valid)
+		{
+			continue;
+		}
+
 		cVector<std::string>& values = persistent.getStringList(i);
 		Key keys[4] = { key_invalid, key_invalid, key_invalid, key_invalid };
 		for (int j = 0; j < values.size(); j++)
