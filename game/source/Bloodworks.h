@@ -55,6 +55,7 @@ class CustomGameWindow;
 class PlayerTemplate;
 class BloodworksSteam;
 class PauseMenu;
+class TutorialMenu;
 
 class Bloodworks : public cGame
 {
@@ -79,6 +80,7 @@ class Bloodworks : public cGame
 	CreditsWindow *creditsWindow;
 	CustomGameWindow *customGameWindow;
 	PauseMenu *pauseMenu;
+	TutorialMenu *tutorialMenu;
 
 	cVector<Gun*> guns;
 	cVector<Bonus*> bonuses;
@@ -169,6 +171,11 @@ public:
 	const cVector<Perk*>& Bloodworks::getPerks() const
 	{
 		return perks;
+	}
+
+	const cVector<Perk*>& Bloodworks::getActivePerks() const
+	{
+		return usedPerks;
 	}
 
 	Player* getPlayer() const
@@ -300,4 +307,5 @@ public:
 	void HideGui(bool bHidden);
 	bool IsGUIHidden() const;
 	void restartMission();
+	void startSurvival();
 };

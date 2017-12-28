@@ -35,7 +35,7 @@ BloodworksCheats::BloodworksCheats(Bloodworks *bloodworks)
 	moveMonsters = true;
 	slowdownBuff = bloodworks->getGlobalUniqueId();
 	stopBuff = bloodworks->getGlobalUniqueId();
-
+	inited = false;
 	hasCheats = bloodworks->getConfig()->getBool("cheats", false) || Coral::isDebuggerPresent();
 
 #ifdef DEBUG
@@ -521,6 +521,13 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 
 void BloodworksCheats::onInit()
 {
+	static int t = 0;
+	t++;
+	if (t < 2)
+	{
+		return; // todo fix
+	}
+	inited = true;
 	static std::string testGame = "";
 	if (Coral::isDebuggerPresent())
 	{

@@ -12,6 +12,7 @@
 #include "Gun.h"
 #include "BloodworksControls.h"
 #include "MonsterController.h"
+#include "MissionController.h"
 
 DropController::~DropController()
 {
@@ -99,7 +100,9 @@ void DropController::tick()
 	{
 		return;
 	}
-	if (timer.getDt() > 0.0f)
+	bool dontSpawnBonus = bloodworks->getMissionController()->getMissionData()["dontSpawnBonus"];
+
+	if (timer.getDt() > 0.0f && dontSpawnBonus == false )
 	{
 		float timeSinceLastDrop = timer.getTime() - lastRandomDropSpawn;
 		float extraDropChance = (timeSinceLastDrop - 10.0f) / 12.0f;
@@ -114,7 +117,6 @@ void DropController::tick()
 			}
 		}
 	}
-
 	Vec2 playerPos = bloodworks->getPlayer()->getPosition();
 	Vec2 crosshairPos = playerPos + bloodworks->getPlayer()->getCrosshairPos();
 	for (int i = 0; i < drops.size(); i++)
@@ -156,18 +158,21 @@ void DropController::tick()
 			remove = true;
 		}
 
-		if (drop.time + 45.0f < timer.getTime())
+		if (!dontSpawnBonus)
 		{
-			remove = true;
-		}
-		else if (drop.time + 35.0f < timer.getTime())
-		{
-			bool isFadeout = ((int)(timer.getTime() * 3)) % 2 != 0;
-			if (isFadeout == false)
+			if (drop.time + 45.0f < timer.getTime())
 			{
-				drop.canFadeout = true;
+				remove = true;
 			}
-			drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, (isFadeout && drop.canFadeout) ? 0.2f : 1.0f));
+			else if (drop.time + 35.0f < timer.getTime())
+			{
+				bool isFadeout = ((int)(timer.getTime() * 3)) % 2 != 0;
+				if (isFadeout == false)
+				{
+					drop.canFadeout = true;
+				}
+				drop.renderable->setColor(Vec4(1.0f, 1.0f, 1.0, (isFadeout && drop.canFadeout) ? 0.2f : 1.0f));
+			}
 		}
 
 		if (remove)
@@ -243,6 +248,11 @@ void DropController::reset()
 
 void DropController::onMonsterDied(Monster* monster, float dropChance)
 {
+	if (bloodworks->getMissionController()->getMissionData()["dontSpawnBonus"])
+	{
+		return;
+	}
+
 	Vec2 screenMin = bloodworks->getCameraPos() - bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() + 50;
 	Vec2 screenMax = bloodworks->getCameraPos() + bloodworks->getScreenDimensions().toVec() * 0.5f * bloodworks->getCameraZoom() - 50;
 

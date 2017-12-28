@@ -43,6 +43,7 @@
 #include "CustomGameWindow.h"
 #include "BloodworksSteam.h"
 #include "PauseMenu.h"
+#include "TutorialMenu.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -256,17 +257,26 @@ void Bloodworks::initImplementation()
 
 	pauseMenu = new PauseMenu(this);
 
+	bool showTutorial = getConfig()->getBool("tutorial", true, "show tutorial on first run");
+	if (showTutorial)
+	{
+		tutorialMenu = new TutorialMenu(this);
+	}
+	else
+	{
+		tutorialMenu = nullptr;
+	}
+
 	mainMenu = new MainMenu(this);
 
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
 
-	coral.setFullScreen(config->getFullScreen());
+	coral.setFullScreen(config->getFullScreen() && !Coral::isDebuggerPresent());
 	mainMenu->setVisible(true);
 
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksCheats = new BloodworksCheats(this);
-	bloodworksCheats->onInit();
 #endif
 }
 
@@ -909,6 +919,7 @@ void Bloodworks::clear()
 	SAFE_DELETE(levelUpPopup);
 	SAFE_DELETE(mainMenu);
 	SAFE_DELETE(pauseMenu);
+	SAFE_DELETE(tutorialMenu);
 	SAFE_DELETE(dropController);
 
 	SAFE_DELETE(monsterController);
@@ -985,6 +996,19 @@ void Bloodworks::restartMission()
 	if (mission.size())
 	{
 		loadMission(mission);
+	}
+}
+
+void Bloodworks::startSurvival()
+{
+	if (tutorialMenu && getConfig()->getBool("tutorial", true) )
+	{
+		tutorialMenu->show();
+		getConfig()->set("tutorial", false);
+	}
+	else
+	{
+		loadMission("Survival");
 	}
 }
 
@@ -1120,11 +1144,17 @@ void Bloodworks::tick()
 		return;
 	}
 
+
 #ifdef HAS_BLOODWORKS_CHEATS
+	if (!bloodworksCheats->isInited())
+	{
+		bloodworksCheats->onTick();
+	}
 	bloodworksCheats->onTick();
 #endif
 
 	lua["dt"] = timer.getDt();
+	lua["nonsloweddt"] = timer.getNonSlowedDt();
 	lua["time"] = timer.getTime();
 	lua["timeScale"] = getSlowdown();
 
@@ -1137,7 +1167,7 @@ void Bloodworks::tick()
 
 	if (isMissionLoaded() == false)
 	{
-		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible() || customGameWindow->isVisible());
+		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible() || customGameWindow->isVisible() || ( tutorialMenu && tutorialMenu->isVisible()) );
 		modWindow->tick();
 		creditsWindow->tick();
 		customGameWindow->tick();
@@ -1209,6 +1239,16 @@ void Bloodworks::tick()
 	config->check();
 	bloodworksSteam->tick();
 	pauseMenu->tick();
+	if (tutorialMenu && tutorialMenu->isVisible())
+	{
+		tutorialMenu->tick();
+	}
+#ifdef HAS_BLOODWORKS_CHEATS
+	if (!bloodworksCheats->isInited())
+	{
+		bloodworksCheats->onInit();
+	}
+#endif
 }
 
 void Bloodworks::tickCamera()

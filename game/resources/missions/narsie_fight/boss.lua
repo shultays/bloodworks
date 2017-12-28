@@ -50,9 +50,9 @@ function NarSieFight.onTick()
         for i= -2,2 do
             while true do
                 local g = getRandomGun()
-                if guns[g.name] ~= true then
-                    guns[g.name]  = true
-                    spawnGun(player.position + Vec2.fromAngle(-math.pi * 0.5 + 0.7 * i) * 170.0, g.name)
+                if guns[g.scriptName] ~= true then
+                    guns[g.scriptName]  = true
+                    spawnGun(player.position + Vec2.fromAngle(-math.pi * 0.5 + 0.7 * i) * 170.0, g.scriptName)
                     break
                 end
             end

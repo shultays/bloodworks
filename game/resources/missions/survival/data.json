@@ -2,8 +2,6 @@
   "type": "mission",
   "name": "Survival",
   
-  "icon": "icon.png",
-  
   "scriptFile" : "survival.lua",
   "scriptName" : "Survival"
 }

@@ -84,7 +84,7 @@ end
 
 GhostBuffId = getGlobalUniqueId()
 
-function makeBossDefault(monster)
+function makeBossDefault(monster, forceType)
     local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
     monster.hitPoint = math.floor(monster.hitPoint * 1.5)
     
@@ -103,6 +103,10 @@ function makeBossDefault(monster)
     repeat
         t = math.random(11)
     until missionTime > 30.0 or t ~= 8 
+    
+    if forceType ~= nil then
+        t = forceType
+    end
     
     if t == 1 then -- huge & tank
         monster.hitPoint = monster.hitPoint * 6

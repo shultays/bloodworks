@@ -34,6 +34,7 @@
 #include "Perk.h"
 #include "StripLaserRenderable.h"
 #include "BloodworksSteam.h"
+#include "BloodRenderable.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -575,6 +576,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"data", &Gun::data,
 		"newBulletData", &Gun::newBulletData,
 		"name", sol::readonly(&Gun::name),
+		"scriptName", sol::readonly(&Gun::scriptName),
 		"ultimate", sol::readonly(&Gun::ultimate),
 		"bulletRadius", &Gun::bulletRadius,
 		"bulletSpeed", &Gun::bulletSpeed,
@@ -626,6 +628,19 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](int index) -> Gun*
 	{
 		return bloodworks->getGuns()[index];
+	});
+
+	lua.set_function("getGun",
+		[&](const std::string& script) -> Gun*
+	{
+		for (auto& gun : bloodworks->getGuns())
+		{
+			if (gun->getScriptName() == script)
+			{
+				return gun;
+			}
+		}
+		return nullptr;
 	});
 
 	lua.set_function("isPaused",
@@ -877,7 +892,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		int index = 0;
 		for (auto& gun : bloodworks->getGuns())
 		{
-			if (name == gun->getName())
+			if (name == gun->getScriptName())
 			{
 				bloodworks->getDropController()->spawnGun(pos, index);
 				return;
@@ -892,7 +907,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		int index = 0;
 		for (auto& bonus : bloodworks->getBonuses())
 		{
-			if (name == bonus->getName())
+			if (name == bonus->getScriptName())
 			{
 				bloodworks->getDropController()->spawnBonus(pos, index);
 				return;
@@ -1172,7 +1187,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"hasBuffInfo", &BuffFloat::hasBuffInfo,
 
 		"getBaseValue", &BuffFloat::getBaseValue,
-		"getBuffedValue", &BuffFloat::getBuffedValue
+		"getBuffedValue", &BuffFloat::getBuffedValue,
+
+		"clear", &BuffFloat::clear
 
 		);
 
@@ -1223,7 +1240,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"hasBuffInfo", &BuffVec4::hasBuffInfo,
 
 		"getBaseValue", &BuffVec4::getBaseValue,
-		"getBuffedValue", &BuffVec4::getBuffedValue
+		"getBuffedValue", &BuffVec4::getBuffedValue,
+
+		"clear", &BuffVec4::clear
 
 		);
 
@@ -1308,6 +1327,23 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&](const std::string& achievement)
 	{
 		return bloodworks->getSteam()->addAchievement(achievement);
+	});
+
+	lua.set_function("clearBloods",
+		[&]()
+	{
+		return bloodworks->getBloodRenderable()->reset();
+	});
+
+	lua.set_function("numActivePerks",
+		[&]()
+	{
+		return (int)bloodworks->getActivePerks().size();
+	});
+	lua.set_function("getActivePerk",
+		[&](int index)
+	{
+		return bloodworks->getActivePerks()[index];
 	});
 }
 

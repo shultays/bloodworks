@@ -252,6 +252,7 @@
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Bonus.cpp" />
     <ClCompile Include="source\StackWalker.cpp" />
+    <ClCompile Include="source\TutorialMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -346,6 +347,7 @@
     <ClInclude Include="source\Sol.h" />
     <ClInclude Include="source\Bonus.h" />
     <ClInclude Include="source\StackWalker.h" />
+    <ClInclude Include="source\TutorialMenu.h" />
     <ClInclude Include="source\UserDetails.h" />
   </ItemGroup>
   <ItemGroup>

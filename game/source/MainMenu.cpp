@@ -189,7 +189,7 @@ void MainMenu::tick(bool hasPopup)
 		if (newGame->isClicked() || mapper.isKeyPressed(GameKey::Select))
 		{
 			mapper.clearKeyPress(GameKey::Select);
-			bloodworks->loadMission("Survival");
+			bloodworks->startSurvival();
 		}
 		else if (customGames->isClicked())
 		{

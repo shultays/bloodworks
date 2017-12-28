@@ -117,7 +117,31 @@ void LevelUpPopup::show(bool setAlpha)
 		return;
 	}
 
-	auto availablePerks = bloodworks->getAvailablePerks();
+	cVector<Perk*> availablePerks;
+	
+	auto& missionScript = lua[bloodworks->getMissionController()->getCurrentMissionScript()];
+	if (missionScript["getPerksForLevelUp"])
+	{
+		sol::table table = missionScript["getPerksForLevelUp"]();
+
+		for (auto t : table)
+		{
+			std::string script = t.second.as<std::string>();
+			
+			for (auto p : bloodworks->getPerks())
+			{
+				if (p->getScriptName() == script)
+				{
+					availablePerks.push_back(p);
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		availablePerks = bloodworks->getAvailablePerks();
+	}
 
 	auto& missionData = bloodworks->getMissionController()->getMissionData();
 	int selectCount = missionData["perkPerLevel"] ? missionData["perkPerLevel"].get<int>() : 3;

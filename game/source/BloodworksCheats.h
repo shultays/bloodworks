@@ -18,6 +18,7 @@ class BloodworksCheats
 	int slowdownBuff;
 	int stopBuff;
 	bool hasCheats;
+	bool inited;
 public:
 	static BloodworksCheats *instance;
 	BloodworksCheats(Bloodworks *bloodworks);
@@ -29,6 +30,10 @@ public:
 	void onMonsterPreTick(Monster* monster);
 	void onInit();
 	bool cheatsEnabled();
+	bool isInited() const
+	{
+		return inited;
+	}
 };
 
 #endif

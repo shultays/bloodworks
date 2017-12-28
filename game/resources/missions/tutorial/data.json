@@ -1,0 +1,9 @@
+{
+  "type": "mission",
+  "name": "Tutorial",
+  
+  "icon": "icon.png",
+  
+  "scriptFile" : "tutorial.lua",
+  "scriptName" : "Tutorial"
+}
