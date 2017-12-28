@@ -34,7 +34,7 @@ TutorialMenu::TutorialMenu(Bloodworks* bloodworks)
 	float fontSize = 22.0f;
 
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Play tutorial first?", fontSize);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Play Tutorial First?", fontSize);
 	text->setWorldMatrix(Mat3::translationMatrix(0, 24));
 	text->setTextAlignment(TextAlignment::center);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
