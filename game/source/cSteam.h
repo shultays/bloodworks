@@ -2,6 +2,9 @@
 
 #include "steam_api.h" 
 
+#include "cdefines.h" 
+
+#ifdef HAS_STEAM
 
 struct Achievement_t 
 { 
@@ -77,3 +80,5 @@ public:
 		return steamInited;
 	}
 };
+
+#endif

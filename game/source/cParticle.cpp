@@ -612,14 +612,18 @@ void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cPa
 
 	for (auto& r : randomizer.vectorRandoms)
 	{
-		assert(attributes[r.attributeIndex].type == TypeVec3 || attributes[r.attributeIndex].type == TypeVec4);
+		assert(attributes[r.attributeIndex].type == TypeVec2 || attributes[r.attributeIndex].type == TypeVec3 || attributes[r.attributeIndex].type == TypeVec4);
 		Vec4 color;
 		color[0] = randFloat(r.min[0], r.max[0]);
 		color[1] = randFloat(r.min[1], r.max[1]);
 		color[2] = randFloat(r.min[2], r.max[2]);
 		color[3] = randFloat(r.min[3], r.max[3]);
 
-		if (attributes[r.attributeIndex].type == TypeVec3)
+		if (attributes[r.attributeIndex].type == TypeVec2)
+		{
+			*(Vec2*)(buff + attributes[r.attributeIndex].begin) = color.vec2;
+		}
+		else if (attributes[r.attributeIndex].type == TypeVec3)
 		{
 			*(Vec3*)(buff + attributes[r.attributeIndex].begin) = color.vec3;
 		}

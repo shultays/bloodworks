@@ -274,6 +274,7 @@
     <ClInclude Include="source\cCapsule.h" />
     <ClInclude Include="source\cCircle.h" />
     <ClInclude Include="source\cDebugRenderable.h" />
+    <ClInclude Include="source\cDefines.h" />
     <ClInclude Include="source\cGrid.h" />
     <ClInclude Include="source\cKeyMapButton.h" />
     <ClInclude Include="source\cMat.h" />

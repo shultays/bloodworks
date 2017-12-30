@@ -1,4 +1,4 @@
 
 function FasterMovement.init()
-    player.maxSpeed:addBuff(1.2)
+    player.maxSpeed:addBuff(1.25)
 end

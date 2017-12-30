@@ -123,6 +123,7 @@ function makeBossDefault(monster, forceType)
         monster.hasBlood = false
         monster.hasGibs = false
         monster.data.randomMove = false
+        monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.8
         addCustomOnTick(monster, function (monster)
             local diffToPlayer = player.position - monster.position 
             local distanceToPlayer = diffToPlayer:length()
@@ -138,12 +139,13 @@ function makeBossDefault(monster, forceType)
         monster.data.randomMove = false
     elseif t == 4 then -- fast
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.75
+        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.65
+        monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 2.0
         monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
         monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
         monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
         monster.knockbackResistance:addBuff(0.4)
-        monster.hitPoint = math.floor(monster.hitPoint * 0.7)
+        monster.hitPoint = math.floor(monster.hitPoint * 0.6)
     elseif t == 5 then -- shoots bullets (fast)
         monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
         monster.data.shootsBullets = true
@@ -167,7 +169,7 @@ function makeBossDefault(monster, forceType)
                     local newMonster = addMonster(monster.monsterTemplate.name)
                     newMonster.data.remainingLife = monster.data.remainingLife
                     newMonster.position = monster.position
-                    newMonster:setScale(math.max(0.35, monster.scale * 0.80))
+                    newMonster:setScale(math.max(0.40, monster.scale * 0.80))
                     newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
                     newMonster:copyIgnoreId(monster)
                     
@@ -211,18 +213,18 @@ function makeBossDefault(monster, forceType)
             for i = 1,8 do
                 local newMonster = addMonster(monster.monsterTemplate.name)
                 newMonster.position = monster.position
-                newMonster:setScale(math.max(0.35, monster.scale * 0.50))
+                newMonster:setScale(math.max(0.40, monster.scale * 0.50))
                 newMonster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
                 newMonster:copyIgnoreId(monster)
                 
                 newMonster.data.playerSeeRange = monster.data.playerSeeRange
                 newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.2
-                newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+                newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.7
 
                 newMonster.data.hitWaitTime = monster.data.hitWaitTime
                 newMonster.data.hitInterval = monster.data.hitInterval
-                newMonster.data.minDamage = monster.data.minDamage
-                newMonster.data.maxDamage = monster.data.maxDamage
+                newMonster.data.minDamage = monster.data.minDamage / 2
+                newMonster.data.maxDamage = monster.data.maxDamage / 2
 
                 newMonster.experienceMultiplier = monster.experienceMultiplier * 0.1
                 newMonster.scoreMultiplier = monster.scoreMultiplier * 0.1

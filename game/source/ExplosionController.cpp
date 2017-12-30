@@ -15,7 +15,7 @@ ExplosionController::ExplosionController(Bloodworks *bloodworks)
 	fireParticle = bloodworks->getParticleTemplate("ExplosionFireParticle");
 	explosionParticles = new cParticle(bloodworks, fireParticle, lua.create_table());
 	explosionParticles->setWorldMatrix(Mat3::identity());
-	bloodworks->addRenderable(explosionParticles, MONSTERS + 1);
+	bloodworks->addRenderable(explosionParticles, MONSTERS + 10);
 
 	noParticles = bloodworks->getConfig()->getBool("no_explosion_particle", false, "Disables explosion particles (there is a problem with explosion particles on some machines)");
 }
@@ -112,23 +112,23 @@ void ExplosionController::tick()
 
 void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit)
 {
-	float particleScale = maxScale * 0.67f;
 	float duration = maxScale / scaleSpeed;
 
-	static int fadeoutTimeIndex = explosionParticles->getParticleTemplate()->getAttributeIndex("fadeoutTime");
-	static int scaleSpeedIndex = explosionParticles->getParticleTemplate()->getAttributeIndex("scaleSpeed");
+	static int maxTimeUniform = explosionParticles->getParticleTemplate()->getAttributeIndex("maxTime");
+	static int maxScaleUniform = explosionParticles->getParticleTemplate()->getAttributeIndex("maxScale");
 	cParticleRandomizer r;
 	float fadeoutDuration = duration;
 	if (fadeoutDuration > 1.8f)
 	{
 		fadeoutDuration = 1.8f;
 	}
-	r.addLinear(fadeoutTimeIndex, fadeoutDuration - 0.2f, fadeoutDuration + 0.2f);
-	r.addLinear(scaleSpeedIndex, particleScale / duration, particleScale / duration + 6.0f);
+	r.addLinear(maxTimeUniform, duration * 0.9f, duration*1.1f);
+	r.addLinear(maxScaleUniform, maxScale * 0.9f, maxScale*1.1f);
 
 	if (noParticles == false)
 	{
-		for (int i = 0; i < 15; i++)
+		int count = min(35 + (int)(maxScale * 35 / 200.0f), 70);
+		for (int i = 0; i < count; i++)
 		{
 			explosionParticles->addParticleInternal(pos, nullptr, &r);
 		}

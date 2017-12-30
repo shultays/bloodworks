@@ -521,6 +521,11 @@ void Monster::modifyDrawLevel(int level)
 	renderable->setLevel(renderable->getLevel() + level);
 }
 
+int Monster::getDrawLevel() const
+{
+	return renderable->getLevel();
+}
+
 void Monster::spawnBodyParts(const Vec2& blowDir)
 {
 	if (blowDir.isNonZero())

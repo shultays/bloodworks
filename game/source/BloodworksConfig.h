@@ -135,11 +135,11 @@ public:
 		set("vSync", vSync);
 	}
 
-
 	int getWindowWidth() const
 	{
 		return windowWidth;
 	}
+
 	int getWindowHeight() const
 	{
 		return windowHeight;
@@ -150,24 +150,23 @@ public:
 		this->windowWidth = windowWidth;
 		set("windowWidth", windowWidth);
 	}
+
 	void setWindowHeight(int windowHeight)
 	{
 		this->windowHeight = windowHeight;
 		set("windowHeight", windowHeight);
 	}
 
-
 	void setCrashAutoSendState(int crashAutoSendState)
 	{
 		this->crashAutoSendState = crashAutoSendState;
 		set("crashAutoSendState", crashAutoSendState);
 	}
+
 	int getCrashAutoSendState() const
 	{
 		return crashAutoSendState;
 	}
-
-
 
 	void check()
 	{

@@ -125,7 +125,11 @@ void Coral::tick()
 	}
 #endif
 	resources.tick();
+
+#ifdef HAS_STEAM
 	steam->tick();
+#endif
+
 	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));
 	if (timeToSleep > 0.01f && noSleep == false) 
@@ -261,7 +265,9 @@ void Coral::init()
 
 	soundManager = new cSoundManager();
 
+#ifdef HAS_STEAM
 	steam = new CSteam();
+#endif
 }
 
 void Coral::clear()
@@ -270,7 +276,9 @@ void Coral::clear()
 	glDeleteFramebuffers(3, tempFrameBuffer);
 	glDeleteBuffers(1, &postProcessQuad);
 
+#ifdef HAS_STEAM
 	SAFE_DELETE(steam);
+#endif
 
 	SAFE_DELETE(soundManager);
 	SAFE_DELETE(slaveController);

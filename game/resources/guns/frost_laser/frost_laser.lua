@@ -90,7 +90,7 @@ function IceBlock.init(gameObject, args)
     gameObject.data.colliderSize = s - 10.0
     gameObject.data.collider = gameObject:addCircleCollider( Vec2.new(0.0, 0.0), 0.0, CollisionFlags.NoBulletCollision)
     
-    gameObject:setLevel(RenderableLevel.monsters + 5)
+    gameObject:setLevel(args.monster:getDrawLevel() + 5)
     
     gameObject.data.rotateSpeed = args.monster.data.maxRotateSpeed
     args.monster.data.maxRotateSpeed = 0.0

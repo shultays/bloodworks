@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Long Distance Runner",
-  "description": "Your movement speed gets higher.",
+  "description": "Your move slightly faster.",
   "iconFile" : "",
   "scriptFile" : "faster_movement.lua",
   "scriptName" : "FasterMovement"

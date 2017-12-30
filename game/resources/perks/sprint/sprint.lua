@@ -1,14 +1,17 @@
 
-function sprint.init()
+Sprint.buffId = getGlobalUniqueId()
+
+function Sprint.init()
     player.data.sprintOldHp = player.hitPoints
     player.data.sprinting = false
 end
 
 
-function sprint.onTick()
-    if player.data.sprintOldHp > player.hitPoints and player.hitPoints < 40 then
-        local id = player.maxSpeed:addBuff(1.5)
-        player.maxSpeed:getBuffInfo(id):setBuffDuration(0.8)
+function Sprint.onTick()
+    if player.data.sprintOldHp > player.hitPoints then
+        local id = player.maxSpeed:addBuffWithId(Sprint.buffId, 2.0)
+        player.maxSpeed:getBuffInfo(id):setBuffDuration(0.7)
+        player.maxSpeed:getBuffInfo(id):setBuffFadeInFadeOut(0.0, 0.35)
     end
 
     player.data.sprintOldHp = player.hitPoints

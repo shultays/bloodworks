@@ -1043,6 +1043,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 
 		"modifyDrawLevel", &Monster::modifyDrawLevel,
 		"setDrawLevel", &Monster::setDrawLevel,
+		"getDrawLevel", &Monster::getDrawLevel,
 		"monsterTemplate", sol::readonly(&Monster::monsterTemplate)
 		);
 

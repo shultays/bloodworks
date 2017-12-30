@@ -1,6 +1,6 @@
 {
   "type" : "gun",
-  "name": "Bumerang Gun",
+  "name": "Bumerang",
   "icon" : "bullet.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [10.0, 10.0],

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "steam_api.h" 
 #include "cVector.h"
+#include "cDefines.h"
+
 #include <unordered_map>
 
 enum EAchievement { 
@@ -36,6 +37,8 @@ enum EStat {
 	STA_COUNT
 };
 
+#ifdef HAS_STEAM
+
 class Bloodworks;
 class Monster;
 
@@ -64,3 +67,31 @@ public:
 	void reset();
 	void onMonsterDied(Monster* monster);
 };
+
+#else
+
+class Bloodworks;
+class Monster;
+
+class BloodworksSteam
+{
+private:
+public:
+	BloodworksSteam(Bloodworks* bloodworks) {}
+
+	void addAchievement(EAchievement achivement) {}
+	bool hasAchievement(EAchievement achivement) const { return true;  }
+	void addStat(EStat stat, int value) {}
+
+	void addAchievement(const std::string& achivement) {}
+	bool hasAchievement(const std::string& achivement) const { return true; }
+
+	void resetUser() {}
+
+	void tick() {}
+	void reset() {}
+	void onMonsterDied(Monster* monster) {}
+};
+
+#endif
+

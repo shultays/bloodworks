@@ -4,6 +4,8 @@
 #include "cGlobals.h"
 
 
+#ifdef HAS_STEAM
+
 CSteamAchievements::CSteamAchievements(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
 	: m_iAppID(0)
 	, m_bInitialized(false)
@@ -223,3 +225,6 @@ void CSteam::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stat
 		);
 	}
 }
+
+
+#endif

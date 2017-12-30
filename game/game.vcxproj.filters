@@ -534,6 +534,9 @@
     <ClInclude Include="source\TutorialMenu.h">
       <Filter>Bloodworks</Filter>
     </ClInclude>
+    <ClInclude Include="source\cDefines.h">
+      <Filter>Coral</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

@@ -1,6 +1,6 @@
 {
   "type" : "bonus",
-  "name": "Experience",
+  "name": "Experience Boost",
   "iconFile" : "icon.png",
   "scriptFile" : "experience.lua",
   "scriptName" : "Experience"

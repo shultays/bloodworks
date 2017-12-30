@@ -2,7 +2,7 @@ DoubleExp.buffId = getGlobalUniqueId()
         
 function DoubleExp.spawn(bonus, pos)
 
-    local duration = 15.0 * player.data.bonusDurationMultiplier
+    local duration = 25.0 * player.data.bonusDurationMultiplier
     
     player.monsterExperienceMultiplier:addBuffWithId(DoubleExp.buffId, 2.0)
     player.monsterExperienceMultiplier:setBuffDuration(DoubleExp.buffId, duration)

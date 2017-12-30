@@ -1,6 +1,6 @@
 {
   "type" : "perk",
-  "name": "Experience",
+  "name": "Experience Boost",
   "description": "You gain a big percentage of experience for your next level.",
   "iconFile" : "",
   "scriptFile" : "experience.lua",

@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Explosion on Reload",
-  "description": "You create a small explosion when your clip is empty.",
+  "description": "You create a small explosion when your clip becomes empty.",
   "iconFile" : "",
   "scriptFile" : "explosion_on_reload.lua",
   "scriptName" : "ExplosionOnReload"

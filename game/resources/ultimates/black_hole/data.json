@@ -1,6 +1,6 @@
 {
   "type" : "gun",
-  "name": "Black Hole Gun",
+  "name": "Black Hole",
   "icon" : "icon.png",
   
   "scriptFile" : "black_hole.lua",

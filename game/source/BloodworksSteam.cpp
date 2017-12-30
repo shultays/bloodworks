@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BloodworksSteam.h"
+
+#ifdef HAS_STEAM
 #include "cSteam.h"
 #include "cGlobals.h"
 #include "Bloodworks.h"
@@ -93,7 +95,7 @@ bool BloodworksSteam::hasAchievement(EAchievement achivement) const
 	{
 		return g_Achievements[achivement].m_bAchieved;
 	}
-	return false;
+	return true;
 }
 
 bool BloodworksSteam::hasAchievement(const std::string& achivement) const
@@ -147,11 +149,11 @@ void BloodworksSteam::tick()
 	{
 		addAchievement(ACH_BRONZE);
 	}
-	if (time > 5 * 60.0f && !g_Achievements[ACH_SILVER].m_bAchieved)
+	if (time > 4 * 60.0f && !g_Achievements[ACH_SILVER].m_bAchieved)
 	{
 		addAchievement(ACH_SILVER);
 	}
-	if (time > 8 * 60.0f && !g_Achievements[ACH_GOLD].m_bAchieved)
+	if (time > 6 * 60.0f && !g_Achievements[ACH_GOLD].m_bAchieved)
 	{
 		addAchievement(ACH_GOLD);
 	}
@@ -199,3 +201,5 @@ void BloodworksSteam::onMonsterDied(Monster* monster)
 {
 	killedMonster++;
 }
+
+#endif

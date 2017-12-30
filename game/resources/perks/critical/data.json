@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Critical Bullets",
-  "description": "You can shoot critical bullets, which deal more damage.",
+  "description": "Your bullets randomly become critical bullets and deal more damage. Plus they are shiny!",
   "iconFile" : "",
   "scriptFile" : "critical.lua",
   "scriptName" : "CriticalBullets"

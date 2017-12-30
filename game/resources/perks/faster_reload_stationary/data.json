@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "Stationary Reload",
-  "description": "Your reloading speed increases if you are not moving.",
+  "description": "Your reloading speed increases while you are not moving.",
   "iconFile" : "",
   "scriptFile" : "faster_reload_stationary.lua",
   "scriptName" : "FasterReloadStationary"

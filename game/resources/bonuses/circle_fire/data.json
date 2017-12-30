@@ -1,6 +1,6 @@
 {
   "type" : "bonus",
-  "name": "Circle Fire",
+  "name": "Laser Turret",
   "iconFile" : "icon.png",
   "scriptFile" : "circle_fire.lua",
   "scriptName" : "CircleFire",

@@ -19,6 +19,7 @@ class DropController
 		cTexturedQuadRenderable *renderable;
 		cTextRenderable *text;
 		float time;
+		Vec2 gunTextureSize;
 
 		bool canFadeout;
 	};

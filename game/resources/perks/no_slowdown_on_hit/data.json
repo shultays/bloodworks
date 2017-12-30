@@ -1,7 +1,7 @@
 {
   "type" : "perk",
   "name": "No Slowdown On Hit",
-  "description": "Monsters no longer slow you down when they hit you.",
+  "description": "Monsters no longer slow you down when they hit.",
   "iconFile" : "",
   "scriptFile" : "no_slowdown_on_hit.lua",
   "scriptName" : "NoSlowdownOnHit"

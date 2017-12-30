@@ -2,6 +2,9 @@
 
 #include <GL/glew.h>
 
+
+#include "cDefines.h"
+
 const float update_interval = 0.01f;
 const float draw_interval = 1.0f / 60.0f;
 
@@ -36,7 +39,9 @@ class Coral
 	cSoundManager *soundManager;
 	cSlaveController *slaveController;
 
+#ifdef HAS_STEAM
 	CSteam *steam;
+#endif
 public:
 	Coral();
 	void init();
@@ -80,10 +85,13 @@ public:
 		return tempFrameBufferTexture[2];
 	}
 
+#ifdef HAS_STEAM
 	CSteam* getSteam() const
 	{
 		return steam;
 	}
+
+#endif
 
 	static cAccumulatedTimeProfiler& createAccumulatedTimeProfile(const char *name);
 	void clearWindow();

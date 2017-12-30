@@ -222,6 +222,12 @@ void BloodworksCheats::onTick()
 		dropController->clearButHighlighted();
 	}
 
+	if (input.isKeyPressed(key_e))
+	{
+		bloodworks->addExplosion(player->getPosition(), 200.0, 200.0, 250, 350, 0.0f, false, sol::function());
+	}
+
+
 	if (input.isKeyPressed(key_7))
 	{
 		Vec2 dir = Vec2::fromAngle(randFloat(pi_2));
@@ -477,9 +483,9 @@ void BloodworksCheats::onLoadMission()
 
 	for (auto& gun : guns)
 	{
-		if (gun->getScriptName() == "MiniGun")
+		if (gun->getScriptName() == "FrostLaser")
 		{
-			//player->setGun(gun);
+			player->setGun(gun);
 		}
 		if (gun->getScriptName() == "PhoenixDive")
 		{
@@ -528,7 +534,7 @@ void BloodworksCheats::onInit()
 		return; // todo fix
 	}
 	inited = true;
-	static std::string testGame = "";
+	static std::string testGame = "Survival";
 	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);

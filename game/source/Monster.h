@@ -164,6 +164,7 @@ public:
 	void addKnockback(const Vec2& speed, float duration);
 	void setDrawLevel(int level);
 	void modifyDrawLevel(int level);
+	int getDrawLevel() const;
 	void spawnBodyParts(const Vec2& blowDir);
 	void spawnBits(const Vec2& blowDir, int extraBits = 0);
 	void setDebug(int debug)

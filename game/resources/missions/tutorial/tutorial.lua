@@ -136,8 +136,9 @@ function Tutorial.onTick()
                     
                     gameObject.data.s = gameObject.data.s + dt * 4.0
                     
-                    if player.position:distance(gameObject:getPosition()) < 20.0 then
+                    if player.position:distance(gameObject:getPosition()) < 25.0 then
                         gameObject.data.picked = true
+                        playSound({path = missionPath .. "gifttake.ogg", volume = 0.5})
                     end
                 end
             end
@@ -372,7 +373,8 @@ function Tutorial.onTick()
         missionData.text1:setColor(Vec4.new(1.0, 1.0, 1.0, missionData.t1a))
         missionData.text2:setColor(Vec4.new(1.0, 1.0, 1.0, missionData.t2a))
     end
-    if isKeyReleased(keys.Delete) then    
+    
+    if isKeyReleased(keys.Delete) and false then    
         local count = getMonsterCount()
         
         for i = 0, count - 1 do
