@@ -22,7 +22,7 @@ function FrostLaser.checkBuff(monster)
     if monster.colorMultiplier:hasBuffInfo(FrostLaser.buffId) == false then
         monster.colorMultiplier:addBuffWithId(FrostLaser.buffId, Vec4:new(1.0, 1.0, 1.0, 1.0))
         local colorbuff = monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
-        colorbuff:setBuffDuration(0.8)
+        colorbuff:setBuffDuration(1.8)
         colorbuff:setBuffFadeInFadeOut(-1.0, 0.3)
     end
 end
@@ -35,6 +35,9 @@ function FrostLaser.onTick(gun)
         local range = 350.0
         local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range,  0.0, {gun = gun, ignoreFlags = CollisionFlags.NoBulletCollision})
         range = result.distance
+        if range > 20 then
+            range = range - 20
+        end
         gun.laser:setLength(range)
         gun.laser:addUniformFloat("time", time)
         if ShootTimer.checkGun(gun) then

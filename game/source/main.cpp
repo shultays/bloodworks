@@ -368,6 +368,7 @@ void RunGame()
 			else if(event.type == SDL_QUIT)
 			{
 				coral.quitGame();
+				break;
 			}
 		}
 		coral.tick();

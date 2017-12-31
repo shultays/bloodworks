@@ -108,6 +108,12 @@ void BloodworksCheats::onTick()
 		}
 	}
 
+	if (input.isKeyPressed(key_m))
+	{
+		input.setUseEvents(input.isUsingEvents());
+	}
+
+
 	if (bloodworks->isMissionLoaded() == false)
 	{
 		return;
@@ -485,7 +491,7 @@ void BloodworksCheats::onLoadMission()
 	{
 		if (gun->getScriptName() == "FrostLaser")
 		{
-			player->setGun(gun);
+			//player->setGun(gun);
 		}
 		if (gun->getScriptName() == "PhoenixDive")
 		{

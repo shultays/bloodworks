@@ -14,7 +14,9 @@ function Laser.onTick(gun)
         local range = 500.0
         local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range, 0.0, {gun = gun, ignoreFlags = CollisionFlags.NoBulletCollision})
         range = result.distance
-        
+        if range > 20 then
+            range = range - 20
+        end
         gun.laser:setLength(range)
         
         if ShootTimer.checkGun(gun) then

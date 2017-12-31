@@ -55,7 +55,7 @@ function MiniGun.onTick(gun)
         end
     else
          data.waitTime = data.waitTime - dt * 2.0
-         if data.waitTime < 0.0 then
+         if data.waitTime <= 0.0 then
             data.waitTime = 0.0
             data.cooldown = false
          else 

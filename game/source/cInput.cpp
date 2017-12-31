@@ -18,6 +18,8 @@ void cInput::init()
 	joyAxisPos2 = Vec2::zero();
 	mouseWheel.setZero();
 	setLuaKeys();
+
+	useEvents = true;
 }
 
 void cInput::pressKey(int key)
@@ -29,8 +31,65 @@ void cInput::pressKey(int key)
 void cInput::tick()
 {
 	memcpy(prevKeyStates, keyStates, sizeof(prevKeyStates));
+
 	prevMousePos = mousePos;
 	mouseWheel.setZero();
+}
+
+void cInput::preTick()
+{
+	if (useEvents == false)
+	{
+		int x, y;
+
+		if (mouseShown)
+		{
+			SDL_GetMouseState(&x, &y);
+			mousePos = Vec2((float)x, (float)(coral.getWinodwHeight() - y));
+		}
+		else
+		{
+			SDL_GetRelativeMouseState(&x, &y);
+			prevMousePos -= Vec2((float)x, (float)-y);
+		}
+		if (ignoreNextMove)
+		{
+			ignoreNextMove = false;
+			prevMousePos = mousePos;
+		}
+	}
+}
+
+void cInput::showMouse()
+{
+	ignoreNextMove = true;
+	prevMousePos = mousePos;
+	mouseShown = true;
+	SDL_SetRelativeMouseMode(SDL_FALSE);
+	SDL_ShowCursor(SDL_TRUE);
+
+	if (useEvents == false)
+	{
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		SDL_GetRelativeMouseState(&x, &y);
+	}
+}
+
+void cInput::hideMouse()
+{
+	ignoreNextMove = true;
+	prevMousePos = mousePos;
+	mouseShown = false;
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_ShowCursor(SDL_FALSE);
+
+	if (useEvents == false)
+	{
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		SDL_GetRelativeMouseState(&x, &y);
+	}
 }
 
 bool cInput::hasJoyStick() const
@@ -80,6 +139,14 @@ void cInput::clearWheel()
 	mouseWheel.setZero();
 }
 
+void cInput::setUseEvents(bool useEvents)
+{
+	this->useEvents = useEvents;
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	SDL_GetRelativeMouseState(&x, &y);
+}
+
 void cInput::mouseWhellMove(int x, int y)
 {
 	mouseWheel.x += x;
@@ -94,18 +161,21 @@ void cInput::releaseKey(int key)
 
 void cInput::setMousePos(const Vec2& pos, const Vec2& relativePos)
 {
-	if (mouseShown)
+	if (useEvents)
 	{
-		mousePos = Vec2(pos.x, pos.y);
-	}
-	else
-	{
-		prevMousePos -= relativePos;
-	}
-	if (ignoreNextMove)
-	{
-		ignoreNextMove = false;
-		prevMousePos = mousePos;
+		if (mouseShown)
+		{
+			mousePos = Vec2(pos.x, pos.y);
+		}
+		else
+		{
+			prevMousePos -= relativePos;
+		}
+		if (ignoreNextMove)
+		{
+			ignoreNextMove = false;
+			prevMousePos = mousePos;
+		}
 	}
 }
 

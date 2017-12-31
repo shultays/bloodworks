@@ -9,6 +9,7 @@ function PhoenixDive.init(gun)
     
     gun.data.checkAchievement = true
     gun.data.achievementProcess = 0
+    gun.data.invulTime = -0.1
 end
 
 function PhoenixDive.onTick(gun)
@@ -41,6 +42,7 @@ function PhoenixDive.onTick(gun)
     
     if data.started then
         player.canFireNextFrame = false
+        data.invulTime = time + 0.5
         if data.shooting < 0.0 then
             data.started = false
             addExplosion(player.position, 160.0, 230.0, 250, 350, 0.1)
@@ -98,12 +100,12 @@ function PhoenixDive.onTick(gun)
                 data.particle:addParticle(player.position + Vec2.randDir() * 20.0 * (math.random() - 0.5), {moveSpeed = Vec2.fromAngle(data.moveAngle + (math.random() - 0.5) * math.pi  ) * 100.0 })
             end
         end
-        
     end
+    
 end
 
 function PhoenixDive.onPlayerDamaged(gun, damage, dir, params)
-    if gun.data.started then
+    if gun.data.invulTime > time then
         return -1
     end
     return damage

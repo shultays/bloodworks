@@ -282,6 +282,9 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	vsync->setChecked(config->getVSync());
 	audioVideoGroup->addRenderable(vsync);
 
+	text->setVisible(false);
+	vsync->setVisible(false);
+
 	y -= rowShift * 1.5f;
 
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Volume", fontSize);

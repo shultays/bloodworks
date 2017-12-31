@@ -50,7 +50,7 @@ void main(void)
         alpha  = (1.2 - dt ) / 0.3;
     }
     
-    const vec3 c0 = vec3(0.984, 0.733, 0.063);
+    const vec3 c0 = vec3(1.0, 0.737, 0.302);
     const vec3 c1 = vec3(0.996, 0.365, 0.063);
     
     vColor = vec4( c0 * color + c1 * (1.0 - color), alpha  );

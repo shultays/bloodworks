@@ -6,7 +6,7 @@
   
   "bulletRadius" : 16.0,
   "bulletSpeed" : 450.0,
-  "bulletDamage" : [4, 6],
+  "bulletDamage" : [4, 7],
   "bulletLifeTime" : 0.90,
   
   "crosshairDistance" : 350.0,

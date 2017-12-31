@@ -96,7 +96,7 @@ void cSoundHandle::setSpeed(float speed)
 {
 	if (handle != -1)
 	{
-		coral.getSoundManager()->soloud->setRelativePlaySpeed(handle, speed);
+		coral.getSoundManager()->soloud->setRelativePlaySpeed(handle, speed * baseSpeed);
 	}
 }
 
@@ -216,6 +216,7 @@ cSoundHandle cSoundSampleWithParams::play()
 	cSoundHandle h = sample->play(volume, pan);
 	if (speed != 1.0f)
 	{
+		h.setBaseSpeed(speed);
 		sample->soundManager->getSoloud()->setRelativePlaySpeed(h.handle, speed);
 	}
 	if (looped)

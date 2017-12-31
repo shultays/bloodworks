@@ -7,7 +7,7 @@ function Tutorial.init()
     missionData.t = 0
     missionData.objective = 0
     
-    missionData.congratsTime = 1.3
+    missionData.congratsTime = 1.6
     missionData.dontSpawnBonus = true
     
     missionData.extraMin = 0.0
@@ -241,9 +241,12 @@ function Tutorial.onTick()
         if missionTime - missionData.t > missionData.congratsTime then
             Tutorial.swapText()
             missionData.text:setText("Sometimes a boss monster will appear on the map.\nThere are different types of bosses.\nThis particular boss has large amount of HP.")
-            missionData.state = 120
-            
-                    
+            missionData.state = 115
+            missionData.t = missionTime
+        end
+    elseif missionData.state == 115 then
+        if missionTime - missionData.t > missionData.congratsTime then
+
             local monster = addMonster("Alien")
             monster.data.canHit = false
             monster.position = player.position - player.aimDir * 400.0
@@ -258,6 +261,8 @@ function Tutorial.onTick()
             monster.experienceMultiplier = 0.0
             
             missionData.objective = missionData.objective + 1
+            
+            missionData.state = 120
         end
     elseif missionData.state == 120 then
         if missionData.objective == 0 then
@@ -397,7 +402,7 @@ function Tutorial.onMonsterDied(monster)
     if missionData.state ==  70 and missionData.objective == 13 then
     
         Tutorial.swapText()
-        missionData.text:setText("Bonuses/weapons are also randomly spawns at map.\nPick up the bonus.")
+        missionData.text:setText("Bonuses/weapons are also randomly spawns at map.\nPick up the bonus and kill the rest of the enemies.")
         
         local v = Vec2.new(0.0, 0.0)
         

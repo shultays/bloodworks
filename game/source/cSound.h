@@ -15,8 +15,10 @@ class cSoundHandle
 	friend class cSoundSample;
 public:
 	int handle;
+	float baseSpeed;
 	cSoundHandle()
 	{
+		baseSpeed = 1.0f;
 		handle = -1;
 	}
 
@@ -39,8 +41,12 @@ public:
 		handle = -1;
 	}
 
-
+	void setBaseSpeed(float speed)
+	{
+		this->baseSpeed = speed;
+	}
 };
+
 namespace SoLoud {
 	class Wav;
 }

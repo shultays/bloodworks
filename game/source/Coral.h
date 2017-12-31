@@ -51,6 +51,17 @@ public:
 	{
 		this->noSleep = noSleep;
 	}
+
+	int getWindowWidth() const
+	{
+		return windowWidth;
+	}
+
+	int getWinodwHeight() const
+	{
+		return windowHeight;
+	}
+
 	void setWindowSize(int width, int height);
 	void setFullScreen(bool fullScreen);
 	bool isFullScreen() const

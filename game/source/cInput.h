@@ -311,8 +311,10 @@ private:
 	Vec2 joyAxisPos;
 	Vec2 joyAxisPos2;
 
+	bool useEvents;
 public:
 	void tick();
+	void preTick();
 
 	Key getKey(const std::string& name)
 	{
@@ -354,23 +356,9 @@ public:
 		prevKeyStates[key] = false;
 	}
 
-	void showMouse()
-	{
-		ignoreNextMove = true;
-		prevMousePos = mousePos;
-		mouseShown = true;
-		SDL_SetRelativeMouseMode(SDL_FALSE);
-		SDL_ShowCursor(SDL_TRUE);
-	}
+	void showMouse();
 
-	void hideMouse()
-	{
-		ignoreNextMove = true;
-		prevMousePos = mousePos;
-		mouseShown = false;
-		SDL_SetRelativeMouseMode(SDL_TRUE);
-		SDL_ShowCursor(SDL_FALSE);
-	}
+	void hideMouse();
 
 	const Vec2& getMousePos() const
 	{
@@ -412,4 +400,11 @@ public:
 		return mouseWheel;
 	}
 	void clearWheel();
+
+	void setUseEvents(bool useEvents);
+
+	bool isUsingEvents() const
+	{
+		return useEvents;
+	}
 };

@@ -9,6 +9,8 @@
   "bulletSpeed" : 850.0,
   "bulletDamage" : [20, 35],
   
+  "bulletLifeTime" : 0.70,
+  
   "maxAmmo" : 6,
   "reloadTime" : 1.9,
   

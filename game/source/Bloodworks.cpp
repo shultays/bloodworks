@@ -84,6 +84,10 @@ void Bloodworks::initImplementation()
 	}
 
 	int tempSize = getConfig()->getInt("map_size", 2500, "Size of the map, reduce if there are crashes");
+
+	bool useEvents = getConfig()->getBool("use_mouse_events", false, "set to 1 if there are mouse related problems");
+	input.setUseEvents(useEvents);
+
 	if (tempSize > 10000)
 	{
 		tempSize = 10000;

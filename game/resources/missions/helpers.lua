@@ -166,6 +166,9 @@ function makeBossDefault(monster, forceType)
             if monster.data.remainingLife > 0 then
                 monster.data.remainingLife = monster.data.remainingLife - 1
                 for i = 1,2 do
+                    if monster.hitPoint > 0 then
+                        return
+                    end
                     local newMonster = addMonster(monster.monsterTemplate.name)
                     newMonster.data.remainingLife = monster.data.remainingLife
                     newMonster.position = monster.position
@@ -210,6 +213,9 @@ function makeBossDefault(monster, forceType)
         monster.scoreMultiplier = monster.scoreMultiplier * 0.5
         monster.data.hitPoint = monster.hitPoint
         addCustomOnKill(monster, function (monster)
+            if monster.hitPoint > 0 then
+                return
+            end
             for i = 1,8 do
                 local newMonster = addMonster(monster.monsterTemplate.name)
                 newMonster.position = monster.position
@@ -321,7 +327,7 @@ function makeBossDefault(monster, forceType)
             return damage
         end)
     elseif t == 11 then -- spawn little clones
-        monster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+        monster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
         monster.moveSpeed = monster.moveSpeed * 0.5
         monster.data.maxHitpoint = monster.hitPoint
         monster:setScale(0.8 + math.random() * 0.3)
@@ -333,13 +339,13 @@ function makeBossDefault(monster, forceType)
             monster.data.spawnTimer = monster.data.spawnTimer - dt
             
             if monster.data.spawnTimer < 0.0 then
-                monster.data.spawnTimer = monster.data.spawnTimer + 3.0
+                monster.data.spawnTimer = monster.data.spawnTimer + 5.0
                 
                 if missionData.ignoreMonsterCount < 100 then
                     local newMonster = addMonster(monster.monsterTemplate.name)
                     newMonster.position = monster.position
                     newMonster:setScale(math.max(0.3, monster.scale * 0.60))
-                    newMonster.colorMultiplier:addBuff(Vec4.new(0.5, 0.3, 0.2, 1.0))
+                    newMonster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
                     
                     newMonster.data.playerSeeRange = monster.data.playerSeeRange
                     newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8

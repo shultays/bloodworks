@@ -41,6 +41,7 @@ void Coral::tick()
 	if (lastFullScreen != fullScreen)
 	{
 		lastFullScreen = fullScreen;
+
 		if (fullScreen)
 		{
 			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -82,9 +83,14 @@ void Coral::tick()
 			}
 			slaveController->update();
 			debugRenderer.tick(timer.getDt());
+			input.preTick();
 			game->tickInternal();
 			input.tick();
 			mapper.check();
+
+#ifdef HAS_STEAM
+			steam->tick();
+#endif
 
 #ifdef SHOW_TIMINGS
 			for (int i = 0; i < profilerCount; i++)
@@ -125,10 +131,6 @@ void Coral::tick()
 	}
 #endif
 	resources.tick();
-
-#ifdef HAS_STEAM
-	steam->tick();
-#endif
 
 	float t = timer.getRealTime();
 	float timeToSleep = min(update_interval - (t - lastUpdateTime), draw_interval - (t - lastDrawTime));

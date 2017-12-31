@@ -2,7 +2,7 @@
 function Rifle.init(gun)
     gun.spreadAngle = 0.0
     gun.crosshairDistance = 350.0
-    ShootTimer.initGun(gun, 0.55)
+    ShootTimer.initGun(gun, 0.75)
     SpreadHelper.initGun(gun)
     gun.data.maxSpread = 0.25
     gun.data.spreadDecreaseStartTime = 0.35

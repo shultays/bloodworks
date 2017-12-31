@@ -669,7 +669,14 @@ Bullet* Gun::addBullet()
 
 	if (gunShootSound.isValid() && lastShootSoundTime + maxSoundPlayInterval < timer.getTime() && gunShootSoundContinuous == false)
 	{
-		lastShootSoundTime = timer.getTime();
+		if (timer.getTime() - lastShootSoundTime > maxSoundPlayInterval)
+		{
+			lastShootSoundTime = timer.getTime();
+		}
+		else
+		{
+			lastShootSoundTime += maxSoundPlayInterval;
+		}
 		bloodworks->addGameSound(gunShootSound.play());
 	}
 
