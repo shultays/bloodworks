@@ -196,7 +196,7 @@ public:
 	}
 
 	void addDrop(const Vec2& position);
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = nullptr);
+	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = sol::function(), bool noParticle = false);
 
 	int getUniqueId()
 	{

@@ -110,7 +110,7 @@ void ExplosionController::tick()
 	}
 }
 
-void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit)
+void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit, bool noParticle)
 {
 	float duration = maxScale / scaleSpeed;
 
@@ -125,7 +125,7 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	r.addLinear(maxTimeUniform, duration * 0.9f, duration*1.1f);
 	r.addLinear(maxScaleUniform, maxScale * 0.9f, maxScale*1.1f);
 
-	if (noParticles == false)
+	if (noParticles == false && noParticle == false)
 	{
 		int count = min(35 + (int)(maxScale * 35 / 200.0f), 70);
 		for (int i = 0; i < count; i++)

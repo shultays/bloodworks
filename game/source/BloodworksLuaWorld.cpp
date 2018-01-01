@@ -507,9 +507,9 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("addExplosion",
-		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit )
+		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit, bool noParticle)
 	{
-		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer, onHit);
+		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer, onHit, noParticle);
 	});
 
 	lua.set_function("playSound",
