@@ -134,6 +134,10 @@ void BloodworksSteam::resetUser()
 
 void BloodworksSteam::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "BloodworksSteam::tick\n";
+	}
 	if (!inited || !bloodworks->getMissionController()->isLoaded() || !bloodworks->getPlayer()->isVisible())
 	{
 		return;

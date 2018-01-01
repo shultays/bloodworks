@@ -345,6 +345,10 @@ void OptionsPopup::show()
 
 void OptionsPopup::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "OptionsPopup::tick\n";
+	}
 	if (isVisible() == false)
 	{
 		return;

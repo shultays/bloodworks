@@ -164,6 +164,10 @@ void MainMenu::resize()
 
 void MainMenu::tick(bool hasPopup)
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "MainMenu::tick\n";
+	}
 	if (bloodworksText->isVisible() == false || hasPopup)
 	{
 		return;

@@ -57,14 +57,14 @@ function BananaBombObject.onTick(gameObject)
     if tnormal > 1.0 then
         gameObject.toBeRemoved = true
         
-        addExplosion(gameObject:getPosition(), 50.0, 100.0, 70, 150, 0.0, false, nil, true)
+        addExplosion(gameObject:getPosition(), 80.0, 100.0, 70, 150, 0.0, false, nil, true)
         if BananaBombObject.lastExplosionSound == nil or time - BananaBombObject.lastExplosionSound > 0.1 then
             playSound({path = "~/resources/sounds/explode.ogg"})
             BananaBombObject.lastExplosionSound = time
         end
         
         if data.i < 3 then
-            local r = math.random(2) + 4 - data.i
+            local r = math.random(2) + 3 - data.i
             for i = 1,r do 
                 local child = addGameObject("BananaBombObject", { i = data.i + 1 } )
                 child:setPosition(gameObject:getPosition())

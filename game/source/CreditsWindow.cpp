@@ -46,6 +46,10 @@ CreditsWindow::~CreditsWindow()
 
 void CreditsWindow::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "CreditsWindow::tick\n";
+	}
 	if (isVisible() == false)
 	{
 		return;

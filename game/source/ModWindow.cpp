@@ -262,6 +262,10 @@ void ModWindow::setVisible(bool visible, bool refresh)
 
 void ModWindow::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "ModWindow::tick\n";
+	}
 	if (closeOnNextTick)
 	{
 		if (timer.getRenderTime() > closeOnNextTickSetRenderTime)

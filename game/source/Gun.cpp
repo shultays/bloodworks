@@ -298,6 +298,11 @@ void Gun::start()
 
 void Gun::tick(float dt)
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "Gun::tick\n";
+	}
+
 	int newMaxAmmo = getMaxAmmo();
 	if (buffedMaxAmmo < newMaxAmmo)
 	{
@@ -343,6 +348,10 @@ void Gun::tick(float dt)
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Gun::tick 1\n";
+	}
 	if (onTickCall)
 	{
 		onTickCall(this);
@@ -406,12 +415,20 @@ void Gun::tick(float dt)
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Gun::tick 2\n";
+	}
 	if (stripLaser)
 	{
 		Vec2 pos = bloodworks->getPlayer()->getGunPos();
 		Vec2 speed = bloodworks->getPlayer()->getAimDir() * bulletSpeed;
 
 		stripLaser->tick(pos, speed);
+	}
+	if (bloodworks->isFirstTick())
+	{
+		out << "Gun::tick fun\n";
 	}
 }
 

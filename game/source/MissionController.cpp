@@ -36,6 +36,10 @@ MissionController::~MissionController()
 
 void MissionController::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "MissionController::tick\n";
+	}
 	ADD_SCOPED_TIME_PROFILER("MissionController::tick");
 	if (loadedMission == -1)
 	{

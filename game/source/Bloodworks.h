@@ -127,6 +127,8 @@ class Bloodworks : public cGame
 	void initImplementation();
 
 	BloodworksSteam* bloodworksSteam;
+
+	bool firstTick;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -308,4 +310,9 @@ public:
 	bool IsGUIHidden() const;
 	void restartMission();
 	void startSurvival();
+
+	bool isFirstTick() const
+	{
+		return firstTick;
+	}
 };

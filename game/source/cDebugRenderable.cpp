@@ -75,6 +75,7 @@ void cDebugRenderable::freeAll()
 
 void cDebugRenderable::init()
 {
+	out << "cDebugRenderable::init\n";
 	textRenderable = new cTextRenderable(nullptr, resources.getFont("resources/fontData.txt"));
 	lineShader = resources.getShader("resources/default.vs", "resources/default.ps");
 	whiteTexture = resources.getTexture("resources/white.png", true);

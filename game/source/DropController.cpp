@@ -96,6 +96,10 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 
 void DropController::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "DropController::tick\n";
+	}
 	if (bloodworks->isMissionLoaded() == false)
 	{
 		return;

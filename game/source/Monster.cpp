@@ -112,6 +112,10 @@ Monster::~Monster()
 
 void Monster::tick()
 {
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick\n";
+	}
 
 	static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("Monster::tickSum");
 	p.start();
@@ -120,6 +124,11 @@ void Monster::tick()
 	BloodworksCheats::instance->onMonsterPreTick(this);
 #endif
 
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 1\n";
+	}
+
 	moveSpeedMultiplier.tick();
 	knockbackResistance.tick();
 	bool colorChanged = colorMultiplier.tick();
@@ -127,12 +136,20 @@ void Monster::tick()
 	{
 		renderable->setColor(colorMultiplier.getBuffedValue());
 	}
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 2\n";
+	}
 	if (luaTick && timer.getDt() > 0.0f)
 	{
 		static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("Monster::luaTick");
 		p.start();
 		luaTick(this);
 		p.stop();
+	}
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 3\n";
 	}
 	renderable->setSpeedMultiplier(this->animationSpeed);
 	moveDir = Vec2::fromAngle(moveAngle);
@@ -146,6 +163,10 @@ void Monster::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 4\n";
+	}
 	for (auto& i : toTrigger)
 	{
 		Timer& t = timers[i];
@@ -161,6 +182,10 @@ void Monster::tick()
 		position += moveVelocity * timer.getDt();
 	}
 
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 5\n";
+	}
 	float dt = timer.getDt();
 	for (int i = 0; i < knockbacks.size(); i++)
 	{
@@ -185,6 +210,10 @@ void Monster::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 6\n";
+	}
 	if (isDead)
 	{
 		position = prevPosition;
@@ -226,6 +255,12 @@ void Monster::tick()
 	}
 
 	clampPos();
+
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 7\n";
+	}
+
 #ifdef HAS_BLOODWORKS_CHEATS
 	BloodworksCheats::instance->onMonsterTick(this);
 #endif
@@ -236,6 +271,11 @@ void Monster::tick()
 
 		healthRenderable->setText(ss.str());
 		healthRenderable->setWorldMatrix(Mat3::translationMatrix(position + Vec2(0.0f, bulletRadius + 10.0f)));
+	}
+
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick 8\n";
 	}
 
 	Mat3 mat = Mat3::identity();
@@ -254,6 +294,10 @@ void Monster::tick()
 
 	firstTick = false;
 	p.stop();
+	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
+	{
+		out << "Monster::tick fub\n";
+	}
 }
 
 

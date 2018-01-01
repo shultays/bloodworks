@@ -35,6 +35,10 @@ void BulletController::addBullet(Bullet* bullet)
 
 void BulletController::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "BulletController::tick\n";
+	}
 	ADD_SCOPED_TIME_PROFILER("BulletController::tick");
 	for (int i = 0; i < bullets.size(); i++)
 	{
@@ -65,6 +69,10 @@ void BulletController::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "BulletController::tick fin\n";
+	}
 }
 
 

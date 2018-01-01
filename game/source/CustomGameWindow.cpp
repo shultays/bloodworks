@@ -87,6 +87,10 @@ void CustomGameWindow::show()
 
 void CustomGameWindow::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "CustomGameWindow::tick\n";
+	}
 	if (isVisible() == false)
 	{
 		return;

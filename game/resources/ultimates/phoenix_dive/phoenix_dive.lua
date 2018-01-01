@@ -96,8 +96,12 @@ function PhoenixDive.onTick(gun)
         data.particleTime = data.particleTime - dt
         while data.particleTime < 0.0 do
             data.particleTime = data.particleTime + 0.02
-            for i = 1,16 do
-                data.particle:addParticle(player.position + Vec2.randDir() * 20.0 * (math.random() - 0.5), {moveSpeed = Vec2.fromAngle(data.moveAngle + (math.random() - 0.5) * math.pi  ) * 100.0 })
+            for i = 1,4 do
+                data.particle:addParticle(player.position + Vec2.randDir() * 20.0 * (math.random() - 0.5), 
+                {   
+                    moveSpeed = Vec2.fromAngle(data.moveAngle + (math.random() - 0.5) * math.pi  ) * 100.0,
+                    initialScale = 2.0
+                })
             end
         end
     end

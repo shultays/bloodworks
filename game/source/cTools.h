@@ -190,6 +190,7 @@ public:
 	void open(const std::string& path)
 	{
 		coss.open(path.c_str(), std::ofstream::out /*| std::ofstream::app */);
+		coss.rdbuf()->pubsetbuf(0, 0);
 	}
 
 	void close()

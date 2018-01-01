@@ -34,7 +34,10 @@ function FlameParticle.addParticle(params, pos, args)
     if args.initialScale == nil then
         args.initialScale = 12 --todo fix why
     end
-    params.initialScale = args.initialScale * (1.0 + math.random())
+    if params.initialScale == nil then
+        params.initialScale = 1.0
+    end
+    params.initialScale = params.initialScale * args.initialScale * (1.0 + math.random())
     params.rotateSpeed = args.rotateSpeed * (1.0 + math.random())
     
     params.particleBeginTime = params.particleBeginTime + math.random() * dt

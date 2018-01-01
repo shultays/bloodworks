@@ -88,6 +88,10 @@ TutorialMenu::~TutorialMenu()
 
 void TutorialMenu::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "TutorialMenu::tick\n";
+	}
 	if (window->isVisible())
 	{
 		if (alpha < 1.0f)

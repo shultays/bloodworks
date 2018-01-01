@@ -4,7 +4,7 @@
   "icon" : "icon.png",
   "bulletTexture" : "bullet.png",
   "bulletSize" : [4.0, 4.0],
-  "bulletRadius" : 2.0,
+  "bulletRadius" : 14.0,
   "bulletSpeed" : 350.0,
   "bulletDamage" : [40, 70],
   

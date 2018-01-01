@@ -199,6 +199,10 @@ void LevelUpPopup::show(bool setAlpha)
 
 void LevelUpPopup::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "LevelUpPopup::tick\n";
+	}
 	if (levelUpShowTime > 0.0f)
 	{
 		levelUpShowTime -= timer.getNonSlowedDt() * 3.9f;

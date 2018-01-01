@@ -24,8 +24,7 @@ void main(void)
 	dt = min(dt, 10.0);
 	
 	float curScale = initialScale + dt * 60.0;
-	curScale = min(curScale, 30.0);
-	
+    
 	float rotate = rotateSpeed * (3.1415 + dt);
 	float s = sin(rotate);
 	float c = cos(rotate);

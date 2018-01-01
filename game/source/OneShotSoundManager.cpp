@@ -3,6 +3,10 @@
 
 void OneShotSoundManager::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "OneShotSoundManager::tick\n";
+	}
 	if (timer.getTime() - lastBucketSwitchTime > BUCKET_DURATION)
 	{
 		lastBucketSwitchTime += BUCKET_DURATION;

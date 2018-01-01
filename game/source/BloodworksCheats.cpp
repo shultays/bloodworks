@@ -56,6 +56,10 @@ bool BloodworksCheats::cheatsEnabled()
 
 void BloodworksCheats::onTick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "BloodworksCheats::onTick\n";
+	}
 	if (input.isKeyDown(key_p) && input.isKeyDown(key_q) && input.isKeyPressed(key_space))
 	{
 		out << "Intentional crash\n";

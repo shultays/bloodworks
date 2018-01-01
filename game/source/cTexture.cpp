@@ -13,6 +13,7 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 {
 	totalResource++;
 
+	out << "loading " << name << "\n";
 	dimensions.setZero();
 	name = fileName;
 	this->repeat = repeat;
@@ -57,9 +58,6 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 
 	SDL_FreeSurface(surf);
 
-#ifdef DEBUG
-	out << "loading " << name << "\n";
-#endif
 }
 
 cTexture::~cTexture()

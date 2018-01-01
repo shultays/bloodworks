@@ -197,6 +197,10 @@ Player::~Player()
 
 void Player::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick\n";
+	}
 	if (visible == false)
 	{
 		return;
@@ -215,6 +219,10 @@ void Player::tick()
 	scaleMultiplier.tick();
 	lastScale = scaleMultiplier.getBuffedValue();
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 2\n";
+	}
 	bool colorChanged = colorMultiplier.tick();
 	if (colorChanged && renderable)
 	{
@@ -235,6 +243,10 @@ void Player::tick()
 	const float acceleration = accelerationMultiplier.getBuffedValueFor(playerTemplate->acceleration);
 	const float decceleration = accelerationMultiplier.getBuffedValueFor(playerTemplate->decceleration);
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 3\n";
+	}
 	float dt = timer.getDt();
 	float currentMaxSpeed = maxSpeed.getBuffedValue();
 
@@ -275,6 +287,10 @@ void Player::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 4\n";
+	}
 	if (moving)
 	{
 		moveSpeed += acceleration * dt;
@@ -295,6 +311,10 @@ void Player::tick()
 	AARect boundaries = bloodworks->getMapLimits();
 	boundaries.addThreshold(-20.0f);
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 5\n";
+	}
 	float boundaryAmount = 40.0f;
 	for (int i = 0; i < knockbacks.size(); i++)
 	{
@@ -336,6 +356,10 @@ void Player::tick()
 		moveAmount.y = moveAmount.y * max(0.0f, (boundaries.getMax().y + boundaryAmount - newPos.y) / boundaryAmount);
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 6\n";
+	}
 
 	if (bloodworks->getConfig()->getLockCrosshair())
 	{
@@ -346,6 +370,10 @@ void Player::tick()
 
 	float collisionRadius = getCollisionRadius();
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 7\n";
+	}
 	bool solved = false;
 	for(int i=0; i<5; i++)
 	{
@@ -378,6 +406,10 @@ void Player::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 8\n";
+	}
 	float sensitivityMult = bloodworks->getConfig()->getSensitivity();
 	sensitivityMult = 0.5f * sensitivityMult * sensitivityMult + 0.5f;
 
@@ -408,6 +440,10 @@ void Player::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 9\n";
+	}
 	if (joystickUsed == false)
 	{
 		if (bloodworks->isPaused() == false)
@@ -431,6 +467,10 @@ void Player::tick()
 		crosshairPos = (game->getRelativeMousePos(input.getMousePos() , RenderableAlignment::world)  - pos )* bloodworks->getCameraZoom();
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 10\n";
+	}
 
 	crosshairDistance = 0.0f;
 
@@ -441,6 +481,12 @@ void Player::tick()
 		aimDir = Vec2::fromAngle(aimAngle);
 		crosshairDistance = crosshairPos.length();
 	}
+
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 11\n";
+	}
+
 	if (gun && gun->getMaxAmmo() > 0)
 	{
 		if (gun->isReloading())
@@ -510,6 +556,10 @@ void Player::tick()
 		secondaryAmmo->setColor(Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 12\n";
+	}
 	if (gun && gun->spreadVisible())
 	{
 		float newSpreadAngle = gunSpreadMultiplier.getBuffedValueFor(gun->getSpreadAngle());
@@ -546,6 +596,11 @@ void Player::tick()
 		spread->setVisible(false);
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 13\n";
+	}
+
 	crosshair->setWorldMatrix(Mat3::scaleMatrix(14.0f).translateBy(pos + crosshairPos));
 	crosshair->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.7f));
 
@@ -563,6 +618,10 @@ void Player::tick()
 	mat.translateBy(pos);
 	renderable->setWorldMatrix(mat);
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 14\n";
+	}
 	if (gun)
 	{
 		bool trigerred = bloodworks->getPauseSlowdown() > 0.5f && mapper.isKeyDown(GameKey::Attack) && canFireNextFrame;
@@ -598,6 +657,10 @@ void Player::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 15\n";
+	}
 
 	float legSpeed = dt * playerTemplate->legSpeed;
 
@@ -648,6 +711,10 @@ void Player::tick()
 	}
 	fixAngle(a);
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick 16\n";
+	}
 	float absAngle = abs(a);
 
 	float maxA = pi * playerTemplate->legMaxRotate;
@@ -685,6 +752,10 @@ void Player::tick()
 
 		rightLegFront->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, rightFront));
 		rightLegBack->setWorldMatrix(bodyMat * Mat3::scaleMatrix(1.0f, rightBack));
+	}
+	if (bloodworks->isFirstTick())
+	{
+		out << "Player::tick fin\n";
 	}
 }
 
@@ -937,7 +1008,7 @@ void Player::reset()
 	scaleMultiplier.clear();
 
 	maxSpeed.setBaseValue(180.0f);
-	maxRotateSpeed.setBaseValue(pi * 6.0f);
+	maxRotateSpeed.setBaseValue(pi * 8.0f);
 	scaleMultiplier.setBaseValue(1.0f);
 	lastScale = 1.0f;
 	isDead = false;

@@ -31,6 +31,10 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 void MonsterController::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "MonsterController::tick\n";
+	}
 	ADD_SCOPED_TIME_PROFILER("MonsterController::tick");
 	float closestDistance = FLT_MAX;
 	Monster* closestMonster = nullptr;
@@ -64,11 +68,19 @@ void MonsterController::tick()
 		}
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "MonsterController::tick 1\n";
+	}
 	if (closestMonster)
 	{
 		closestMonster->setDebug(-1);
 	}
 
+	if (bloodworks->isFirstTick())
+	{
+		out << "MonsterController::tick 2\n";
+	}
 	for (int i=0; i<monsters.size(); i++)
 	{
 		Monster* monster = monsters[i];
@@ -78,6 +90,10 @@ void MonsterController::tick()
 		{
 			grid.relocate(monster);
 		}
+	}
+	if (bloodworks->isFirstTick())
+	{
+		out << "MonsterController::tick end\n";
 	}
 }
 

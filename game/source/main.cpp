@@ -50,6 +50,7 @@ void addController(int id)
 
 bool Init()
 {
+	out << "init\n";
 	srand((int)time((time_t)0));
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
@@ -58,6 +59,7 @@ bool Init()
 		return false;
 	}
 
+	out << "init 2\n";
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		800, 600, flags);
@@ -75,11 +77,14 @@ bool Init()
 		addController(0);
 	}
 
+	out << "init 3\n";
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os, sol::lib::debug);
 
+	out << "init 4\n";
 	mainContext = SDL_GL_CreateContext(mainWindow);
 	SetOpenGLAttributes();
 	glewInit();
+	out << "init fin\n";
 	return true;
 }
 
@@ -107,7 +112,10 @@ void InitGame()
 
 LONG WINAPI ExpFilter(EXCEPTION_POINTERS* pExp, DWORD dwExpCode)
 {
-	lua["printStack"]();
+	if (lua["printStack"])
+	{
+		lua["printStack"]();
+	}
 	printExceptionStack(pExp);
 	return EXCEPTION_EXECUTE_HANDLER;
 }

@@ -89,6 +89,10 @@ PauseMenu::~PauseMenu()
 
 void PauseMenu::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "PauseMenu::tick\n";
+	}
 	bool show = bloodworks->isPaused() && bloodworks->getMissionController()->isLoaded() 
 		&& !bloodworks->isLevelUpPopupVisible() && !bloodworks->isOptionsVisible();
 

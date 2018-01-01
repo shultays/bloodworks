@@ -196,6 +196,10 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 void BloodRenderable::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "BloodRenderable::tick\n";
+	}
 	std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
 	while (bodyPart != bodyParts.end())
 	{

@@ -29,6 +29,10 @@ ExplosionController::~ExplosionController()
 
 void ExplosionController::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "ExplosionController::tick\n";
+	}
 	for (int i = 0; i < explosions.size(); i++)
 	{
 		auto& explosionData = explosions[i];

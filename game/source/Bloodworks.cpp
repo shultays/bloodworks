@@ -69,14 +69,23 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 
 void Bloodworks::initImplementation()
 {
+	if ( isFirstTick())
+	{
+		out << "Bloodworks::initImplementation\n";
+	}
 	nextGlobalUniqueId = 1;
-
+	firstTick = true;
 	lua.script(R"(
 			doNotDelete = {}
 			for k in pairs (_G) do
 				doNotDelete[k] = true
 			end
 		)");
+
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 1\n";
+	}
 
 	if (config == nullptr)
 	{
@@ -92,6 +101,13 @@ void Bloodworks::initImplementation()
 	{
 		tempSize = 10000;
 	}
+
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 2\n";
+	}
+
+
 	int maxTextureSize = -1;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 	if (maxTextureSize > 0)
@@ -109,19 +125,39 @@ void Bloodworks::initImplementation()
 	mapSize = (float)tempSize;
 	mapRect.set(-mapSize * 0.5f, +mapSize * 0.5f);
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 3\n";
+	}
+
 	coral.setWindowSize(config->getWindowWidth(), config->getWindowHeight());
 
 	luaWorld = new BloodworksLuaWorld(this);
 	luaWorld->reset();
+
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 4\n";
+	}
 
 	lua.script_file("resources/helpers.lua");
 	lua.script_file("resources/missions/helpers.lua");
 	lua.script_file("resources/guns/helpers.lua");
 	lua.script_file("resources/monsters/helpers.lua");
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 5\n";
+	}
+
 	coral.getSoundManager()->setGlobalVolume(config->getVolume());
 
 	lua["time"] = timer.getTime();
+
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 6\n";
+	}
 
 	dropController = new DropController(this);
 	monsterController = new MonsterController(this);
@@ -135,11 +171,25 @@ void Bloodworks::initImplementation()
 
 	player = new Player(this);
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 7\n";
+	}
+
 	loadMod("resources");
+
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 8\n";
+	}
 
 	bg = new GroundRenderable(this);
 	addRenderable(bg, BACKGROUND);
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 9\n";
+	}
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
@@ -257,6 +307,10 @@ void Bloodworks::initImplementation()
 	pausePostProcess->setShaderWeight(0.0f);
 	pausePostProcess->setEnabled(false);
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::initImplementation 10\n";
+	}
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	pauseMenu = new PauseMenu(this);
@@ -282,6 +336,8 @@ void Bloodworks::initImplementation()
 #ifdef HAS_BLOODWORKS_CHEATS
 	bloodworksCheats = new BloodworksCheats(this);
 #endif
+
+	out << "Bloodworks init done\n";
 }
 
 void Bloodworks::init()
@@ -312,7 +368,7 @@ void Bloodworks::init()
 	}
 	initImplementation();
 	updateZoom();
-	static bool noSleep = getConfig()->getBool("no_sleep", false, "Disables CPU going idle, set to 1 if there are performance problems (will make your CPU scream in pain)");
+	static bool noSleep = !getConfig()->getBool("sleep_between_frames", false, "Disables CPU going idle, set to 0 if there are performance problems (will make your CPU scream in pain)");
 	if (noSleep == true)
 	{
 		coral.setNoSleep(noSleep);
@@ -342,6 +398,7 @@ Bloodworks::Bloodworks()
 	crashReporterWindow = nullptr;
 
 	bloodworksSteam = new BloodworksSteam(this);
+	firstTick = true;
 	BloodworksControls::init();
 }
 
@@ -459,25 +516,54 @@ void Bloodworks::windowResized(int width, int height)
 
 void Bloodworks::clearMission()
 {
+	firstTick = true;
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission\n";
+	}
 	lua["gameObjects"] = lua.create_table();
 	lua["mission"] = lua.create_table();
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 1\n";
+	}
 	coral.getSoundManager()->clearAllSounds();
 
 	setSoundSpeed(1.0f);
 	setSlowdown(1.0f);
 
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 2\n";
+	}
 	bloodworksSteam->reset();
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 3\n";
+	}
 	missionController->reset();
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 4\n";
+	}
 	collisionController->reset();
 	player->reset();
 	monsterController->reset();
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 5\n";
+	}
 	bloodRenderable->reset();
 	dropController->reset();
 	bulletController->reset();
 	explosionController->reset();
 	levelUpPopup->reset();
 	luaWorld->reset();
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission 6\n";
+	}
 
 	cameraCenterPos.setZero();
 	setCameraPos(cameraCenterPos);
@@ -519,6 +605,10 @@ void Bloodworks::clearMission()
 	}
 	cameraPos.setZero();
 	input.showMouse();
+	if (isFirstTick())
+	{
+		out << "Bloodworks::clearMission fin\n";
+	}
 }
 
 bool Bloodworks::gotoMainMenu()
@@ -537,6 +627,8 @@ bool Bloodworks::gotoMainMenu()
 
 bool Bloodworks::loadMission(const std::string& mission)
 {
+	firstTick = true;
+	out << "loading mission " << mission << "\n";
 	if (levelUpPopup->isVisible())
 	{
 		return false;
@@ -866,6 +958,7 @@ GameObjectTemplate* Bloodworks::getGameObjectTemplate(const std::string& templat
 
 void Bloodworks::clear()
 {
+	firstTick = nullptr;
 	SAFE_DELETE(config);
 	if (crashReporterWindow)
 	{
@@ -1124,7 +1217,10 @@ void Bloodworks::addDrop(const Vec2& position)
 void Bloodworks::tick()
 {
 	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
-
+	if (firstTick)
+	{
+		out << "Bloodworks::tick\n";
+	}
 	if (crashReporterWindow)
 	{
 		crashReporterWindow->tick();
@@ -1152,7 +1248,7 @@ void Bloodworks::tick()
 #ifdef HAS_BLOODWORKS_CHEATS
 	if (!bloodworksCheats->isInited())
 	{
-		bloodworksCheats->onTick();
+		bloodworksCheats->onInit();
 	}
 	bloodworksCheats->onTick();
 #endif
@@ -1240,6 +1336,10 @@ void Bloodworks::tick()
 		updateZoom();
 	}
 
+	if (isFirstTick())
+	{
+		out << "config->check\n";
+	}
 	config->check();
 	bloodworksSteam->tick();
 	pauseMenu->tick();
@@ -1253,10 +1353,20 @@ void Bloodworks::tick()
 		bloodworksCheats->onInit();
 	}
 #endif
+
+	if (isFirstTick())
+	{
+		out << "first tick end\n";
+	}
+	firstTick = false;
 }
 
 void Bloodworks::tickCamera()
 {
+	if (isFirstTick())
+	{
+		out << "Bloodworks::tickCamera\n";
+	}
 	if (player->isVisible())
 	{
 		AARect playerRect(player->getPosition(), player->getPosition());

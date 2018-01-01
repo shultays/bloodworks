@@ -1368,5 +1368,9 @@ void BloodworksLuaWorld::clear()
 
 void BloodworksLuaWorld::tick()
 {
+	if (bloodworks->isFirstTick())
+	{
+		out << "BloodworksLuaWorld::tick\n";
+	}
 	buffController->tick();
 }
