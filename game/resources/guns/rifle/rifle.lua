@@ -42,7 +42,7 @@ function Rifle.onBulletHit(gun, bullet, monster)
             data.achievementProcess = 0
         elseif monster.isDead == true then
             data.achievementProcess = data.achievementProcess + 1
-            if data.achievementProcess >= 40 then
+            if data.achievementProcess >= 30 then
                 addAchievement( "ACH_RIFLE" ) 
                 data.checkAchievement = false
             end

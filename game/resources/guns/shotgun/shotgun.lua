@@ -40,7 +40,7 @@ function Shotgun.onBulletHit(gun, bullet, monster)
             bullet.data.killCount.c = bullet.data.killCount.c + 1
             if bullet.data.killCount.c == 3 then
                 data.achievementProcess = data.achievementProcess + 1
-                if data.achievementProcess >= 25 then
+                if data.achievementProcess >= 20 then
                     addAchievement( "ACH_SHOTGUN" ) 
                     data.checkAchievement = false
                 end

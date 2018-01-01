@@ -335,11 +335,42 @@ onPlayerDamaged : called when the player is damaged (guns are able to prevent da
                                 </h2>
                                 <p>Game loop of Bloodworks runs on C++ side. In this part it renders stuff, does player controls, ticks monsters, guns, calls necessarry trigers etc etc. On lua side, we have scriptTables that contains trigers for game entities. For each instance of object (monster/gun etc) we have a lua object with some variables and methods to link it to its c++ counterpart and we have a scriptTable to contain all trigers for this object's template.</p>
                                 <p>Other than these objects and scriptTables, we have a bunch of public methods on lua side to alter game/mission state or get some useful information about our current state. For example "addCustomBullet" adds a bullet that is not linked to any gun. "getMonsterCount" returns number of monsters. There are quite a few function like that and they will be further explained.</p>
+                                <p>Pretty much everything that can be accessible by lua side are defined in BloodworksLuaWorld.cpp. I will try to explain things here but check that file if you want a more complete list</p>
+                                <h3>
+                                    Uploading Mods
+                                </h3>
+                                <p>To upload your newly created mod, put all files in a folder under the game's mods folder. Other than your mod's files, you will need two additional ones: mod_info.json and mod_icon.png.</p>
+                                <p>json file countains information for the mod and icon file is an icon for the mod that will be displayed in in game windows. Here is an example json file for mod:</p>
+                                
+                                <button class="accordion">Expand</button>
+                                <div class="panel">
+                                    <pre>
+"{
+  "type" : "mod",
+  "modtype" : "other",
+  "name" : "Giftboxes",
+  "icon" : "mod_icon.png",
+  "description" : "Santa has visited to Bloodworks! And he drops random gift boxes on the map.&lt;br&gt;&lt;br&gt;Shoot boxes to unwrap your gift!",
+  "creator" : "taytay",
+  "version" : "1.0"
+}
+                                    </pre>
+                                </div>
+                                
+                                <p>To upload your mod, run 'uploader.exe'. On first run, it will ask you to create a user or login with an existing one. After doing that it will ask you to enter path for a mod to upload. This is a relative path to executable folder so if your path folder is named 'my_awesome_gun', just enter 'resources/mods/my_awesome_gun'. After that your mod should be uploaded to server and other players will be able to access it. If you want to edit your mod, just reupload it.</p>
+                                
+                                <h3>
+                                    Warnings
+                                </h3>
+                                <p>Each mod should have script name (which will be used for creating its lua object). For example there is already a script named 'Pistol', if you make a mod with same script name, your mod (or the existing pistol) will not work. I will try to address this issue in future and at least give a warning. </p>
+                                
+                                
                             </article>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
         <script>
             var acc = document.getElementsByClassName("accordion");

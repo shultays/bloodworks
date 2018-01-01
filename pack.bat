@@ -12,6 +12,7 @@ xcopy game\*.wav .\temp\bloodworks /sy
 xcopy game\*.exe .\temp\bloodworks /sy
 xcopy game\*.ps .\temp\bloodworks /sy
 xcopy game\*.vs .\temp\bloodworks /sy
+xcopy game\*.html .\temp\bloodworks /sy
 
 del .\temp\bloodworks\config.txt
 del .\temp\bloodworks\user_details.txt

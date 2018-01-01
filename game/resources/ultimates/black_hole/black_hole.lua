@@ -81,7 +81,7 @@ function BlackHole.onTick(gun)
                 end
                 data.achievementProcess = data.achievementProcess + killCount
                 
-                if data.achievementProcess >= 40 then
+                if data.achievementProcess >= 30 then
                     addAchievement( "ACH_BLACK_HOLE" )
                     data.checkAchievement = false
                 end

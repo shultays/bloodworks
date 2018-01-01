@@ -85,13 +85,13 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             data.checkAchievement = false
             return
         end
-        if monster ~= nil and bullet.data.splitHit ~= nil then
+        if monster ~= nil and bullet.data.splitHit ~= nil and monster.isDead then
         
             if  bullet.data.splitHit[0] == nil then
                 bullet.data.splitHit[0] = true
             else
                 data.achievementProcess = data.achievementProcess + 1
-                if data.achievementProcess >= 50 then
+                if data.achievementProcess >= 15 then
                     addAchievement( "ACH_SPLIT_GUN" ) 
                     data.checkAchievement = false
                 end

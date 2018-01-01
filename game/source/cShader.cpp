@@ -13,7 +13,9 @@ cShader::~cShader()
 	totalResource--;
 	if (shaderProgram != -1)
 	{
+#ifdef DEBUG
 		out << "unloading " << vertexShaderFile << " " << pixelShaderFile << "\n";
+#endif
 	}
 	if (pixelShader != -1)
 	{

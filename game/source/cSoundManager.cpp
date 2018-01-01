@@ -47,6 +47,9 @@ cSoundSample::cSoundSample(cSoundManager* soundManager)
 
 void cSoundSample::loadSample(const std::string& file)
 {
+#ifdef DEBUG
+	out << "loading " << file << "\n";
+#endif
 	this->file = file;
 	fixFilePath(this->file);
 	sample = new SoLoud::Wav();
@@ -152,6 +155,9 @@ void cSoundHandleGroup::addHandle(cSoundHandle& handle)
 */
 cSoundSample::~cSoundSample()
 {
+#ifdef DEBUG
+	out << "unloading " << file << "\n";
+#endif
 	totalResource--;
 	SAFE_DELETE(sample);
 }

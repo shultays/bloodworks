@@ -35,7 +35,7 @@ function Pistol.onTick(gun)
             return
         end
         
-        if missionTime > 3 * 60.0 then
+        if missionTime > 2 * 60.0 then
             addAchievement("ACH_PISTOL")
             data.checkAchievement = false
         end

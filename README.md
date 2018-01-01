@@ -1,14 +1,16 @@
 ## Bloodworks
 
- Bloodworks is top-down survival-action game.
+Bloodworks is a free top-down survival action game where you fight against an endless waves of monsters. The odds are not in your favor!
 
-You play as a soldier who tries to survive against endless waves of monsters he faces. He has many weapons at his arsenal, bonuses or perks that will help him in his fight.
+In Survival mode, you find new weapons as you fight, gain overpowered 'ultimate' weapons, unlock new perks as you level up. Currently there are 20 weapons and 5 ultimates you can eqip, 24 perks to choose and 15 bonuses to collect! The more will be added in future updates.
 
-The game is pretty much entirely moddable. Adding new weapons, bonuses, monsters, perks, missions or tweaking the existing ones are possible with a little bit of lua scripting (which you can do simply by editing text files!). There is also support for uploading or downloading game mods.
+The game is extremely moddable. You can add new weapons, monsters, perks, bonuses or even mission types. The game play content of Bloodworks is written in Lua and Json and you can edit them by a text editor. You can download the mods that other people created or share your mods with others.
 
 Bloodworks is still in development. Once it is finished, it will be completely free and open source. If you get a crash, the game will ask you to confirmation to send a crash report. It would greatly help me if you do so! Nothing personal is being sent to my servers, it is just console logs and any other information you provide in the crash report. You can also open a ticket or send feedback using my website if you prefer it.
 
 If you want to contribute to the project or simply give feedback, my email address is (mail <at> enginmercan.com). Source code can be found in my Github Page if you are interested.
+
+The game can be played downloaded on Steam <a href="http://store.steampowered.com/app/717990/Bloodworks/">Steam</a> or <a href="http://store.steampowered.com/app/717990/Bloodworks/">itchi.io</a>
 
 Controls
 
@@ -17,7 +19,6 @@ Controls
     Left Click: Shoot
     Right Click: Ultimate
     R: Reload
-    P: Pause
     Tab: Open perk menu (if leveled up)
     F10 - Toggle full screen
 
@@ -31,7 +32,8 @@ Enjoy!
 
 <img src="https://raw.githubusercontent.com/shultays/bloodworks/master/0.gif" width="350">
 
-<a href="https://www.youtube.com/watch?v=Fjxbh8k15z8">Gameplay video (YouTube)</>
+<a href="https://www.youtube.com/watch?v=J6nBlytRQSM">Trailer (YouTube)</a>
+<a href="https://www.youtube.com/watch?v=Fjxbh8k15z8">Gameplay video (YouTube)</a>
 
 ## Documentation
 

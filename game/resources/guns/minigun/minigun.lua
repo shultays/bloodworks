@@ -93,7 +93,7 @@ function MiniGun.onTick(gun)
             data.checkAchievement = false
             return
         end
-        if data.achievementProcess >= 40 then
+        if data.achievementProcess >= 30 then
             addAchievement( "ACH_MINIGUN" )
             data.checkAchievement = false
             return

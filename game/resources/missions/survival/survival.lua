@@ -73,7 +73,7 @@ function Survival.onTick()
     
     missionData.curMaxMonster = math.floor(lerp(55, missionData.maxMonster, clamp(min * 0.05)))
     local rateMult = 1.0 + (getMapSize().x - 3000.0) / 5000.0
-    local rate =  (0.8 - clamp(min * 0.2) * 0.3)  / rateMult
+    local rate =  (0.9 - clamp(min * 0.2) * 0.4)  / rateMult
     if missionTime - missionData.lastSpawnTime > rate and canSpawnMonster() and player.isDead == false then
         missionData.lastSpawnTime = missionTime
         local monster = addRandomMonster()

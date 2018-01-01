@@ -12,11 +12,17 @@ cTexture::cTexture()
 cTexture::cTexture(const std::string& fileName, bool repeat)
 {
 	totalResource++;
+
+	dimensions.setZero();
+	name = fileName;
+	this->repeat = repeat;
+
 	SDL_Surface* surf = IMG_Load(fileName.c_str());
 	if (surf == NULL)
 	{
 		out << "surface_error: " << fileName << " " << SDL_GetError() << "\n";
 		hasError = true;
+		return;
 	}
 
 	GLenum data_fmt;
@@ -51,16 +57,17 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 
 	SDL_FreeSurface(surf);
 
-	name = fileName;
-	this->repeat = repeat;
-
+#ifdef DEBUG
 	out << "loading " << name << "\n";
+#endif
 }
 
 cTexture::~cTexture()
 {
 	totalResource--;
+#ifdef DEBUG
 	out << "unloading " << name << "\n";
+#endif
 	if (gTexture != -1)
 	{
 		glDeleteTextures(1, &gTexture);

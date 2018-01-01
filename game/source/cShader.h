@@ -319,7 +319,9 @@ public:
 
 	bool loadFromFile(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
 	{
+#ifdef DEBUG
 		out << "loading " << vertexShaderFile << " " <<  pixelShaderFile << "\n";
+#endif
 		this->vertexShaderFile = vertexShaderFile;
 		this->pixelShaderFile = pixelShaderFile;
 

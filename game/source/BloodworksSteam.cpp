@@ -177,7 +177,7 @@ void BloodworksSteam::tick()
 		if (count >= 4)
 		{
 			edgeTime += timer.getDt();
-			if (edgeTime >= 30.0f)
+			if (edgeTime >= 20.0f)
 			{
 				addAchievement(ACH_LIVING_ON_THE_EDGE);
 			}

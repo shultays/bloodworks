@@ -50,7 +50,7 @@ function Flamethrower.onTick(gun)
             data.checkAchievement = false
             return
         end
-        if data.achievementProcess >= 30 then
+        if data.achievementProcess >= 20 then
             addAchievement( "ACH_FLAME_THROWER" )
             data.checkAchievement = false
         end

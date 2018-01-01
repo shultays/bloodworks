@@ -50,7 +50,7 @@ function Railgun.onBulletHit(gun, bullet, monster)
             bullet.data.killCount = bullet.data.killCount + 1
             if bullet.data.killCount == 3 then
                 data.achievementProcess = data.achievementProcess + 1
-                if data.achievementProcess >= 50 then
+                if data.achievementProcess >= 30 then
                     addAchievement( "ACH_RAIL_GUN" ) 
                     data.checkAchievement = false
                 end

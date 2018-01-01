@@ -44,11 +44,11 @@ function RocketLauncher.onBulletHit(gun, bullet, monster)
                         gun.data.checkAchievement = false
                         return
                     end
-                    if killCount >= 5 then
+                    if killCount >= 4 then
                         killCount = -100
                         gun.data.achievementProcess = gun.data.achievementProcess + 1
                         
-                        if gun.data.achievementProcess  >= 50 then
+                        if gun.data.achievementProcess  >= 30 then
                             addAchievement( "ACH_ROCKET_LAUNCHER" )
                             gun.data.checkAchievement = false
                         end

@@ -54,7 +54,7 @@ function PhoenixDive.onTick(gun)
         if data.hitTime < 0.0 then
             data.hitTime = data.hitTime + 0.02
             
-            runForEachMonsterInRadius(player.position, 40.0, {}, function(monster)
+            runForEachMonsterInRadius(player.position, 50.0, {}, function(monster)
                 local args = {doNotStun = true}
                 local toMonster = monster.position - player.position
                 toMonster:normalize()
@@ -87,7 +87,7 @@ function PhoenixDive.onTick(gun)
             end
             data.achievementProcess = data.achievementProcess + count
             
-            if data.achievementProcess >= 15 then
+            if data.achievementProcess >= 10 then
                 addAchievement( "ACH_PHOENIX_DIVE" )
                 data.checkAchievement = false
             end
