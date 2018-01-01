@@ -48,6 +48,10 @@ Egg-Sack Model
 Danimal
 via opengameart.org
 
+Narsie Sprite
+Ausops/tgstation
+via github.com
+
 Black-Hole Shader
 Yaniel
 via shadertoy.com
