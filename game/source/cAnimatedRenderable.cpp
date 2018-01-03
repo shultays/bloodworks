@@ -7,6 +7,11 @@
 
 void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
+	extern bool renderParticleOnly;
+	if (renderParticleOnly)
+	{
+		return;
+	}
 	if (animations[currentAnimation].frames.size() > 0)
 	{
 		cRenderableWithShader::render(isIdentity, mat, crop);

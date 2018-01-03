@@ -342,6 +342,11 @@ void cParticle::addTexture(const std::string& path)
 
 void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, cParticleRandomizer* randomizer, bool replaceLastParticle)
 {
+	extern bool disableAddParticle;
+	if (disableAddParticle)
+	{
+		return;
+	}
 	if (disableParticle)
 	{
 		return;
@@ -528,6 +533,11 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 
 void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
+	extern bool disableParticleRender;
+	if (disableParticleRender)
+	{
+		return;
+	}
 	if (quadBuffers.size() > 0)
 	{
 		particleTemplate->setShaderUniforms();

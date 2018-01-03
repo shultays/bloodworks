@@ -56,6 +56,7 @@ bool BloodworksCheats::cheatsEnabled()
 
 void BloodworksCheats::onTick()
 {
+
 	if (bloodworks->isFirstTick())
 	{
 		out << "BloodworksCheats::onTick\n";
@@ -89,6 +90,27 @@ void BloodworksCheats::onTick()
 			tickCount = 0;
 		}
 	}
+
+	Player *player = bloodworks->getPlayer();
+	DropController *dropController = bloodworks->getDropController();
+
+	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
+	const cVector<Gun*>& guns = bloodworks->getGuns();
+
+	if (input.isKeyPressed(key_5))
+	{
+		for (int i = 0; i < guns.size(); i++)
+		{
+			dropController->spawnGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
+		}
+
+		for (int i = 0; i < bonuses.size(); i++)
+		{
+			dropController->spawnBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
+		}
+	}
+
+	return;
 
 	if (hasCheats == false)
 	{
@@ -124,10 +146,6 @@ void BloodworksCheats::onTick()
 	}
 
 	const cVector<Perk*>& perks = bloodworks->getPerks();
-	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
-	const cVector<Gun*>& guns = bloodworks->getGuns();
-	Player *player = bloodworks->getPlayer();
-	DropController *dropController = bloodworks->getDropController();
 	MonsterController *monsterController = bloodworks->getMonsterController();
 	BulletController *bulletController = bloodworks->getBulletController();
 	MissionController *missionController = bloodworks->getMissionController();

@@ -36,6 +36,11 @@ Coral::Coral()
 	cPackHelper::deleteFolder(TEMP_FOLDER, true, false);
 }
 
+bool disableAddParticle = false;
+bool renderParticleOnly = false;
+bool disableParticleRender = false;
+bool dontTickGame = false;
+
 void Coral::tick()
 {
 	if (lastFullScreen != fullScreen)
@@ -58,7 +63,7 @@ void Coral::tick()
 
 		float slowdown = game->getSlowdown();
 		float t;
-		int maxTick = 4;
+		int maxTick = 3;
 		while ((t = timer.getRealTime()) - lastUpdateTime >= update_interval && maxTick --> 0)
 		{
 			ADD_SCOPED_TIME_PROFILER(">>>>  tick  <<<<");
@@ -69,22 +74,58 @@ void Coral::tick()
 				profilers[i].reset();
 			}
 #endif
-			timer.currentTime = update_interval * slowdown + timer.currentTime;
-			timer.dt = update_interval * slowdown;
-			timer.realDt = update_interval;
-			tickedBeforeRender = true;
-			if (t - lastUpdateTime < update_interval * 2.0f)
+
+			float updateDt = t - lastUpdateTime;
+			if (updateDt > update_interval * 2.0f )
 			{
-				lastUpdateTime += update_interval;
+				updateDt = update_interval * 2.0f;
+			}
+
+			timer.currentTime = updateDt * slowdown + timer.currentTime;
+			timer.dt = updateDt * slowdown;
+			timer.realDt = updateDt;
+			tickedBeforeRender = true;
+			if (t - lastUpdateTime < updateDt * 2.0f)
+			{
+				lastUpdateTime += updateDt;
 			}
 			else
 			{
 				lastUpdateTime = t;
 			}
+
+			if (input.isKeyPressed(key_1))
+			{
+				disableAddParticle = !disableAddParticle;
+			}
+			if (input.isKeyPressed(key_2))
+			{
+				disableParticleRender = !disableParticleRender;
+			}
+			if (input.isKeyPressed(key_3))
+			{
+				renderParticleOnly = !renderParticleOnly;
+			}
+			if (input.isKeyPressed(key_4))
+			{
+				dontTickGame = !dontTickGame;
+				if (dontTickGame)
+				{
+					game->setSlowdown(0.0f);
+				}
+				else
+				{
+					game->setSlowdown(1.0f);
+				}
+			}
+
 			slaveController->update();
 			debugRenderer.tick(timer.getDt());
 			input.preTick();
-			game->tickInternal();
+			if (!dontTickGame)
+			{
+				game->tickInternal();
+			}
 			input.tick();
 			mapper.check();
 

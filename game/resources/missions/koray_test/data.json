@@ -1,0 +1,9 @@
+{
+  "type": "mission",
+  "name": "KorayTest",
+  
+  "icon": "icon.png",
+  
+  "scriptFile" : "KorayTest.lua",
+  "scriptName" : "KorayTest"
+}
