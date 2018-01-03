@@ -9,6 +9,7 @@
 #include "cTextRenderable.h"
 #include "BloodworksControls.h"
 #include "BloodworksConfig.h"
+#include "BloodworksSteam.h"
 
 #define MAIN_MENU_MUSIC_VOL 1.3f
 
@@ -205,7 +206,7 @@ void MainMenu::tick(bool hasPopup)
 		}
 		else if (mods->isClicked())
 		{
-			bloodworks->showMods();
+			bloodworks->getSteam()->openWorkshop();
 		}
 		else if (credits->isClicked())
 		{

@@ -1,5 +1,5 @@
 
-function Laser.init(gun)
+function LaserGun.init(gun)
     gun.spreadAngle = 0.0
     gun.crosshairDistance = 550.0
     gun.data.maxRangeUniform = gun.laser:addUniformFloat("maxRange", 500.0)
@@ -7,7 +7,7 @@ function Laser.init(gun)
 end
 
 
-function Laser.onTick(gun)
+function LaserGun.onTick(gun)
     gun.laser:setVisible(false)
     if gun.isTriggered and gun:hasAmmo() then
         gun.laser:setVisible(true)

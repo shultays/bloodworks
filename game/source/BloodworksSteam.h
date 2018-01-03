@@ -5,6 +5,9 @@
 
 #include <unordered_map>
 
+
+#define MAX_WORKSHOP_ITEMS 512
+
 enum EAchievement { 
 	ACH_BRONZE,
 	ACH_SILVER,
@@ -39,6 +42,8 @@ enum EStat {
 
 #ifdef HAS_STEAM
 
+#include "steam_api.h"
+
 class Bloodworks;
 class Monster;
 
@@ -66,6 +71,14 @@ public:
 	void tick();
 	void reset();
 	void onMonsterDied(Monster* monster);
+
+
+	int m_nNumWorkshopItems = 0;
+	bool loadWorkshopItem(PublishedFileId_t workshopItemID);
+	void loadWorkshopItems();
+	STEAM_CALLBACK(BloodworksSteam, onWorkshopItemInstalled, ItemInstalled_t);
+
+	void openWorkshop();
 };
 
 #else

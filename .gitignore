@@ -16,3 +16,8 @@ game.VC.db
 /server/opendb.php
 /server/hasher.php
 *.opendb
+bloodworks_workshop/.vs/
+bloodworks_workshop/bloodworks_workshop/Debug/
+bloodworks_workshop/bloodworks_workshop/x64/
+bloodworks_workshop/x64/Debug/
+bloodworks_workshop/x64/

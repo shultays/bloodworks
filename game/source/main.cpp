@@ -64,6 +64,7 @@ bool Init()
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		800, 600, flags);
 
+	CHECK_GL_ERROR;
 	if (!mainWindow)
 	{
 		out << "Unable to create window\n";
@@ -77,24 +78,35 @@ bool Init()
 		addController(0);
 	}
 
+	CHECK_GL_ERROR;
 	out << "init 3\n";
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os, sol::lib::debug);
 
 	out << "init 4\n";
+	CHECK_GL_ERROR;
 	mainContext = SDL_GL_CreateContext(mainWindow);
+	CHECK_GL_ERROR;
 	SetOpenGLAttributes();
+	CHECK_GL_ERROR;
 	glewInit();
+	CHECK_GL_ERROR;
 	out << "init fin\n";
 	return true;
 }
 
 bool SetOpenGLAttributes()
 {
+	out << "SetOpenGLAttributes\n";
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	CHECK_GL_ERROR;
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	CHECK_GL_ERROR;
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	CHECK_GL_ERROR;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	CHECK_GL_ERROR;
 
+	out << "SetOpenGLAttributes fin\n";
 	return true;
 }
 

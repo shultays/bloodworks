@@ -31,7 +31,7 @@ include_once 'opendb.php';
 include_once 'hasher.php';
 include_once 'check_spam.php';
 
-if (checkSpam($link, 60, 2, "upload") == false) {
+if (checkSpam($link, 60, 4, "upload") == false) {
     echo "please dont kill my server";
     include_once 'closedb.php';
     exit();
@@ -217,6 +217,13 @@ if($validHeader and $validUser and $validUpload and $validFile)
                 $fileName = $link->real_escape_string($fileName);
                 $fileType = $link->real_escape_string($fileType);
                 $content = $link->real_escape_string($content);
+                
+                $description = $link->real_escape_string($description);
+                $version = $link->real_escape_string($version);
+                $creator = $link->real_escape_string($creator);
+                $modname = $link->real_escape_string($modname);
+                
+                
                 $type = $link->real_escape_string($type);
         
                 if ($modid == -1)

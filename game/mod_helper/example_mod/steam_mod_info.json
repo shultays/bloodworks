@@ -1,0 +1,11 @@
+{
+  "title" : "Nerf Gun",
+  "description" : "For hardcore players",
+  "picture" : "icon.png",
+  
+  "meta" : "",
+  
+  "tags" : [ "weapon" ],
+  
+  "change_note" : "initial upload"
+}

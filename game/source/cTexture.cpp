@@ -13,7 +13,7 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 {
 	totalResource++;
 
-	out << "loading " << name << "\n";
+	out << "loading " << fileName << "\n";
 	dimensions.setZero();
 	name = fileName;
 	this->repeat = repeat;

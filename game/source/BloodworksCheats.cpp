@@ -535,16 +535,20 @@ void BloodworksCheats::onMonsterPreTick(Monster* monster)
 	}
 }
 
+
+#include "steam_api.h"
+
 void BloodworksCheats::onInit()
 {
 	static int t = 0;
 	t++;
-	if (t < 2)
+	if (t < 5)
 	{
 		return; // todo fix
 	}
+
 	inited = true;
-	static std::string testGame = "Survival";
+	static std::string testGame = "";
 	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);

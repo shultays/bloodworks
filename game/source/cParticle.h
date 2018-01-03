@@ -6,7 +6,6 @@
 #include "sol.h"
 #include "DirentHelper.h"
 
-#define MAX_QUAD 256
 class cParticle;
 
 class cParticleRandomizer

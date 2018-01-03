@@ -16,6 +16,8 @@ class cSlaveController;
 class cAccumulatedTimeProfiler;
 class CSteam;
 
+#define CHECK_GL_ERROR do{ int z = glGetError(); if (z != GL_NO_ERROR) out << "gl error (" << __FILE__ << ":" << __LINE__ << ") " << z << "\n"; } while(0)
+
 class Coral
 {
 	friend class cGame;

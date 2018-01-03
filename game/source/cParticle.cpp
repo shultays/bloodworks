@@ -6,6 +6,8 @@
 #include "cTools.h"
 
 
+#define MAX_QUAD 256
+
 bool disableParticle;
 
 cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file)

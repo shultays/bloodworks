@@ -83,6 +83,7 @@ void cDebugRenderable::init()
 	glGenBuffers(1, &lineGPUBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, lineGPUBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(LinetGPUData) * MAX_LINE, NULL, GL_DYNAMIC_DRAW);
+	out << "cDebugRenderable::init fin\n";
 }
 
 int cDebugRenderable::addText(const std::string &string, float x, float y, float time /*= FLT_MAX*/, int color /*= Vec4(1.0f)*/, float size /*= 24.0f*/, TextAlignment textAlignment, RenderableAlignment alignment)

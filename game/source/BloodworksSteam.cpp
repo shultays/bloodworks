@@ -44,6 +44,14 @@ Stat_t g_Stats[] = {
 	_STAT_ID(STA_BLOODBATH, STAT_INT),
 };
 
+void BloodworksSteam::openWorkshop()
+{
+	if (inited)
+	{
+		SteamFriends()->ActivateGameOverlayToWebPage("http://steamcommunity.com/workshop/browse/?appid=717990&browsesort=trend&section=readytouseitems");
+	}
+}
+
 BloodworksSteam::BloodworksSteam(Bloodworks* bloodworks)
 {
 	this->bloodworks = bloodworks;
@@ -206,4 +214,76 @@ void BloodworksSteam::onMonsterDied(Monster* monster)
 	killedMonster++;
 }
 
+bool BloodworksSteam::loadWorkshopItem(PublishedFileId_t workshopItemID)
+{
+	if (m_nNumWorkshopItems == MAX_WORKSHOP_ITEMS)
+		return false; // too much
+
+	uint32 unItemState = SteamUGC()->GetItemState(workshopItemID);
+
+	if (!(unItemState & k_EItemStateInstalled))
+		return false;
+
+	uint32 unTimeStamp = 0;
+	uint64 unSizeOnDisk = 0;
+	char szItemFolder[1024] = { 0 };
+
+	if (!SteamUGC()->GetItemInstallInfo(workshopItemID, &unSizeOnDisk, szItemFolder, sizeof(szItemFolder), &unTimeStamp))
+		return false;
+
+	// char szFile[1024];
+	// if (unItemState & k_EItemStateLegacyItem)
+	// {
+	// 	// szItemFolder just points directly to the item for legacy items that were published with the RemoteStorage API.
+	// 	_snprintf(szFile, sizeof(szFile), "%s", szItemFolder);
+	// }
+	// else
+	// {
+	// 	_snprintf(szFile, sizeof(szFile), "%s/workshopitem.txt", szItemFolder);
+	// }
+
+	std::string folder = szItemFolder;
+	out << "loading mod : " << folder << "\n";
+	bloodworks->loadMod(szItemFolder);
+
+	if (!hasAchievement(ACH_MOD))
+	{
+		addAchievement(ACH_MOD);
+	}
+
+	return true;
+}
+
+void BloodworksSteam::loadWorkshopItems()
+{
+	if (inited)
+	{
+		PublishedFileId_t vecSubscribedItems[MAX_WORKSHOP_ITEMS];
+
+		int numSubscribedItems = SteamUGC()->GetSubscribedItems(vecSubscribedItems, MAX_WORKSHOP_ITEMS);
+
+		if (numSubscribedItems > MAX_WORKSHOP_ITEMS)
+		{
+			numSubscribedItems = MAX_WORKSHOP_ITEMS;
+		}
+
+		for (int iSubscribedItem = 0; iSubscribedItem < numSubscribedItems; iSubscribedItem++)
+		{
+			PublishedFileId_t workshopItemID = vecSubscribedItems[iSubscribedItem];
+			loadWorkshopItem(workshopItemID);
+		}
+	}
+}
+
+void BloodworksSteam::onWorkshopItemInstalled(ItemInstalled_t *pParam)
+{
+	if (pParam->m_unAppID == SteamUtils()->GetAppID())
+	{
+		if (bloodworks->isMissionLoaded())
+		{
+			bloodworks->gotoMainMenu();
+		}
+		loadWorkshopItem(pParam->m_nPublishedFileId);
+	}
+}
 #endif

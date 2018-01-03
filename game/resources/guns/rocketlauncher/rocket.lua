@@ -30,12 +30,16 @@ function RocketLauncher.onTick(gun)
 end
 
 function RocketLauncher.onBulletHit(gun, bullet, monster)
+
+    local minD = math.floor(70 * player.damageMultiplier:getBuffedValue() )
+    local maxD = math.floor(130 * player.damageMultiplier:getBuffedValue() )
+    
     if gun.data.checkAchievement then
         local killCount = 0
         if  monster ~= nil and monster.isDead then
             killCount = killCount + 1
         end
-        addExplosion(bullet.position, 80.0, 180.0, 70, 130, 0.0, false, function(monster)
+        addExplosion(bullet.position, 80.0, 180.0, minD, maxD, 0.0, false, function(monster)
             if  monster ~= nil and monster.isDead then
                 killCount = killCount + 1
                 
@@ -58,7 +62,7 @@ function RocketLauncher.onBulletHit(gun, bullet, monster)
             end
         end)
     else
-        addExplosion(bullet.position, 80.0, 180.0, 70, 130)
+        addExplosion(bullet.position, 80.0, 180.0, minD, maxD)
     end
 end
 

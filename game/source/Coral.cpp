@@ -200,52 +200,86 @@ void Coral::clearWindow()
 
 void Coral::initFrameBuffers()
 {
+	out << "Coral::initFrameBuffers\n";
 	if (tempFrameBuffer[0] != -1)
 	{
 		glDeleteTextures(3, tempFrameBufferTexture);
+		CHECK_GL_ERROR;
 		glDeleteFramebuffers(3, tempFrameBuffer);
+		CHECK_GL_ERROR;
 	}
+	out << "Coral::initFrameBuffers 1\n";
 
+	CHECK_GL_ERROR;
 	glGenFramebuffers(3, tempFrameBuffer);
+	CHECK_GL_ERROR;
 	glGenTextures(3, tempFrameBufferTexture);
+	CHECK_GL_ERROR;
 
+	out << "Coral::initFrameBuffers 2\n";
 	IntVec2 size = game->getScreenDimensions();
 
 	for (int i = 0; i < 3; i++)
 	{
+		out << "Coral::initFrameBuffers 3 " << i << "\n";
 		glBindFramebuffer(GL_FRAMEBUFFER, tempFrameBuffer[i]);
+		CHECK_GL_ERROR;
 
+		out << "Coral::initFrameBuffers 4 " << i << "\n";
 		glBindTexture(GL_TEXTURE_2D, tempFrameBufferTexture[i]);
+		CHECK_GL_ERROR;
 		glTexImage2D(GL_TEXTURE_2D, 0, i < 2 ? GL_RGB : GL_RGBA, size.w, size.h, 0, i < 2 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		CHECK_GL_ERROR;
 
+		out << "Coral::initFrameBuffers 5 " << i << "\n";
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		CHECK_GL_ERROR;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		CHECK_GL_ERROR;
 
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tempFrameBufferTexture[i], 0);
+		out << "Coral::initFrameBuffers 6 " << i << "\n";
+		glGenerateMipmap(GL_TEXTURE_2D);
+		CHECK_GL_ERROR;
+
+		out << "Coral::initFrameBuffers 7 " << i << "\n";
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tempFrameBufferTexture[i], 0);
+		CHECK_GL_ERROR;
 	}
 
+	out << "Coral::initFrameBuffers 8\n";
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	CHECK_GL_ERROR;
+	out << "Coral::initFrameBuffers fin\n";
 }
 
 void Coral::init()
 {
-	const char* str;
-	printf("Vendor: %s\n", (str = (const char*)glGetString(GL_VENDOR)) ? str : "");
-	printf("Renderer: %s\n", (str = (const char*)glGetString(GL_RENDERER)) ? str : "");
-	printf("OpenGL version: %s\n", (str = (const char*)glGetString(GL_VERSION)) ? str : "");
-	printf("GLSL : %s\n", (str = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)) ? str : "");
+	out << "Coral::init\n";
+	std::string str;
+	str = (const char*)glGetString(GL_VENDOR);
+	out << "Vendor: " << str << "\n";
+	str = (const char*)glGetString(GL_RENDERER);
+	out << "Renderer: " <<  str << "\n";
+	str = (const char*)glGetString(GL_VERSION);
+	out << "OpenGL version: " << str << "\n";
+	str = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+	out << "GLSL: " << str << "\n";
 
+	out << "Coral::init 1\n";
 	slaveController = new cSlaveController();
 	slaveController->startSlaves(3);
 
+	out << "Coral::init 2\n";
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 
+	out << "Coral::init 3\n";
 	gameRunning = true;
 	fullScreen = false;
 	lastFullScreen = false;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
 
+	out << "Coral::init 4\n";
 	GLfloat vertexData[] =
 	{
 		-1.0f, 1.0f,
@@ -254,22 +288,31 @@ void Coral::init()
 		-1.0f, -1.0f,
 	};
 
+	CHECK_GL_ERROR;
 	glGenBuffers(1, &postProcessQuad);
+	CHECK_GL_ERROR;
 	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+	CHECK_GL_ERROR;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+	CHECK_GL_ERROR;
 
+	out << "Coral::init 5\n";
 	timer.init();
 	input.init();
 	tickedBeforeRender = false;
 	lastDrawTime = timer.getTime() - draw_interval;
 	lastUpdateTime = timer.getTime() - update_interval;
+	out << "Coral::init 6\n";
 	initFrameBuffers();
 
+	out << "Coral::init 7\n";
 	soundManager = new cSoundManager();
 
+	out << "Coral::init 8\n";
 #ifdef HAS_STEAM
 	steam = new CSteam();
 #endif
+	out << "Coral::init fin\n";
 }
 
 void Coral::clear()

@@ -69,12 +69,12 @@ void appendJson(nlohmann::json& j, const std::string& fileName)
 
 void Bloodworks::initImplementation()
 {
+	firstTick = true;
 	if ( isFirstTick())
 	{
 		out << "Bloodworks::initImplementation\n";
 	}
 	nextGlobalUniqueId = 1;
-	firstTick = true;
 	lua.script(R"(
 			doNotDelete = {}
 			for k in pairs (_G) do
@@ -177,6 +177,14 @@ void Bloodworks::initImplementation()
 	}
 
 	loadMod("resources");
+
+
+	static bool modsFolderDisabled = config->getBool("all_mods_disabled", false, "Set if you don't want to load mods");
+
+	if (!modsFolderDisabled)
+	{
+		bloodworksSteam->loadWorkshopItems();
+	}
 
 	if (isFirstTick())
 	{
@@ -1126,12 +1134,22 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 		return;
 	}
 
-	static bool modsFolderDisabled = config->getBool("all_mods_disabled", false, "Set if you don't want to load mods");
-	if (modsFolderDisabled)
+	if (beginsWith(f.folder, std::string("resources/mods/")))
 	{
-		if (beginsWith(f.folder, std::string("resources/mods/")))
+		return;
+	}
+
+	if (type != "game_object_template")
+	{
+		if (j.count("scriptName") != 0)
 		{
-			return;
+			std::string scriptName = j["scriptName"].get<std::string>();
+
+			if (lua[scriptName])
+			{
+				out << f.folder << f.file << " shares same script name with another object, it will be ignored\n";
+				return;
+			}
 		}
 	}
 
@@ -1241,6 +1259,7 @@ void Bloodworks::tick()
 			}
 		}
 		config->check();
+		firstTick = false;
 		return;
 	}
 

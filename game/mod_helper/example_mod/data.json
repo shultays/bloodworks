@@ -1,0 +1,22 @@
+{
+  "type" : "gun",
+  "name": "Nerf-Gun",
+  "icon" : "icon.png",
+  "bulletTexture" : "bullet.png",
+  "bulletSize" : [5.0, 3.0],
+  "bulletMeshShift" : [-5.0, 0.0],
+  "bulletRadius" : 6.0,
+  "bulletSpeed" : 320.0,
+  "bulletDamage" : [5, 10],
+  
+  "maxAmmo" : 10,
+  "reloadTime" : 0.4,
+  
+  "firingSound" : {
+    "path" : "nerfgun.ogg",
+    "volume" : 3.75
+  },
+  
+  "scriptFile" : "nerfgun.lua",
+  "scriptName" : "NerfGun"
+}

@@ -9,7 +9,7 @@
   "bulletDamage" : [35, 40],
   
   "scriptFile" : "laser.lua",
-  "scriptName" : "Laser",
+  "scriptName" : "LaserGun",
   
   "maxAmmo" : 40,
   "reloadTime" : 1.5,
