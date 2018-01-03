@@ -4,7 +4,8 @@
 #include "cGame.h"
 #include "cTexture.h"
 #include "cTools.h"
-
+#include "cTools.h"
+#include "cTimeProfiler.h"
 
 #define MAX_QUAD 256
 
@@ -352,6 +353,13 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		return;
 	}
 
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("cParticle::addParticleInternal");
+	p.start();
+#endif
+
+	
 	Vec2 pos = posInput;
 	if (replaceLastParticle == false)
 	{
@@ -376,6 +384,13 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 			quadBuffers.push_back(bufferData);
 		}
 	}
+
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p2 = Coral::createAccumulatedTimeProfile("cParticle::addParticleInternal 1");
+	p2.start();
+#endif
+
 
 	QuadBufferData &bufferData = quadBuffers[quadBuffers.size() - 1];
 
@@ -459,6 +474,12 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		}
 	}
 
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p3 = Coral::createAccumulatedTimeProfile("cParticle::addParticleInternal 3");
+	p3.start();
+#endif
+
 	setAttributes[particleTemplate->attributes[particleTemplate->posIndex].index] = 1;
 	*(Vec2*)(buff + particleTemplate->attributes[particleTemplate->posIndex].begin) = pos;
 	setAttributes[particleTemplate->attributes[particleTemplate->timeIndex].index] = 1;
@@ -516,7 +537,20 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		}
 	}
 
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p4 = Coral::createAccumulatedTimeProfile("cParticle::addParticleInternal 4");
+	p4.start();
+#endif
+
 	glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p5 = Coral::createAccumulatedTimeProfile("cParticle::addParticleInternal 5");
+	p5.start();
+#endif
+
 	if (replaceLastParticle)
 	{
 		glBufferSubData(GL_ARRAY_BUFFER, vertexSize * ( bufferData.count - particleNumToAdd), vertexSize * particleNumToAdd, buff);
@@ -529,6 +563,22 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		bufferData.count += particleNumToAdd;
 		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 	}
+
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p6 = Coral::createAccumulatedTimeProfile("cParticle::render 6");
+	p6.start();
+#endif
+
+#ifdef SHOW_TIMINGS
+	glFinish();
+	p.stop();
+	p2.stop();
+	p3.stop();
+	p4.stop();
+	p5.stop();
+	p6.stop();
+#endif
 }
 
 void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
@@ -538,6 +588,14 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 	{
 		return;
 	}
+
+#ifdef SHOW_TIMINGS
+	glFinish();
+	static cAccumulatedTimeProfiler& p = Coral::createAccumulatedTimeProfile("cParticle::render");
+	p.start();
+#endif
+
+
 	if (quadBuffers.size() > 0)
 	{
 		particleTemplate->setShaderUniforms();
@@ -556,11 +614,24 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 			}
 		}
 
+#ifdef SHOW_TIMINGS
+		glFinish();
+		static cAccumulatedTimeProfiler& p2 = Coral::createAccumulatedTimeProfile("cParticle::render 2");
+		p2.start();
+#endif
+
 		game->lastShader = particleTemplate->shader;
 		particleTemplate->shader->begin();
 		particleTemplate->shader->setUniform(particleTemplate->uCurrentTime, timer.getTime() - time);
 
 		cRenderableWithShader::render(isIdentity, mat, crop);
+
+#ifdef SHOW_TIMINGS
+		glFinish();
+		static cAccumulatedTimeProfiler& p3 = Coral::createAccumulatedTimeProfile("cParticle::render 3");
+		p3.start();
+#endif
+
 		glActiveTexture(GL_TEXTURE0);
 
 		for (int i = textures.size() - 1; i >= 0; i--)
@@ -571,6 +642,12 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 		}
 
 		particleTemplate->shader->setViewMatrix(game->getViewMatrix(alignment));
+
+#ifdef SHOW_TIMINGS
+		glFinish();
+		static cAccumulatedTimeProfiler& p4 = Coral::createAccumulatedTimeProfile("cParticle::render 4");
+		p4.start();
+#endif
 
 		glEnableVertexAttribArray(0);
 		for (auto& bufferData : quadBuffers)
@@ -598,7 +675,27 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 
 		glDisable(GL_TEXTURE_2D);
 		game->lastShader = nullptr;
+
+#ifdef SHOW_TIMINGS
+		glFinish();
+		static cAccumulatedTimeProfiler& p5 = Coral::createAccumulatedTimeProfile("cParticle::render 5");
+		p5.start();
+#endif
+
+
+#ifdef SHOW_TIMINGS
+		glFinish();
+		p2.stop();
+		p3.stop();
+		p4.stop();
+		p5.stop();
+#endif
+
 	}
+#ifdef SHOW_TIMINGS
+	glFinish();
+	p.stop();
+#endif
 }
 
 void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, cVector<int>& setAttributes) const

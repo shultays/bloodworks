@@ -1,0 +1,9 @@
+{
+  "type": "mission",
+  "name": "ParticleTest",
+  
+  "icon": "icon.png",
+  
+  "scriptFile" : "ParticleTest.lua",
+  "scriptName" : "ParticleTest"
+}

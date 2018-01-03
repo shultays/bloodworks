@@ -1,6 +1,6 @@
 #pragma once
 
-//#define SHOW_TIMINGS 
+#define SHOW_TIMINGS 
 
 #ifdef SHOW_TIMINGS
 

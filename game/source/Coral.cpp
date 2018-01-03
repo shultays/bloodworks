@@ -134,9 +134,12 @@ void Coral::tick()
 #endif
 
 #ifdef SHOW_TIMINGS
-			for (int i = 0; i < profilerCount; i++)
+			if (input.isKeyDown(key_f))
 			{
-				profilers[i].printResult();
+				for (int i = 0; i < profilerCount; i++)
+				{
+					profilers[i].printResult();
+				}
 			}
 #endif
 		}
@@ -163,6 +166,16 @@ void Coral::tick()
 
 			SDL_GL_SwapWindow(mainWindow);
 			lastDrawTime = timer.getRealTime();
+
+#ifdef SHOW_TIMINGS
+			if (input.isKeyDown(key_f))
+			{
+				for (int i = 0; i < profilerCount; i++)
+				{
+					profilers[i].printResult();
+				}
+			}
+#endif
 		}
 	}
 #ifdef SHOW_TIMINGS
