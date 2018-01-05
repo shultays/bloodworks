@@ -1,0 +1,11 @@
+{
+  "title" : "Faster Player",
+  "description" : "This mod will make your character move faster. Speed can be customized by editing mod config file which can be found in steam game folder.",
+  "picture" : "mod_icon.png",
+  
+  "meta" : "",
+  
+  "tags" : [ "other" ],
+  
+  "change_note" : "initial upload"
+}

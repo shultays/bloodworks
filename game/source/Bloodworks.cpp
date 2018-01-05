@@ -1246,6 +1246,10 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	{
 		missionController->addMission(j, f);
 	}
+	else if (type == "mission_mod")
+	{
+		missionController->addMissionMod(j, f);
+	}
 	else if (type == "animation_template")
 	{
 		cAnimationTemplate *animation = new cAnimationTemplate(j, f);

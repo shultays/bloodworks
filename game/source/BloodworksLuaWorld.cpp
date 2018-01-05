@@ -257,6 +257,66 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"playAnimation", &cAnimatedTexturedQuadRenderable::playAnimationWithName
 		);
 
+
+
+	lua.new_usertype<cPersistent>("Config",
+		"getBool", [](cPersistent* config, const std::string& name, bool val, const std::string& comment)
+	{
+		return config->getBool(name, val, comment.c_str());
+	},
+		"getFloat", [](cPersistent* config, const std::string& name, float val, const std::string& comment)
+	{
+		return config->getFloat(name, val, comment.c_str());
+	},
+		"getInt", [](cPersistent* config, const std::string& name, int val, const std::string& comment)
+	{
+		return config->getInt(name, val, comment.c_str());
+	},
+		"getVec2", [](cPersistent* config, const std::string& name, const Vec2& val, const std::string& comment)
+	{
+		return config->getVec2(name, val, comment.c_str());
+	},
+		"getIntVec2", [](cPersistent* config, const std::string& name, const IntVec2& val, const std::string& comment)
+	{
+		return config->getIntVec2(name, val, comment.c_str());
+	},
+		"getString", [](cPersistent* config, const std::string& name, const std::string& val, const std::string& comment)
+	{
+		return config->getString(name, val, comment.c_str());
+	},
+
+		"setBool", [](cPersistent* config, const std::string& name, bool val)
+	{
+		config->set(name, val);
+	},
+		"setFloat", [](cPersistent* config, const std::string& name, float val)
+	{
+		config->set(name, val);
+	},
+		"setInt", [](cPersistent* config, const std::string& name, int val)
+	{
+		config->set(name, val);
+	},
+		"setVec2", [](cPersistent* config, const std::string& name, const Vec2& val)
+	{
+		config->set(name, val);
+	},
+		"setIntVec2", [](cPersistent* config, const std::string& name, const IntVec2& val)
+	{
+		config->set(name, val);
+	},
+		"setString", [](cPersistent* config, const std::string& name, const std::string& val)
+	{
+		config->set(name, val);
+	}
+
+		);
+
+	lua.new_usertype<MissionMod>("MissionMod",
+		"data", &MissionMod::data,
+		"config", &MissionMod::persistent
+		);
+
 	lua.new_usertype<cParticleTemplate>("ParticleTemplate",
 
 		"setUniformFloat", [](cParticleTemplate* particle, const std::string& name, float val)
@@ -1341,6 +1401,12 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	{
 		return (int)bloodworks->getActivePerks().size();
 	});
+	lua.set_function("getActivePerk",
+		[&](int index)
+	{
+		return bloodworks->getActivePerks()[index];
+	});
+
 	lua.set_function("getActivePerk",
 		[&](int index)
 	{

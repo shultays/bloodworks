@@ -1,0 +1,16 @@
+
+
+# increase to make player go faster
+speedMult       10.50
+
+# increase to make player accelerate faster
+accelerationMult 2.0
+
+# increase to make player rotate faster
+rotateSpeedMult 1.50
+
+# decrease to make player shoot faster
+shootSpeedMult  1.0
+
+# increase to make player do more damage
+damageMult      1.0

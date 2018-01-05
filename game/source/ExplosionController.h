@@ -29,6 +29,7 @@ class ExplosionController
 	cVector<ExplosionData> explosions;
 	cParticle *explosionParticles;
 	bool noParticles;
+
 public:
 	ExplosionController(Bloodworks *bloodworks);
 	~ExplosionController();

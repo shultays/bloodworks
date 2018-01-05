@@ -22,11 +22,14 @@ del .\temp\bloodworks\stdout_to_send.txt
 del .\temp\bloodworks\uploader_stdout.txt
 del .\temp\bloodworks\bloodworks_debug.exe
 del .\temp\bloodworks\uploader_debug.exe
-del .\temp\bloodworks\mod_uploader\upload_mod_debug.exe
+del .\temp\bloodworks\mod_helper\upload_mod_debug.exe
 
 rmdir .\temp\bloodworks\resources\mods /s /q
 mkdir .\temp\bloodworks\resources\mods
 mkdir .\temp\bloodworks\resources\temp
+rmdir .\temp\bloodworks\resources\testmods /s /q
+rmdir .\temp\bloodworks\mod_configs /s /q
+mkdir .\temp\bloodworks\mod_configs
 
 del bloodworks.zip
 

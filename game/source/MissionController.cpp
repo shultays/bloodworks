@@ -32,6 +32,17 @@ MissionController::MissionController(Bloodworks *bloodworks)
 MissionController::~MissionController()
 {
 	reset();
+	for (auto mod : missionMods)
+	{
+		SAFE_DELETE(mod);
+	}
+	missionMods.clear();
+
+	for (auto mission : missions)
+	{
+		SAFE_DELETE(mission);
+	}
+	missions.clear();
 }
 
 void MissionController::tick()
@@ -49,6 +60,13 @@ void MissionController::tick()
 	lua["missionTime"] = timer.getTime() - missionLoadTime;
 	lua["missionLoadTime"] = missionLoadTime;
 	scriptTable["onTick"]();
+
+	missions[loadedMission]->persistent.check();
+
+	for (auto mod : missionMods)
+	{
+		mod->onTick();
+	}
 
 	cVector<int> toBeRemoved;
 	for (auto& g : gameObjects)
@@ -153,31 +171,35 @@ void MissionController::removeGameObject(int id)
 
 void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& file)
 {
-	MissionData data;
-	data.basePath = file.folder;
+	MissionData* data = new MissionData();
+	data->basePath = file.folder;
 	if (j.count("name"))
 	{
-		data.name = j["name"].get<std::string>();
+		data->name = j["name"].get<std::string>();
 	}
 	if (j.count("icon") && j["icon"].get<std::string>().size())
 	{
-		data.icon = file.folder + j["icon"].get<std::string>();
-		fixFilePath(data.icon);
+		data->icon = file.folder + j["icon"].get<std::string>();
+		fixFilePath(data->icon);
 	}
 	if (j.count("description"))
 	{
-		data.description = j["description"].get<std::string>();
+		data->description = j["description"].get<std::string>();
 	}
 
-	data.scriptName = j["scriptName"].get<std::string>();
-	data.scriptFile = file.folder + j["scriptFile"].get<std::string>();
-	fixFilePath(data.scriptFile);
+	data->scriptName = j["scriptName"].get<std::string>();
+	data->scriptFile = file.folder + j["scriptFile"].get<std::string>();
+	fixFilePath(data->scriptFile);
+
+
+	data->persistent.setFileBackup("mod_configs/" + data->scriptName + ".txt");
+
 	missions.push_back(data);
+}
 
-	if (data.scriptName == "Survival")
-	{
-		return;
-	}
+void MissionController::addMissionMod(nlohmann::json& j, const DirentHelper::File& file)
+{
+	missionMods.push_back(new MissionMod(j, file));
 }
 
 void MissionController::loadMission(const std::string& name)
@@ -186,19 +208,26 @@ void MissionController::loadMission(const std::string& name)
 	for (int i = 0; i<missions.size(); i++)
 	{
 		auto& mission = missions[i];
-		if (mission.scriptName == name)
+		if (mission->scriptName == name)
 		{
 			loadedMission = i;
-			scriptTable = lua[mission.scriptName] = lua.create_table();
+			scriptTable = lua[mission->scriptName] = lua.create_table();
 			missionLoadTime = timer.getTime();
 
 			lua["missionTime"] = timer.getTime() - missionLoadTime;
 			lua["missionLoadTime"] = missionLoadTime;
-			lua["missionScript"] = mission.scriptName;
-			lua["missionPath"] = mission.basePath;
+			lua["missionScript"] = mission->scriptName;
+			lua["missionPath"] = mission->basePath;
+			lua["missionConfig"] = mission->persistent;
 
-			lua.script_file(mission.scriptFile);
+			lua.script_file(mission->scriptFile);
 			scriptTable["init"]();
+
+			for (auto mod : missionMods)
+			{
+				mod->init();
+			}
+
 			missionLoopHandle = missionLoop.play();
 			updateMusicVolume();
 			return;
@@ -213,7 +242,7 @@ void MissionController::reset()
 	gameSpeedMultiplier.clear();
 	if (loadedMission >= 0)
 	{
-		scriptTable = lua[missions[loadedMission].scriptName] = lua.create_table();
+		scriptTable = lua[missions[loadedMission]->scriptName] = lua.create_table();
 		loadedMission = -1;
 	}
 	for (auto& g : gameObjects)
@@ -307,8 +336,49 @@ std::string MissionController::getCurrentMissionScript()
 {
 	if (loadedMission != -1)
 	{
-		return missions[loadedMission].scriptName;
+		return missions[loadedMission]->scriptName;
 	}
 	return "";
 }
 
+MissionMod::MissionMod(nlohmann::json& j, const DirentHelper::File& file)
+{
+	std::string scriptName = j["scriptName"].get<std::string>();
+	std::string scriptFile = file.folder + j["scriptFile"].get<std::string>();
+
+	lua[scriptName] = lua.create_table();
+
+	fixFilePath(scriptFile);
+	lua.script_file(scriptFile);
+
+	sol::table table = lua[scriptName];
+
+	initFunc = table["init"];
+	onTickFunc = table["onTick"];
+
+	persistent.setFileBackup("mod_configs/" + scriptName + ".txt");
+}
+
+MissionMod::~MissionMod()
+{
+	persistent.check();
+}
+
+void MissionMod::init()
+{
+	data = lua.create_table();
+	if (initFunc)
+	{
+		initFunc(this);
+	}
+}
+
+void MissionMod::onTick()
+{
+	if (onTickFunc)
+	{
+		onTickFunc(this);
+	}
+
+	persistent.check();
+}

@@ -1,0 +1,5 @@
+{
+  "type" : "mission_mod",
+  "scriptFile" : "BuffPlayer.lua",
+  "scriptName" : "BuffPlayer"
+}
