@@ -321,7 +321,7 @@ function ExpAroundPlayerObject.onTick(gameObject)
         gameObject.toBeRemoved = true
         alpha = 0.0
         t = 1.0
-        addExplosion(gameObject.data.pos, 50.0, 80.0, 20, 40, 0.2, true)
+        addExplosion(gameObject.data.pos, 50.0, 80.0, 20, 40, 0.2, true, nil, true)
         
         local d = gameObject.data.pos:distance(player.position)
         d = clamp(1.0 - d / 200.0) * 0.4
@@ -352,7 +352,7 @@ function NarSie.explosions(monster, init)
     if explosionsData.timeToShoot < 0.0 and explosionsData.count > 0 then
         explosionsData.timeToShoot = explosionsData.timeToShoot + explosionsData.interval
     
-        addExplosion(monster.position, 500.0, 150.0 * explosionsData.shootSpeed, 30 - explosionsData.count * 3, 40 - explosionsData.count * 3, 0.0, true)
+        addExplosion(monster.position, 500.0, 150.0 * explosionsData.shootSpeed, 30 - explosionsData.count * 3, 40 - explosionsData.count * 3, 0.0, true, nil, explosionsData.count ~= 6 and explosionsData.count ~= 3 )
         
         playSound({path = missionPath .. "narsie/explosion07.ogg", position = monster.position, volume = 1.5})
         explosionsData.count = explosionsData.count - 1

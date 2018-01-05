@@ -220,6 +220,15 @@ void BloodworksCheats::onTick()
 		out << "=======================================================\n";
 	}
 
+	if (input.isKeyPressed(key_l))
+	{
+		sleepMS(100);
+	}
+	if (input.isKeyDown(key_k))
+	{
+		sleepMS(100);
+	}
+
 	if (input.isKeyPressed(key_6))
 	{
 		sol::table t = lua.create_table();
