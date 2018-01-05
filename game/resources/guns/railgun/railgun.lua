@@ -23,13 +23,9 @@ function Railgun.onTick(gun)
             local bullet = gun:addBullet()
             bullet.penetrateCount = 4
             
-            local particle = bullet:addTrailParticle("RailGunParticle", Vec2.new(0.0, 0.0), 7.0, {})
+            bullet:addTrailParticle("RailGunParticle", Vec2.new(0.0, 0.0), 7.0, {})
             
-            particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-            particle.args.initialScale = 1.5
-            particle.args.initialAlpha = 0.2
-            particle.args.fadeOutSpeed = 0.3
-            particle.args.color = Vec3.new(1.0, 1.0, 1.0)
+            bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {initialScale = 1.5, initialAlpha = 0.2, fadeOutSpeed = 0.3, color = Vec3.new(1.0, 1.0, 1.0)})
             
             bullet.data.killCount = 0
         end

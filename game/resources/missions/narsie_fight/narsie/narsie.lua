@@ -507,11 +507,12 @@ function NarSie.sendFireBall(monster, s)
     bullet.radius = 6.0
     bullet:addRenderableTextureWithSize(monster.monsterTemplate.basePath .. "bullet.png", Vec2.new(4.0, 4.0))
     
-    particle = bullet:addTrailParticle("FlameParticle", Vec2.new(0.0, 0.0), 4.0, {initialScale = 150.0})
+    
+    -- fix
+    -- particle = bullet:addTrailParticle("FlameParticle", Vec2.new(0.0, 0.0), 4.0, {})
     
     particle = bullet:addTrailParticle("RocketSmokeParticle", Vec2.new(0.0, 0.0), 2.0, {})
     particle:addLinearRandom("fadeOutSpeed", 1.0, 1.4)
-    
     
     bullet.lifeTime = 9.0
     

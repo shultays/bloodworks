@@ -63,8 +63,7 @@ function RocketBarrage.onBulletTick(gun, bullet)
         bullet.data.particleT = bullet.data.particleT - dt
         if bullet.data.particleT < 0.0 then
             bullet.data.particleT = nil
-            local particle = bullet:addTrailParticle("RocketSmokeParticleBig", Vec2.new(0.0, 0.0), 7.0, {})
-            particle:addLinearRandom("fadeOutSpeed", 1.0, 1.4)
+            bullet:addTrailParticle("RocketSmokeParticleBig", Vec2.new(0.0, 0.0), 7.0, {})
         end
     end
 end

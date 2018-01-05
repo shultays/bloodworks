@@ -52,11 +52,6 @@ void LaserRenderable::setLength(float length)
 
 void LaserRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
-	extern bool renderParticleOnly;
-	if (renderParticleOnly)
-	{
-		return;
-	}
 	cRenderableWithShader::render(isIdentity, mat, crop);
 	shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
 	laserTemplate->render(laserLength);

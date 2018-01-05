@@ -62,6 +62,7 @@ class Bullet
 		Vec2 spawnShift;
 		float spawnDistance;
 		Vec2 lastSpawnPos;
+		bool shared;
 	};
 
 	cVector<Particledata> particles;

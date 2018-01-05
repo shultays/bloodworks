@@ -26,6 +26,12 @@
             "max"  : 0.5
         },
         {
+            "name" : "fadeOutSpeed",
+            "type" : "linear",
+            "min"  : 1.0,
+            "max"  : 1.4
+        },
+        {
             "name" : "initialScale",
             "type" : "linear",
             "min"  : 8.0,
@@ -42,12 +48,6 @@
             "type" : "linear",
             "min"  : 0.5,
             "max"  : 1.0
-        },
-        {
-            "name" : "fadeOutSpeed",
-            "type" : "linear",
-            "min"  : 0.4,
-            "max"  : 0.8
         }
     ]
 }

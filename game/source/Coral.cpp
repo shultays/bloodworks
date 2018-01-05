@@ -36,11 +36,6 @@ Coral::Coral()
 	cPackHelper::deleteFolder(TEMP_FOLDER, true, false);
 }
 
-bool disableAddParticle = false;
-bool renderParticleOnly = false;
-bool disableParticleRender = false;
-bool dontTickGame = false;
-
 void Coral::tick()
 {
 	if (lastFullScreen != fullScreen)
@@ -94,38 +89,10 @@ void Coral::tick()
 				lastUpdateTime = t;
 			}
 
-			if (input.isKeyPressed(key_1))
-			{
-				disableAddParticle = !disableAddParticle;
-			}
-			if (input.isKeyPressed(key_2))
-			{
-				disableParticleRender = !disableParticleRender;
-			}
-			if (input.isKeyPressed(key_3))
-			{
-				renderParticleOnly = !renderParticleOnly;
-			}
-			if (input.isKeyPressed(key_4))
-			{
-				dontTickGame = !dontTickGame;
-				if (dontTickGame)
-				{
-					game->setSlowdown(0.0f);
-				}
-				else
-				{
-					game->setSlowdown(1.0f);
-				}
-			}
-
 			slaveController->update();
 			debugRenderer.tick(timer.getDt());
 			input.preTick();
-			if (!dontTickGame)
-			{
-				game->tickInternal();
-			}
+			game->tickInternal();
 			input.tick();
 			mapper.check();
 

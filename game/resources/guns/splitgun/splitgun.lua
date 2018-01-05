@@ -22,10 +22,8 @@ function SplitGun.onTick(gun)
             gun:consumeAmmo()
             SpreadHelper.onShoot(gun)
             local bullet = gun:addBullet()
-            local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
+            bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {initialScale = 2.0, fadeOutSpeed = 1.2})
             bullet.data.remainingSplit = 2
-            particle.args.initialScale = 2.0
-            particle.args.fadeOutSpeed = 1.2
             playSound({path = SplitGun.basePath .. "split_gun.ogg"})
         end
     end
@@ -46,7 +44,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
         end
         if bullet.data.remainingSplit > 0 then
             local newBullet = gun:addBullet()
-            local particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
+            local particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, { doNotShare = true })
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
             particle.args.startFadeinSpeed = 10000.0
@@ -60,7 +58,7 @@ function SplitGun.onBulletHit(gun, bullet, monster)
             local prevBullet = newBullet
             
             newBullet = gun:addBullet()
-            particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
+            particle = newBullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, { doNotShare = true })
             particle.args.initialScale = 2.0
             particle.args.fadeOutSpeed = 1.2
             particle.args.startFadeinSpeed = 10000.0

@@ -20,8 +20,7 @@ function PlasmaGun.onTick(gun)
             gun:consumeAmmo()
             SpreadHelper.onShoot(gun)
             local bullet = gun:addBullet()
-            local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 3.0, {})
-            particle.args.color = Vec3.new(0.0, 0.6, 0.8)
+            bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 3.0, {color = Vec3.new(0.0, 0.6, 0.8)})
         end
     end
 end

@@ -4,11 +4,6 @@
 
 void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
-	extern bool renderParticleOnly;
-	if (renderParticleOnly)
-	{
-		return;
-	}
 	cRenderableWithShader::render(isIdentity, mat, crop);
 	font->texture->bindTexture();
 

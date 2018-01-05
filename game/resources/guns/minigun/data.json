@@ -15,11 +15,11 @@
   "firingSoundContinuous" : true,
   "firingSound" : {
     "path" : "shoot.ogg",
-    "volume" : 0.5
+    "volume" : 3.0
   },
   
   "firingSoundFadein" : 0.05,
-  "firingSoundFadeout" : 0.3,
+  "firingSoundFadeout" : 0.1,
   
   "scriptFile" : "minigun.lua",
   "scriptName" : "MiniGun"

@@ -279,20 +279,26 @@ int main(int argn, const char* argv[])
 	if (argn > 1)
 	{
 		path = argv[1];
-
-		if (GetFullPathName(path.c_str(), MAX_PATH, full_path, NULL))
-		{
-			path = full_path;
-		}
 	}
 	else
 	{
-		printf("enter mod folder: ");
+		printf("enter full path to mod folder: ");
 		fgets(full_path, 100, stdin);
 		path = full_path;
 	}
 
-	path = path + "\\";
+	if (path.size())
+	{
+		if (path[path.size() - 1] == '\n')
+		{
+			path.resize(path.size() - 1);
+		}
+
+		if (path[path.size() - 1] != '\\')
+		{
+			path = path + "\\";
+		}
+	}
 	
 	printf("full path: %s\n", path.c_str());
 

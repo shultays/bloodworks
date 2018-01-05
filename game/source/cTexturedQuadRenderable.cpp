@@ -5,11 +5,6 @@
 
 void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
-	extern bool renderParticleOnly;
-	if (renderParticleOnly)
-	{
-		return;
-	}
 	if (texture[0] == nullptr)
 	{
 		return;

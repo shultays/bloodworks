@@ -155,7 +155,7 @@ int RunMain()
 {
 	printStack(true);
 	bool hasException = false;
-	//if (Coral::isDebuggerPresent())
+	if (Coral::isDebuggerPresent())
 	{
 		ShowConsole();
 	}

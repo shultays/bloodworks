@@ -53,7 +53,14 @@ Bullet::~Bullet()
 	SAFE_DELETE(renderable);
 	for (int i = 0; i < particles.size(); i++)
 	{
-		bloodworks->addOrphanParticle(particles[i].particle);
+		if (particles[i].shared)
+		{
+			bloodworks->freeSharedParticle(particles[i].particle);
+		}
+		else
+		{
+			bloodworks->addOrphanParticle(particles[i].particle);
+		}
 	}
 	particles.clear();
 }
@@ -252,11 +259,26 @@ void Bullet::addRenderableTextureWithPosAndSize(const std::string& texture, cons
 cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, float spawnDistance, const sol::table& args)
 {
 	Particledata particleData;
-	particleData.particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
+	cParticleTemplate* particleTemplate = bloodworks->getParticleTemplate(name);
+
+	if (particleTemplate->isStripParticle() || args["doNotShare"] == true )
+	{
+		particleData.particle = new cParticle(bloodworks, particleTemplate, args);
+		particleData.shared = false;
+	}
+	else
+	{
+		particleData.particle = bloodworks->getSharedParticle(particleTemplate, renderable->getLevel() - 1, args);
+		particleData.shared = true;
+	}
+
 	particleData.spawnShift = shift;
 	particleData.lastSpawnPos = pos;
 	particleData.spawnDistance = spawnDistance;
-	bloodworks->addRenderable(particleData.particle, renderable->getLevel() - 1);
+	if (!particleData.shared)
+	{
+		bloodworks->addRenderable(particleData.particle, renderable->getLevel() - 1);
+	}
 	particles.push_back(particleData);
 	return particleData.particle;
 }

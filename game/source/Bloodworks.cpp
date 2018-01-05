@@ -597,6 +597,18 @@ void Bloodworks::clearMission()
 	}
 	orphanParticles.clear();
 
+	for (auto& particleList : sharedParticles)
+	{
+		cVector<SharedParticleData>& list = particleList.second;
+
+		for (int i = 0; i < list.size(); i++)
+		{
+			SAFE_DELETE(list[i].particle);
+		}
+	}
+
+	sharedParticles.clear();
+
 	for (auto& perk : perks)
 	{
 		perk->reset();
@@ -1114,6 +1126,53 @@ void Bloodworks::startSurvival()
 	else
 	{
 		loadMission("Survival");
+	}
+}
+
+cParticle* Bloodworks::getSharedParticle(cParticleTemplate* particleTemplate, int drawLevel, const sol::table& args)
+{
+	cVector<SharedParticleData>& list = sharedParticles[particleTemplate];
+
+	for (auto& data : list)
+	{
+		if (data.drawLevel == drawLevel)
+		{
+			data.count++;
+			return data.particle;
+		}
+	}
+
+	SharedParticleData data;
+	data.count = 1;
+	data.drawLevel = drawLevel;
+	data.particle = new cParticle(this, particleTemplate, args);
+	addRenderable(data.particle, drawLevel);
+
+	list.push_back(data);
+
+	return data.particle;
+}
+
+void Bloodworks::freeSharedParticle(cParticle* particle)
+{
+	cVector<SharedParticleData>& list = sharedParticles[particle->getParticleTemplate()];
+
+	for ( int i = 0; i < list.size(); i++ )
+	{
+		SharedParticleData& data = list[i];
+		if (data.particle == particle)
+		{
+			data.count--;
+			if (data.count == 0)
+			{
+				addOrphanParticle(data.particle);
+				list.swapToTailRemove(i);
+			}
+			else
+			{
+			}
+			return;
+		}
 	}
 }
 

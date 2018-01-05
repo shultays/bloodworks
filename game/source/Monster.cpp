@@ -106,6 +106,13 @@ Monster::~Monster()
 {
 	bloodworks->addOrphanParticle(particles);
 	particles.clear();
+
+	for (auto particle : sharedParticles)
+	{
+		bloodworks->freeSharedParticle(particle);
+	}
+	sharedParticles.clear();
+
 	SAFE_DELETE(renderable);
 	SAFE_DELETE(healthRenderable);
 }
@@ -500,9 +507,25 @@ bool Monster::shouldHit(Gun *gun)
 
 cParticle* Monster::addParticleSpawner(const std::string& name, sol::table& args)
 {
-	cParticle *particle = new cParticle(bloodworks, bloodworks->getParticleTemplate(name), args);
-	particles.push_back(particle);
-	bloodworks->addRenderable(particle, renderable->getLevel() + 1);
+	cParticleTemplate* particleTemplate = bloodworks->getParticleTemplate(name);
+	cParticle *particle;
+	int levelShift = 1;
+	if (args["levelShift"])
+	{
+		levelShift = args["levelShift"];
+	}
+	if (particleTemplate->isStripParticle() || args["doNotShare"] == true )
+	{
+		particle = new cParticle(bloodworks, particleTemplate, args);
+		particles.push_back(particle);
+		bloodworks->addRenderable(particle, renderable->getLevel() + levelShift);
+	}
+	else
+	{
+		particle = bloodworks->getSharedParticle(particleTemplate, renderable->getLevel() + levelShift, args);
+		sharedParticles.push_back(particle);
+	}
+
 	return particle;
 }
 

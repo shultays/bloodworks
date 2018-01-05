@@ -170,6 +170,7 @@ class cParticleTemplate : public cUniformDataWithShader
 	float maxLifeTime;
 	std::string scriptName;
 	sol::table scriptTable;
+	sol::function addParticle;
 
 	int attributeSize;
 
@@ -210,19 +211,7 @@ class cParticleTemplate : public cUniformDataWithShader
 public:
 	cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file);
 
-	~cParticleTemplate()
-	{
-		shader = nullptr;
-		for (auto& t : textures)
-		{
-			t = nullptr;
-		}
-		textures.clear();
-		for (auto& t : emptyBuffers)
-		{
-			glDeleteBuffers(1, &t);
-		}
-	}
+	~cParticleTemplate();
 
 	const std::string& getName() const
 	{
@@ -234,6 +223,10 @@ public:
 		return attributesMap[name];
 	}
 	bool needsLuaCall() const;
+	bool isStripParticle() const
+	{
+		return isStrip;
+	}
 };
 
 
@@ -241,7 +234,6 @@ class cParticle : public cRenderableWithShader
 {
 	float time;
 	cParticleTemplate *particleTemplate;
-	char *buff;
 
 	struct QuadBufferData
 	{
@@ -267,12 +259,7 @@ public:
 
 	void addTexture(const std::string& path);
 
-	~cParticle()
-	{
-		textures.clear();
-		SAFE_DELETE(buff);
-		clear();
-	}
+	~cParticle();
 
 	void addParticleInternal(const Vec2& pos, sol::table* params, cParticleRandomizer* randomizer = nullptr, bool bReplaceLast = false);
 	void addParticle(const Vec2& pos, sol::table& params)
@@ -366,4 +353,8 @@ public:
 	{
 		return time;
 	}
+
+	cVector< char > dataToPush;
+private:
+	void pushData();
 };

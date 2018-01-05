@@ -171,12 +171,6 @@ GroundRenderable::~GroundRenderable()
 
 void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
-
-	extern bool renderParticleOnly;
-	if (renderParticleOnly)
-	{
-		return;
-	}
 	bloodworks->lastShader = nullptr;
 	glEnable(GL_TEXTURE_2D);
 	cShaderShr shader = resources.getShader("resources/default");

@@ -129,6 +129,15 @@ class Bloodworks : public cGame
 	BloodworksSteam* bloodworksSteam;
 
 	bool firstTick;
+
+	struct SharedParticleData 
+	{
+		cParticle* particle;
+		int drawLevel;
+		int count;
+	};
+
+	std::map<const cParticleTemplate*, cVector< SharedParticleData > > sharedParticles;
 protected:
 	virtual void render() override;
 	virtual void tick() override;
@@ -315,4 +324,7 @@ public:
 	{
 		return firstTick;
 	}
+
+	cParticle* getSharedParticle(cParticleTemplate* particleTemplate, int drawLevel, const sol::table& args);
+	void freeSharedParticle(cParticle* particle);
 };

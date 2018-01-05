@@ -97,21 +97,6 @@ void BloodworksCheats::onTick()
 	const cVector<Bonus*>& bonuses = bloodworks->getBonuses();
 	const cVector<Gun*>& guns = bloodworks->getGuns();
 
-	if (input.isKeyPressed(key_5))
-	{
-		for (int i = 0; i < guns.size(); i++)
-		{
-			dropController->spawnGun(player->getPosition() + Vec2(-100, i * 50.0f - guns.size() * 25.0f), i);
-		}
-
-		for (int i = 0; i < bonuses.size(); i++)
-		{
-			dropController->spawnBonus(player->getPosition() + Vec2(100, i * 50.0f - bonuses.size() * 25.0f), i);
-		}
-	}
-
-	return;
-
 	if (hasCheats == false)
 	{
 		return;
@@ -228,6 +213,11 @@ void BloodworksCheats::onTick()
 	if (input.isKeyPressed(key_5) && bloodworks->isLevelUpPopupVisible() == false)
 	{
 		player->doLevelup();
+	}
+
+	if (input.isKeyPressed(key_space))
+	{
+		out << "=======================================================\n";
 	}
 
 	if (input.isKeyPressed(key_6))

@@ -16,9 +16,7 @@ function Shotgun.onTick(gun)
             local killCount = { c = 0}
             for i = 1, 10 do
                 local bullet = gun:addBullet()
-                local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-                particle.args.initialScale = 2.5
-                particle.args.fadeOutSpeed = 1.6
+                bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {initialScale = 2.5, fadeOutSpeed = 1.6})
                 bullet.moveSpeed = bullet.moveSpeed * (math.random() * 0.4 + 0.6)
                 bullet.data.killCount = killCount
             end

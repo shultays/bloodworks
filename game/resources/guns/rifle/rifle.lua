@@ -21,12 +21,9 @@ function Rifle.onTick(gun)
             gun:consumeAmmo()
             SpreadHelper.onShoot(gun)
             local bullet = gun:addBullet()
-            local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-            particle.args.initialScale = 3.0
-            particle.args.fadeOutSpeed = 0.8
+            bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {initialScale = 3.0, fadeOutSpeed = 0.8})
         end
     end
-    
 end
 
 

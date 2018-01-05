@@ -92,6 +92,7 @@ class Monster
 	float dropChance;
 
 	cVector<cParticle*> particles;
+	cVector<cParticle*> sharedParticles;
 
 	struct Knockback 
 	{

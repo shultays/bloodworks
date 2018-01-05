@@ -22,7 +22,7 @@ function HomingOrb.spawn(bonus, pos)
         bullet.penetrateCount = math.floor(6 * player.data.bonusDurationMultiplier)
         bullet.damage = math.floor(math.random() * 70 + 60)
         bullet.data.monster = monster
-        local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 20.0, {})
+        local particle = bullet:addTrailParticle("PlasmaTrailParticle", Vec2.new(0.0, 0.0), 20.0, { doNotShare = true })
         particle.args.color = Vec3.new(0.8, 0.7, 0.1)
         particle.args.initialScale = 10.0
         particle.args.initialAlpha = 0.4

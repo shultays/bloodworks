@@ -32,7 +32,7 @@ function MiniGun.onTick(gun)
     end
     if shoot then
         if data.waitTime == 0.0 then
-            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.4})
+            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.7})
             data.shootStarted = true
         end
         data.waitTime = data.waitTime + dt
@@ -48,9 +48,7 @@ function MiniGun.onTick(gun)
                 bullet.onDamageArgs.customSlowdownAmount = 4.0
                 bullet.onDamageArgs.slowdownOnly = true
                 
-                local particle = bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, {})
-                particle.args.initialScale = 2.0
-                particle.args.fadeOutSpeed = 1.2
+                bullet:addTrailParticle("BulletTrailParticle", Vec2.new(0.0, 14.0), 15.0, { initialScale = 2.0, fadeOutSpeed = 1.2})
             end
         end
     else
@@ -60,7 +58,7 @@ function MiniGun.onTick(gun)
             data.cooldown = false
          else 
             if data.cooldown == false then
-                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.4})
+                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.6})
                 data.cooldown = true
             end
          end
