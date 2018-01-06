@@ -126,7 +126,7 @@ void Bullet::tick()
 
 			particleData.lastSpawnPos += toFinalPos * particleData.spawnDistance;
 
-			if (particleData.particle->getParticleTemplate()->needsLuaCall())
+			if (particleData.particle->getParticleTemplate()->needsLuaCall() )
 			{
 				particleData.particle->addParticle(particleData.lastSpawnPos, particleArgs);
 			}
@@ -272,6 +272,7 @@ cParticle* Bullet::addTrailParticle(const std::string& name, const Vec2& shift, 
 		particleData.shared = true;
 	}
 
+	particleData.hasArgs = args.size() > 0;
 	particleData.spawnShift = shift;
 	particleData.lastSpawnPos = pos;
 	particleData.spawnDistance = spawnDistance;

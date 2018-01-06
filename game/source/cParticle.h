@@ -5,6 +5,7 @@
 #include "json.h"
 #include "sol.h"
 #include "DirentHelper.h"
+#include <list>
 
 class cParticle;
 
@@ -242,14 +243,19 @@ class cParticle : public cRenderableWithShader
 		float timeToDie;
 	};
 
+	bool staticParticleBuffers;
+
 	int maxBufferSize;
-	cVector<QuadBufferData> quadBuffers;
+	std::list<QuadBufferData> quadBuffers;
 
 	bool nextIsStripBegining;
 	cVector<cTextureShr> textures;
 	cUniformDataWithShader uniformData;
 
 	cParticleRandomizer randomizer;
+	int lastDirtyCount;
+
+	cVector< char > dataToPush;
 public:
 	sol::table args; // todo move to private
 
@@ -278,21 +284,7 @@ public:
 		return quadBuffers.size() > 0;
 	}
 
-	void clear()
-	{
-		for (auto& bufferData : quadBuffers)
-		{
-			if (particleTemplate->emptyBuffers.size() < maxBufferSize * 2)
-			{
-				particleTemplate->emptyBuffers.push_back(bufferData.quadBuffer);
-			}
-			else
-			{
-				glDeleteBuffers(1, &bufferData.quadBuffer);
-			}
-		}
-		quadBuffers.clear();
-	}
+	void clear();
 
 	cParticleTemplate* getParticleTemplate() const
 	{
@@ -354,7 +346,5 @@ public:
 		return time;
 	}
 
-	cVector< char > dataToPush;
-private:
 	void pushData();
 };

@@ -10,6 +10,7 @@
 #include "cPackHelper.h"
 #include "cTimeProfiler.h"
 #include "cSteam.h"
+#include "cParticle.h"
 
 #define CURL_STATICLIB 
 #include <curl/curl.h>
@@ -22,7 +23,7 @@ GLuint postProcessQuad;
 extern SDL_Window *mainWindow;
 
 #ifdef SHOW_TIMINGS
-cAccumulatedTimeProfiler profilers[512];
+cAccumulatedTimeProfiler profilers[1024];
 int profilerCount = 0;
 #endif
 
@@ -33,7 +34,10 @@ Coral::Coral()
 
 	tempFrameBuffer[0] = -1;
 	noSleep = false;
+	dirtyParticleIndex = 0;
 	cPackHelper::deleteFolder(TEMP_FOLDER, true, false);
+
+	dirtyParticles.reserve(1024);
 }
 
 void Coral::tick()
@@ -108,12 +112,35 @@ void Coral::tick()
 					profilers[i].printResult();
 				}
 			}
+			profilerCount = 0;
 #endif
 		}
 
 		if ((t = timer.getRealTime()) - lastDrawTime >= draw_interval * 0.95f)
 		{
 			ADD_SCOPED_TIME_PROFILER(">>>> render <<<<");
+
+#ifdef SHOW_TIMINGS
+			for (int i = 0; i < profilerCount; i++)
+			{
+				profilers[i].reset();
+			}
+#endif
+
+			dirtyParticleIndex++;
+			if (dirtyParticleIndex == -1)
+			{
+				dirtyParticleIndex++;
+			}
+			if (dirtyParticles.size())
+			{
+				for (auto p : dirtyParticles)
+				{
+					p->pushData();
+				}
+				dirtyParticles.clear();
+			}
+
 			if (tickedBeforeRender)
 			{
 				tickedBeforeRender = false;
@@ -142,6 +169,7 @@ void Coral::tick()
 					profilers[i].printResult();
 				}
 			}
+			profilerCount = 0;
 #endif
 		}
 	}
@@ -205,7 +233,9 @@ bool Coral::isDebuggerPresent()
 cAccumulatedTimeProfiler& Coral::createAccumulatedTimeProfile(const char *name)
 {
 #ifdef SHOW_TIMINGS
-	profilers[profilerCount] = cAccumulatedTimeProfiler(name);
+	assert(profilerCount < sizeof(profilers) / sizeof(profilers[0]));
+
+	profilers[profilerCount].setName(name);
 	return profilers[profilerCount++];
 #else
 	static cAccumulatedTimeProfiler dummy;
@@ -217,6 +247,16 @@ void Coral::clearWindow()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Coral::removeDirtyParticle(cParticle* particle)
+{
+	dirtyParticles.swapToTailRemoveElement(particle);
+}
+
+void Coral::addDirtyParticle(cParticle* particle)
+{
+	dirtyParticles.push_back(particle);
 }
 
 void Coral::initFrameBuffers()
@@ -349,4 +389,3 @@ void Coral::clear()
 	SAFE_DELETE(soundManager);
 	SAFE_DELETE(slaveController);
 }
-

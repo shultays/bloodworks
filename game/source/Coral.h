@@ -4,6 +4,7 @@
 
 
 #include "cDefines.h"
+#include "cVector.h"
 
 const float update_interval = 0.01f;
 const float draw_interval = 1.0f / 60.0f;
@@ -15,6 +16,7 @@ class StackWalkerToConsole;
 class cSlaveController;
 class cAccumulatedTimeProfiler;
 class CSteam;
+class cParticle;
 
 #define CHECK_GL_ERROR do{ int z = glGetError(); if (z != GL_NO_ERROR) out << "gl error (" << __FILE__ << ":" << __LINE__ << ") " << z << "\n"; } while(0)
 
@@ -41,6 +43,8 @@ class Coral
 	cSoundManager *soundManager;
 	cSlaveController *slaveController;
 
+	int dirtyParticleIndex;
+	cVector<cParticle*> dirtyParticles;
 #ifdef HAS_STEAM
 	CSteam *steam;
 #endif
@@ -108,4 +112,11 @@ public:
 
 	static cAccumulatedTimeProfiler& createAccumulatedTimeProfile(const char *name);
 	void clearWindow();
+
+	int getDirtyParticleIndex() const
+	{
+		return dirtyParticleIndex;
+	}
+	void removeDirtyParticle(cParticle* particle);
+	void addDirtyParticle(cParticle* particle);
 };

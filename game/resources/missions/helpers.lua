@@ -108,7 +108,6 @@ function makeBossDefault(monster, forceType)
         t = forceType
     end
     
-    t = 10
     
     if t == 1 then -- huge & tank
         monster.hitPoint = monster.hitPoint * 6

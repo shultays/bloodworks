@@ -1,3 +1,4 @@
+
 #include "cTimeProfiler.h"
 #ifdef SHOW_TIMINGS
 #include "cTools.h"
@@ -44,17 +45,6 @@ void cTimeProfiler::stop()
 	}
 }
 
-cAccumulatedTimeProfiler::cAccumulatedTimeProfiler(const char* text)
-{
-	strncpy_s(this->text, text, sizeof(this->text));
-	started = false;
-	reset();
-}
-
-cAccumulatedTimeProfiler::~cAccumulatedTimeProfiler()
-{
-}
-
 void cAccumulatedTimeProfiler::start()
 {
 	assert(started == false);
@@ -90,5 +80,12 @@ void cAccumulatedTimeProfiler::reset()
 	total = 0.0;
 }
 
+
+void cAccumulatedTimeProfiler::setName(const char *text)
+{
+	strncpy_s(this->text, text, sizeof(this->text));
+	started = false;
+	reset();
+}
 
 #endif

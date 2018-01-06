@@ -388,6 +388,11 @@ void Bloodworks::init()
 		extern bool disableParticle;
 		disableParticle = true;
 	}
+
+	static bool staticParticles = getConfig()->getBool("static_particles", true , "use static buffers for particles {toggling might help with performance)");
+
+	extern bool staticParticleBuffersG;
+	staticParticleBuffersG = staticParticles;
 }
 
 Bloodworks::Bloodworks()

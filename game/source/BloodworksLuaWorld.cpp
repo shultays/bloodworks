@@ -361,7 +361,10 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setColor", &cParticle::setColor,
 		"setWorldMatrix", &cParticle::setWorldMatrix,
 		"addParticle", &cParticle::addParticle,
-		"addParticleWithoutArgs", &cParticle::addParticleWithoutArgs,
+		"addParticleWithoutArgs", [](cParticle* particle, const Vec2& name)
+	{
+		particle->addParticleWithoutArgs(name);
+	}, 
 		"args", &cParticle::args,
 		"addLinearRandom", &cParticle::addLinearRandomizerWithName,
 		"addAngularRandom", &cParticle::addAngularRandomizerWithName,

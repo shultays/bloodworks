@@ -34,18 +34,18 @@ public:
 class cAccumulatedTimeProfiler
 {
 	std::chrono::high_resolution_clock::time_point startTime;
-	char text[64];
+	char text[256];
 	bool started;
 	double total;
 public:
 	cAccumulatedTimeProfiler(){}
-	cAccumulatedTimeProfiler(const char* text);
-	~cAccumulatedTimeProfiler();
 	void start();
 	void stop();
 	void printResult();
 	void reset();
+	void setName(const char *text);
 };
+
 
 #else
 
