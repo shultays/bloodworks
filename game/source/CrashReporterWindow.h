@@ -37,4 +37,5 @@ public:
 	CrashReportWindow(Bloodworks* bloodworks);
 	~CrashReportWindow();
 	void tick();
+	void windowResized();
 };

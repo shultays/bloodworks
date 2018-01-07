@@ -46,7 +46,11 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 	}
 	GL_CALL(glGenTextures(1, &gTexture));
 	GL_CALL(glBindTexture(GL_TEXTURE_2D, gTexture));
-	GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, data_fmt, surf->w, surf->h, 0, data_fmt, GL_UNSIGNED_BYTE, surf->pixels));
+	GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, data_fmt, GL_UNSIGNED_BYTE, surf->pixels));
+	if (hadGLError)
+	{
+		out << data_fmt << " " << surf->w << " " << surf->h << "\n";
+	}
 	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 	dimensions = IntVec2(surf->w, surf->h);

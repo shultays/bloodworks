@@ -55,21 +55,7 @@ void BloodworksSteam::openWorkshop()
 BloodworksSteam::BloodworksSteam(Bloodworks* bloodworks)
 {
 	this->bloodworks = bloodworks;
-	inited = coral.getSteam() && coral.getSteam()->isInited();
-
-	if (inited)
-	{
-		coral.getSteam()->init(g_Achievements, sizeof(g_Achievements) / sizeof(g_Achievements[0]),
-			g_Stats, sizeof(g_Stats) / sizeof(g_Stats[0]));
-	}
-
-	for (int n = 0; n < sizeof(g_Achievements) / sizeof(g_Achievements[0]); n++)
-	{
-		nameMap[g_Achievements[n].m_pchAchievementID] = (EAchievement) n;
-	}
-	assert(sizeof(g_Achievements) / sizeof(g_Achievements[0]) == ACH_COUNT);
-	assert(sizeof(g_Stats) / sizeof(g_Stats[0]) == STA_COUNT);
-	reset();
+	inited = false;
 }
 
 void BloodworksSteam::addAchievement(EAchievement achivement)
@@ -138,6 +124,31 @@ void BloodworksSteam::resetUser()
 	{
 		coral.getSteam()->getAchievements()->resetUser();
 	}
+}
+
+void BloodworksSteam::init()
+{
+	if (inited)
+	{
+		return;
+	}
+	out << "BloodworksSteam::init\n";
+	inited = coral.getSteam() && coral.getSteam()->isInited();
+
+	if (inited)
+	{
+		coral.getSteam()->init(g_Achievements, sizeof(g_Achievements) / sizeof(g_Achievements[0]),
+			g_Stats, sizeof(g_Stats) / sizeof(g_Stats[0]));
+	}
+
+	for (int n = 0; n < sizeof(g_Achievements) / sizeof(g_Achievements[0]); n++)
+	{
+		nameMap[g_Achievements[n].m_pchAchievementID] = (EAchievement)n;
+	}
+	assert(sizeof(g_Achievements) / sizeof(g_Achievements[0]) == ACH_COUNT);
+	assert(sizeof(g_Stats) / sizeof(g_Stats[0]) == STA_COUNT);
+	reset();
+	out << "BloodworksSteam::init fin\n";
 }
 
 void BloodworksSteam::tick()

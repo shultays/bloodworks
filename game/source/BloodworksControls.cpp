@@ -6,6 +6,7 @@ cVector<struct BloodworksControls::KeyData> BloodworksControls::keys;
 
 void BloodworksControls::init()
 {
+	out << "BloodworksControls::init\n";
 	const Key GameKeyValues[][4] =
 	{
 		{ key_w,					joystick_0_button_up },
@@ -41,7 +42,8 @@ void BloodworksControls::init()
 		"Toggle_Fullscreen",
 	};
 
-	mapper.setSavePath( (int)GameKey::Count, GameKeyNames, "keys.txt");
+	mapper.setSavePath((int)GameKey::Count, GameKeyNames, "keys.txt");
+	out << "BloodworksControls::init 1\n";
 	for (int i = 0; i < (int)GameKey::Count; i++)
 	{
 		BloodworksControls::KeyData keyData;
@@ -62,4 +64,5 @@ void BloodworksControls::init()
 		keyData.defaults[3] = GameKeyValues[i][3];
 		keys.push_back(keyData);
 	}
+	out << "BloodworksControls::init fin\n";
 }

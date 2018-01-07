@@ -6,26 +6,31 @@
 
 #ifdef HAS_STEAM
 
-CSteamAchievements::CSteamAchievements(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
+CSteamAchievements::CSteamAchievements()
 	: m_iAppID(0)
 	, m_bInitialized(false)
 	, m_CallbackUserStatsReceived(this, &CSteamAchievements::OnUserStatsReceived)
 	, m_CallbackUserStatsStored(this, &CSteamAchievements::OnUserStatsStored)
 	, m_CallbackAchievementStored(this, &CSteamAchievements::OnAchievementStored)
 {
+	inited = false;
+}
+
+void CSteamAchievements::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
+{
+	inited = true;
 	m_iAppID = SteamUtils()->GetAppID();
 	m_pAchievements = Achievements;
 	m_iNumAchievements = NumAchievements;
 
 	m_pStats = Stats;
 	m_iNumStats = NumStats;
-
+	dirtyStats = false;
 	requestStats();
 }
 
 CSteamAchievements::~CSteamAchievements()
 {
-
 }
 
 bool CSteamAchievements::requestStats()
@@ -99,36 +104,19 @@ bool CSteamAchievements::setStat(const char* ID, int val)
 void CSteamAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
 {
 	// we may get callbacks for other games' stats arriving, ignore them 
-	if (m_iAppID == pCallback->m_nGameID)
+	if (m_iAppID == pCallback->m_nGameID )
 	{
 		if (k_EResultOK == pCallback->m_eResult)
 		{
-			bool b = false;
-			out << ("Received stats and achievements from Steam\n");
-			m_bInitialized = true;
-			// load achievements 
-			for (int iAch = 0; iAch < m_iNumAchievements; ++iAch)
-			{
-				Achievement_t &ach = m_pAchievements[iAch];
-				b = SteamUserStats()->GetAchievement(ach.m_pchAchievementID, &ach.m_bAchieved);
-			}
 
-			// load stats 
-			for (int iStat = 0; iStat < m_iNumStats; ++iStat)
+			if (!inited)
 			{
-				Stat_t &stat = m_pStats[iStat];
-				switch (stat.m_eStatType)
-				{
-				case STAT_INT:
-					b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_iValue);
-					break;
-				case STAT_FLOAT:
-				case STAT_AVGRATE:
-					b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_flValue);
-					break;
-				default:
-					break;
-				}
+				dirtyStats = true;
+				out << "Received stats and achievements from Steam but not init yet\n";
+			}
+			else
+			{
+				updateStats();
 			}
 		}
 		else
@@ -192,14 +180,58 @@ void CSteamAchievements::resetUser()
 }
 
 
+void CSteamAchievements::tick()
+{
+	if (inited && dirtyStats)
+	{
+		updateStats();
+	}
+}
+
+void CSteamAchievements::updateStats()
+{
+	bool b = false;
+	out << "Received stats and achievements from Steam\n";
+	m_bInitialized = true;
+	// load achievements 
+	for (int iAch = 0; iAch < m_iNumAchievements; ++iAch)
+	{
+		Achievement_t &ach = m_pAchievements[iAch];
+		b = SteamUserStats()->GetAchievement(ach.m_pchAchievementID, &ach.m_bAchieved);
+	}
+
+	// load stats 
+	for (int iStat = 0; iStat < m_iNumStats; ++iStat)
+	{
+		Stat_t &stat = m_pStats[iStat];
+		switch (stat.m_eStatType)
+		{
+		case STAT_INT:
+			b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_iValue);
+			break;
+		case STAT_FLOAT:
+		case STAT_AVGRATE:
+			b = SteamUserStats()->GetStat(stat.m_pchID, &stat.m_flValue);
+			break;
+		default:
+			break;
+		}
+	}
+	out << "Received stats and achievements from Steam fin\n";
+	dirtyStats = false;
+}
+
 CSteam::CSteam()
 {
 	steamInited = SteamAPI_Init();
-	SteamUtils()->SetOverlayNotificationPosition(k_EPositionBottomLeft);
-	achivements = nullptr;
+	achivements = achivements = new CSteamAchievements();
 	if (!steamInited)
 	{
 		out << "Steam init failed\n";
+	}
+	else
+	{
+		SteamUtils()->SetOverlayNotificationPosition(k_EPositionBottomLeft);
 	}
 }
 
@@ -212,19 +244,23 @@ CSteam::~CSteam()
 
 void CSteam::tick()
 {
-	SteamAPI_RunCallbacks();
+	if (steamInited)
+	{
+		SteamAPI_RunCallbacks();
+		if (achivements)
+		{
+			achivements->tick();
+		}
+	}
 }
 
 void CSteam::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
 {
 	// Create the SteamAchievements object if Steam was successfully initialized 
-	if (steamInited)
-	{
-		achivements = new CSteamAchievements(
-			Achievements, NumAchievements,
-			Stats, NumStats
-		);
-	}
+	achivements->init(
+		Achievements, NumAchievements,
+		Stats, NumStats
+	);
 }
 
 

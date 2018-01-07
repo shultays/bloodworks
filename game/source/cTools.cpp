@@ -16,6 +16,9 @@
 #ifdef _WIN32
 #include "StackWalker.h"
 
+
+bool hadGLError = false;
+
 class StackWalkerToConsole : public StackWalker
 {
 protected:

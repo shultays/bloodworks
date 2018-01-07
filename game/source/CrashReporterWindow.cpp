@@ -48,7 +48,7 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	send->setHoverMatrix(Vec2(-shift, -150.0f), 1.1f, 0.0f);
 	send->setHitArea(-bgSize, bgSize);
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Send", 18.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Send (Enter)", 18.0f);
 	text->setWorldMatrix(Mat3::translationMatrix(0.0f, bgSize.h * 0.7f));
 	text->setTextAlignment(TextAlignment::center);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
@@ -67,7 +67,7 @@ CrashReportWindow::CrashReportWindow(Bloodworks* bloodworks)
 	cancel->setHitArea(-bgSize, bgSize);
 	cancel->setHoverSpeed(8.0f);
 
-	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Cancel", 18.0f);
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Cancel (Esc)", 18.0f);
 	text->setWorldMatrix(Mat3::translationMatrix(0.0f, bgSize.h * 0.7f));
 	text->setTextAlignment(TextAlignment::center);
 	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
@@ -110,10 +110,15 @@ void CrashReportWindow::tick()
 	cancel->check(input.getMousePos());
 	remember->check(input.getMousePos());
 
-	if (send->isClicked() || cancel->isClicked())
+	if (send->isClicked() || cancel->isClicked() || input.isKeyDown(key_return) || input.isKeyDown(key_escape))
 	{
 		remeberChoice = remember->isChecked();
-		shouldSend = send->isClicked();
+		shouldSend = send->isClicked() || input.isKeyDown(key_return);
 		closed = true;
 	}
+}
+
+void CrashReportWindow::windowResized()
+{
+
 }

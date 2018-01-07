@@ -352,8 +352,10 @@ void Bloodworks::initImplementation()
 
 void Bloodworks::init()
 {
+	out << "Bloodworks::init\n";
 	if (Coral::isDebuggerPresent() == false)
 	{
+		out << "Bloodworks::init no debug\n";
 		std::ifstream f(STD_OUTPUT_COPY);
 
 		if (f.good())
@@ -376,8 +378,10 @@ void Bloodworks::init()
 			}
 		}
 	}
+	out << "Bloodworks::init 1\n";
 	initImplementation();
 	updateZoom();
+	out << "Bloodworks::init 2\n";
 	static bool noSleep = !getConfig()->getBool("sleep_between_frames", false, "Disables CPU going idle, set to 0 if there are performance problems (will make your CPU scream in pain)");
 	if (noSleep == true)
 	{
@@ -393,12 +397,20 @@ void Bloodworks::init()
 
 	static bool staticParticles = getConfig()->getBool("static_particles", true , "use static buffers for particles {toggling might help with performance)");
 
+	out << "Bloodworks::init 3\n";
 	extern bool staticParticleBuffersG;
 	staticParticleBuffersG = staticParticles;
+
+	bloodworksSteam->init();
+
+	out << "Bloodworks::init 4\n";
+	out << "Bloodworks::init fin\n";
 }
 
 Bloodworks::Bloodworks()
 {
+	out << "Bloodworks::Bloodworks\n";
+
 	nextUniqueId = 1000;
 	nextGlobalUniqueId = 1;
 
@@ -415,6 +427,7 @@ Bloodworks::Bloodworks()
 	bloodworksSteam = new BloodworksSteam(this);
 	firstTick = true;
 	BloodworksControls::init();
+	out << "Bloodworks::Bloodworks fin\n";
 }
 
 Bloodworks::~Bloodworks()
@@ -517,8 +530,13 @@ bool Bloodworks::isLevelUpPopupVisible() const
 
 void Bloodworks::windowResized(int width, int height)
 {
-	updateZoom();
 	cGame::windowResized(width, height);
+	updateZoom();
+	if (crashReporterWindow)
+	{
+		crashReporterWindow->windowResized();
+		return;
+	}
 	mainMenu->resize();
 	player->resize();
 	missionController->repositionGUI();

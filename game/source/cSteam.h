@@ -43,8 +43,11 @@ private:
 	Stat_t *m_pStats; // Stats data 
 	int m_iNumStats; // The number of Stats
 
+	bool dirtyStats;
+	bool inited;
 public:
-	CSteamAchievements(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
+	CSteamAchievements();
+	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
 	~CSteamAchievements();
 	bool requestStats();
 	bool setAchievement(const char* ID);
@@ -57,6 +60,9 @@ public:
 	STEAM_CALLBACK(CSteamAchievements, OnAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
 
 	void resetUser();
+	void tick();
+private:
+	void updateStats();
 };
 
 class CSteam

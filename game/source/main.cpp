@@ -28,7 +28,7 @@ Coral coral;
 
 LONG __stdcall CrashHandler(PEXCEPTION_POINTERS pExceptionInfo)
 {
-
+	printStack();
 	out.close();
 	exit(0);
 	return EXCEPTION_EXECUTE_HANDLER;
