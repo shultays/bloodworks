@@ -670,13 +670,13 @@ void cParticle::pushData()
 	{
 		if (staticParticleBuffers)
 		{
-			int sizeToPush = min(dataToPush.size(), 512 * particleTemplate->attributeSize );
+			int sizeToPush = min(dataToPush.size() - sizeStart, 512 * particleTemplate->attributeSize );
 			QuadBufferData bufferData;
 			bufferData.count = 0;
 
-			glGenBuffers(1, &bufferData.quadBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeToPush, &dataToPush[0] + sizeStart, GL_STATIC_DRAW);
+			GL_CALL(glGenBuffers(1, &bufferData.quadBuffer));
+			GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
+			GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeToPush, &dataToPush[0] + sizeStart, GL_STATIC_DRAW));
 
 			bufferData.count += sizeToPush / particleTemplate->attributeSize;
 			bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
@@ -694,9 +694,9 @@ void cParticle::pushData()
 
 				if (particleTemplate->emptyBuffers.size() == 0)
 				{
-					glGenBuffers(1, &bufferData.quadBuffer);
-					glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
-					glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW);
+					GL_CALL(glGenBuffers(1, &bufferData.quadBuffer));
+					GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
+					GL_CALL(glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW));
 					bind = true;
 				}
 				else
@@ -713,13 +713,13 @@ void cParticle::pushData()
 
 			if (!bind)
 			{
-				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+				GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
 			}
 
 			int emptySize = (MAX_QUAD * 4 - bufferData.count) * particleTemplate->attributeSize;
 			int sizeToPush = min(dataToPush.size() - sizeStart, emptySize);
 
-			glBufferSubData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * bufferData.count, sizeToPush, &dataToPush[0] + sizeStart);
+			GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * bufferData.count, sizeToPush, &dataToPush[0] + sizeStart));
 
 			bufferData.count += sizeToPush / particleTemplate->attributeSize;
 			bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;

@@ -9,19 +9,20 @@ end
 
 function RocketBarrage.onTick(gun)
     local data = gun.data
-    if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
-        gun:consumeAmmo()
-        data.shooting = 2.0
-        data.shootDt = 0.0
-        local buff = player.maxRotateSpeed:addBuff(0.06)
-        player.maxRotateSpeed:setBuffDuration(buff, data.shooting + 0.3)
-        player.maxRotateSpeed:setBuffFadeInFadeOut(buff, 0.05, 0.3)
-        local buff = player.maxSpeed:addBuff(0.3)
-        player.maxSpeed:setBuffDuration(buff, data.shooting)
-        player.maxSpeed:setBuffFadeInFadeOut(buff, 0.1, 0.1)
-    end
     
-    if data.shooting > 0.0 then
+    if data.shooting <= 0.0 then
+        if gun.isTriggered and gun:hasAmmo()  then
+            gun:consumeAmmo()
+            data.shooting = 2.0
+            data.shootDt = 0.0
+            local buff = player.maxRotateSpeed:addBuff(0.06)
+            player.maxRotateSpeed:setBuffDuration(buff, data.shooting + 0.3)
+            player.maxRotateSpeed:setBuffFadeInFadeOut(buff, 0.05, 0.3)
+            local buff = player.maxSpeed:addBuff(0.3)
+            player.maxSpeed:setBuffDuration(buff, data.shooting)
+            player.maxSpeed:setBuffFadeInFadeOut(buff, 0.1, 0.1)
+        end
+    else
         player.canFireNextFrame = false
         data.shooting = data.shooting - dt
         data.shootDt = data.shootDt + dt * 80

@@ -247,34 +247,7 @@ public:
 	//}
 
 
-	GLuint buildShader(const std::string& name, const std::string& source, int shaderType)
-	{
-		assert(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
-
-
-		GLuint shader = glCreateShader(shaderType);
-		const char* cSource = source.c_str();
-		glShaderSource(shader, 1, &cSource, NULL);
-
-		glCompileShader(shader);
-		int compileStatus;
-
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-
-		if (!compileStatus) 
-		{
-			printErrorLog(name, shader);
-			return 0;
-		}
-		else
-		{
-#ifdef DEBUG
-			printWarningsLog(name, shader);
-#endif
-		}
-
-		return shader;
-	}
+	GLuint buildShader(const std::string& name, const std::string& source, int shaderType);
 
 	GLuint loadShader(const std::string& fileName, int shaderType)
 	{
@@ -317,45 +290,7 @@ public:
 		return pixelShaderFile;
 	}
 
-	bool loadFromFile(const std::string& vertexShaderFile, const std::string& pixelShaderFile)
-	{
-		out << "loading " << vertexShaderFile << " " <<  pixelShaderFile << "\n";
-		this->vertexShaderFile = vertexShaderFile;
-		this->pixelShaderFile = pixelShaderFile;
-
-		vertexShader = loadShader(vertexShaderFile, GL_VERTEX_SHADER);
-		if (!vertexShader) 
-		{
-			return false;
-		}
-		pixelShader = loadShader(pixelShaderFile, GL_FRAGMENT_SHADER);
-		if (!pixelShader) 
-		{
-			return false;
-		}
-
-		shaderProgram = glCreateProgram();
-		if (!shaderProgram) 
-		{
-			return false;
-		}
-		glAttachShader(shaderProgram, vertexShader);
-		glAttachShader(shaderProgram, pixelShader);
-
-		glLinkProgram(shaderProgram);
-
-		int linkStatus;
-		glGetShaderiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
-
-		if (!linkStatus)
-			return false;
-
-		glUseProgram(shaderProgram);
-		addDefaultUniforms();
-		addDefaultAttribs();
-
-		return true;
-	}
+	bool loadFromFile(const std::string& vertexShaderFile, const std::string& pixelShaderFile);
 
 	void begin() 
 	{

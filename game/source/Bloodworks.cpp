@@ -183,7 +183,9 @@ void Bloodworks::initImplementation()
 
 	if (!modsFolderDisabled)
 	{
+#ifdef HAS_STEAM
 		bloodworksSteam->loadWorkshopItems();
+#endif
 	}
 
 	if (isFirstTick())

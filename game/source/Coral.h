@@ -6,9 +6,6 @@
 #include "cDefines.h"
 #include "cVector.h"
 
-const float update_interval = 0.01f;
-const float draw_interval = 1.0f / 60.0f;
-
 extern GLuint postProcessQuad;
 
 class cSoundManager;
@@ -17,8 +14,6 @@ class cSlaveController;
 class cAccumulatedTimeProfiler;
 class CSteam;
 class cParticle;
-
-#define CHECK_GL_ERROR do{ int z = glGetError(); if (z != GL_NO_ERROR) out << "gl error (" << __FILE__ << ":" << __LINE__ << ") " << z << "\n"; } while(0)
 
 class Coral
 {

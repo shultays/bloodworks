@@ -29,6 +29,12 @@
 #undef max
 #endif
 
+#define CHECK_GL_ERROR { int z = glGetError(); if (z != GL_NO_ERROR) out << "gl error (" << __FILE__ << ":" << __LINE__ << ") 0x" << std::hex << z << std::dec << "\n"; } 
+
+#define CHECK_GL_ERROR_X(x) { int z = glGetError(); if (z != GL_NO_ERROR) out << "gl error " << x << " (" << __FILE__ << ":" << __LINE__ << ") 0x" << std::hex << z << std::dec << "\n"; } 
+
+#define GL_CALL(x) { CHECK_GL_ERROR_X("unchecked error"); x; CHECK_GL_ERROR_X(#x); } 
+
 template <class T>
 inline const T& min(const T& a, const T& b)
 {

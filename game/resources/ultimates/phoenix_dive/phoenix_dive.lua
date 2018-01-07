@@ -14,30 +14,30 @@ end
 
 function PhoenixDive.onTick(gun)
     local data = gun.data
-    if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
-        gun:consumeAmmo()
-        data.shooting = 0.6
-        
-        local buff = player.maxSpeed:addBuff(0.0)
-        player.maxSpeed:setBuffDuration(buff, data.shooting)
-        buff = player.maxRotateSpeed:addBuff(0.0)
-        player.maxRotateSpeed:setBuffDuration(buff, data.shooting)
-        buff = player.colorMultiplier:addBuff(Vec4.fromColor(0xFFFF8888))
-        player.colorMultiplier:setBuffDuration(buff, data.shooting)
-        player.colorMultiplier:setBuffFadeInFadeOut(buff, 0.1, 0.1)
-        data.moveAngle = player.aimAngle
-        
-        data.particleTime = 0.0
-        data.hitTime = 0.0
-        data.started = true
-        playSound({path = PhoenixDive.basePath .."dive.ogg", volume = 0.9})
-        player:addKnockback(Vec2.fromAngle(data.moveAngle) * 500.0, data.shooting)
-        data.achievementProcess = 0 
-    end
     
-    if data.shooting >= 0.0 then
+    if data.started == false then
+        if gun.isTriggered and gun:hasAmmo() then
+            gun:consumeAmmo()
+            data.shooting = 0.6
+            
+            local buff = player.maxSpeed:addBuff(0.0)
+            player.maxSpeed:setBuffDuration(buff, data.shooting)
+            buff = player.maxRotateSpeed:addBuff(0.0)
+            player.maxRotateSpeed:setBuffDuration(buff, data.shooting)
+            buff = player.colorMultiplier:addBuff(Vec4.fromColor(0xFFFF8888))
+            player.colorMultiplier:setBuffDuration(buff, data.shooting)
+            player.colorMultiplier:setBuffFadeInFadeOut(buff, 0.1, 0.1)
+            data.moveAngle = player.aimAngle
+            
+            data.particleTime = 0.0
+            data.hitTime = 0.0
+            data.started = true
+            playSound({path = PhoenixDive.basePath .."dive.ogg", volume = 0.9})
+            player:addKnockback(Vec2.fromAngle(data.moveAngle) * 500.0, data.shooting)
+            data.achievementProcess = 0 
+        end
+    else
         data.shooting = data.shooting - dt
-        
     end
     
     if data.started then

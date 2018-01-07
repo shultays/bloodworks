@@ -11,16 +11,17 @@ end
 function BigLaser.onTick(gun)
     gun.laser:setVisible(false)
     local data = gun.data
-    if gun.isTriggered and gun:hasAmmo() and data.shooting < 0.0 then
-        gun:consumeAmmo()
-        data.shooting = 2.5
-        
-        local buff = player.maxRotateSpeed:addBuff(0.1)
-        player.maxRotateSpeed:setBuffDuration(buff, data.shooting + 0.3)
-        player.maxRotateSpeed:setBuffFadeInFadeOut(buff, 0.05, 0.3)
-    end
-
-    if data.shooting > 0.0 then
+    
+    if data.shooting <= 0.0 then
+        if gun.isTriggered and gun:hasAmmo() then
+            gun:consumeAmmo()
+            data.shooting = 2.5
+            
+            local buff = player.maxRotateSpeed:addBuff(0.1)
+            player.maxRotateSpeed:setBuffDuration(buff, data.shooting + 0.3)
+            player.maxRotateSpeed:setBuffFadeInFadeOut(buff, 0.05, 0.3)
+        end
+    else
         player.canFireNextFrame = false
         data.shooting = data.shooting - dt
         gun.laser:setVisible(true)

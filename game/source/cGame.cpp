@@ -166,6 +166,8 @@ cGame::cGame()
 
 	first = new cRootRenderable();
 	first->level = -1;
+
+	backBuffer = 0;
 }
 
 cGame::~cGame()

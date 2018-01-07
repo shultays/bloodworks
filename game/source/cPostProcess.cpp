@@ -21,8 +21,11 @@ void cPostProcess::init(cGame* game, cShaderShr shader, int level /*= 10000*/)
 
 
 	screenSizeIndex = addUniformVec2("uScreen", game->getScreenDimensions().toVec());
+	CHECK_GL_ERROR;
 	timeIndex = addUniformFloat("uTime", timer.getTime());
+	CHECK_GL_ERROR;
 	zoomIndex = addUniformFloat("uZoom", game->getCameraZoom());
+	CHECK_GL_ERROR;
 }
 
 void cPostProcess::bind()

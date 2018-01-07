@@ -137,8 +137,12 @@ void MainMenu::resize()
 
 	mods->setDefaultMatrix(menuStart, Vec2(scale), 0.0f);
 	mods->setHoverMatrix(menuStart + Vec2(-10.0f, 0.0), Vec2(scale * 1.2f), 0.0f);
-
+	
+#ifdef HAS_STEAM
 	menuStart -= Vec2(0.0f, 50.0f * scale);
+#else
+	mods->setVisible(false);
+#endif
 
 	options->setDefaultMatrix(menuStart, Vec2(scale), 0.0f);
 	options->setHoverMatrix(menuStart + Vec2(-10.0f, 0.0), Vec2(scale * 1.2f), 0.0f);
@@ -206,7 +210,9 @@ void MainMenu::tick(bool hasPopup)
 		}
 		else if (mods->isClicked())
 		{
+#ifdef HAS_STEAM
 			bloodworks->getSteam()->openWorkshop();
+#endif
 		}
 		else if (credits->isClicked())
 		{
@@ -225,7 +231,9 @@ void MainMenu::setVisible(bool visible)
 
 	newGame->setVisible(visible);
 	customGames->setVisible(visible);
+#ifdef HAS_STEAM
 	mods->setVisible(visible);
+#endif
 	options->setVisible(visible);
 	credits->setVisible(visible);
 	quit->setVisible(visible);

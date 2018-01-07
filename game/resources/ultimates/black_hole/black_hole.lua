@@ -11,25 +11,26 @@ end
 function BlackHole.onTick(gun)
     local data = gun.data
     local duration = 6.0 * player.data.bonusDurationMultiplier
-    if gun.isTriggered and gun:hasAmmo() and data.started == false then
-        gun:consumeAmmo()
-        if gun.data.postprocess == nil then
-            gun.data.postprocess = addPostProcess("resources/post_process/blackhole.ps")
-        end
-        data.shooting = 0.0
-        data.started = true
-        data.postprocess:setEnabled(true)
-        data.ppos = player.position + player.aimDir * (player.crosshairDistance + 50.0)    
-        data.bodyIndex = addCircleCollider(data.ppos, 1.0)
-        setColliderFlags(data.bodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoBulletCollision)
-        
-        data.bulletBodyIndex = addCircleCollider(data.ppos, 1.0)
-        setColliderFlags(data.bulletBodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoPlayerCollision)
-        playSound({path = BlackHole.basePath .. "black_hole.ogg", position = data.ppos, volume = 1.2})
-        gun.data.achievementProcess = 0
-    end
     
-    if data.started then
+    if data.started == false then
+        if gun.isTriggered and gun:hasAmmo() then
+            gun:consumeAmmo()
+            if gun.data.postprocess == nil then
+                gun.data.postprocess = addPostProcess("resources/post_process/blackhole.ps")
+            end
+            data.shooting = 0.0
+            data.started = true
+            data.postprocess:setEnabled(true)
+            data.ppos = player.position + player.aimDir * (player.crosshairDistance + 50.0)    
+            data.bodyIndex = addCircleCollider(data.ppos, 1.0)
+            setColliderFlags(data.bodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoBulletCollision)
+            
+            data.bulletBodyIndex = addCircleCollider(data.ppos, 1.0)
+            setColliderFlags(data.bulletBodyIndex, CollisionFlags.NoMonsterCollision + CollisionFlags.NoPlayerCollision)
+            playSound({path = BlackHole.basePath .. "black_hole.ogg", position = data.ppos, volume = 1.2})
+            gun.data.achievementProcess = 0
+        end
+    else
         data.shooting = data.shooting + dt
         if data.shooting > duration then
             data.started = false

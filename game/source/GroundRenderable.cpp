@@ -27,27 +27,27 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		groundSize += 128;
 	}
 
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	GL_CALL(glGenFramebuffers(1, &frameBuffer));
+	GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
 
-	glGenTextures(1, &frameBufferTexture);
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, groundSize, groundSize, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	GL_CALL(glGenTextures(1, &frameBufferTexture));
+	GL_CALL(glBindTexture(GL_TEXTURE_2D, frameBufferTexture));
+	GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, groundSize, groundSize, 0, GL_RGB, GL_UNSIGNED_BYTE, 0));
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture, 0);
+	GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture, 0));
 
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 
 
-	glDrawBuffers(1, DrawBuffers);
+	GL_CALL(glDrawBuffers(1, DrawBuffers));
 	Vec4 color = Vec4::fromColor(0xFFFFFFFF);
 	glClearColor(color.r, color.g, color.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
 	glViewport(0, 0, groundSize, groundSize);
 	bloodworks->lastShader = nullptr;
 

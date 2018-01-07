@@ -20,6 +20,10 @@
 #endif
 GLuint postProcessQuad;
 
+const float update_interval = 0.01f;
+const float draw_interval = 1.0f / 60.0f;
+
+
 extern SDL_Window *mainWindow;
 
 #ifdef SHOW_TIMINGS
@@ -75,9 +79,9 @@ void Coral::tick()
 #endif
 
 			float updateDt = t - lastUpdateTime;
-			if (updateDt > update_interval * 2.0f )
+			if (updateDt > update_interval * 5.0f )
 			{
-				updateDt = update_interval * 2.0f;
+				updateDt = update_interval * 5.0f;
 			}
 
 			timer.currentTime = updateDt * slowdown + timer.currentTime;
@@ -265,52 +269,31 @@ void Coral::initFrameBuffers()
 	if (tempFrameBuffer[0] != -1)
 	{
 		glDeleteTextures(3, tempFrameBufferTexture);
-		CHECK_GL_ERROR;
 		glDeleteFramebuffers(3, tempFrameBuffer);
-		CHECK_GL_ERROR;
 	}
-	out << "Coral::initFrameBuffers 1\n";
 
-	CHECK_GL_ERROR;
-	glGenFramebuffers(3, tempFrameBuffer);
-	CHECK_GL_ERROR;
-	glGenTextures(3, tempFrameBufferTexture);
-	CHECK_GL_ERROR;
+	GL_CALL(glGenFramebuffers(3, tempFrameBuffer));
+	GL_CALL(glGenTextures(3, tempFrameBufferTexture));
 
-	out << "Coral::initFrameBuffers 2\n";
 	IntVec2 size = game->getScreenDimensions();
 
 	for (int i = 0; i < 3; i++)
 	{
-		out << "Coral::initFrameBuffers 3 " << i << "\n";
-		glBindFramebuffer(GL_FRAMEBUFFER, tempFrameBuffer[i]);
-		CHECK_GL_ERROR;
+		GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, tempFrameBuffer[i]));
 
-		out << "Coral::initFrameBuffers 4 " << i << "\n";
-		glBindTexture(GL_TEXTURE_2D, tempFrameBufferTexture[i]);
-		CHECK_GL_ERROR;
-		glTexImage2D(GL_TEXTURE_2D, 0, i < 2 ? GL_RGB : GL_RGBA, size.w, size.h, 0, i < 2 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		CHECK_GL_ERROR;
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, tempFrameBufferTexture[i]));
+		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, i < 2 ? GL_RGB : GL_RGBA, size.w, size.h, 0, i < 2 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, 0));
 
-		out << "Coral::initFrameBuffers 5 " << i << "\n";
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		CHECK_GL_ERROR;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		CHECK_GL_ERROR;
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 
-		out << "Coral::initFrameBuffers 6 " << i << "\n";
-		glGenerateMipmap(GL_TEXTURE_2D);
-		CHECK_GL_ERROR;
+		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
 
-		out << "Coral::initFrameBuffers 7 " << i << "\n";
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tempFrameBufferTexture[i], 0);
-		CHECK_GL_ERROR;
+		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tempFrameBufferTexture[i], 0));
 	}
 
-	out << "Coral::initFrameBuffers 8\n";
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	CHECK_GL_ERROR;
 	out << "Coral::initFrameBuffers fin\n";
 }
 

@@ -273,30 +273,32 @@ void BloodRenderable::init()
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
 	defaultPostProcessShader = resources.getShader("resources/post_process/default.vs", "resources/post_process/default.ps");
 
-	glGenFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer);
-	glGenTextures(BLOOD_BUFFER_COUNT, frameBufferTexture);
+	GL_CALL(glGenFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer));
+	GL_CALL(glGenTextures(BLOOD_BUFFER_COUNT, frameBufferTexture));
 
 	for (int i = 0; i < BLOOD_BUFFER_COUNT; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[i]);
 
-		glBindTexture(GL_TEXTURE_2D, frameBufferTexture[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bloodSize, bloodSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, frameBufferTexture[i]));
+		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bloodSize, bloodSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture[i], 0);
+		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture[i], 0));
 
 		GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 
-		glDrawBuffers(1, DrawBuffers);
+		GL_CALL(glDrawBuffers(1, DrawBuffers));
 		glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 	}
 	bloodworks->resetToBackBuffer();
+
+	CHECK_GL_ERROR_X("blood renderable init");
 }
 
 void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float size, std::list<BodyPartData>::iterator* insertPos)

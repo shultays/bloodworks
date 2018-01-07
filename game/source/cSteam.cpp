@@ -195,6 +195,7 @@ void CSteamAchievements::resetUser()
 CSteam::CSteam()
 {
 	steamInited = SteamAPI_Init();
+	SteamUtils()->SetOverlayNotificationPosition(k_EPositionBottomLeft);
 	achivements = nullptr;
 	if (!steamInited)
 	{

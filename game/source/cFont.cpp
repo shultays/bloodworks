@@ -70,9 +70,9 @@ cFont::cFont(const std::string& fontData)
 		};
 
 		GLuint vbo;
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+		GL_CALL(glGenBuffers(1, &vbo));
+		GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+		GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW));
 
 		charInfos[i].vbo = vbo;
 	}
