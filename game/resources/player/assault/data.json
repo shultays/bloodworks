@@ -19,7 +19,7 @@
     "minRotationSpeed": 3.0,
     "maxRotationSpeed": 10.0,
     
-    "maxSpeed" : 150.0,
+    "maxSpeed" : 170.0,
     "maxRotateSpeed" : 6.0,
     
     "bodyScale" : [0.21, 0.21],
