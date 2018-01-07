@@ -1,27 +1,28 @@
 #version 150
-attribute vec2 pos;
-attribute vec2 uv;
-attribute float time;
 
-attribute vec2 moveSpeed;
-attribute vec2 uvStart;
-attribute vec2 uvSize;
+in vec2 pos;
+in vec2 uv;
+in float time;
 
-attribute vec2 uvShift;
-attribute float color;
+in vec2 moveSpeed;
+in vec2 uvStart;
+in vec2 uvSize;
 
-attribute float maxTime;
-attribute float maxScale;
+in vec2 uvShift;
+in float color;
+
+in float maxTime;
+in float maxScale;
 
 uniform float uCurrentTime;
 uniform sampler2D uTexture0;
 uniform mat3 uViewMatrix;
 
-varying vec2 vVertexUV;
-varying vec2 vUVMid;
-varying vec2 vUVSize;
+out vec2 vVertexUV;
+out vec2 vUVMid;
+out vec2 vUVSize;
 
-varying vec4 vColor;
+out vec4 vColor;
 
 void main(void) 
 {

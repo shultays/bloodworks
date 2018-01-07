@@ -179,6 +179,8 @@ void Bloodworks::initImplementation()
 	loadMod("resources");
 
 
+	bloodworksSteam->init();
+
 	static bool modsFolderDisabled = config->getBool("all_mods_disabled", false, "Set if you don't want to load mods");
 
 	if (!modsFolderDisabled)
@@ -401,7 +403,6 @@ void Bloodworks::init()
 	extern bool staticParticleBuffersG;
 	staticParticleBuffersG = staticParticles;
 
-	bloodworksSteam->init();
 
 	out << "Bloodworks::init 4\n";
 	out << "Bloodworks::init fin\n";

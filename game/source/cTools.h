@@ -29,13 +29,9 @@
 #undef max
 #endif
 
-
 extern bool hadGLError;
-
 #define CHECK_GL_ERROR { hadGLError = false; int z = glGetError(); if (hadGLError = (z != GL_NO_ERROR)) out << "gl error (" << __FILE__ << ":" << __LINE__ << ") 0x" << std::hex << z << std::dec << "\n"; } 
-
 #define CHECK_GL_ERROR_X(x) { hadGLError = false; int z = glGetError(); if (hadGLError = (z != GL_NO_ERROR)) out << "gl error " << x << " (" << __FILE__ << ":" << __LINE__ << ") 0x" << std::hex << z << std::dec << "\n"; } 
-
 #define GL_CALL(x) { CHECK_GL_ERROR_X("unchecked error"); x; CHECK_GL_ERROR_X(#x); } 
 
 template <class T>

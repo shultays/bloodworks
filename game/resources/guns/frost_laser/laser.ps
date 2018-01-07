@@ -4,13 +4,15 @@ uniform float width1;
 uniform float width2;
 uniform float width3;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
-varying float curLength;
+in vec4 vColor;
+in vec2 vVertexUV;
+in float curLength;
 uniform float maxRange;
 uniform float time;
 
-varying float xPos;
+in float xPos;
+
+out vec4 outColor;
 
 void main(void) 
 {
@@ -20,6 +22,6 @@ void main(void)
 	{
 		color.a = ( t + 20.0) / 70.0;
 	}
-	gl_FragColor = texture2D(uTexture0, vVertexUV) * color;
-	gl_FragColor.a *= abs(sin((curLength - time * 200.0)/ 10.0)) * 0.4 + 0.6;
+	outColor = texture2D(uTexture0, vVertexUV) * color;
+	outColor.a *= abs(sin((curLength - time * 200.0)/ 10.0)) * 0.4 + 0.6;
 }

@@ -35,9 +35,7 @@ function FrostLaser.onTick(gun)
         local range = 350.0
         local result = getClosestMonsterOnLine(player.gunPos, player.aimDir * range,  0.0, {gun = gun, ignoreFlags = CollisionFlags.NoBulletCollision})
         range = result.distance
-        if range > 20 then
-            range = range - 20
-        end
+
         gun.laser:setLength(range)
         gun.laser:addUniformFloat("time", time)
         if ShootTimer.checkGun(gun) then

@@ -60,12 +60,14 @@ cFont::cFont(const std::string& fontData)
 			(charInfos[i].x + charInfos[i].w) / size.w - pad, charInfos[i].y / size.h + pad,
 			1.0f, 1.0f, 1.0f, 1.0f,
 
-			charInfos[i].w / (float)maxWidth,  0.0f,
-			(charInfos[i].x + charInfos[i].w) / size.w - pad, (charInfos[i].y + charInfos[i].h) / size.h - pad,
-			1.0f, 1.0f, 1.0f, 1.0f,
 
 			0.0f, 0.0f,
 			charInfos[i].x / size.w + pad, (charInfos[i].y + charInfos[i].h) / size.h - pad,
+			1.0f, 1.0f, 1.0f, 1.0f,
+
+
+			charInfos[i].w / (float)maxWidth,  0.0f,
+			(charInfos[i].x + charInfos[i].w) / size.w - pad, (charInfos[i].y + charInfos[i].h) / size.h - pad,
 			1.0f, 1.0f, 1.0f, 1.0f,
 		};
 

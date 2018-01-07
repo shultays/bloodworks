@@ -2,7 +2,9 @@
 uniform sampler2D uTexture0;
 uniform float uShaderAmount;
 
-varying vec2 vScreenUV;
+in vec2 vScreenUV;
+
+out vec4 outColor;
 
 void main(void) 
 {
@@ -11,5 +13,5 @@ void main(void)
 	float greenAmount = color.g * 0.8;
 	float blueAmount = color.b * 0.8;
 	
-    gl_FragColor = vec4(mix(color, vec3(redAmount, greenAmount, blueAmount), uShaderAmount), 1.0);
+    outColor = vec4(mix(color, vec3(redAmount, greenAmount, blueAmount), uShaderAmount), 1.0);
 }

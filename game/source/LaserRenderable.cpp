@@ -6,6 +6,7 @@
 #include "DirentHelper.h"
 
 GLuint laserQuad = -1;
+GLuint laserVertex = -1;
 
 LaserRenderable::LaserRenderable(Bloodworks *bloodworks, LaserTemplate *laserTemplate) : cRenderableWithShader((cGame*)bloodworks, laserTemplate->shader)
 {
@@ -66,13 +67,11 @@ void LaserRenderable::updateMatrix()
 void LaserTemplate::render(float laserLength)
 {
 	game->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
 	shader->begin();
-	glActiveTexture(0);
-	shader->setTexture0(0);
 	laserTexture->bindTexture();
 
 	glBindBuffer(GL_ARRAY_BUFFER, laserQuad);
+	glBindVertexArray(laserVertex);
 	shader->bindAttribute(aYShift.index, 4 * 5, 4 * 0);
 	shader->bindAttribute(widthMult1.index, 4 * 5, 4 * 1);
 	shader->bindAttribute(widthMult2.index, 4 * 5, 4 * 2);
@@ -87,7 +86,7 @@ void LaserTemplate::render(float laserLength)
 
 	shader->setUniform(laserWidth.index, laserThickness);
 
-	glDrawArrays(GL_QUADS, 0, 12);
+	glDrawArrays(GL_TRIANGLES, 0, 12);
 }
 
 LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j, const DirentHelper::File& file)
@@ -128,22 +127,36 @@ LaserTemplate::LaserTemplate(cGame *game, nlohmann::json& j, const DirentHelper:
 			-0.5f, 0.0f, 0.0f, 0.0f, 0.0f,
 			-0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
 			0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+
+			0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
 			0.5f, 0.0f, 0.0f, 0.0f, 0.0f,
+			-0.5f, 0.0f, 0.0f, 0.0f, 0.0f,
 
 			-0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
 			-0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
 			0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
+
+			0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
 			0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
+			-0.5f, 1.0f, 0.0f, 0.0f, 0.5f,
 
 			-0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
 			-0.5f, 1.0f, 1.0f, 1.0f, 1.0f,
 			0.5f, 1.0f, 1.0f, 1.0f, 1.0f,
+
+			0.5f, 1.0f, 1.0f, 1.0f, 1.0f,
 			0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
+			-0.5f, 1.0f, 1.0f, 0.0f, 0.5f,
 		};
 
 		glGenBuffers(1, &laserQuad);
 		glBindBuffer(GL_ARRAY_BUFFER, laserQuad);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+
+		glGenVertexArrays(1, &laserVertex);
+		glBindVertexArray(laserVertex);
+		glBindBuffer(GL_ARRAY_BUFFER, laserQuad);
 	}
 }
 

@@ -47,8 +47,9 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	glClearColor(color.r, color.g, color.b, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+
 	GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
-	glViewport(0, 0, groundSize, groundSize);
+	GL_CALL(glViewport(0, 0, groundSize, groundSize));
 	bloodworks->lastShader = nullptr;
 
 	{
@@ -69,6 +70,12 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 
 	SAFE_DELETE(bg);
 
+	{
+
+		//glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
+		//bloodworks->lastShader = nullptr;
+		//return;
+	}
 	cShaderShr brushShader = resources.getShader("resources/ground/brush");
 
 	cTextureShr perlin = resources.getTexture("resources/ground/perlin.png", true);
@@ -172,11 +179,12 @@ GroundRenderable::~GroundRenderable()
 void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	bloodworks->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
 	cShaderShr shader = resources.getShader("resources/default");
 	shader->begin();
+
 	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
+	glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
+	glBindVertexArray(quadBuffer);
 
 	shader->bindPosition(sizeof(float) * 8, 0);
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
@@ -186,11 +194,8 @@ void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cr
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 	shader->setWorldMatrix(Mat3::scaleMatrix(groundSize * 0.5f, -groundSize * 0.5f));
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glDisableVertexAttribArray(0);
-
-	glDisable(GL_TEXTURE_2D);
 	bloodworks->lastShader = nullptr;
 
 }

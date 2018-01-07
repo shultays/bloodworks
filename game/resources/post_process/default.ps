@@ -1,7 +1,9 @@
 #version 150
 uniform sampler2D uTexture0;
-varying vec2 vScreenUV;
+in vec2 vScreenUV;
+out vec4 outColor;
+
 void main(void) 
 {
-    gl_FragColor = texture2D(uTexture0, vScreenUV);
+    outColor = texture2D(uTexture0, vScreenUV);
 }

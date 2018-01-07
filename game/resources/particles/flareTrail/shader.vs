@@ -1,21 +1,22 @@
 #version 150
-attribute vec2 pos;
-attribute vec2 uv;
-attribute float time;
 
-attribute float color;
-attribute vec2 moveSpeed;
-attribute float initialScale;
-attribute float scaleSpeed;
-attribute float initialAlpha;
-attribute float fadeOutSpeed;
+in vec2 pos;
+in vec2 uv;
+in float time;
+
+in float color;
+in vec2 moveSpeed;
+in float initialScale;
+in float scaleSpeed;
+in float initialAlpha;
+in float fadeOutSpeed;
 
 uniform float uCurrentTime;
 uniform sampler2D uTexture0;
 uniform mat3 uViewMatrix;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
+out vec4 vColor;
+out vec2 vVertexUV;
 
 
 void main(void) 

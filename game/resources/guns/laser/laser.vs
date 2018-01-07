@@ -1,9 +1,9 @@
 #version 150
-attribute float yShift;
-attribute float widthMult1;
-attribute float widthMult2;
-attribute float widthMult3;
-attribute float xUV;
+in float yShift;
+in float widthMult1;
+in float widthMult2;
+in float widthMult3;
+in float xUV;
 
 uniform sampler2D uTexture0;
 uniform mat3 uWorldMatrix;
@@ -17,9 +17,9 @@ uniform float laserWidth;
 
 uniform float maxRange;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
-varying float curLength;
+out vec4 vColor;
+out vec2 vVertexUV;
+out float curLength;
 
 void main(void) 
 {

@@ -7,7 +7,8 @@
 
 class cGame;
 enum class RenderableAlignment;
-extern GLuint quad;
+extern GLuint defaultQuad;
+extern GLuint quadBuffer;
 
 class cRenderable
 {

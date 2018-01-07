@@ -112,6 +112,7 @@ void cGame::renderInternal()
 					lastShader = postProcesses[i]->shader;
 					postProcesses[i]->bind();
 					glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+					glBindVertexArray(postProcessVertex);
 
 					lastShader->bindUV(0, 0);
 					if (nextBackBufferIndex == 0)
@@ -127,7 +128,7 @@ void cGame::renderInternal()
 
 					lastShader->setTexture0(0);
 
-					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 				}
 			}
 		}
@@ -157,12 +158,19 @@ cGame::cGame()
 		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 		1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 		1.0f,  -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+
+		1.0f,  -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
 	};
 
-	glGenBuffers(1, &quad);
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
+	glGenBuffers(1, &defaultQuad);
+	glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, &quadBuffer);
+	glBindVertexArray(quadBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
 
 	first = new cRootRenderable();
 	first->level = -1;

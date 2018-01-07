@@ -1,15 +1,15 @@
 #version 150
-attribute vec2 pos;
-attribute vec2 uv;
-attribute float time;
-attribute float startFadeinSpeed;
+in vec2 pos;
+in vec2 uv;
+in float time;
+in float startFadeinSpeed;
 
-attribute vec3 color;
-attribute float initialScale;
-attribute float scaleSpeed;
-attribute float initialAlpha;
-attribute float fadeOutSpeed;
-attribute float rotation;
+in vec3 color;
+in float initialScale;
+in float scaleSpeed;
+in float initialAlpha;
+in float fadeOutSpeed;
+in float rotation;
 
 uniform float uCurrentTime;
 uniform sampler2D uTexture0;
@@ -17,8 +17,8 @@ uniform mat3 uViewMatrix;
 
 uniform float lastBulletTime;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
+out vec4 vColor;
+out vec2 vVertexUV;
 
 void main(void) 
 {

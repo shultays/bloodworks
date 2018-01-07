@@ -2,10 +2,11 @@
 uniform sampler2D uTexture0;
 uniform vec4 uCrop;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
-varying vec3 worldPos;
+in vec4 vColor;
+in vec2 vVertexUV;
+in vec3 worldPos;
 
+out vec4 outColor;
 
 void main(void) 
 {
@@ -15,5 +16,5 @@ void main(void)
 		discard;
 	}
 	vec4 v = texture2D(uTexture0, vVertexUV) * vColor;
-	gl_FragColor = v;
+	outColor = v;
 }

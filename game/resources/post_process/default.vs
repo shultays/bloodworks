@@ -1,9 +1,9 @@
 #version 150
-attribute vec2 aVertexUV;
+in vec2 aVertexUV;
 
 uniform sampler2D uTexture0;
 
-varying vec2 vScreenUV;
+out vec2 vScreenUV;
 
 void main(void) 
 {

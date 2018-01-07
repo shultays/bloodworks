@@ -102,6 +102,7 @@ public:
 
 	void resetUser() {}
 
+	void init() {}
 	void tick() {}
 	void reset() {}
 	void onMonsterDied(Monster* monster) {}

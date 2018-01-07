@@ -1,7 +1,7 @@
 #version 150
-attribute vec2 aVertexPosition;
-attribute vec2 aVertexUV;
-attribute vec4 aVertexColor;
+in vec2 aVertexPosition;
+in vec2 aVertexUV;
+in vec4 aVertexColor;
 
 uniform vec4 uColor;
 uniform sampler2D uTexture0;
@@ -12,8 +12,8 @@ uniform float uCurrentAmmo;
 uniform int uMaxAmmo;
 uniform float uReloading;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
+out vec4 vColor;
+out vec2 vVertexUV;
 
 void main(void) 
 {

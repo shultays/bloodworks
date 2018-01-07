@@ -288,7 +288,7 @@ void BloodworksSteam::loadWorkshopItems()
 
 void BloodworksSteam::onWorkshopItemInstalled(ItemInstalled_t *pParam)
 {
-	if (pParam->m_unAppID == SteamUtils()->GetAppID())
+	if (pParam->m_unAppID == SteamUtils()->GetAppID() && inited)
 	{
 		if (bloodworks->isMissionLoaded())
 		{

@@ -3,6 +3,7 @@
 #include "cTexture.h"
 #include "cGlobals.h"
 
+
 void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
 	if (texture[0] == nullptr)
@@ -12,17 +13,16 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AAR
 
 	cRenderableWithShader::render(isIdentity, mat, crop);
 
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
+	glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
+	glBindVertexArray(quadBuffer);
 
+	int n = -1;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
 	shader->bindPosition(sizeof(float) * 8, 0);
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
 	shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
 	shader->setColor(color);
-	shader->setTexture0(0);
-	shader->setTexture1(1);
-	shader->setTexture2(2);
-	shader->setTexture3(3);
 
 	for (int i = 3; i >= 0; i--)
 	{
@@ -33,13 +33,16 @@ void cTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AAR
 		}
 	}
 
+	shader->setTexture0(0);
+	shader->setTexture1(1);
+	shader->setTexture2(2);
+	shader->setTexture3(3);
+
+
 	shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(0);
-
-	glDisable(GL_TEXTURE_2D);
-
 
 	for (int i = 3; i >= 0; i--)
 	{

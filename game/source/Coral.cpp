@@ -19,6 +19,7 @@
 #include "Windows.h"
 #endif
 GLuint postProcessQuad;
+GLuint postProcessVertex;
 
 const float update_interval = 0.01f;
 const float draw_interval = 1.0f / 60.0f;
@@ -321,6 +322,7 @@ void Coral::init()
 	gameRunning = true;
 	fullScreen = false;
 	lastFullScreen = false;
+	CHECK_GL_ERROR;
 	SDL_GetWindowSize(mainWindow, &windowWidth, &windowHeight);
 
 	out << "Coral::init 4\n";
@@ -328,18 +330,19 @@ void Coral::init()
 	{
 		-1.0f, 1.0f,
 		1.0f,  1.0f,
-		1.0f,  -1.0f,
 		-1.0f, -1.0f,
+		1.0f,  -1.0f,
 	};
 
-	CHECK_GL_ERROR;
 	glGenBuffers(1, &postProcessQuad);
-	CHECK_GL_ERROR;
 	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
-	CHECK_GL_ERROR;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	CHECK_GL_ERROR;
 
+	glGenVertexArrays(1, &postProcessVertex);
+	glBindVertexArray(postProcessVertex);
+	glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+
+	CHECK_GL_ERROR;
 	out << "Coral::init 5\n";
 	timer.init();
 	input.init();

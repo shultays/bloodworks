@@ -1,18 +1,18 @@
 #version 150
-attribute vec2 pos;
-attribute vec2 speed;
-attribute float time;
-attribute vec2 uv;
+in vec2 pos;
+in vec2 speed;
+in float time;
+in vec2 uv;
 
-attribute vec2 prevpos;
-attribute vec2 prevspeed;
-attribute float prevtime;
+in vec2 prevpos;
+in vec2 prevspeed;
+in float prevtime;
 
 uniform float uCurrentTime;
 uniform mat3 uViewMatrix;
 
-varying float t;
-varying float y;
+out float t;
+out float y;
 
 void main(void) 
 {

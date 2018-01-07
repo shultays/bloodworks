@@ -15,8 +15,8 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, c
 
 		if (animations[currentAnimation].frames.size() > 0)
 		{
-
-			glBindBuffer(GL_ARRAY_BUFFER, quad);
+			glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
+			glBindVertexArray(quadBuffer);
 
 			shader->bindPosition(sizeof(float) * 8, 0);
 			shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
@@ -29,11 +29,7 @@ void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, c
 
 			texture->bindTexture();
 			shader->setWorldMatrix(isIdentity ? worldMatrix : worldMatrix * mat);
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-			glDisableVertexAttribArray(0);
-
-			glDisable(GL_TEXTURE_2D);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 	}
 }

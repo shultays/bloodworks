@@ -191,7 +191,12 @@ class cParticleTemplate : public cUniformDataWithShader
 	std::unordered_map<std::string, int> attributesMap;
 	cVector<cTextureShr> textures;
 	std::unordered_map<std::string, int> texturesMap;
-	cVector<GLuint> emptyBuffers;
+	struct EmptyBuffer
+	{
+		GLuint arrayBuffer;
+		GLuint vertexBuffer;
+	};
+	cVector<EmptyBuffer> emptyBuffers;
 
 	int posIndex;
 	int timeIndex;
@@ -238,7 +243,8 @@ class cParticle : public cRenderableWithShader
 
 	struct QuadBufferData
 	{
-		GLuint quadBuffer;
+		GLuint arrayBuffer;
+		GLuint vertexBuffer;
 		int count;
 		float timeToDie;
 	};

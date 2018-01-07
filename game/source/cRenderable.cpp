@@ -1,7 +1,8 @@
 #include "cRenderable.h"
 #include "cGame.h"
 
-GLuint quad = -1;
+GLuint defaultQuad = -1;
+GLuint quadBuffer = -1;
 
 cRenderable::cRenderable(cGame *game)
 {
@@ -35,5 +36,4 @@ void cRenderable::setLevel(int level)
 		game->addRenderable(this, level);
 	}
 }
-
 

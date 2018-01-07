@@ -23,7 +23,6 @@ cTexture::cTexture(const std::string& fileName, bool repeat)
 	if (surf == NULL)
 	{
 		out << "surface_error: " << fileName << " " << SDL_GetError() << "\n";
-		hasError = true;
 		return;
 	}
 

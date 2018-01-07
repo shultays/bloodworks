@@ -51,6 +51,7 @@ void addController(int id)
 bool Init()
 {
 	out << "init\n";
+	CHECK_GL_ERROR;
 	srand((int)time((time_t)0));
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
@@ -59,6 +60,10 @@ bool Init()
 		return false;
 	}
 
+	CHECK_GL_ERROR;
+	SetOpenGLAttributes();
+
+	CHECK_GL_ERROR;
 	out << "init 2\n";
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -81,9 +86,10 @@ bool Init()
 	out << "init 3\n";
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os, sol::lib::debug);
 
+
 	CHECK_GL_ERROR;
+
 	mainContext = SDL_GL_CreateContext(mainWindow);
-	SetOpenGLAttributes();
 	glewInit();
 	out << "init fin\n";
 	CHECK_GL_ERROR_X("init_end");
@@ -92,14 +98,15 @@ bool Init()
 
 bool SetOpenGLAttributes()
 {
+	int t = 0;
 	out << "SetOpenGLAttributes\n";
-	GL_CALL(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
-	GL_CALL(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3));
-	GL_CALL(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2));
-	GL_CALL(SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1));
-	CHECK_GL_ERROR;
+	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	t += SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	out << "SetOpenGLAttributes fin\n";
+	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+	out << "SetOpenGLAttributes fin" << t << "\n" ;
 	return true;
 }
 
@@ -159,20 +166,25 @@ int RunMain()
 		if (!Init())
 			return -1;
 
+		CHECK_GL_ERROR;
 		glEnable(GL_BLEND);
+		CHECK_GL_ERROR;
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_TEXTURE_2D);
+		CHECK_GL_ERROR;
 
 		glClearColor(0.0, 0.0, 0.0, 1.0);
+		CHECK_GL_ERROR;
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		CHECK_GL_ERROR;
 
 		SDL_GL_SwapWindow(mainWindow);
 		if (SDL_GL_SetSwapInterval(-1) != 0)
 		{
 			SDL_GL_SetSwapInterval(0);
 		}
-		debugRenderer.init();
 		InitGame();
+		debugRenderer.init();
 
 		RunGame();
 

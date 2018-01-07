@@ -7,6 +7,7 @@
 #include "cVector.h"
 
 extern GLuint postProcessQuad;
+extern GLuint postProcessVertex;
 
 class cSoundManager;
 class StackWalkerToConsole;

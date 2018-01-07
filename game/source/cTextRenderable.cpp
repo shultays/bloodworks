@@ -143,7 +143,7 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 				shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
 				shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
 
-				glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+				glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 				charSize = (float)info.w;
 			}
@@ -157,8 +157,6 @@ void cTextRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		}
 	}
 
-	glDisableVertexAttribArray(0);
-	glDisable(GL_TEXTURE_2D);
 }
 
 void cTextRenderable::setVerticalTextAlignment(VerticalTextAlignment verticalTextAlignment)

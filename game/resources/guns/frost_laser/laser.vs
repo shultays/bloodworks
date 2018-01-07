@@ -1,9 +1,10 @@
 #version 150
-attribute float yShift;
-attribute float widthMult1;
-attribute float widthMult2;
-attribute float widthMult3;
-attribute float xUV;
+
+in float yShift;
+in float widthMult1;
+in float widthMult2;
+in float widthMult3;
+in float xUV;
 
 uniform sampler2D uTexture0;
 uniform mat3 uWorldMatrix;
@@ -18,11 +19,11 @@ uniform float laserWidth;
 uniform float maxRange;
 uniform float time;
 
-varying vec4 vColor;
-varying vec2 vVertexUV;
-varying float curLength;
+out vec4 vColor;
+out vec2 vVertexUV;
+out float curLength;
 
-varying float xPos;
+out float xPos;
 void main(void) 
 {
 	curLength = width1 * widthMult1 + width2 * widthMult2 + width3 * widthMult3;

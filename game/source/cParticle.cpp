@@ -7,7 +7,7 @@
 #include "cTools.h"
 #include "cTimeProfiler.h"
 
-#define MAX_QUAD 1024
+#define MAX_VERTEX 512 * 6
 
 bool disableParticle;
 bool staticParticleBuffersG = true;
@@ -316,7 +316,9 @@ cParticleTemplate::~cParticleTemplate()
 	textures.clear();
 	for (auto& t : emptyBuffers)
 	{
-		glDeleteBuffers(1, &t);
+		EmptyBuffer& b = t;
+		glDeleteBuffers(1, &b.arrayBuffer);
+		glDeleteVertexArrays(1, &b.vertexBuffer);
 	}
 }
 
@@ -390,7 +392,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		pushData();
 	}
 
-	int particleNumToAdd = particleTemplate->isStrip ? 2 : 4;
+	int particleNumToAdd = particleTemplate->isStrip ? 2 : 6;
 	int dataSize = particleTemplate->attributeSize * particleNumToAdd;
 
 	int oldSize = dataToPush.size();
@@ -498,18 +500,23 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 		}
 	}
 
-	if (particleNumToAdd == 4)
+	if (particleNumToAdd == 6)
 	{
 		memcpy(buff + vertexSize * 1, buff, vertexSize);
 		memcpy(buff + vertexSize * 2, buff, vertexSize);
 		memcpy(buff + vertexSize * 3, buff, vertexSize);
+		memcpy(buff + vertexSize * 4, buff, vertexSize);
+		memcpy(buff + vertexSize * 5, buff, vertexSize);
 
 		if (particleTemplate->textures.size())
 		{
 			*(Vec2*)(buff + vertexSize * 0 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
 			*(Vec2*)(buff + vertexSize * 1 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 1.0f);
 			*(Vec2*)(buff + vertexSize * 2 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
-			*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+
+			*(Vec2*)(buff + vertexSize * 3 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 1.0f);
+			*(Vec2*)(buff + vertexSize * 4 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(1.0f, 0.0f);
+			*(Vec2*)(buff + vertexSize * 5 + particleTemplate->attributes[particleTemplate->uvIndex].begin) = Vec2(0.0f, 0.0f);
 		}
 	}
 	else
@@ -537,7 +544,7 @@ void cParticle::addParticleInternal(const Vec2& posInput, sol::table* paramsP, c
 	{
 		QuadBufferData &bufferData = quadBuffers.back();
 
-		glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, vertexSize * (bufferData.count - particleNumToAdd), vertexSize * particleNumToAdd, buff);
 		bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
 		dataToPush.resize(dataToPush.size() - dataSize);
@@ -564,19 +571,24 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 			{
 				if (staticParticleBuffers)
 				{
-					glDeleteBuffers(1, &(i->quadBuffer));
+					glDeleteBuffers(1, &(i->arrayBuffer));
+					glDeleteVertexArrays(1, &(i->vertexBuffer));
 					quadBuffers.erase(i++);
 				}
 				else
 				{
 					if (particleTemplate->emptyBuffers.size() < 50)
 					{
-						particleTemplate->emptyBuffers.push_back(i->quadBuffer);
+						cParticleTemplate::EmptyBuffer emptyBuffer;
+						emptyBuffer.arrayBuffer = i->arrayBuffer;
+						emptyBuffer.vertexBuffer = i->vertexBuffer;
+						particleTemplate->emptyBuffers.push_back(emptyBuffer);
 						quadBuffers.erase(i++);
 					}
 					else
 					{
-						glDeleteBuffers(1, &(i->quadBuffer));
+						glDeleteBuffers(1, &(i->arrayBuffer));
+						glDeleteVertexArrays(1, &(i->vertexBuffer));
 						quadBuffers.erase(i++);
 					}
 				}
@@ -608,12 +620,12 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 			pushData();
 		}
 
-		glEnableVertexAttribArray(0);
 		for (auto& bufferData : quadBuffers)
 		{
 			if (bufferData.count >= 4)
 			{
-				glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
+				glBindVertexArray(bufferData.vertexBuffer);
 
 				{
 					for (auto& attribute : particleTemplate->attributes)
@@ -625,11 +637,11 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 				{
 					if (particleTemplate->isStrip)
 					{
-						glDrawArrays(GL_QUAD_STRIP, 0, bufferData.count);
+						glDrawArrays(GL_TRIANGLE_STRIP, 0, bufferData.count);
 					}
 					else
 					{
-						glDrawArrays(GL_QUADS, 0, bufferData.count);
+						glDrawArrays(GL_TRIANGLES, 0, bufferData.count);
 					}
 				}
 			}
@@ -637,7 +649,6 @@ void cParticle::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 
 		glDisableVertexAttribArray(0);
 
-		glDisable(GL_TEXTURE_2D);
 		game->lastShader = nullptr;
 	}
 }
@@ -648,15 +659,20 @@ void cParticle::clear()
 	{
 		if (staticParticleBuffers)
 		{
-			glDeleteBuffers(1, &bufferData.quadBuffer);
+			glDeleteBuffers(1, &bufferData.arrayBuffer);
+			glDeleteVertexArrays(1, &bufferData.vertexBuffer);
 		}
 		else if (particleTemplate->emptyBuffers.size() < maxBufferSize * 2)
 		{
-			particleTemplate->emptyBuffers.push_back(bufferData.quadBuffer);
+			cParticleTemplate::EmptyBuffer emptyBuffer;
+			emptyBuffer.arrayBuffer = bufferData.arrayBuffer;
+			emptyBuffer.vertexBuffer = bufferData.vertexBuffer;
+			particleTemplate->emptyBuffers.push_back(emptyBuffer);
 		}
 		else
 		{
-			glDeleteBuffers(1, &bufferData.quadBuffer);
+			glDeleteBuffers(1, &bufferData.arrayBuffer);
+			glDeleteVertexArrays(1, &bufferData.vertexBuffer);
 		}
 	}
 	quadBuffers.clear();
@@ -670,13 +686,17 @@ void cParticle::pushData()
 	{
 		if (staticParticleBuffers)
 		{
-			int sizeToPush = min(dataToPush.size() - sizeStart, 512 * particleTemplate->attributeSize );
+			int sizeToPush = min(dataToPush.size() - sizeStart, 6 * 128 * particleTemplate->attributeSize );
 			QuadBufferData bufferData;
 			bufferData.count = 0;
 
-			GL_CALL(glGenBuffers(1, &bufferData.quadBuffer));
-			GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
-			GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeToPush, &dataToPush[0] + sizeStart, GL_STATIC_DRAW));
+			glGenBuffers(1, &bufferData.arrayBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeToPush, &dataToPush[0] + sizeStart, GL_STATIC_DRAW);
+
+			glGenVertexArrays(1, &bufferData.vertexBuffer);
+			glBindVertexArray(bufferData.vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
 
 			bufferData.count += sizeToPush / particleTemplate->attributeSize;
 			bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;
@@ -687,21 +707,27 @@ void cParticle::pushData()
 		else
 		{
 			bool bind = false;
-			if (quadBuffers.size() == 0 || quadBuffers.back().count == MAX_QUAD * 4)
+			if (quadBuffers.size() == 0 || quadBuffers.back().count == MAX_VERTEX)
 			{
 				QuadBufferData bufferData;
 				bufferData.count = 0;
 
 				if (particleTemplate->emptyBuffers.size() == 0)
 				{
-					GL_CALL(glGenBuffers(1, &bufferData.quadBuffer));
-					GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
-					GL_CALL(glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * 4 * MAX_QUAD, NULL, GL_DYNAMIC_DRAW));
+					glGenBuffers(1, &bufferData.arrayBuffer);
+					glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
+					glBufferData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * MAX_VERTEX, NULL, GL_DYNAMIC_DRAW);
+
+					glGenVertexArrays(1, &bufferData.vertexBuffer);
+					glBindVertexArray(bufferData.vertexBuffer);
+					glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
 					bind = true;
 				}
 				else
 				{
-					bufferData.quadBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1];
+					bufferData.arrayBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1].arrayBuffer;
+					bufferData.vertexBuffer = particleTemplate->emptyBuffers[particleTemplate->emptyBuffers.size() - 1].vertexBuffer;
+
 					particleTemplate->emptyBuffers.resize(particleTemplate->emptyBuffers.size() - 1);
 				}
 
@@ -713,13 +739,13 @@ void cParticle::pushData()
 
 			if (!bind)
 			{
-				GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bufferData.quadBuffer));
+				glBindBuffer(GL_ARRAY_BUFFER, bufferData.arrayBuffer);
 			}
 
-			int emptySize = (MAX_QUAD * 4 - bufferData.count) * particleTemplate->attributeSize;
+			int emptySize = (MAX_VERTEX - bufferData.count) * particleTemplate->attributeSize;
 			int sizeToPush = min(dataToPush.size() - sizeStart, emptySize);
 
-			GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * bufferData.count, sizeToPush, &dataToPush[0] + sizeStart));
+			glBufferSubData(GL_ARRAY_BUFFER, particleTemplate->attributeSize * bufferData.count, sizeToPush, &dataToPush[0] + sizeStart);
 
 			bufferData.count += sizeToPush / particleTemplate->attributeSize;
 			bufferData.timeToDie = timer.getTime() + particleTemplate->maxLifeTime;

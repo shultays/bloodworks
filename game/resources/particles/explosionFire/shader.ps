@@ -1,17 +1,19 @@
 #version 150
 uniform sampler2D uTexture0;
 
-varying vec2 vVertexUV;
-varying vec2 vUVMid;
-varying vec2 vUVSize;
-varying vec4 vColor;
+in vec2 vVertexUV;
+in vec2 vUVMid;
+in vec2 vUVSize;
+in vec4 vColor;
+
+out vec4 outColor;
 
 void main(void) 
 {
-	gl_FragColor = texture2D(uTexture0, vVertexUV);
-    gl_FragColor.rgb *= vColor.rgb;
+	outColor = texture2D(uTexture0, vVertexUV);
+    outColor.rgb *= vColor.rgb;
     
-    gl_FragColor.a *= 1.0 - length ( (vVertexUV - vUVMid ) / vUVSize ) / ( 0.5 * 0.5);
-    gl_FragColor.a = ( gl_FragColor.a - 0.1 ) * 1.5;
-    gl_FragColor.a  = clamp(gl_FragColor.a  * abs(gl_FragColor.a) * vColor.a, 0.0, 1.0) * 0.4;
+    outColor.a *= 1.0 - length ( (vVertexUV - vUVMid ) / vUVSize ) / ( 0.5 * 0.5);
+    outColor.a = ( outColor.a - 0.1 ) * 1.5;
+    outColor.a  = clamp(outColor.a  * abs(outColor.a) * vColor.a, 0.0, 1.0) * 0.4;
 }

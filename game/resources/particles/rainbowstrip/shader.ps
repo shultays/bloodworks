@@ -1,7 +1,7 @@
 #version 150
 
-varying float t;
-varying float y;
+in float t;
+in float y;
 
 
 uniform float uCurrentTime;
@@ -17,6 +17,8 @@ vec3 addSin(in vec3 color, in float hoffset, in float t, in float t2)
     return i * color;
 }
 
+
+out vec4 outColor;
 
 void main(void) 
 {
@@ -35,6 +37,6 @@ void main(void)
     a = max(a, c.b);
     a = min(a, 0.7) * t2;
     a *= clamp( 3.5 - t * 0.4, 0.0, 1.0 );
-	gl_FragColor = vec4(c , a );
+	outColor = vec4(c , a );
     
 }

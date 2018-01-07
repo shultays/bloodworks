@@ -672,7 +672,7 @@ void Player::tick()
 	{
 		if (legTimer < 1.0)
 		{
-			if (legTimer > 0.05f - legSpeed)
+			if (legTimer > 0.05f)
 			{
 				legTimer += legSpeed;
 			}
@@ -683,7 +683,7 @@ void Player::tick()
 		}
 		else if(legTimer < 2.0)
 		{
-			if (legTimer > 1.05f - legSpeed)
+			if (legTimer > 1.05f)
 			{
 				legTimer += legSpeed;
 			}
@@ -1012,7 +1012,7 @@ void Player::reset()
 	scaleMultiplier.setBaseValue(1.0f);
 	lastScale = 1.0f;
 	isDead = false;
-	legTimer = 1.0f;
+	legTimer = 2.0f;
 	reloadAlpha = 0.0f;
 	secondaryReloadAlpha = 0.0f;
 

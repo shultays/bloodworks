@@ -333,7 +333,7 @@ public:
 	{
 		Attribute& attribute = attributes[index];
 		glEnableVertexAttribArray(attribute.location);
-		glVertexAttribPointer(attribute.location, attribute.getCount(), attribute.getType(), attribute.isNormalized(), stride, (const void*)(long long)pointer);
+		glVertexAttribPointer(attribute.location, attribute.getCount(), GL_FLOAT, attribute.isNormalized(), stride, (const void*)(long long)pointer);
 	}
 
 

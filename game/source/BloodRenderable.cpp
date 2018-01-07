@@ -12,11 +12,11 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	bloodworks->lastShader = nullptr;
-	glEnable(GL_TEXTURE_2D);
 	cShaderShr shader = defaultShader;
 	shader->begin();
+	glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
+	glBindVertexArray(quadBuffer);
 	shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
-	glBindBuffer(GL_ARRAY_BUFFER, quad);
 
 	shader->bindPosition(sizeof(float) * 8, 0);
 	shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
@@ -26,11 +26,10 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, frameBufferTexture[0]);
 	shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(0);
 
-	glDisable(GL_TEXTURE_2D);
 	bloodworks->lastShader = nullptr;
 
 	if (bodyParts.size() > 0)
@@ -169,11 +168,13 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 			GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		bloodworks->lastShader = nullptr;
-		glEnable(GL_TEXTURE_2D);
 		shader = defaultShader;
 		shader->begin();
+
+		glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
+		glBindVertexArray(quadBuffer);
+
 		shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
-		glBindBuffer(GL_ARRAY_BUFFER, quad);
 
 		shader->bindPosition(sizeof(float) * 8, 0);
 		shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
@@ -183,11 +184,9 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, frameBufferTexture[1]);
 		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glDisableVertexAttribArray(0);
-
-		glDisable(GL_TEXTURE_2D);
 	}
 
 #endif
