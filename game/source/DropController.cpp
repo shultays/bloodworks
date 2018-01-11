@@ -19,12 +19,14 @@ DropController::~DropController()
 	reset();
 }
 
-void DropController::spawnGun(const Vec2& position, int forceIndex)
+int DropController::spawnGun(const Vec2& position, int forceIndex, float spawnTime)
 {
 	Drop drop;
 	drop.bonus = nullptr;
 	drop.time = timer.getTime();
 	drop.canFadeout = false;
+	drop.spawnTime = spawnTime;
+	drop.id = bloodworks->getUniqueId();
 	auto& guns = bloodworks->getGuns();
 
 	if (forceIndex == -1)
@@ -61,13 +63,17 @@ void DropController::spawnGun(const Vec2& position, int forceIndex)
 	bloodworks->addRenderable(drop.text, GUI - 10);
 
 	drops.push_back(drop);
+
+	return drop.id;
 }
 
-void DropController::spawnBonus(const Vec2& position, int forceIndex)
+int DropController::spawnBonus(const Vec2& position, int forceIndex, float spawnTime)
 {
 	Drop drop;
 	drop.canFadeout = false;
 	drop.time = timer.getTime();
+	drop.spawnTime = spawnTime;
+	drop.id = bloodworks->getUniqueId();
 	auto& bonuses = bloodworks->getBonuses();
 	if (forceIndex >= 0)
 	{
@@ -92,10 +98,12 @@ void DropController::spawnBonus(const Vec2& position, int forceIndex)
 	bloodworks->addRenderable(drop.text, GUI - 10);
 
 	drops.push_back(drop);
+	return drop.id;
 }
 
 void DropController::tick()
 {
+	LastEntrySet S("DropController::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "DropController::tick\n";
@@ -164,7 +172,7 @@ void DropController::tick()
 
 		if (!dontSpawnBonus)
 		{
-			if (drop.time + 45.0f < timer.getTime())
+			if (drop.time + drop.spawnTime < timer.getTime())
 			{
 				remove = true;
 			}
@@ -189,7 +197,7 @@ void DropController::tick()
 	}
 }
 
-void DropController::spawnDrop(const Vec2& position)
+int DropController::spawnDrop(const Vec2& position, float spawnTime)
 {
 	cVector<float> bonusChances;
 	bonusChances.resize(bloodworks->getBonuses().size());
@@ -216,11 +224,10 @@ void DropController::spawnDrop(const Vec2& position)
 			r -= bonusChances[i];
 			if (r < 0.00001f)
 			{
-				spawnBonus(position, i);
-				return;
+				return spawnBonus(position, i, spawnTime);
 			}
 		}
-		spawnBonus(position, bloodworks->getBonuses().size() - 1);
+		return spawnBonus(position, randInt(bloodworks->getBonuses().size()), spawnTime);
 	}
 	else
 	{
@@ -231,11 +238,10 @@ void DropController::spawnDrop(const Vec2& position)
 			r -= gunChances[i];
 			if (r < 0.00001f)
 			{
-				spawnGun(position, i);
-				return;
+				return spawnGun(position, i, spawnTime);
 			}
 		}
-		spawnGun(position, bloodworks->getGuns().size() - 1);
+		return spawnGun(position, randInt(bloodworks->getGuns().size()), spawnTime);
 	}
 }
 
@@ -297,7 +303,18 @@ void DropController::clearButHighlighted()
 	{
 		if (drop.pos.distanceSquared(crosshairPos) > 30.0f * 30.0f)
 		{
-			drop.time -= 50.0f;
+			drop.time -= 100.0f;
+		}
+	}
+}
+
+void DropController::removeDrop(int id)
+{
+	for (auto& drop : drops)
+	{
+		if (drop.id == id)
+		{
+			drop.spawnTime = 0.0f;
 		}
 	}
 }

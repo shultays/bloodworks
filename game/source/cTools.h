@@ -216,3 +216,21 @@ extern cDebugStream out;
 
 
 void SendReport(const std::string& message, bool useCopy = false);
+
+
+extern std::string lastEntry;
+
+class LastEntrySet
+{
+	std::string t;
+public:
+	LastEntrySet(const std::string& t)
+	{
+		this->t = t;
+		lastEntry = t;
+	}
+	~LastEntrySet()
+	{
+		lastEntry = std::string("~ ") + t;
+	}
+};

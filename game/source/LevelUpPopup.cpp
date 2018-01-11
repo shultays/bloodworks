@@ -199,6 +199,7 @@ void LevelUpPopup::show(bool setAlpha)
 
 void LevelUpPopup::tick()
 {
+	LastEntrySet S("LevelUpPopup::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "LevelUpPopup::tick\n";

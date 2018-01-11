@@ -44,6 +44,7 @@
 #include "BloodworksSteam.h"
 #include "PauseMenu.h"
 #include "TutorialMenu.h"
+#include "cPackHelper.h"
 #include <sstream>
 
 #ifdef HAS_BLOODWORKS_CHEATS
@@ -165,7 +166,9 @@ void Bloodworks::initImplementation()
 	collisionController = new CollisionController(this);
 	missionController = new MissionController(this);
 	oneShotSoundManager = new OneShotSoundManager(this);
+#ifdef MOD_WINDOW
 	modWindow = new ModWindow(this);
+#endif
 	creditsWindow = new CreditsWindow(this);
 	customGameWindow = new CustomGameWindow(this);
 
@@ -885,7 +888,9 @@ void Bloodworks::cancelSlaveWork(cSlaveWork* work)
 
 void Bloodworks::showMods()
 {
+#ifdef MOD_WINDOW
 	modWindow->setVisible(true, true);
+#endif
 }
 
 void Bloodworks::loadMod(const std::string& path, bool loadOnlyModData)
@@ -1070,7 +1075,9 @@ void Bloodworks::clear()
 	SAFE_DELETE(missionController);
 	SAFE_DELETE(collisionController);
 	SAFE_DELETE(oneShotSoundManager);
+#ifdef MOD_WINDOW
 	SAFE_DELETE(modWindow);
+#endif
 	SAFE_DELETE(creditsWindow);
 	SAFE_DELETE(customGameWindow);
 
@@ -1211,10 +1218,16 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	std::string type = j["type"].get<std::string>();
 	if (type == "mod")
 	{
+#ifdef MOD_WINDOW
 		modWindow->addInstalledMod(j, f);
+#endif
 	}
 
-	if (loadOnlyModData || (j.count("disabled") && j["disabled"].get<bool>() == true) || modWindow->isPathDisabled(f.folder))
+	if (loadOnlyModData || (j.count("disabled") && j["disabled"].get<bool>() == true)
+#ifdef MOD_WINDOW
+		|| modWindow->isPathDisabled(f.folder)
+#endif
+		)
 	{
 		return;
 	}
@@ -1242,7 +1255,14 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	{
 		Gun *gun = new Gun(this, j, f);
 		gun->setIndex(guns.size());
-		guns.push_back(gun);
+		if (gun->isUltimate())
+		{
+			guns.insert(guns.begin(), gun);
+		}
+		else
+		{
+			guns.push_back(gun);
+		}
 	}
 	else if (type == "bonus")
 	{
@@ -1323,6 +1343,7 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
+	LastEntrySet S("Bloodworks::tick");
 	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
 	if (firstTick)
 	{
@@ -1375,8 +1396,15 @@ void Bloodworks::tick()
 
 	if (isMissionLoaded() == false)
 	{
-		mainMenu->tick(optionsPopup->isVisible() || modWindow->isVisible() || creditsWindow->isVisible() || customGameWindow->isVisible() || ( tutorialMenu && tutorialMenu->isVisible()) );
+		mainMenu->tick(optionsPopup->isVisible() ||
+#ifdef MOD_WINDOW
+			modWindow->isVisible() || 
+#endif
+			creditsWindow->isVisible() || customGameWindow->isVisible() || ( tutorialMenu && tutorialMenu->isVisible()) );
+
+#ifdef MOD_WINDOW
 		modWindow->tick();
+#endif
 		creditsWindow->tick();
 		customGameWindow->tick();
 	}
@@ -1437,7 +1465,7 @@ void Bloodworks::tick()
 	levelUpPopup->tick();
 	tickGameSlowdown();
 
-	if (mapper.isKeyPressed(GameKey::Fullscreen))
+	if (mapper.isKeyPressed(GameKey::Fullscreen) && !optionsPopup->isVisible())
 	{
 		coral.setFullScreen(!coral.isFullScreen());
 		config->setFullScreen(coral.isFullScreen());

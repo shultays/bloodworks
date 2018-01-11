@@ -1,5 +1,9 @@
 #pragma once
 
+#include "cDefines.h"
+
+#ifdef MOD_WINDOW
+
 #include <string>
 #include "cPackHelper.h"
 #include "json.h"
@@ -451,3 +455,5 @@ public:
 		return password;
 	}
 };
+
+#endif

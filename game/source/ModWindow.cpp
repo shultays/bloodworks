@@ -1,4 +1,8 @@
 #include "ModWindow.h"
+
+
+#ifdef MOD_WINDOW
+
 #include "cRenderableContainer.h"
 #include "cTexturedQuadRenderable.h"
 #include "Bloodworks.h"
@@ -815,3 +819,5 @@ void ModWindow::FetchMod::runOnMain()
 		success = cPackHelper::unpackFile(ss.str(), folder);
 	}
 }
+
+#endif

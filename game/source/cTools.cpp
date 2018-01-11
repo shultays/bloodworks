@@ -17,6 +17,8 @@
 #include "StackWalker.h"
 
 
+std::string lastEntry;
+
 bool hadGLError = false;
 
 class StackWalkerToConsole : public StackWalker

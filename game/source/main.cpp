@@ -10,6 +10,7 @@
 #include "Bloodworks.h"
 #include "cPackHelper.h"
 
+
 std::string programName = "Bloodworks";
 
 SDL_Window *mainWindow;
@@ -28,6 +29,7 @@ Coral coral;
 
 LONG __stdcall CrashHandler(PEXCEPTION_POINTERS pExceptionInfo)
 {
+	out << "Last Entry : " << lastEntry << "\n";
 	printStack();
 	out.close();
 	exit(0);
@@ -51,25 +53,30 @@ void addController(int id)
 bool Init()
 {
 	out << "init\n";
-	CHECK_GL_ERROR;
+#ifdef HAS_STEAM
+	out << "STEAM\n";
+#else
+	out << "NO STEAM\n";
+#endif
+
+	out << __DATE__ << " " << __TIME__ << "\n";
+
 	srand((int)time((time_t)0));
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		out << "Failed to init SDL\n";
 		hasError = true;
+		CheckSDLError(__LINE__);
 		return false;
 	}
 
-	CHECK_GL_ERROR;
 	SetOpenGLAttributes();
 
-	CHECK_GL_ERROR;
 	out << "init 2\n";
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		800, 600, flags);
 
-	CHECK_GL_ERROR;
 	if (!mainWindow)
 	{
 		out << "Unable to create window\n";
@@ -87,10 +94,21 @@ bool Init()
 	lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::jit, sol::lib::os, sol::lib::debug);
 
 
-	CHECK_GL_ERROR;
 
 	mainContext = SDL_GL_CreateContext(mainWindow);
-	glewInit();
+	if (mainContext == nullptr)
+	{
+		out << "opengl context is null\n";
+		CheckSDLError(__LINE__);
+		return false;
+	}
+	GLenum  err = glewInit();
+	if (err != GLEW_OK) 
+	{
+		std::string glewError = (const char *)glewGetErrorString(err);
+		out << "glewInit failed: " << glewError << "\n";
+		CheckSDLError(__LINE__);
+	}
 	out << "init fin\n";
 	CHECK_GL_ERROR_X("init_end");
 	return true;
@@ -100,11 +118,11 @@ bool SetOpenGLAttributes()
 {
 	int t = 0;
 	out << "SetOpenGLAttributes\n";
-	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	t += SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	//t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	//t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	//t += SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
 	out << "SetOpenGLAttributes fin" << t << "\n" ;
 	return true;
@@ -188,6 +206,7 @@ int RunMain()
 
 		RunGame();
 
+		out << "Last Entry : " << lastEntry << "\n";
 		CHECK_GL_ERROR;
 		Cleanup();
 #ifdef _WIN32
@@ -198,6 +217,7 @@ int RunMain()
 	}
 	if (hasException)
 	{
+		out << "Last Entry : " << lastEntry << "\n";
 		if (mainWindow)
 		{
 			SDL_HideWindow(mainWindow);

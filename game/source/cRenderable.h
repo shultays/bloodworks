@@ -63,8 +63,9 @@ public:
 	
 	const Vec2& getPosition() const
 	{
-		return worldMatrix.row2.vec2;
+		return worldMatrix.row2().vec2();
 	}
+
 	void setWorldMatrix(const Mat3& worldMatrix);
 
 	virtual void setColor(const Vec4& color)

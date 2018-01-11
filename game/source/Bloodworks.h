@@ -76,7 +76,9 @@ class Bloodworks : public cGame
 	cPostProcess *pausePostProcess;
 	LevelUpPopup *levelUpPopup;
 	OptionsPopup *optionsPopup;
+#ifdef MOD_WINDOW
 	ModWindow *modWindow;
+#endif
 	CreditsWindow *creditsWindow;
 	CustomGameWindow *customGameWindow;
 	PauseMenu *pauseMenu;

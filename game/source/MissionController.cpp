@@ -47,6 +47,7 @@ MissionController::~MissionController()
 
 void MissionController::tick()
 {
+	LastEntrySet S("MissionController::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "MissionController::tick\n";

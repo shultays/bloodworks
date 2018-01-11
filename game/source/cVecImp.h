@@ -38,20 +38,6 @@ public:
 			G_VEC_TYPE w, h;
 		};
 #endif
-
-#ifdef G_VEC_PREV_1_CLASS
-		struct 
-		{
-			G_VEC_PREV_1_CLASS G_VEC_PREV_1_NAME;
-		};
-#endif
-#ifdef G_VEC_PREV_2_CLASS
-		struct 
-		{
-			G_VEC_PREV_2_CLASS G_VEC_PREV_2_NAME;
-		};
-#endif
-
 		struct 
 		{
 			G_VEC_TYPE x;
@@ -82,6 +68,29 @@ public:
 		/*for (int i = 0; i < GVEC_N; ++i)
 		data[i] = 0;*/
 	}
+
+
+#ifdef G_VEC_PREV_1_CLASS
+	G_VEC_PREV_1_CLASS& G_VEC_PREV_1_NAME()
+	{
+		return *(G_VEC_PREV_1_CLASS*)this;
+	}
+	const G_VEC_PREV_1_CLASS& G_VEC_PREV_1_NAME() const
+	{
+		return *(const G_VEC_PREV_1_CLASS*)this;
+	}
+#endif
+
+#ifdef G_VEC_PREV_2_CLASS
+	G_VEC_PREV_2_CLASS& G_VEC_PREV_2_NAME()
+	{
+		return *(G_VEC_PREV_2_CLASS*)this;
+	}
+	const G_VEC_PREV_2_CLASS& G_VEC_PREV_2_NAME() const
+	{
+		return *(const G_VEC_PREV_2_CLASS*)this;
+	}
+#endif
 
 	static const G_VEC_IMP_NAME& zero()
 	{

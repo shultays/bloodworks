@@ -244,6 +244,7 @@ CSteam::~CSteam()
 
 void CSteam::tick()
 {
+	LastEntrySet S("CSteam::tick");
 	if (steamInited)
 	{
 		SteamAPI_RunCallbacks();

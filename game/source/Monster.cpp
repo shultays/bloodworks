@@ -119,6 +119,7 @@ Monster::~Monster()
 
 void Monster::tick()
 {
+	LastEntrySet S(name);
 	if (bloodworks->isFirstTick() && this == bloodworks->getMonsterController()->getMonsterAtIndex(0))
 	{
 		out << "Monster::tick\n";

@@ -885,21 +885,21 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	});
 
 	lua.set_function("spawnRandomDrop",
-		[&](const Vec2& pos)
+		[&](const Vec2& pos, float time)
 	{
-		return bloodworks->getDropController()->spawnDrop(pos);
+		return bloodworks->getDropController()->spawnDrop(pos, time > 0.1f ? time : DEFAULT_DROP_DURATION);
 	});
 
 	lua.set_function("spawnRandomGun",
-		[&](const Vec2& pos)
+		[&](const Vec2& pos, float time)
 	{
-		return bloodworks->getDropController()->spawnGun(pos);
+		return bloodworks->getDropController()->spawnGun(pos, -1, time > 0.1f ? time : DEFAULT_DROP_DURATION);
 	});
 
 	lua.set_function("spawnRandomBonus",
-		[&](const Vec2& pos)
+		[&](const Vec2& pos, float time)
 	{
-		return bloodworks->getDropController()->spawnBonus(pos);
+		return bloodworks->getDropController()->spawnBonus(pos, -1, time > 0.1f ? time : DEFAULT_DROP_DURATION);
 	});
 
 
@@ -917,12 +917,6 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		[&]()
 	{
 		return bloodworks->getCameraAngle();
-	});
-
-	lua.set_function("spawnRandomGun",
-		[&](const Vec2& pos)
-	{
-		return bloodworks->getDropController()->spawnGun(pos);
 	});
 
 	lua.set_function("getLastBonusSpawnTime",
@@ -950,33 +944,39 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	}
 	);
 	lua.set_function("spawnGun",
-		[&](const Vec2& pos, const std::string& name)
+		[&](const Vec2& pos, const std::string& name, float time)
 	{
 		int index = 0;
 		for (auto& gun : bloodworks->getGuns())
 		{
 			if (name == gun->getScriptName())
 			{
-				bloodworks->getDropController()->spawnGun(pos, index);
-				return;
+				return bloodworks->getDropController()->spawnGun(pos, index, time > 0.1f ? time : DEFAULT_DROP_DURATION);
 			}
 			index++;
 		}
+		return -1;
 	});
 
 	lua.set_function("spawnBonus",
-		[&](const Vec2& pos, const std::string& name)
+		[&](const Vec2& pos, const std::string& name, float time)
 	{
 		int index = 0;
 		for (auto& bonus : bloodworks->getBonuses())
 		{
 			if (name == bonus->getScriptName())
 			{
-				bloodworks->getDropController()->spawnBonus(pos, index);
-				return;
+				return bloodworks->getDropController()->spawnBonus(pos, index, time > 0.1f ? time : DEFAULT_DROP_DURATION);
 			}
 			index++;
 		}
+		return -1;
+	});
+
+	lua.set_function("removeDrop",
+		[&](int id)
+	{
+		bloodworks->getDropController()->removeDrop(id);
 	});
 
 
@@ -1437,6 +1437,7 @@ void BloodworksLuaWorld::clear()
 
 void BloodworksLuaWorld::tick()
 {
+	LastEntrySet S("BloodworksLuaWorld::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "BloodworksLuaWorld::tick\n";

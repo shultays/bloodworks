@@ -47,6 +47,7 @@ Coral::Coral()
 
 void Coral::tick()
 {
+	LastEntrySet S("Coral::tick");
 	if (lastFullScreen != fullScreen)
 	{
 		lastFullScreen = fullScreen;

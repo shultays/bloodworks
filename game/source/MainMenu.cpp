@@ -169,6 +169,7 @@ void MainMenu::resize()
 
 void MainMenu::tick(bool hasPopup)
 {
+	LastEntrySet S("MainMenu::ticktick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "MainMenu::tick\n";

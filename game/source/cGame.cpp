@@ -30,6 +30,7 @@ void cGame::tickInternal()
 
 void cGame::renderInternal()
 {
+	LastEntrySet S("cGame::renderInternal");
 	Vec2 windowSize = getScreenDimensions().toVec();
 	windowSize *= cameraZoom;
 	float halfWidth = windowSize.w * 0.5f;

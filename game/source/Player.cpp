@@ -197,6 +197,7 @@ Player::~Player()
 
 void Player::tick()
 {
+	LastEntrySet S("Player::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "Player::tick\n";

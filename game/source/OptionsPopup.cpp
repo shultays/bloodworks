@@ -424,7 +424,7 @@ void OptionsPopup::tick()
 	if (lastClickedTitle == inputTitle)
 	{
 		bool isInside = inputGroup->isMouseInside(input.getMousePos());
-		Vec2 transformedPos = input.getMousePos() - inputGroup->getScrollMatrix().row2.vec2;
+		Vec2 transformedPos = input.getMousePos() - inputGroup->getScrollMatrix().row2().vec2() / bloodworks->getCameraZoom();
 
 		sensitivity->check(transformedPos, !isInside);
 		if (sensitivity->isChanged())

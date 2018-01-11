@@ -1,0 +1,5 @@
+{
+  "type" : "mission_mod",
+  "scriptFile" : "SpawnGuns.lua",
+  "scriptName" : "SpawnGuns"
+}

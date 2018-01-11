@@ -3,7 +3,7 @@
 
 AARect AARect::transform(const Mat3& mat) const
 {
-	return AARect((mat * Vec3(minPoint, 1.0f)).vec2, (mat * Vec3(maxPoint, 1.0f)).vec2);
+	return AARect((mat * Vec3(minPoint, 1.0f)).vec2(), (mat * Vec3(maxPoint, 1.0f)).vec2());
 }
 
 void AARect::clampPos(Vec2& position) const

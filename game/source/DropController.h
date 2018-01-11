@@ -8,6 +8,8 @@ class cTexturedQuadRenderable;
 class Bloodworks;
 class Monster;
 
+#define DEFAULT_DROP_DURATION 45.0f
+
 class DropController
 {
 	Bloodworks *bloodworks;
@@ -22,6 +24,8 @@ class DropController
 		Vec2 gunTextureSize;
 
 		bool canFadeout;
+		float spawnTime;
+		int id;
 	};
 
 	cVector<Drop> drops;
@@ -37,12 +41,14 @@ public:
 	}
 	~DropController();
 
-	void spawnGun(const Vec2& position, int forceIndex = -1);
-	void spawnBonus(const Vec2& position, int forceIndex = -1);
+	int spawnDrop(const Vec2& position, float spawnTime = DEFAULT_DROP_DURATION);
+	int spawnGun(const Vec2& position, int forceIndex = -1, float spawnTime = DEFAULT_DROP_DURATION);
+	int spawnBonus(const Vec2& position, int forceIndex = -1, float spawnTime = DEFAULT_DROP_DURATION);
+
 	void tick();
-	void spawnDrop(const Vec2& position);
 	void reset();
 	void onMonsterDied(Monster* monster, float dropChance);
 	float getLastSpawnTime() const;
 	void clearButHighlighted();
+	void removeDrop(int id);
 };

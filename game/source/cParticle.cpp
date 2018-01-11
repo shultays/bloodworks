@@ -789,11 +789,11 @@ void cParticleTemplate::randomizeAttributes(cParticleRandomizer& randomizer, cPa
 
 		if (attributes[r.attributeIndex].type == TypeVec2)
 		{
-			*(Vec2*)(buff + attributes[r.attributeIndex].begin) = color.vec2;
+			*(Vec2*)(buff + attributes[r.attributeIndex].begin) = color.vec2();
 		}
 		else if (attributes[r.attributeIndex].type == TypeVec3)
 		{
-			*(Vec3*)(buff + attributes[r.attributeIndex].begin) = color.vec3;
+			*(Vec3*)(buff + attributes[r.attributeIndex].begin) = color.vec3();
 		}
 		else
 		{

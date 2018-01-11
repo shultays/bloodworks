@@ -31,6 +31,7 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 
 void MonsterController::tick()
 {
+	LastEntrySet S("MonsterController::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "MonsterController::tick\n";

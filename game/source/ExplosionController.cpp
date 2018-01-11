@@ -29,6 +29,7 @@ ExplosionController::~ExplosionController()
 
 void ExplosionController::tick()
 {
+	LastEntrySet S("ExplosionController::tick");
 	if (bloodworks->isFirstTick())
 	{
 		out << "ExplosionController::tick\n";

@@ -1,0 +1,11 @@
+{
+  "title" : "Spawn All Guns",
+  "description" : "Spawn all guns around the player when the mission starts.",
+  "picture" : "mod_icon.png",
+  
+  "meta" : "",
+  
+  "tags" : [ "other" ],
+  
+  "change_note" : "initial upload"
+}

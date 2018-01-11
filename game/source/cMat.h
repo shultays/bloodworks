@@ -36,14 +36,6 @@ public:
 		{
 			float data[4 * 4];
 		};
-		struct 
-		{
-			Vec4 row0;
-			Vec4 row1;
-			Vec4 row2;
-			Vec4 row3;
-		};
-
 	};
 
 	Mat4() {}
@@ -58,11 +50,46 @@ public:
 
 	Mat4(const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3)
 	{
-		row0 = v0;
-		row1 = v1;
-		row2 = v2;
-		row3 = v3;
+		row0() = v0;
+		row1() = v1;
+		row2() = v2;
+		row3() = v3;
 	}
+
+	Vec4& row0()
+	{
+		return *reinterpret_cast<Vec4*>(&data[0]);
+	}
+	Vec4& row1()
+	{
+		return *reinterpret_cast<Vec4*>(&data[4]);
+	}
+	Vec4& row2()
+	{
+		return *reinterpret_cast<Vec4*>(&data[6]);
+	}
+	Vec4& row3()
+	{
+		return *reinterpret_cast<Vec4*>(&data[12]);
+	}
+	 
+	const Vec4& row0() const
+	{
+		return *reinterpret_cast<const Vec4*>(&data[0]);
+	}
+	const Vec4& row1() const
+	{
+		return *reinterpret_cast<const Vec4*>(&data[4]);
+	}
+	const Vec4& row2() const
+	{
+		return *reinterpret_cast<const Vec4*>(&data[6]);
+	}
+	const Vec4& row3() const
+	{
+		return *reinterpret_cast<const Vec4*>(&data[12]);
+	}
+
 
 	static const Mat4& identity();
 
@@ -634,12 +661,6 @@ public:
 			float data[3 * 3];
 		};
 
-		struct 
-		{
-			Vec3 row0;
-			Vec3 row1;
-			Vec3 row2;
-		};
 
 		struct 
 		{
@@ -667,9 +688,35 @@ public:
 
 	Mat3(Vec3 v0, Vec3 v1, Vec3 v2) 
 	{
-		row0 = v0;
-		row1 = v1;
-		row2 = v2;
+		row0() = v0;
+		row1() = v1;
+		row2() = v2;
+	}
+
+	Vec3& row0()
+	{
+		return *reinterpret_cast<Vec3*>(&data[0]);
+	}
+	Vec3& row1()
+	{
+		return *reinterpret_cast<Vec3*>(&data[3]);
+	}
+	Vec3& row2()
+	{
+		return *reinterpret_cast<Vec3*>(&data[6]);
+	}
+
+	const Vec3& row0() const
+	{
+		return *reinterpret_cast<const Vec3*>(&data[0]);
+	}
+	const Vec3& row1() const
+	{
+		return *reinterpret_cast<const Vec3*>(&data[3]);
+	}
+	const Vec3& row2() const
+	{
+		return *reinterpret_cast<const Vec3*>(&data[6]);
 	}
 
 	static const Mat3& identity();
@@ -901,11 +948,6 @@ public:
 		};
 		struct 
 		{
-			Vec2 row0;
-			Vec2 row1;
-		};
-		struct 
-		{
 			float _00, _01;
 			float _10, _11;
 		};
@@ -922,8 +964,17 @@ public:
 
 	Mat2(Vec2 v0, Vec2 v1) 
 	{
-		row0 = v0;
-		row1 = v1;
+		row0() = v0;
+		row1() = v1;
+	}
+
+	Vec2& row0()
+	{
+		return *reinterpret_cast<Vec2*>(&data[0]);
+	}
+	Vec2& row1()
+	{
+		return *reinterpret_cast<Vec2*>(&data[2]);
 	}
 
 	static Mat2 identity() 

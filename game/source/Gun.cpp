@@ -298,6 +298,8 @@ void Gun::start()
 
 void Gun::tick(float dt)
 {
+	LastEntrySet S(name);
+
 	if (bloodworks->isFirstTick())
 	{
 		out << "Gun::tick\n";

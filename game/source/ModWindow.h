@@ -1,7 +1,12 @@
 #pragma once
 
+#include "cDefines.h"
+
+#ifdef MOD_WINDOW
+
 #include "UserDetails.h"
 #include "cSlaveWork.h"
+
 #include <unordered_map>
 
 class Bloodworks;
@@ -124,3 +129,5 @@ public:
 	bool isPathDisabled(const std::string& path) const;
 	bool isModDisabled(const std::string& mod) const;
 };
+
+#endif
