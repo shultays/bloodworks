@@ -8,7 +8,8 @@
 
 #define MAX_WORKSHOP_ITEMS 512
 
-enum EAchievement { 
+enum EAchievement 
+{ 
 	ACH_BRONZE,
 	ACH_SILVER,
 	ACH_GOLD,
@@ -34,10 +35,21 @@ enum EAchievement {
 	
 	ACH_COUNT
 };
-enum EStat { 
+
+enum EStat 
+{
 	STA_BLOODBATH,
 
 	STA_COUNT
+};
+
+
+enum ELeaderBoard
+{
+	LED_SCORE,
+	LED_LIFE_TIME,
+
+	LED_COUNT
 };
 
 #ifdef HAS_STEAM
@@ -56,6 +68,11 @@ private:
 	std::unordered_map<std::string, EAchievement > nameMap;
 	int killedMonster;
 	float edgeTime;
+
+	int highScore;
+	int totalTime;
+
+	bool updatingScores;
 public:
 	BloodworksSteam(Bloodworks* bloodworks);
 
@@ -80,6 +97,8 @@ public:
 	STEAM_CALLBACK(BloodworksSteam, onWorkshopItemInstalled, ItemInstalled_t);
 
 	void openWorkshop();
+
+	void uploadLeaderboards(int score, float time);
 };
 
 #else

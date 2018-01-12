@@ -43,7 +43,7 @@ function SpawnGuns.onTick(mod)
             mod.data.check = 0
         end
         
-        if player.gun.scriptName ~= "Pistol" and mod.data.guns ~= nil then
+        if player.gun ~= nil and player.gun.scriptName ~= "Pistol" and mod.data.guns ~= nil then
             for i in pairs(mod.data.guns) do 
                 removeDrop(i)
             end

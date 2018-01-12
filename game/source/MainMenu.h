@@ -6,6 +6,7 @@
 class Bloodworks;
 class cTexturedQuadRenderable;
 class cButton;
+class cTextRenderable;
 
 class MainMenu
 {
@@ -22,6 +23,8 @@ class MainMenu
 	cSoundSampleShr music;
 	cSoundHandle handle;
 
+
+	cTextRenderable* topScore;
 public:
 	MainMenu(Bloodworks *b);
 	~MainMenu();
@@ -29,4 +32,6 @@ public:
 	void tick(bool hasPopup);
 	void setVisible(bool visible);
 	void updateMusicVolume();
+
+	void updateScore(const std::string& score);
 };

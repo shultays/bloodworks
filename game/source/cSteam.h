@@ -32,6 +32,18 @@ struct Stat_t
 	float m_flAvgDenominator; 
 };
 
+struct Leaderboard_t
+{
+	int m_ID;
+	const char *m_pchID;
+	int score;
+
+	int rank;
+	int count;
+	int lastUploadScore;
+	SteamLeaderboard_t steamID;
+};
+
 class CSteamAchievements
 {
 private: 
@@ -45,9 +57,16 @@ private:
 
 	bool dirtyStats;
 	bool inited;
+
+	Leaderboard_t *m_pLeaderboards; // Stats data 
+	int m_iNumLeaderboards; // The number of Stats
+
+	bool scoresUploaded;
+	bool scoresLoaded;
+	bool scoreError;
 public:
 	CSteamAchievements();
-	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
+	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats, Leaderboard_t *Leaderboards, int NumLeaderboards);
 	~CSteamAchievements();
 	bool requestStats();
 	bool setAchievement(const char* ID);
@@ -61,8 +80,25 @@ public:
 
 	void resetUser();
 	void tick();
+
+	void OnFindLeaderboard(LeaderboardFindResult_t *pFindLeaderboardResult, bool bIOFailure);
+	CCallResult<CSteamAchievements, LeaderboardFindResult_t> m_SteamCallResultCreateLeaderboard;
+
+	void OnLeaderboardDownloadedEntries(LeaderboardScoresDownloaded_t *pLeaderboardScoresDownloaded, bool bIOFailure);
+	CCallResult<CSteamAchievements, LeaderboardScoresDownloaded_t> m_callResultDownloadEntries;
+
+	void OnUploadScore(LeaderboardScoreUploaded_t *pFindLearderboardResult, bool bIOFailure);
+	CCallResult<CSteamAchievements, LeaderboardScoreUploaded_t> m_SteamCallResultUploadScore;
+
+	void uploadScores();
+	bool AreScoresReady() const;
+	bool isUploadingScores() const;
 private:
+	void uploadScoresInternal();
 	void updateStats();
+	void requestLeaderboards();
+	int curLeaderboardLoad;
+	void requestLeaderboardEntries();
 };
 
 class CSteam
@@ -76,7 +112,7 @@ public:
 	~CSteam();
 
 	void tick();
-	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats);
+	void init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats, Leaderboard_t *Leaderboards, int NumLeaderboards);
 	CSteamAchievements* getAchievements() const
 	{
 		return achivements;
@@ -85,6 +121,7 @@ public:
 	{
 		return steamInited;
 	}
+
 };
 
 #endif

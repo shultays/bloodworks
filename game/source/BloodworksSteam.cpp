@@ -11,10 +11,12 @@
 #include "Gun.h"
 #include "MonsterController.h"
 #include "Monster.h"
-
+#include "MainMenu.h"
 
 #define _ACH_ID( id ) { id, #id, false } 
-Achievement_t g_Achievements[] = {
+
+Achievement_t g_Achievements[] = 
+{
 	_ACH_ID(ACH_BRONZE),
 	_ACH_ID(ACH_SILVER),
 	_ACH_ID(ACH_GOLD),
@@ -40,9 +42,20 @@ Achievement_t g_Achievements[] = {
 };
 
 #define _STAT_ID( id,type ) { id, #id, type, 0, 0, 0, 0 }
-Stat_t g_Stats[] = {
+
+Stat_t g_Stats[] = 
+{
 	_STAT_ID(STA_BLOODBATH, STAT_INT),
 };
+
+#define _LEADER_BOARD_ID( id ) { id, #id, 0 }
+
+Leaderboard_t g_LeaderBoards[] = 
+{
+	_LEADER_BOARD_ID(LED_SCORE),
+	_LEADER_BOARD_ID(LED_LIFE_TIME),
+};
+
 
 void BloodworksSteam::openWorkshop()
 {
@@ -52,10 +65,23 @@ void BloodworksSteam::openWorkshop()
 	}
 }
 
+void BloodworksSteam::uploadLeaderboards(int score, float time)
+{
+	if (inited && coral.getSteam()->getAchievements()->AreScoresReady() && !coral.getSteam()->getAchievements()->isUploadingScores() )
+	{
+		bloodworks->getMainMenu()->updateScore("\nUpdating Scores");
+		g_LeaderBoards[LED_SCORE].score = max(g_LeaderBoards[LED_SCORE].score, score);
+		g_LeaderBoards[LED_LIFE_TIME].score = max(g_LeaderBoards[LED_LIFE_TIME].score, (int)(time * 1000) );
+		coral.getSteam()->getAchievements()->uploadScores();
+		updatingScores = true;
+	}
+}
+
 BloodworksSteam::BloodworksSteam(Bloodworks* bloodworks)
 {
 	this->bloodworks = bloodworks;
 	inited = false;
+	updatingScores = true;
 }
 
 void BloodworksSteam::addAchievement(EAchievement achivement)
@@ -138,7 +164,8 @@ void BloodworksSteam::init()
 	if (inited)
 	{
 		coral.getSteam()->init(g_Achievements, sizeof(g_Achievements) / sizeof(g_Achievements[0]),
-			g_Stats, sizeof(g_Stats) / sizeof(g_Stats[0]));
+			g_Stats, sizeof(g_Stats) / sizeof(g_Stats[0]),
+			g_LeaderBoards, sizeof(g_LeaderBoards) / sizeof(g_LeaderBoards[0]) );
 	}
 
 	for (int n = 0; n < sizeof(g_Achievements) / sizeof(g_Achievements[0]); n++)
@@ -157,7 +184,38 @@ void BloodworksSteam::tick()
 	{
 		out << "BloodworksSteam::tick\n";
 	}
-	if (!inited || !bloodworks->getMissionController()->isLoaded() || !bloodworks->getPlayer()->isVisible())
+
+	if (!inited)
+	{
+		return;
+	}
+
+	if (updatingScores && !coral.getSteam()->getAchievements()->isUploadingScores() && coral.getSteam()->getAchievements()->AreScoresReady())
+	{
+		float t = ((float)(g_LeaderBoards[LED_SCORE].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE].count;
+
+		std::stringstream s;
+		s << "\nBest Score : ";
+		s << g_LeaderBoards[LED_SCORE].score;
+		s.precision(3);
+		if (t < 1.0f)
+		{
+			if (t < 0.001f)
+			{
+				t = 0.001f;
+			}
+			s <<  " (Top " << t << "%)";
+		}
+		else
+		{
+			s << " (Top " << (int)(t) << "%)";
+		}
+
+		bloodworks->getMainMenu()->updateScore(s.str());
+		updatingScores = false;
+	}
+
+	if (!bloodworks->getMissionController()->isLoaded() || !bloodworks->getPlayer()->isVisible())
 	{
 		return;
 	}

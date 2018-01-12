@@ -995,6 +995,9 @@ void Player::reset()
 	playerTemplate = nullptr;
 	canFireNextFrame = true;
 
+	score = 0;
+	dieTime = -1;
+
 	knockbacks.clear();
 	maxSpeed.clear();
 	monsterExperienceMultiplier.clear();
@@ -1178,6 +1181,7 @@ void Player::killSelf()
 	}
 	killSounds[randInt(killSounds.size())]->play();
 	isDead = true;
+	dieTime = timer.getTime();
 	setVisible(false);
 	setGun(nullptr);
 	setSecondaryGun(nullptr);

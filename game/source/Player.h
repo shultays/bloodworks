@@ -144,6 +144,7 @@ class Player
 
 	float lastScale;
 	int score;
+	float dieTime;
 	int level;
 	int experience;
 	int experienceForNextLevel;
@@ -215,6 +216,10 @@ public:
 	int getScore() const
 	{
 		return score;
+	}	
+	float getDieTime() const
+	{
+		return dieTime;
 	}
 
 	bool isActive() const 

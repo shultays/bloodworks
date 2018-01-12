@@ -16,7 +16,7 @@ CSteamAchievements::CSteamAchievements()
 	inited = false;
 }
 
-void CSteamAchievements::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
+void CSteamAchievements::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats, Leaderboard_t *Leaderboards, int NumLeaderboards)
 {
 	inited = true;
 	m_iAppID = SteamUtils()->GetAppID();
@@ -25,8 +25,20 @@ void CSteamAchievements::init(Achievement_t *Achievements, int NumAchievements, 
 
 	m_pStats = Stats;
 	m_iNumStats = NumStats;
+
+	m_pLeaderboards = Leaderboards;
+	m_iNumLeaderboards = NumLeaderboards;
+
 	dirtyStats = false;
+	scoreError = false;
+
+	curLeaderboardLoad = 0;
+
+	scoresLoaded = false;
+	scoresUploaded = false;
+
 	requestStats();
+	requestLeaderboards();
 }
 
 CSteamAchievements::~CSteamAchievements()
@@ -162,6 +174,7 @@ void CSteamAchievements::OnAchievementStored(UserAchievementStored_t *pCallback)
 	}
 }
 
+
 void CSteamAchievements::resetUser()
 {
 	for (int iAch = 0; iAch < m_iNumAchievements; ++iAch)
@@ -221,6 +234,130 @@ void CSteamAchievements::updateStats()
 	dirtyStats = false;
 }
 
+void CSteamAchievements::requestLeaderboards()
+{
+	if (curLeaderboardLoad < m_iNumLeaderboards)
+	{
+		SteamAPICall_t hSteamAPICall = SteamUserStats()->FindOrCreateLeaderboard(m_pLeaderboards[curLeaderboardLoad].m_pchID, k_ELeaderboardSortMethodAscending, k_ELeaderboardDisplayTypeNumeric);
+		m_SteamCallResultCreateLeaderboard.Set(hSteamAPICall, this, &CSteamAchievements::OnFindLeaderboard);
+	}
+	else
+	{
+		curLeaderboardLoad = 0;
+		requestLeaderboardEntries();
+	}
+}
+
+void CSteamAchievements::uploadScoresInternal()
+{
+
+	if (curLeaderboardLoad < m_iNumLeaderboards)
+	{
+		SteamAPICall_t hSteamAPICall = SteamUserStats()->UploadLeaderboardScore(m_pLeaderboards[curLeaderboardLoad].steamID, k_ELeaderboardUploadScoreMethodKeepBest, 
+			m_pLeaderboards[curLeaderboardLoad].score, NULL, 0);
+		m_pLeaderboards[curLeaderboardLoad].lastUploadScore = m_pLeaderboards[curLeaderboardLoad].score;
+
+		m_SteamCallResultUploadScore.Set(hSteamAPICall, this, &CSteamAchievements::OnUploadScore);
+	}
+	else
+	{
+		scoresUploaded = true;
+	}
+}
+
+void CSteamAchievements::OnUploadScore(LeaderboardScoreUploaded_t *pFindLearderboardResult, bool bIOFailure)
+{
+	if (!bIOFailure && pFindLearderboardResult->m_bSuccess)
+	{
+		m_pLeaderboards[curLeaderboardLoad].rank = pFindLearderboardResult->m_nGlobalRankNew;
+		m_pLeaderboards[curLeaderboardLoad].count = SteamUserStats()->GetLeaderboardEntryCount(pFindLearderboardResult->m_hSteamLeaderboard);
+		if (m_pLeaderboards[curLeaderboardLoad].count < 1)
+		{
+			m_pLeaderboards[curLeaderboardLoad].count = 1;
+		}
+	}
+	curLeaderboardLoad++;
+	uploadScoresInternal();
+}
+
+void CSteamAchievements::uploadScores()
+{
+	scoresUploaded = false;
+	curLeaderboardLoad = 0;
+	uploadScoresInternal();
+}
+
+bool CSteamAchievements::AreScoresReady() const
+{
+	return scoresLoaded && !scoreError;
+}
+
+bool CSteamAchievements::isUploadingScores() const
+{
+	return !scoresUploaded;
+}
+
+void CSteamAchievements::OnFindLeaderboard(LeaderboardFindResult_t *pFindLeaderboardResult, bool bIOFailure)
+{
+	if (!bIOFailure && pFindLeaderboardResult->m_bLeaderboardFound)
+	{
+		m_pLeaderboards[curLeaderboardLoad].steamID = pFindLeaderboardResult->m_hSteamLeaderboard;
+		m_pLeaderboards[curLeaderboardLoad].count = SteamUserStats()->GetLeaderboardEntryCount(pFindLeaderboardResult->m_hSteamLeaderboard);
+		if (m_pLeaderboards[curLeaderboardLoad].count < 1)
+		{
+			m_pLeaderboards[curLeaderboardLoad].count = 1;
+		}
+	}
+	else
+	{
+		scoreError = true;
+	}
+
+	curLeaderboardLoad++;
+	requestLeaderboards();
+}
+
+void CSteamAchievements::requestLeaderboardEntries()
+{
+	if (curLeaderboardLoad < m_iNumLeaderboards)
+	{
+		SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(m_pLeaderboards[curLeaderboardLoad].steamID, k_ELeaderboardDataRequestGlobalAroundUser,
+			0, 0);
+
+		// Register for the async callback
+		m_callResultDownloadEntries.Set(hSteamAPICall, this, &CSteamAchievements::OnLeaderboardDownloadedEntries);
+	}
+	else
+	{
+		scoresLoaded = true;
+		scoresUploaded = true;
+	}
+}
+
+
+void CSteamAchievements::OnLeaderboardDownloadedEntries(LeaderboardScoresDownloaded_t *pLeaderboardScoresDownloaded, bool bIOFailure)
+{
+	if (pLeaderboardScoresDownloaded->m_cEntryCount > 0 && !bIOFailure)
+	{
+		LeaderboardEntry_t entry;
+
+		int32 details;
+
+		SteamUserStats()->GetDownloadedLeaderboardEntry(pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries, 0, &entry, &details, 1);
+
+		m_pLeaderboards[curLeaderboardLoad].score = m_pLeaderboards[curLeaderboardLoad].lastUploadScore = entry.m_nScore;
+		m_pLeaderboards[curLeaderboardLoad].rank = entry.m_nGlobalRank;
+	}
+	else
+	{
+		m_pLeaderboards[curLeaderboardLoad].score = m_pLeaderboards[curLeaderboardLoad].lastUploadScore = 0;
+		m_pLeaderboards[curLeaderboardLoad].rank = m_pLeaderboards[curLeaderboardLoad].count + 1;
+	}
+
+	curLeaderboardLoad++;
+	requestLeaderboardEntries();
+}
+
 CSteam::CSteam()
 {
 	steamInited = SteamAPI_Init();
@@ -255,12 +392,13 @@ void CSteam::tick()
 	}
 }
 
-void CSteam::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats)
+void CSteam::init(Achievement_t *Achievements, int NumAchievements, Stat_t *Stats, int NumStats, Leaderboard_t *Leaderboards, int NumLeaderboards)
 {
 	// Create the SteamAchievements object if Steam was successfully initialized 
 	achivements->init(
 		Achievements, NumAchievements,
-		Stats, NumStats
+		Stats, NumStats,
+		Leaderboards, NumLeaderboards
 	);
 }
 

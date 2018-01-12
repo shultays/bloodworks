@@ -329,4 +329,9 @@ public:
 
 	cParticle* getSharedParticle(cParticleTemplate* particleTemplate, int drawLevel, const sol::table& args);
 	void freeSharedParticle(cParticle* particle);
+
+	MainMenu*  getMainMenu() const
+	{
+		return mainMenu;
+	}
 };

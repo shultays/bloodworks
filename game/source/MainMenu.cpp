@@ -85,6 +85,14 @@ MainMenu::MainMenu(Bloodworks *b)
 	quit->setSounds(click, hover);
 	bloodworks->addRenderable(quit, GUI + 21);
 
+	topScore = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "\nLoading Scores...", 24.0f);
+	topScore->setAlignment(RenderableAlignment::bottomRight);
+	topScore->setWorldMatrix(Mat3::translationMatrix(Vec2(-10.0f, 50.0f)));
+	topScore->setTextAlignment(TextAlignment::right);
+	topScore->setVerticalTextAlignment(VerticalTextAlignment::bottom);
+	bloodworks->addRenderable(topScore, GUI + 21);
+
+
 	resize();
 	music = resources.getSoundSample("resources/sounds/main_menu.ogg");
 	setVisible(false);
@@ -100,6 +108,7 @@ MainMenu::~MainMenu()
 	SAFE_DELETE(options);
 	SAFE_DELETE(credits);
 	SAFE_DELETE(quit);
+	SAFE_DELETE(topScore);
 }
 
 void MainMenu::resize()
@@ -238,6 +247,9 @@ void MainMenu::setVisible(bool visible)
 	options->setVisible(visible);
 	credits->setVisible(visible);
 	quit->setVisible(visible);
+
+	topScore->setVisible(visible);
+
 	if (visible)
 	{
 		if (handle.isValid() == false)
@@ -266,4 +278,9 @@ void MainMenu::updateMusicVolume()
 	{
 		handle.setVolume(bloodworks->getConfig()->getMusicVolume());
 	}
+}
+
+void MainMenu::updateScore(const std::string& score)
+{
+	topScore->setText(score);
 }

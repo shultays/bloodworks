@@ -14,6 +14,7 @@
 #include "BloodworksConfig.h"
 #include "cTimeProfiler.h"
 #include "GameObjectTemplate.h"
+#include "BloodworksSteam.h"
 
 MissionController::MissionController(Bloodworks *bloodworks)
 {
@@ -64,9 +65,12 @@ void MissionController::tick()
 
 	missions[loadedMission]->persistent.check();
 
-	for (auto mod : missionMods)
+	if (loadedMission != -1)
 	{
-		mod->onTick();
+		for (auto mod : missionMods)
+		{
+			mod->onTick();
+		}
 	}
 
 	cVector<int> toBeRemoved;
@@ -243,6 +247,13 @@ void MissionController::reset()
 	gameSpeedMultiplier.clear();
 	if (loadedMission >= 0)
 	{
+		if ((bool)getMissionData()["isSurvival"])
+		{
+			float time = bloodworks->getPlayer()->getDieTime() - missionLoadTime;
+			int score = bloodworks->getPlayer()->getScore();
+			bloodworks->getSteam()->uploadLeaderboards(score, time);
+		}
+
 		scriptTable = lua[missions[loadedMission]->scriptName] = lua.create_table();
 		loadedMission = -1;
 	}
