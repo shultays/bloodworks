@@ -4,6 +4,7 @@
 #include "cGlobals.h"
 #include "DirentHelper.h"
 #include "cAnimationTemplate.h"
+#include "cGame.h"
 
 void cAnimatedTexturedQuadRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
 {
@@ -99,10 +100,8 @@ cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(nlohmann::json& 
 
 cAnimatedTexturedQuadRenderable::AnimationData getAnimationData(const DirentHelper::File& file)
 {
-	std::string jsonFile;
-	textFileRead(file.folder + file.file, jsonFile);
-	nlohmann::json j = nlohmann::json::parse(jsonFile.c_str());
-
+	nlohmann::json j;
+	game->loadJsonFile(j, file.folder + file.file, false);
 	return getAnimationData(j, file);
 }
 

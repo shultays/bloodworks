@@ -3,6 +3,7 @@
 #include "cMat.h"
 #include "cResources.h"
 #include "cPriorityVector.h"
+#include "json.h"
 #include <GL/glew.h>
 
 enum class RenderableAlignment
@@ -109,4 +110,5 @@ public:
 	AARect getScreenRect() const;
 
 	virtual void loadLuaFile(const std::string& scriptFilePath);
+	virtual void loadJsonFile(nlohmann::json& j, const std::string& file, bool loadInit);
 };

@@ -304,3 +304,10 @@ void cGame::loadLuaFile(const std::string& scriptFilePath)
 {
 	lua.script_file(scriptFilePath);
 }
+
+void cGame::loadJsonFile(nlohmann::json& j, const std::string& file, bool loadInit)
+{
+	std::string jsonFile;
+	textFileRead(file, jsonFile);
+	j = nlohmann::json::parse(jsonFile.c_str());
+}
