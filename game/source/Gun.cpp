@@ -133,7 +133,7 @@ Gun::Gun(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& fi
 		crosshairDistance = j["crosshairDistance"].get<float>();
 	}
 
-	lua.script_file(scriptFilePath);
+	bloodworks->loadLuaFile(scriptFilePath);
 
 	gunShootSoundFadein = 0.1f;
 	gunShootSoundFadeout = 0.1f;

@@ -12,7 +12,7 @@
 bool disableParticle;
 bool staticParticleBuffersG = true;
 
-cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file)
+cParticleTemplate::cParticleTemplate(cGame* game, nlohmann::json& j, const DirentHelper::File& file)
 {
 	shader = resources.getShader(file.folder + j["vertexShader"].get<std::string>(), file.folder + j["pixelShader"].get<std::string>());
 	scriptName = j["scriptName"].get<std::string>();
@@ -22,7 +22,7 @@ cParticleTemplate::cParticleTemplate(nlohmann::json& j, const DirentHelper::File
 	fixFolderPath(folder);
 	scriptTable["basePath"] = folder;
 	std::string scriptPath = file.folder + j["scriptFile"].get<std::string>();
-	lua.script_file(scriptPath);
+	game->loadLuaFile(scriptPath);
 
 	maxLifeTime = j["maxLifeTime"].get<float>();
 	attributeSize = 0;

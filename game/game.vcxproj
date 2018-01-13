@@ -215,6 +215,7 @@
     <ClCompile Include="source\cTexture.cpp" />
     <ClCompile Include="source\cTimeProfiler.cpp" />
     <ClCompile Include="source\CustomGameWindow.cpp" />
+    <ClCompile Include="source\GameObjectTemplate.cpp" />
     <ClCompile Include="source\GroundRenderable.cpp" />
     <ClCompile Include="source\ModWindow.cpp" />
     <ClCompile Include="source\MonsterTemplate.cpp" />

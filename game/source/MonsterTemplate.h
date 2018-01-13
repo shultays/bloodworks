@@ -9,6 +9,8 @@
 
 #include "cAnimatedRenderable.h"
 
+class Bloodworks;
+
 class MonsterTemplate
 {
 	friend class BloodworksLuaWorld;
@@ -45,7 +47,7 @@ class MonsterTemplate
 	float bitSpeed;
 public:
 	MonsterTemplate(){}
-	MonsterTemplate(nlohmann::json& j, const DirentHelper::File& file);
+	MonsterTemplate(Bloodworks* bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 
 	~MonsterTemplate();
 

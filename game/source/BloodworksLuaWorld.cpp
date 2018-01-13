@@ -780,7 +780,7 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("loadScript",
 		[&](const std::string& path)
 	{
-		bloodworks->loadScript(path);
+		bloodworks->loadLuaFile(path);
 	});
 
 	lua.set_function("getClosestMonsterWithIgnoreId",

@@ -31,7 +31,7 @@ class MissionMod
 
 	sol::table data;
 public:
-	MissionMod(nlohmann::json& j, const DirentHelper::File& file);
+	MissionMod(Bloodworks* bloodworks, nlohmann::json& j, const DirentHelper::File& file);
 	~MissionMod();
 
 	void init();

@@ -204,7 +204,7 @@ void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& 
 
 void MissionController::addMissionMod(nlohmann::json& j, const DirentHelper::File& file)
 {
-	missionMods.push_back(new MissionMod(j, file));
+	missionMods.push_back(new MissionMod(bloodworks, j, file));
 }
 
 void MissionController::loadMission(const std::string& name)
@@ -225,7 +225,7 @@ void MissionController::loadMission(const std::string& name)
 			lua["missionPath"] = mission->basePath;
 			lua["missionConfig"] = mission->persistent;
 
-			lua.script_file(mission->scriptFile);
+			bloodworks->loadLuaFile(mission->scriptFile);
 			scriptTable["init"]();
 
 			for (auto mod : missionMods)
@@ -353,7 +353,7 @@ std::string MissionController::getCurrentMissionScript()
 	return "";
 }
 
-MissionMod::MissionMod(nlohmann::json& j, const DirentHelper::File& file)
+MissionMod::MissionMod(Bloodworks* bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
 	std::string scriptName = j["scriptName"].get<std::string>();
 	std::string scriptFile = file.folder + j["scriptFile"].get<std::string>();
@@ -361,7 +361,7 @@ MissionMod::MissionMod(nlohmann::json& j, const DirentHelper::File& file)
 	lua[scriptName] = lua.create_table();
 
 	fixFilePath(scriptFile);
-	lua.script_file(scriptFile);
+	bloodworks->loadLuaFile(scriptFile);
 
 	sol::table table = lua[scriptName];
 

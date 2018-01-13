@@ -299,3 +299,8 @@ AARect cGame::getScreenRect() const
 
 	return AARect(screenMin, screenMax);
 }
+
+void cGame::loadLuaFile(const std::string& scriptFilePath)
+{
+	lua.script_file(scriptFilePath);
+}

@@ -1,8 +1,9 @@
 #include "MonsterTemplate.h"
 #include "cGlobals.h"
 #include "json.h"
+#include "bloodworks.h"
 
-MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& file)
+MonsterTemplate::MonsterTemplate(Bloodworks* bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
 	name = j["name"].get<std::string>();
 	size = Vec2(j["size"].at(0).get<float>(), j["size"].at(1).get<float>());
@@ -40,7 +41,7 @@ MonsterTemplate::MonsterTemplate(nlohmann::json& j, const DirentHelper::File& fi
 	scriptName = j["scriptName"].get<std::string>();
 	scriptTable = lua[scriptName] = lua.create_table();
 	scriptPath = file.folder + j["scriptFile"].get<std::string>();
-	lua.script_file(scriptPath);
+	bloodworks->loadLuaFile(scriptPath);
 
 	if (j.count("bitSpeed"))
 	{

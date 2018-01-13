@@ -252,6 +252,9 @@
     <ClCompile Include="source\TutorialMenu.cpp">
       <Filter>Bloodworks</Filter>
     </ClCompile>
+    <ClCompile Include="source\GameObjectTemplate.cpp">
+      <Filter>Bloodworks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cVec.h">

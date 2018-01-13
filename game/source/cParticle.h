@@ -8,6 +8,7 @@
 #include <list>
 
 class cParticle;
+class cGame;
 
 class cParticleRandomizer
 {
@@ -215,7 +216,7 @@ class cParticleTemplate : public cUniformDataWithShader
 	void randomizeAttributes(cParticleRandomizer& randomizer, cParticle* particle, Vec2& pos, char *buff, cVector<int>& setAttributes) const;
 
 public:
-	cParticleTemplate(nlohmann::json& j, const DirentHelper::File& file);
+	cParticleTemplate(cGame* game, nlohmann::json& j, const DirentHelper::File& file);
 
 	~cParticleTemplate();
 

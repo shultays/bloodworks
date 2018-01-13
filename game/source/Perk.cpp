@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "Bonus.h"
 #include "cGlobals.h"
+#include "Bloodworks.h"
 
 Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& file)
 {
@@ -37,7 +38,7 @@ Perk::Perk(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File& 
 	scriptTable["basePath"] = folder;
 
 	std::string scriptPath = file.folder + j["scriptFile"].get<std::string>();
-	lua.script_file(scriptPath);
+	bloodworks->loadLuaFile(scriptPath);
 
 	onAddGunBulletFunc = scriptTable["onAddGunBullet"];
 	onPlayerDamagedFunc = scriptTable["onPlayerDamaged"];

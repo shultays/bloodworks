@@ -29,7 +29,7 @@ Bonus::Bonus(Bloodworks *bloodworks, nlohmann::json& j, const DirentHelper::File
 	std::string folder = file.folder;
 	fixFolderPath(folder);
 	scriptTable["basePath"] = folder;
-	lua.script_file(scriptFile);
+	bloodworks->loadLuaFile(scriptFile);
 
 	spawnFunc = scriptTable["spawn"];
 

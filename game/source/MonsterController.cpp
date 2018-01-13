@@ -810,7 +810,7 @@ Monster* MonsterController::getMonster(int id) const
 
 void MonsterController::addMonsterTemplate(nlohmann::json& j, const DirentHelper::File& file)
 {
-	MonsterTemplate *t = new MonsterTemplate(j, file);
+	MonsterTemplate *t = new MonsterTemplate(bloodworks, j, file);
 	monsterTemplates.push_back(t);
 	monsterTemplateIndices[t->getScriptName()] = monsterTemplates.size() - 1;
 }
