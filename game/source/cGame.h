@@ -108,5 +108,5 @@ public:
 
 	AARect getScreenRect() const;
 
-	void loadLuaFile(const std::string& scriptFilePath);
+	virtual void loadLuaFile(const std::string& scriptFilePath);
 };

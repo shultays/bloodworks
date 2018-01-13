@@ -347,6 +347,6 @@ public:
 	{
 		return mainMenu;
 	}
-	virtual void loadLuaFile(const std::string& scriptFilePath);
+	virtual void loadLuaFile(const std::string& scriptFilePath );
 	void loadJsonFile(nlohmann::json& j, const std::string& filePath, bool loadInit = false);
 };
