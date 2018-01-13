@@ -52,16 +52,16 @@ BloodworksCheats *bloodworksCheats;
 #endif
 
 
-void appendJson(Bloodworks* bloodworks, nlohmann::json& j, const std::string& fileName)
+void Bloodworks::appendJson(Bloodworks* bloodworks, nlohmann::json& j, const std::string& fileName, bool loadInit)
 {
 	out << "json " << fileName << "\n";
 	nlohmann::json j2;
 
-	bloodworks->loadJsonFile(j2, fileName);
+	bloodworks->loadJsonFile(j2, fileName, loadInit);
 
 	if (j2.count("baseFile"))
 	{
-		appendJson(bloodworks, j, j2["baseFile"].get<std::string>());
+		appendJson(bloodworks, j, j2["baseFile"].get<std::string>(), false);
 	}
 
 	for (nlohmann::json::iterator it = j2.begin(); it != j2.end(); ++it)
@@ -190,7 +190,7 @@ void Bloodworks::initImplementation()
 		out << "Bloodworks::initImplementation 7\n";
 	}
 
-	loadMod("resources");
+	loadResources();
 
 	stopAutoGenerating();
 
@@ -912,7 +912,7 @@ void Bloodworks::loadMod(const std::string& path, bool loadOnlyModData)
 		if (f.isTypeOf("json"))
 		{
 			nlohmann::json j;
-			appendJson(this, j, f.folder + f.file);
+			appendJson(this, j, f.folder + f.file, true);
 			parseJson(j, f, loadOnlyModData);
 		}
 	}
@@ -1213,6 +1213,7 @@ void Bloodworks::freeSharedParticle(cParticle* particle)
 		}
 	}
 }
+
 
 void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData)
 {

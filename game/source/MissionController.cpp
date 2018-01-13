@@ -256,7 +256,7 @@ void MissionController::reset()
 			bloodworks->getSteam()->uploadLeaderboards(score, time);
 		}
 
-		scriptTable = lua[missions[loadedMission]->scriptName] = lua.create_table();
+		scriptTable = lua[missions[loadedMission]->scriptName];
 		loadedMission = -1;
 	}
 	for (auto& g : gameObjects)
