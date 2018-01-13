@@ -269,7 +269,10 @@ void CSteamAchievements::OnUploadScore(LeaderboardScoreUploaded_t *pFindLearderb
 {
 	if (!bIOFailure && pFindLearderboardResult->m_bSuccess)
 	{
-		m_pLeaderboards[curLeaderboardLoad].rank = pFindLearderboardResult->m_nGlobalRankNew;
+		if (pFindLearderboardResult->m_bScoreChanged)
+		{
+			m_pLeaderboards[curLeaderboardLoad].rank = pFindLearderboardResult->m_nGlobalRankNew;
+		}
 		m_pLeaderboards[curLeaderboardLoad].count = SteamUserStats()->GetLeaderboardEntryCount(pFindLearderboardResult->m_hSteamLeaderboard);
 		if (m_pLeaderboards[curLeaderboardLoad].count < 1)
 		{

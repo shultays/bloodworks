@@ -92,7 +92,6 @@ MainMenu::MainMenu(Bloodworks *b)
 	topScore->setVerticalTextAlignment(VerticalTextAlignment::bottom);
 	bloodworks->addRenderable(topScore, GUI + 21);
 
-
 	resize();
 	music = resources.getSoundSample("resources/sounds/main_menu.ogg");
 	setVisible(false);
@@ -252,6 +251,11 @@ void MainMenu::setVisible(bool visible)
 
 	if (visible)
 	{
+		if (bloodworks->isInvalidDefault())
+		{
+			topScore->setText("High scores are disabled.\nDisable mods in options menu to enable");
+		}
+
 		if (handle.isValid() == false)
 		{
 			handle = music->play();

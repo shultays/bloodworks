@@ -203,6 +203,15 @@ void Bloodworks::initImplementation()
 #endif
 	}
 
+	mainMenu = new MainMenu(this);
+
+
+	if (!isInvalidDefault())
+	{
+		bloodworksSteam->updateMainMenuScore();
+	}
+
+
 	if (isFirstTick())
 	{
 		out << "Bloodworks::initImplementation 8\n";
@@ -349,8 +358,6 @@ void Bloodworks::initImplementation()
 	{
 		tutorialMenu = nullptr;
 	}
-
-	mainMenu = new MainMenu(this);
 
 	levelUpPopup = new LevelUpPopup(this);
 	optionsPopup = new OptionsPopup(this);
@@ -1093,6 +1100,7 @@ void Bloodworks::clear()
 
 void Bloodworks::reload()
 {
+	config->check();
 	clear();
 	initImplementation();
 }

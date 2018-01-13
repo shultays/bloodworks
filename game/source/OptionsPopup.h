@@ -66,6 +66,8 @@ class OptionsPopup
 	void changeTab(cButton *tab, cRenderable *group);
 
 	AARect inside;
+
+	bool needsReload;
 public:
 	OptionsPopup(Bloodworks *bloodworks);
 	~OptionsPopup();

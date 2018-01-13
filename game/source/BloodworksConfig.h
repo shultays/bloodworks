@@ -136,7 +136,7 @@ public:
 	void setModsAreDisabled(bool modsAreDisabled)
 	{
 		this->modsAreDisabled = modsAreDisabled;
-		set("fullScreen", modsAreDisabled);
+		set("all_mods_disabled", modsAreDisabled);
 	}
 
 	bool getVSync() const

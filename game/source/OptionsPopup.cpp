@@ -109,7 +109,7 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	disableMods->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	disableMods->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
 	disableMods->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
-	disableMods->setChecked(config->getAutoOpenLevelupPopup());
+	disableMods->setChecked(config->getModsAreDisabled());
 	gameplayGroup->addRenderable(disableMods);
 
 	y -= rowShift;
@@ -343,6 +343,8 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 	lastClickTime = -10.0f;
 	tick();
 	optionsGroup->setVisible(false);
+
+	needsReload = false;
 }
 
 OptionsPopup::~OptionsPopup()
@@ -357,6 +359,7 @@ bool OptionsPopup::isVisible() const
 
 void OptionsPopup::show()
 {
+	needsReload = false;
 	optionsGroup->setVisible(true);
 
 	if (bloodworks->isMissionLoaded())
@@ -451,6 +454,7 @@ void OptionsPopup::tick()
 		if (disableMods->isChanged())
 		{
 			config->setModsAreDisabled(disableMods->isChecked());
+			needsReload = true;
 		}
 	}
 
@@ -555,11 +559,19 @@ void OptionsPopup::tick()
 	{
 		input.clearKeyPress(mouse_button_left);
 		optionsGroup->setVisible(false);
+		if (needsReload)
+		{
+			bloodworks->reload();
+		}
 	}
 	if (mapper.isKeyPressed(GameKey::Back) && inUseKey == nullptr)
 	{
 		optionsGroup->setVisible(false);
 		mapper.clearKeyPress(GameKey::Back);
+		if (needsReload)
+		{
+			bloodworks->reload();
+		}
 	}
 }
 

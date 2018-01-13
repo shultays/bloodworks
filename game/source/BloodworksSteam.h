@@ -99,6 +99,7 @@ public:
 	void openWorkshop();
 
 	void uploadLeaderboards(int score, float time);
+	void updateMainMenuScore();
 };
 
 #else
@@ -125,6 +126,7 @@ public:
 	void tick() {}
 	void reset() {}
 	void onMonsterDied(Monster* monster) {}
+	void updateMainMenuScore();
 };
 
 #endif

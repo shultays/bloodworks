@@ -67,7 +67,7 @@ void BloodworksSteam::openWorkshop()
 
 void BloodworksSteam::uploadLeaderboards(int score, float time)
 {
-	if (inited && coral.getSteam()->getAchievements()->AreScoresReady() && !coral.getSteam()->getAchievements()->isUploadingScores() )
+	if (inited && coral.getSteam()->getAchievements()->AreScoresReady() && !coral.getSteam()->getAchievements()->isUploadingScores() && !bloodworks->isInvalidDefault() )
 	{
 		bloodworks->getMainMenu()->updateScore("\nUpdating Scores");
 		g_LeaderBoards[LED_SCORE].score = max(g_LeaderBoards[LED_SCORE].score, score);
@@ -176,6 +176,7 @@ void BloodworksSteam::init()
 	assert(sizeof(g_Stats) / sizeof(g_Stats[0]) == STA_COUNT);
 	reset();
 	out << "BloodworksSteam::init fin\n";
+
 }
 
 void BloodworksSteam::tick()
@@ -192,26 +193,10 @@ void BloodworksSteam::tick()
 
 	if (updatingScores && !coral.getSteam()->getAchievements()->isUploadingScores() && coral.getSteam()->getAchievements()->AreScoresReady())
 	{
-		float t = ((float)(g_LeaderBoards[LED_SCORE].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE].count;
-
-		std::stringstream s;
-		s << "\nBest Score : ";
-		s << g_LeaderBoards[LED_SCORE].score;
-		s.precision(3);
-		if (t < 1.0f)
+		if (!bloodworks->isInvalidDefault())
 		{
-			if (t < 0.001f)
-			{
-				t = 0.001f;
-			}
-			s <<  " (Top " << t << "%)";
+			updateMainMenuScore();
 		}
-		else
-		{
-			s << " (Top " << (int)(t) << "%)";
-		}
-
-		bloodworks->getMainMenu()->updateScore(s.str());
 		updatingScores = false;
 	}
 
@@ -281,6 +266,34 @@ void BloodworksSteam::reset()
 void BloodworksSteam::onMonsterDied(Monster* monster)
 {
 	killedMonster++;
+}
+
+void BloodworksSteam::updateMainMenuScore()
+{
+	if (!coral.getSteam()->getAchievements()->AreScoresReady())
+	{
+		return;
+	}
+	float t = ((float)(g_LeaderBoards[LED_SCORE].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE].count;
+
+	std::stringstream s;
+	s << "\nBest Score : ";
+	s << g_LeaderBoards[LED_SCORE].score;
+	s.precision(3);
+	if (t < 1.0f)
+	{
+		if (t < 0.001f)
+		{
+			t = 0.001f;
+		}
+		s << " (Top " << t << "%)";
+	}
+	else
+	{
+		s << " (Top " << (int)(t) << "%)";
+	}
+
+	bloodworks->getMainMenu()->updateScore(s.str());
 }
 
 bool BloodworksSteam::loadWorkshopItem(PublishedFileId_t workshopItemID)
