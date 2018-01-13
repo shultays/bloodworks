@@ -20,6 +20,8 @@ class BloodworksConfig : public cPersistent
 	int windowHeight;
 
 	int crashAutoSendState;
+
+	bool modsAreDisabled;
 public:
 	BloodworksConfig()
 	{
@@ -42,6 +44,8 @@ public:
 		windowHeight = getInt("windowHeight", 600);
 
 		crashAutoSendState = getInt("crashAutoSendState", 0);
+
+		modsAreDisabled = getBool("all_mods_disabled", false, "Set if you don't want to load mods");
 	}
 
 	bool getGore() const
@@ -123,6 +127,16 @@ public:
 	{
 		this->fullScreen = fullScreen;
 		set("fullScreen", fullScreen);
+	}
+
+	bool getModsAreDisabled() const
+	{
+		return modsAreDisabled;
+	}
+	void setModsAreDisabled(bool modsAreDisabled)
+	{
+		this->modsAreDisabled = modsAreDisabled;
+		set("fullScreen", modsAreDisabled);
 	}
 
 	bool getVSync() const

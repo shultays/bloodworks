@@ -196,6 +196,9 @@ void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& 
 	data->scriptFile = file.folder + j["scriptFile"].get<std::string>();
 	fixFilePath(data->scriptFile);
 
+	lua[data->scriptName] = lua.create_table();
+
+	bloodworks->loadLuaFile(data->scriptFile);
 
 	data->persistent.setFileBackup("mod_configs/" + data->scriptName + ".txt");
 
@@ -216,7 +219,7 @@ void MissionController::loadMission(const std::string& name)
 		if (mission->scriptName == name)
 		{
 			loadedMission = i;
-			scriptTable = lua[mission->scriptName] = lua.create_table();
+			scriptTable = lua[mission->scriptName];
 			missionLoadTime = timer.getTime();
 
 			lua["missionTime"] = timer.getTime() - missionLoadTime;
@@ -225,7 +228,6 @@ void MissionController::loadMission(const std::string& name)
 			lua["missionPath"] = mission->basePath;
 			lua["missionConfig"] = mission->persistent;
 
-			bloodworks->loadLuaFile(mission->scriptFile);
 			scriptTable["init"]();
 
 			for (auto mod : missionMods)
