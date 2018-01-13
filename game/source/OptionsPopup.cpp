@@ -97,6 +97,23 @@ OptionsPopup::OptionsPopup(Bloodworks *bloodworks)
 
 	y -= rowShift;
 
+	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Disable Mods", fontSize);
+	text->setWorldMatrix(Mat3::translationMatrix(x, y));
+	text->setTextAlignment(TextAlignment::left);
+	text->setVerticalTextAlignment(VerticalTextAlignment::mid);
+	gameplayGroup->addRenderable(text);
+	disableModsText = text;
+
+	disableMods = new cTickBox(bloodworks);
+	disableMods->setWorldMatrix(Mat3::translationMatrix(x, y));
+	disableMods->setDefaultMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	disableMods->setHoverMatrix(Vec2(x + tickShift, y - 5.0f), Vec2(tickSize), 0.0f);
+	disableMods->setHitArea(-tickSize * 0.6f, tickSize * 0.6f);
+	disableMods->setChecked(config->getAutoOpenLevelupPopup());
+	gameplayGroup->addRenderable(disableMods);
+
+	y -= rowShift;
+
 	text = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), "Gore", fontSize, Vec4(0.4f, 0.4f, 0.4f, 1.0f));
 	text->setWorldMatrix(Mat3::translationMatrix(x, y));
 	text->setTextAlignment(TextAlignment::left);
@@ -341,6 +358,17 @@ bool OptionsPopup::isVisible() const
 void OptionsPopup::show()
 {
 	optionsGroup->setVisible(true);
+
+	if (bloodworks->isMissionLoaded())
+	{
+		disableMods->setVisible(false);
+		disableModsText->setVisible(false);
+	}
+	else
+	{
+		disableMods->setVisible(true);
+		disableModsText->setVisible(true);
+	}
 }
 
 void OptionsPopup::tick()
@@ -402,6 +430,7 @@ void OptionsPopup::tick()
 		screenShake->check(input.getMousePos());
 		lockCrosshair->check(input.getMousePos());
 		autoLevelUp->check(input.getMousePos());
+		disableMods->check(input.getMousePos());
 
 		if (gore->isChanged())
 		{
@@ -418,6 +447,10 @@ void OptionsPopup::tick()
 		if (autoLevelUp->isChanged())
 		{
 			config->setAutoOpenLevelupPopup(autoLevelUp->isChecked());
+		}
+		if (disableMods->isChanged())
+		{
+			config->setModsAreDisabled(disableMods->isChecked());
 		}
 	}
 

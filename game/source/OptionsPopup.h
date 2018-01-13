@@ -27,6 +27,9 @@ class OptionsPopup
 	cTickBox *screenShake;
 	cTickBox *lockCrosshair;
 	cTickBox *autoLevelUp;
+	cTickBox *disableMods;
+
+	cTextRenderable* disableModsText;
 
 	// audio video options
 	cButton *audioVideoTitle;

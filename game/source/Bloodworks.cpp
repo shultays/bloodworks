@@ -74,7 +74,7 @@ void Bloodworks::initImplementation()
 {
 	firstTick = true;
 	autoGenerating = false;
-
+	invalidDefault = false;
 	if ( isFirstTick())
 	{
 		out << "Bloodworks::initImplementation\n";
