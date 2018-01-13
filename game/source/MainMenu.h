@@ -34,4 +34,5 @@ public:
 	void updateMusicVolume();
 
 	void updateScore(const std::string& score);
+	void invalidateScore();
 };

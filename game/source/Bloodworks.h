@@ -354,6 +354,11 @@ public:
 	virtual void loadLuaFile(const std::string& scriptFilePath );
 	virtual void loadJsonFile(nlohmann::json& j, const std::string& filePath, bool loadInit = false);
 
+	void setInvalidDefault()
+	{
+		invalidDefault = true;
+	}
+
 	bool isInvalidDefault() const
 	{
 		return invalidDefault;

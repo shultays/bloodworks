@@ -253,7 +253,7 @@ void MainMenu::setVisible(bool visible)
 	{
 		if (bloodworks->isInvalidDefault())
 		{
-			topScore->setText("High scores are disabled.\nDisable mods in options menu to enable");
+			invalidateScore();
 		}
 
 		if (handle.isValid() == false)
@@ -287,4 +287,9 @@ void MainMenu::updateMusicVolume()
 void MainMenu::updateScore(const std::string& score)
 {
 	topScore->setText(score);
+}
+
+void MainMenu::invalidateScore()
+{
+	topScore->setText("High scores are disabled.\nDisable mods in options menu to enable");
 }

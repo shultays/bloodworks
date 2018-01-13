@@ -46,8 +46,8 @@ enum EStat
 
 enum ELeaderBoard
 {
-	LED_SCORE,
-	LED_LIFE_TIME,
+	LED_SCORE_NEW,
+	LED_LIFE_TIME_NEW,
 
 	LED_COUNT
 };
