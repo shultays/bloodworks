@@ -12,6 +12,7 @@
 #include "MonsterController.h"
 #include "Monster.h"
 #include "MainMenu.h"
+#include "BloodworksConfig.h"
 
 #define _ACH_ID( id ) { id, #id, false } 
 
@@ -52,8 +53,8 @@ Stat_t g_Stats[] =
 
 Leaderboard_t g_LeaderBoards[] = 
 {
-	_LEADER_BOARD_ID(LED_SCORE),
-	_LEADER_BOARD_ID(LED_LIFE_TIME),
+	_LEADER_BOARD_ID(LED_SCORE_NEW),
+	_LEADER_BOARD_ID(LED_LIFE_TIME_NEW),
 };
 
 
@@ -70,8 +71,8 @@ void BloodworksSteam::uploadLeaderboards(int score, float time)
 	if (inited && coral.getSteam()->getAchievements()->AreScoresReady() && !coral.getSteam()->getAchievements()->isUploadingScores() && !bloodworks->isInvalidDefault() )
 	{
 		bloodworks->getMainMenu()->updateScore("\nUpdating Scores");
-		g_LeaderBoards[LED_SCORE].score = max(g_LeaderBoards[LED_SCORE].score, score);
-		g_LeaderBoards[LED_LIFE_TIME].score = max(g_LeaderBoards[LED_LIFE_TIME].score, (int)(time * 1000) );
+		g_LeaderBoards[LED_SCORE_NEW].score = max(g_LeaderBoards[LED_SCORE_NEW].score, score);
+		g_LeaderBoards[LED_LIFE_TIME_NEW].score = max(g_LeaderBoards[LED_LIFE_TIME_NEW].score, (int)(time * 1000) );
 		coral.getSteam()->getAchievements()->uploadScores();
 		updatingScores = true;
 	}
@@ -274,11 +275,11 @@ void BloodworksSteam::updateMainMenuScore()
 	{
 		return;
 	}
-	float t = ((float)(g_LeaderBoards[LED_SCORE].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE].count;
+	float t = ((float)(g_LeaderBoards[LED_SCORE_NEW].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE_NEW].count;
 
 	std::stringstream s;
 	s << "\nBest Score : ";
-	s << g_LeaderBoards[LED_SCORE].score;
+	s << g_LeaderBoards[LED_SCORE_NEW].score;
 	s.precision(3);
 	if (t < 1.0f)
 	{
@@ -359,8 +360,10 @@ void BloodworksSteam::loadWorkshopItems()
 
 void BloodworksSteam::onWorkshopItemInstalled(ItemInstalled_t *pParam)
 {
-	if (pParam->m_unAppID == SteamUtils()->GetAppID() && inited)
+	if (pParam->m_unAppID == SteamUtils()->GetAppID() && inited && !bloodworks->getConfig()->getModsAreDisabled() )
 	{
+		bloodworks->setInvalidDefault();
+		bloodworks->getMainMenu()->invalidateScore();
 		if (bloodworks->isMissionLoaded())
 		{
 			bloodworks->gotoMainMenu();
