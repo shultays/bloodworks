@@ -107,6 +107,7 @@ void Bullet::tick()
 	if (hasCollision && bloodworks->getCollisionController()->hasCollision(Circle(pos, radius), CollisionController::no_bullet_collision))
 	{
 		onHit(nullptr);
+		onCollision();
 		removeSelf();
 	}
 
@@ -229,6 +230,14 @@ Gun* Bullet::getGun() const
 	return gun;
 }
 
+void Bullet::onCollision()
+{
+	if (onCollisionCallback)
+	{
+		// todo
+	}
+}
+
 void Bullet::onHit(Monster* monster)
 {
 	if (onHitCallback)
@@ -310,6 +319,7 @@ void Bullet::setScript(sol::table& script)
 	this->script = script;
 
 	onHitCallback = script["onHit"];
+	onCollisionCallback = script["onCollision"];
 	onTickCallback = script["onTick"];
 	shouldHitMonsterTest = script["shouldHitMonsterTest"];
 }

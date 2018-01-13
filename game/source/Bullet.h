@@ -44,6 +44,7 @@ class Bullet
 	sol::table script;
 
 	sol::function onHitCallback;
+	sol::function onCollisionCallback;
 	sol::function onTickCallback;
 	sol::function shouldHitMonsterTest;
 
@@ -105,4 +106,6 @@ public:
 	float getMeshRotation();
 	void setColor(const Vec4& color);
 	Gun* getGun() const;
+private:
+	void onCollision();
 };

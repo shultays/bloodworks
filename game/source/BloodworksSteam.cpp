@@ -275,7 +275,13 @@ void BloodworksSteam::updateMainMenuScore()
 	{
 		return;
 	}
-	float t = ((float)(g_LeaderBoards[LED_SCORE_NEW].rank - 1)) * 100.0f / g_LeaderBoards[LED_SCORE_NEW].count;
+
+	int c = g_LeaderBoards[LED_SCORE_NEW].count;
+	if (c > 0)
+	{
+		c--;
+	}
+	float t = ((float)(g_LeaderBoards[LED_SCORE_NEW].rank - 1)) * 100.0f / c;
 
 	std::stringstream s;
 	s << "\nBest Score : ";

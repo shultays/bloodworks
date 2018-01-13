@@ -84,6 +84,311 @@ end
 
 GhostBuffId = getGlobalUniqueId()
 
+defaultBossCount = 0
+defaultBosses = {}
+defaultBossesCheck = {}
+
+function addDefaultBoss(func, check)
+    defaultBossCount = defaultBossCount + 1
+    defaultBosses[ defaultBossCount ] = func
+    defaultBossesCheck[ defaultBossCount ] = check
+    return defaultBossCount
+end
+
+addDefaultBoss(function(monster)
+    -- huge & tank
+    monster.hitPoint = monster.hitPoint * 6
+    monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.7
+    monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
+    monster:setScale(1.3 + math.random() * 0.1)
+    monster.knockbackResistance:addBuff(0.07)
+    monster.data.stunDuration = 0.0
+    monster.data.slowDuration = 0.0
+end)
+
+addDefaultBoss(function(monster)
+    -- ghost
+    monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.0))
+    monster:setScale(monster.scale * 0.85)
+    monster.hasCollision = false
+    monster.hasBlood = false
+    monster.hasGibs = false
+    monster.data.randomMove = false
+    monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.8
+    addCustomOnTick(monster, function (monster)
+        local diffToPlayer = player.position - monster.position 
+        local distanceToPlayer = diffToPlayer:length()
+        monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.7 * clamp( 1.0 - (distanceToPlayer - 150.0) / 300 ) ) )
+    end)
+end)
+addDefaultBoss(function(monster)
+    -- hits hard
+    monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
+    monster.data.minDamage = math.floor(monster.data.minDamage * 3.0)
+    monster.data.maxDamage = math.floor(monster.data.maxDamage * 4.0)
+    monster.data.hitWaitTime = monster.data.hitWaitTime * 0.5
+    monster.hitPoint = math.floor(monster.hitPoint * 1.1)
+    monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.1
+    monster.data.randomMove = false
+end)
+addDefaultBoss(function(monster)
+    -- fast
+    monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
+    monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.65
+    monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 2.0
+    monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
+    monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
+    monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
+    monster.knockbackResistance:addBuff(0.4)
+    monster.hitPoint = math.floor(monster.hitPoint * 0.6)
+end)
+
+addDefaultBoss(function(monster)
+    -- shoots bullets (fast)
+    monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
+    monster.data.shootsBullets = true
+    monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.1))
+    monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.1))
+
+    monster.data.bulletRate = 1.0 - clamp(min * 0.1) * 0.4
+    monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
+    monster.data.bulletCount = 5 + math.floor( min / 2 ) * 2
+end)
+
+addDefaultBoss(function(monster)
+    -- spawns 2 on death
+    monster.data.remainingLife = 3
+    monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
+    monster:setScale(monster.scale * (1.1 + math.random() * 0.1))
+    monster.experienceMultiplier = monster.experienceMultiplier * 0.3
+    monster.scoreMultiplier = monster.scoreMultiplier * 0.3
+    monster.data.hitPoint = monster.hitPoint
+    monster.data.onKillFuncSplit = function (monster)
+        if monster.data.remainingLife > 0 then
+            monster.data.remainingLife = monster.data.remainingLife - 1
+            for i = 1,2 do
+                if monster.hitPoint > 0 then
+                    return
+                end
+                local newMonster = addMonster(monster.monsterTemplate.name)
+                newMonster.data.remainingLife = monster.data.remainingLife
+                newMonster.position = monster.position
+                newMonster:setScale(math.max(0.40, monster.scale * 0.80))
+                newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
+                newMonster:copyIgnoreId(monster)
+                
+                newMonster.data.playerSeeRange = monster.data.playerSeeRange
+                newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
+                newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+
+                newMonster.data.hitWaitTime = monster.data.hitWaitTime
+                newMonster.data.hitInterval = monster.data.hitInterval
+                newMonster.data.minDamage = monster.data.minDamage
+                newMonster.data.maxDamage = monster.data.maxDamage
+
+                newMonster.experienceMultiplier = monster.experienceMultiplier * 0.5
+                newMonster.scoreMultiplier = monster.scoreMultiplier * 0.5
+
+                newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
+                newMonster.data.hitPoint = newMonster.hitPoint
+                newMonster.moveAngle = monster.moveAngle + math.pi * (i - 0.5)
+                newMonster.data.onKillFuncSplit = monster.data.onKillFuncSplit
+                addCustomOnKill(newMonster, monster.data.onKillFuncSplit)
+                
+                newMonster.data.invulTime = time + 0.3
+                
+                addCustomOnHit(newMonster, function(monster, damage, args)
+                    if time < monster.data.invulTime then
+                        return 0
+                    end
+                    return damage
+                end)
+            end
+        end
+    end
+    addCustomOnKill(monster, monster.data.onKillFuncSplit)
+end)
+addDefaultBoss(function(monster)
+    -- spawns 8 on death
+    monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
+    monster:setScale(1.0 + math.random() * 0.2)
+    monster.experienceMultiplier = monster.experienceMultiplier * 0.5
+    monster.scoreMultiplier = monster.scoreMultiplier * 0.5
+    monster.data.hitPoint = monster.hitPoint
+    addCustomOnKill(monster, function (monster)
+        if monster.hitPoint > 0 then
+            return
+        end
+        for i = 1,8 do
+            local newMonster = addMonster(monster.monsterTemplate.name)
+            newMonster.position = monster.position
+            newMonster:setScale(math.max(0.40, monster.scale * 0.50))
+            newMonster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
+            newMonster:copyIgnoreId(monster)
+            
+            newMonster.data.playerSeeRange = monster.data.playerSeeRange
+            newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.2
+            newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.7
+
+            newMonster.data.hitWaitTime = monster.data.hitWaitTime
+            newMonster.data.hitInterval = monster.data.hitInterval
+            newMonster.data.minDamage = monster.data.minDamage / 2
+            newMonster.data.maxDamage = monster.data.maxDamage / 2
+
+            newMonster.experienceMultiplier = monster.experienceMultiplier * 0.1
+            newMonster.scoreMultiplier = monster.scoreMultiplier * 0.1
+
+            newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
+            newMonster.data.hitPoint = newMonster.hitPoint
+                
+            newMonster.data.randomMove = true
+            newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
+            
+            newMonster.data.invulTime = time + 0.3
+            addCustomOnHit(newMonster, function(monster, damage, args)
+                if time < monster.data.invulTime then
+                    return 0
+                end
+                return damage
+            end)
+        end
+    end)
+end)
+addDefaultBoss(function(monster)
+    -- angel
+    monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
+    monster.data.maxMoveSpeed = math.min(500.0, monster.data.maxMoveSpeed * 3.0)
+    monster.data.originalSpeed = monster.data.maxMoveSpeed
+    monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
+    monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
+        
+    monster.data.minDamage = math.floor(monster.data.minDamage * 0.5)
+    monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.5)
+
+    monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
+    monster.data.hitInterval = monster.data.hitInterval * 0.4
+    monster.data.targetShift = Vec2.new(0.0, 0.0)
+    monster.data.randomMove = false
+    monster.knockbackResistance:addBuff(0.0)
+    addCustomOnTick(monster, function (monster)
+        local diffToPlayer = player.position - monster.position 
+        local distanceToPlayer = diffToPlayer:length()
+        local angleToPlayer = diffToPlayer:getAngle() - math.pi
+        local angle = 0.2
+        if distanceToPlayer < 150 then
+            angle = angle + 1.4 * (1.0 - distanceToPlayer / 150.0)
+        end
+        if distanceToPlayer > 1000 or math.abs(angleDiff(angleToPlayer, player.aimAngle)) < angle then
+            monster.data.maxMoveSpeed = 0.0
+            monster.animationSpeed = 0.0
+            monster.moveSpeed = 0.0
+            monster.data.maxRotateSpeed = 0.0
+            monster.data.canHit = false
+        else
+            monster.data.maxMoveSpeed = monster.data.originalSpeed
+            monster.animationSpeed = 1.0
+            monster.data.maxRotateSpeed = monster.data.originalSpeed
+            monster.data.canHit = true
+        end
+    end)
+end, 
+function(monster)
+    if missionTime < 30.0 then
+        return false
+    else
+        return true
+    end
+end)
+addDefaultBoss(function(monster)
+    -- invulnerability after hit
+    monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
+    addCustomOnHit(monster, function(monster, damage, args)
+        if time - monster.data.lastHitTime < 1.0 then
+            damage = 0
+        end
+        
+        local buffId = monster.moveSpeedMultiplier:addBuffWithId(monster.id, 0.3)
+        monster.moveSpeedMultiplier:setBuffDuration(buffId, 1.0)
+        
+        buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
+        monster.colorMultiplier:setBuffDuration(buffId, 1.0)
+        monster.data.lastHitTime = time
+        return damage
+    end)
+    addCustomShouldHit(monster, function(monster, gun, bullet)
+        return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
+    end)
+end)
+addDefaultBoss(function(monster)
+    -- blinks
+    monster.data.blinkParticle = monster:addParticleSpawner("CriticalParticle", {});
+    monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 1.7, 1.0))
+    monster.hitPoint = math.floor(monster.hitPoint * 1.5)
+
+    addCustomOnHit(monster, function(monster, damage, args)
+        if monster.hitPoint > damage then
+            local t = math.random() * math.pi * 2.0
+            local r = math.random() * 100.0 + 100.0
+            local v = Vec2.fromAngle(t) * r
+            for i=1,8 do
+                monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
+            end
+            monster.position = monster.position + v
+            for i=1,8 do
+                monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
+            end
+            
+            playSound({path = "~/resources/sounds/shimmer.ogg"})
+        end
+        return damage
+    end)
+end)
+
+addDefaultBoss(function(monster)
+    -- spawn little clones
+    monster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
+    monster.moveSpeed = monster.moveSpeed * 0.5
+    monster.data.maxHitpoint = monster.hitPoint
+    monster:setScale(0.8 + math.random() * 0.3)
+
+    addCustomOnTick(monster, function (monster)
+        if monster.data.spawnTimer == nil then
+            monster.data.spawnTimer = 3.0
+        end
+        monster.data.spawnTimer = monster.data.spawnTimer - dt
+        
+        if monster.data.spawnTimer < 0.0 then
+            monster.data.spawnTimer = monster.data.spawnTimer + 5.0
+            
+            if missionData.ignoreMonsterCount < 100 then
+                local newMonster = addMonster(monster.monsterTemplate.name)
+                newMonster.position = monster.position
+                newMonster:setScale(math.max(0.3, monster.scale * 0.60))
+                newMonster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
+                
+                newMonster.data.playerSeeRange = monster.data.playerSeeRange
+                newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
+                newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
+
+                newMonster.data.hitWaitTime = monster.data.hitWaitTime
+                newMonster.data.hitInterval = monster.data.hitInterval
+                newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
+                newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
+
+                newMonster.experienceMultiplier = 0.0
+                newMonster.scoreMultiplier = 0.0
+
+                newMonster.hitPoint = math.floor(monster.data.maxHitpoint * 0.2)
+                newMonster.data.randomMove = true
+                newMonster.moveAngle = -monster.moveAngle
+                
+                ignoreMonsterForCount(newMonster)
+            end
+        end
+    end)
+end)
+
+
 function makeBossDefault(monster, forceType)
     local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
     monster.hitPoint = math.floor(monster.hitPoint * 1.5)
@@ -99,275 +404,18 @@ function makeBossDefault(monster, forceType)
     monster.scoreMultiplier = 5.0 + math.random() * 2.0
     monster:modifyDrawLevel(3)
     
-    local t = 0
-    repeat
-        t = math.random(11)
-    until missionTime > 30.0 or t ~= 8 
-    
     if forceType ~= nil then
-        t = forceType
-    end
-    
-    
-    if t == 1 then -- huge & tank
-        monster.hitPoint = monster.hitPoint * 6
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.7
-        monster.colorMultiplier:addBuff(Vec4.new(0.9, 0.8, 0.3, 1.0))
-        monster:setScale(1.3 + math.random() * 0.1)
-        monster.knockbackResistance:addBuff(0.07)
-        monster.data.stunDuration = 0.0
-        monster.data.slowDuration = 0.0
-    elseif t == 2 then -- ghost
-        monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.0))
-        monster:setScale(monster.scale * 0.85)
-        monster.hasCollision = false
-        monster.hasBlood = false
-        monster.hasGibs = false
-        monster.data.randomMove = false
-        monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.8
-        addCustomOnTick(monster, function (monster)
-            local diffToPlayer = player.position - monster.position 
-            local distanceToPlayer = diffToPlayer:length()
-            monster.colorMultiplier:addBuffWithId(GhostBuffId, Vec4.new(0.5, 0.5, 0.5, 0.7 * clamp( 1.0 - (distanceToPlayer - 150.0) / 300 ) ) )
-        end)
-    elseif t == 3 then -- hits hard
-        monster.colorMultiplier:addBuff(Vec4.new(1.0, 0.3, 0.3, 1.0))
-        monster.data.minDamage = math.floor(monster.data.minDamage * 3.0)
-        monster.data.maxDamage = math.floor(monster.data.maxDamage * 4.0)
-        monster.data.hitWaitTime = monster.data.hitWaitTime * 0.5
-        monster.hitPoint = math.floor(monster.hitPoint * 1.1)
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.1
-        monster.data.randomMove = false
-    elseif t == 4 then -- fast
-        monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 1.0, 1.0))
-        monster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.65
-        monster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 2.0
-        monster.data.minDamage = math.floor(monster.data.minDamage * 0.8)
-        monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.8)
-        monster.data.hitWaitTime = monster.data.hitWaitTime * 0.2
-        monster.knockbackResistance:addBuff(0.4)
-        monster.hitPoint = math.floor(monster.hitPoint * 0.6)
-    elseif t == 5 then -- shoots bullets (fast)
-        monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.7, 0.3, 1.0))
-        monster.data.shootsBullets = true
-        monster.data.bulletMinDamage = math.floor(monster.data.bulletMinDamage * (1.0 + min * 0.1))
-        monster.data.bulletMaxDamage = math.floor(monster.data.bulletMaxDamage * (1.0 + min * 0.1))
-        
-        monster.data.bulletRate = 1.0 - clamp(min * 0.1) * 0.4
-        monster.data.bulletRandom = 0.2 - clamp(min * 0.15) * 0.15
-        monster.data.bulletCount = 5 + math.floor( min / 2 ) * 2
-    elseif t == 6 then -- spawns 2 on death
-        monster.data.remainingLife = 3
-        monster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-        monster:setScale(monster.scale * (1.1 + math.random() * 0.1))
-        monster.experienceMultiplier = monster.experienceMultiplier * 0.3
-        monster.scoreMultiplier = monster.scoreMultiplier * 0.3
-        monster.data.hitPoint = monster.hitPoint
-        monster.data.onKillFuncSplit = function (monster)
-            if monster.data.remainingLife > 0 then
-                monster.data.remainingLife = monster.data.remainingLife - 1
-                for i = 1,2 do
-                    if monster.hitPoint > 0 then
-                        return
-                    end
-                    local newMonster = addMonster(monster.monsterTemplate.name)
-                    newMonster.data.remainingLife = monster.data.remainingLife
-                    newMonster.position = monster.position
-                    newMonster:setScale(math.max(0.40, monster.scale * 0.80))
-                    newMonster.colorMultiplier:addBuff(Vec4.new(0.7, 0.2, 0.7, 1.0))
-                    newMonster:copyIgnoreId(monster)
-                    
-                    newMonster.data.playerSeeRange = monster.data.playerSeeRange
-                    newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
-                    newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
-
-                    newMonster.data.hitWaitTime = monster.data.hitWaitTime
-                    newMonster.data.hitInterval = monster.data.hitInterval
-                    newMonster.data.minDamage = monster.data.minDamage
-                    newMonster.data.maxDamage = monster.data.maxDamage
-
-                    newMonster.experienceMultiplier = monster.experienceMultiplier * 0.5
-                    newMonster.scoreMultiplier = monster.scoreMultiplier * 0.5
-
-                    newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
-                    newMonster.data.hitPoint = newMonster.hitPoint
-                    newMonster.moveAngle = monster.moveAngle + math.pi * (i - 0.5)
-                    newMonster.data.onKillFuncSplit = monster.data.onKillFuncSplit
-                    addCustomOnKill(newMonster, monster.data.onKillFuncSplit)
-                    
-                    newMonster.data.invulTime = time + 0.3
-                    
-                    addCustomOnHit(newMonster, function(monster, damage, args)
-                        if time < monster.data.invulTime then
-                            return 0
-                        end
-                        return damage
-                    end)
-                end
+        local t = forceType
+        defaultBosses[t](monster)
+    else
+        local t = 0
+        while true do
+            t = math.random(defaultBossCount)
+            if defaultBossesCheck[t] == nil or defaultBossesCheck[t](monster) then
+                defaultBosses[t](monster)
+                break
             end
         end
-        addCustomOnKill(monster, monster.data.onKillFuncSplit)
-    elseif t == 7 then -- spawns 8 on death
-        monster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
-        monster:setScale(1.0 + math.random() * 0.2)
-        monster.experienceMultiplier = monster.experienceMultiplier * 0.5
-        monster.scoreMultiplier = monster.scoreMultiplier * 0.5
-        monster.data.hitPoint = monster.hitPoint
-        addCustomOnKill(monster, function (monster)
-            if monster.hitPoint > 0 then
-                return
-            end
-            for i = 1,8 do
-                local newMonster = addMonster(monster.monsterTemplate.name)
-                newMonster.position = monster.position
-                newMonster:setScale(math.max(0.40, monster.scale * 0.50))
-                newMonster.colorMultiplier:addBuff(Vec4.new(0.2, 0.2, 0.2, 1.0))
-                newMonster:copyIgnoreId(monster)
-                
-                newMonster.data.playerSeeRange = monster.data.playerSeeRange
-                newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 1.2
-                newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed * 0.7
-
-                newMonster.data.hitWaitTime = monster.data.hitWaitTime
-                newMonster.data.hitInterval = monster.data.hitInterval
-                newMonster.data.minDamage = monster.data.minDamage / 2
-                newMonster.data.maxDamage = monster.data.maxDamage / 2
-
-                newMonster.experienceMultiplier = monster.experienceMultiplier * 0.1
-                newMonster.scoreMultiplier = monster.scoreMultiplier * 0.1
-
-                newMonster.hitPoint = math.floor(monster.data.hitPoint * 0.5)
-                newMonster.data.hitPoint = newMonster.hitPoint
-                    
-                newMonster.data.randomMove = true
-                newMonster.moveAngle = monster.moveAngle + math.pi * i / 8
-                
-                newMonster.data.invulTime = time + 0.3
-                addCustomOnHit(newMonster, function(monster, damage, args)
-                    if time < monster.data.invulTime then
-                        return 0
-                    end
-                    return damage
-                end)
-            end
-        end)
-    elseif t == 8 then -- angel
-        monster.colorMultiplier:addBuff(Vec4.new(2.0, 2.0, 2.0, 1.0))
-        monster.data.maxMoveSpeed = math.min(500.0, monster.data.maxMoveSpeed * 3.0)
-        monster.data.originalSpeed = monster.data.maxMoveSpeed
-        monster.data.maxRotateSpeed =  monster.data.maxRotateSpeed * 3.0
-        monster.data.originalRotateSpeed =  monster.data.maxRotateSpeed
-            
-        monster.data.minDamage = math.floor(monster.data.minDamage * 0.5)
-        monster.data.maxDamage = math.floor(monster.data.maxDamage * 0.5)
-        
-        monster.data.hitWaitTime = monster.data.hitWaitTime * 0.1
-        monster.data.hitInterval = monster.data.hitInterval * 0.4
-        monster.data.targetShift = Vec2.new(0.0, 0.0)
-        monster.data.randomMove = false
-        monster.knockbackResistance:addBuff(0.0)
-        addCustomOnTick(monster, function (monster)
-            local diffToPlayer = player.position - monster.position 
-            local distanceToPlayer = diffToPlayer:length()
-            local angleToPlayer = diffToPlayer:getAngle() - math.pi
-            local angle = 0.2
-            if distanceToPlayer < 150 then
-                angle = angle + 1.4 * (1.0 - distanceToPlayer / 150.0)
-            end
-            if distanceToPlayer > 1000 or math.abs(angleDiff(angleToPlayer, player.aimAngle)) < angle then
-                monster.data.maxMoveSpeed = 0.0
-                monster.animationSpeed = 0.0
-                monster.moveSpeed = 0.0
-                monster.data.maxRotateSpeed = 0.0
-                monster.data.canHit = false
-            else
-                monster.data.maxMoveSpeed = monster.data.originalSpeed
-                monster.animationSpeed = 1.0
-                monster.data.maxRotateSpeed = monster.data.originalSpeed
-                monster.data.canHit = true
-            end
-        end)
-    elseif t == 9 then -- invulnerability after hit
-        monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 0.7, 1.0))
-        addCustomOnHit(monster, function(monster, damage, args)
-            if time - monster.data.lastHitTime < 1.0 then
-                damage = 0
-            end
-            
-            local buffId = monster.moveSpeedMultiplier:addBuffWithId(monster.id, 0.3)
-            monster.moveSpeedMultiplier:setBuffDuration(buffId, 1.0)
-            
-            buffId = monster.colorMultiplier:addBuff(Vec4.new(1.0, 1.0, 1.0, 0.2))
-            monster.colorMultiplier:setBuffDuration(buffId, 1.0)
-            monster.data.lastHitTime = time
-            return damage
-        end)
-        addCustomShouldHit(monster, function(monster, gun, bullet)
-            return monster.data.lastHitTime == nil or time - monster.data.lastHitTime > 1.0
-        end)
-    elseif t == 10 then -- blinks
-        monster.data.blinkParticle = monster:addParticleSpawner("CriticalParticle", {});
-        monster.colorMultiplier:addBuff(Vec4.new(0.7, 1.7, 1.7, 1.0))
-        monster.hitPoint = math.floor(monster.hitPoint * 1.5)
-
-        addCustomOnHit(monster, function(monster, damage, args)
-            if monster.hitPoint > damage then
-                local t = math.random() * math.pi * 2.0
-                local r = math.random() * 100.0 + 100.0
-                local v = Vec2.fromAngle(t) * r
-                for i=1,8 do
-                    monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
-                end
-                monster.position = monster.position + v
-                for i=1,8 do
-                    monster:spawnParticle(monster.data.blinkParticle, {initialScale = 15.0, moveSpeed = 150.0})
-                end
-                
-                playSound({path = "~/resources/sounds/shimmer.ogg"})
-            end
-            return damage
-        end)
-    elseif t == 11 then -- spawn little clones
-        monster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
-        monster.moveSpeed = monster.moveSpeed * 0.5
-        monster.data.maxHitpoint = monster.hitPoint
-        monster:setScale(0.8 + math.random() * 0.3)
-        
-        addCustomOnTick(monster, function (monster)
-            if monster.data.spawnTimer == nil then
-                monster.data.spawnTimer = 3.0
-            end
-            monster.data.spawnTimer = monster.data.spawnTimer - dt
-            
-            if monster.data.spawnTimer < 0.0 then
-                monster.data.spawnTimer = monster.data.spawnTimer + 5.0
-                
-                if missionData.ignoreMonsterCount < 100 then
-                    local newMonster = addMonster(monster.monsterTemplate.name)
-                    newMonster.position = monster.position
-                    newMonster:setScale(math.max(0.3, monster.scale * 0.60))
-                    newMonster.colorMultiplier:addBuff(Vec4.new(0.722, 0.369, 0.176, 1.0))
-                    
-                    newMonster.data.playerSeeRange = monster.data.playerSeeRange
-                    newMonster.data.maxMoveSpeed = monster.data.maxMoveSpeed * 0.8
-                    newMonster.data.maxRotateSpeed = monster.data.maxRotateSpeed
-
-                    newMonster.data.hitWaitTime = monster.data.hitWaitTime
-                    newMonster.data.hitInterval = monster.data.hitInterval
-                    newMonster.data.minDamage = math.ceil(monster.data.minDamage * 0.4)
-                    newMonster.data.maxDamage = math.ceil(monster.data.maxDamage * 0.4)
-
-                    newMonster.experienceMultiplier = 0.0
-                    newMonster.scoreMultiplier = 0.0
-
-                    newMonster.hitPoint = math.floor(monster.data.maxHitpoint * 0.2)
-                    newMonster.data.randomMove = true
-                    newMonster.moveAngle = -monster.moveAngle
-                    
-                    ignoreMonsterForCount(newMonster)
-                end
-            end
-        end)
     end
 end
 

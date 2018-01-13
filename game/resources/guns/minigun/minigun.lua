@@ -32,7 +32,7 @@ function MiniGun.onTick(gun)
     end
     if shoot then
         if data.waitTime == 0.0 then
-            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.7})
+            playSound({path = MiniGun.basePath .. "start.ogg", volume = 0.5})
             data.shootStarted = true
         end
         data.waitTime = data.waitTime + dt
@@ -58,7 +58,7 @@ function MiniGun.onTick(gun)
             data.cooldown = false
          else 
             if data.cooldown == false then
-                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.6})
+                playSound({path = MiniGun.basePath .. "end.ogg", volume = 0.4})
                 data.cooldown = true
             end
          end

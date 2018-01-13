@@ -51,7 +51,7 @@ function FrostLaser.onTick(gun)
                 local colorbuff = monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
               
                 local amount = buff:getCurrentBuffAmount()
-                amount = amount * 0.70
+                amount = amount * 0.60
                 
                 if amount < 0.2 and monster.data.iceBlock == nil and monster.isDead == false then
                     monster.data.iceBlock = addGameObject("IceBlock", { monster = monster, gun = gun })
@@ -70,6 +70,20 @@ function FrostLaser.onTick(gun)
     end
 end
 
+function FrostLaser.incAchievement(gun)
+    if gun.data.checkAchievement then
+        if hasAchievement( "ACH_FROST_LASER" ) or player.isDead or missionData.isSurvival ~= true then
+            data.checkAchievement = false
+        else
+            gun.data.achievementProcess = gun.data.achievementProcess + 1
+            print(gun.data.achievementProcess)
+            if gun.data.achievementProcess >= 40 then
+                addAchievement( "ACH_FROST_LASER" ) 
+            end
+        end
+    end
+end
+
 IceBlock = {}
 
 function IceBlock.init(gameObject, args)
@@ -80,6 +94,8 @@ function IceBlock.init(gameObject, args)
     gameObject.data.renderable:setWorldMatrix(Mat3.fromScale(s, s))
     gameObject:setPosition(args.monster.position)
     gameObject:setRotation(math.pi * 2.0 * math.random() )
+    
+    gameObject.data.position = Vec2.new(args.monster.position.x, args.monster.position.y)
     
     gameObject.data.monster = args.monster
     gameObject.data.gun = args.gun
@@ -138,6 +154,43 @@ function IceBlock.onTick(gameObject)
         relocateCircleCollider(gameObject.data.collider, gameObject:getPosition(), gameObject.data.colliderSize)
     end
     
+    if t > 1.7 then
+        if data.addedExplosion == nil then
+            data.addedExplosion = true
+            
+            playSound({path = FrostLaser.basePath .. "shatter" .. math.random(5) .. ".ogg", position = data.position, volume = 0.4})
+            
+            local e = addCustomExplosion(data.position)
+            e.minDamage = 25
+            e.maxDamage = 35
+            e.maxScale = 80
+            e.scaleSpeed = 150
+            e.startTime = time - 0.1
+            e.renderable:setColor( Vec4.new(0.4, 0.5, 1.0, 1.0) )
+            
+            e.onHit = function(monster)
+                FrostLaser.checkBuff(monster)
+                
+                local buff = monster.moveSpeedMultiplier:getBuffInfo(FrostLaser.buffId)
+                local colorbuff = monster.colorMultiplier:getBuffInfo(FrostLaser.buffId)
+                
+                local amount = buff:getCurrentBuffAmount()
+                amount = math.min(amount, 0.5)
+                
+                buff:setBuffAmount(amount)
+                buff:restart()
+                
+                amount = 1.0 - amount
+                colorbuff:setBuffAmount(Vec4:new(1.0 - amount, 1.0 - amount * 0.8, 1.0 - amount * 0.2, 1.0))
+                colorbuff:restart()
+                
+                if monster.isDead then
+                    FrostLaser.incAchievement(data.gun)
+                end
+            end
+        end
+    end
+    
     if t > 2.0 then
         gameObject.toBeRemoved = true
         if data.monster ~= nil then
@@ -152,27 +205,17 @@ function IceBlock.onTick(gameObject)
             colorbuff:setBuffAmount(Vec4:new(1.0, 1.0, 1.0, 1.0))
             colorbuff:restart()
             
-            data.monster:doDamage(math.floor(30+20*math.random()), -data.monster.moveDir) 
+            data.monster:doDamage(math.floor(20+20*math.random()), -data.monster.moveDir) 
             
             data.monster.hasCollision = data.resetCollision
     
             data.monster.data.maxRotateSpeed =  data.rotateSpeed
             data.monster.animationSpeed =  data.animationSpeed
             
-            local gun = data.gun
-            
-        
-            if gun.data.checkAchievement then
-                if hasAchievement( "ACH_FROST_LASER" ) or player.isDead or missionData.isSurvival ~= true then
-                    data.checkAchievement = false
-                elseif data.monster.isDead then
-                    gun.data.achievementProcess = gun.data.achievementProcess + 1
-                    if gun.data.achievementProcess >= 40 then
-                        addAchievement( "ACH_FROST_LASER" ) 
-                    end
-                end
-           end
-         end
+            if data.monster.isDead then
+                FrostLaser.incAchievement(data.gun)
+            end
+        end
     end
 end
 

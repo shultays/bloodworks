@@ -35,6 +35,7 @@
 #include "StripLaserRenderable.h"
 #include "BloodworksSteam.h"
 #include "BloodRenderable.h"
+#include "ExplosionController.h"
 
 BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 {
@@ -212,6 +213,11 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"setVisible", &cTexturedQuadRenderable::setVisible,
 		"setColor", &cTexturedQuadRenderable::setColor,
 		"setWorldMatrix", &cTexturedQuadRenderable::setWorldMatrix,
+
+		"setTexture", [](cTexturedQuadRenderable* particle, const std::string& name)
+	{
+		particle->setTexture(name);
+	},
 
 		"setUniformFloat", [](cTexturedQuadRenderable* particle, const std::string& name, float val)
 	{
@@ -572,7 +578,13 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 	lua.set_function("addExplosion",
 		[&](const Vec2& pos, float scale, float speed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit, bool noParticle)
 	{
-		bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer, onHit, noParticle);
+		return &bloodworks->addExplosion(pos, scale, speed, minDamage, maxDamage, startTime, damagePlayer, onHit, noParticle);
+	});
+
+	lua.set_function("addCustomExplosion",
+		[&](const Vec2& pos, bool particle)
+	{
+		return &bloodworks->addExplosion(pos, 100.0f, 100.0f, 50, 100, 0.0f, false, sol::function(), !particle);
 	});
 
 	lua.set_function("playSound",
@@ -1002,6 +1014,20 @@ BloodworksLuaWorld::BloodworksLuaWorld(Bloodworks *b)
 		"scriptTable", sol::readonly(&MonsterTemplate::scriptTable),
 		"scriptArgs", sol::readonly(&MonsterTemplate::scriptArgs),
 		"basePath", sol::readonly(&MonsterTemplate::basePath)
+	);
+
+	lua.new_usertype<ExplosionData>("ExplosionData",
+		"id", sol::readonly(&ExplosionData::id),
+
+		"renderable", &ExplosionData::ringRenderable,
+		"position", &ExplosionData::pos,
+		"startTime", &ExplosionData::startTime,
+		"maxScale", &ExplosionData::maxScale,
+		"scaleSpeed", &ExplosionData::scaleSpeed,
+		"minDamage", &ExplosionData::minDamage,
+		"maxDamage", &ExplosionData::maxDamage,
+		"damagePlayer", &ExplosionData::damagePlayer,
+		"onHit", &ExplosionData::onHit
 	);
 
 #ifdef SHOW_TIMINGS

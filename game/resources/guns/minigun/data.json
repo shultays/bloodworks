@@ -15,7 +15,7 @@
   "firingSoundContinuous" : true,
   "firingSound" : {
     "path" : "shoot.ogg",
-    "volume" : 3.0
+    "volume" : 1.3
   },
   
   "firingSoundFadein" : 0.05,

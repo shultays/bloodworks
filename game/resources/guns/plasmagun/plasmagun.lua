@@ -65,7 +65,7 @@ function PlasmaGun.onBulletHit(gun, bullet, monster)
                 
                 
                 local args = {doNotStun = true}
-                m:doDamageWithArgs(math.floor( ( 10 + 10 * math.random() ) * player.damageMultiplier:getBuffedValue() ), (m.position - oldGameObjectPos):normalized(), args)
+                m:doDamageWithArgs(math.floor( ( 10 + 10 * math.random() ) ), (m.position - oldGameObjectPos):normalized(), args)
             
                 if m.isDead then
                     count = count + 1

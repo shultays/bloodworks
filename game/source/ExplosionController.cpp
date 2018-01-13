@@ -111,11 +111,13 @@ void ExplosionController::tick()
 			alpha = (explosionData.maxScale - newScale) / (explosionData.maxScale - a2);
 		}
 		explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(newScale + 10.0f).translateBy(explosionData.pos));
-		explosionData.ringRenderable->setColor(Vec4(1.0f, explosionData.damagePlayer ? 0.4f : 1.0f, explosionData.damagePlayer ? 0.4f : 1.0f, alpha * 0.4f));
+		
+		const Vec4& color = explosionData.ringRenderable->getColor();
+		explosionData.ringRenderable->setColor(Vec4(color.r, color.g, color.b, alpha * 0.4f));
 	}
 }
 
-void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit, bool noParticle)
+ExplosionData& ExplosionController::addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime, bool damagePlayer, sol::function onHit, bool noParticle)
 {
 	float duration = maxScale / scaleSpeed;
 
@@ -142,7 +144,7 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	ExplosionData explosionData;
 	explosionData.ringRenderable = new cTexturedQuadRenderable(bloodworks, "resources/particles/explosionFire/ring.png", "resources/default");
 	explosionData.ringRenderable->setWorldMatrix(Mat3::scaleMatrix(0.0f).translateBy(pos));
-	explosionData.ringRenderable->setColor(Vec4(0.0f));
+	explosionData.ringRenderable->setColor(Vec4(1.0f, 1.0f, 1.0f, 0.0f));
 	explosionData.damagePlayer = damagePlayer;
 	explosionData.damagedPlayer = false;
 	explosionData.lastDamageScale = -50.0f;
@@ -158,6 +160,8 @@ void ExplosionController::addExplosion(const Vec2& pos, float maxScale, float sc
 	bloodworks->addRenderable(explosionData.ringRenderable, damagePlayer ? PLAYER + 10 : MONSTERS + 1);
 
 	explosions.push_back(explosionData);
+
+	return explosions[explosions.size() - 1];
 }
 
 void ExplosionController::reset()

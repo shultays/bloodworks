@@ -59,6 +59,7 @@ class PlayerTemplate;
 class BloodworksSteam;
 class PauseMenu;
 class TutorialMenu;
+struct ExplosionData;
 
 class Bloodworks : public cGame
 {
@@ -227,7 +228,7 @@ public:
 	}
 
 	void addDrop(const Vec2& position);
-	void addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = sol::function(), bool noParticle = false);
+	ExplosionData& addExplosion(const Vec2& pos, float maxScale, float scaleSpeed, int minDamage, int maxDamage, float startTime = 0.0f, bool damagePlayer = false, sol::function onHit = sol::function(), bool noParticle = false);
 
 	int getUniqueId()
 	{
@@ -359,8 +360,5 @@ public:
 		invalidDefault = true;
 	}
 
-	bool isInvalidDefault() const
-	{
-		return invalidDefault;
-	}
+	bool isInvalidDefault() const;
 };

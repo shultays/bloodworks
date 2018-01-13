@@ -31,8 +31,8 @@ end
 
 function RocketLauncher.onBulletHit(gun, bullet, monster)
 
-    local minD = math.floor(70 * player.damageMultiplier:getBuffedValue() )
-    local maxD = math.floor(130 * player.damageMultiplier:getBuffedValue() )
+    local minD = 70 
+    local maxD = 130 
     
     if gun.data.checkAchievement then
         local killCount = 0
