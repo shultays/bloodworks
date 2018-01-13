@@ -196,7 +196,7 @@ void Bloodworks::initImplementation()
 
 	bloodworksSteam->init();
 	
-	if (!config->getModsAreDisabled())
+	if (!config->getModsAreDisabled() && !autoGenerating)
 	{
 #ifdef HAS_STEAM
 		bloodworksSteam->loadWorkshopItems();
