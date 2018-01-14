@@ -2,7 +2,7 @@
 function BumerangGun.init(gun)
     gun.spreadAngle = 0.0
     gun.crosshairDistance = 750.0
-    ShootTimer.initGun(gun, 0.8)
+    ShootTimer.initGun(gun, 0.9)
     gun.data.maxSpread = 0.25
     gun.data.spreadDecreaseStartTime = 0.35
     gun.data.spreadDecreaseSpeed = 0.80

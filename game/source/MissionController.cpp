@@ -15,6 +15,146 @@
 #include "cTimeProfiler.h"
 #include "GameObjectTemplate.h"
 #include "BloodworksSteam.h"
+#include <set>
+
+cPersistent* MissionController::getPersistent(const std::string& path)
+{
+	cPersistent* p = persistents[path];
+	if (p == nullptr)
+	{
+		p = persistents[path] = new cPersistent();
+		p->setFileBackup(path);
+	}
+	return p;
+}
+
+void MissionController::getMissions(cVector<MissionTreeItem>& currentMods, const cVector<std::string>& folder) const
+{
+	currentMods.clear();
+	std::unordered_map<std::string, int> addedFolders;
+	for(int index = 0; index < missions.size(); index++)
+	{
+		auto m = missions[index];
+		if (m->scriptName == "Survival")
+		{
+			continue;
+		}
+		if (m->folder.size() < folder.size())
+		{
+			continue;
+		}
+		bool allSame = true;
+
+		std::string s;
+		for (int i = 0; i<folder.size(); i++)
+		{
+			if (folder[i] != m->folder[i])
+			{
+				allSame = false;
+				break;
+			}
+
+			s += folder[i] + "/";
+		}
+
+		if (allSame)
+		{
+			if (m->folder.size() == folder.size())
+			{
+				currentMods.resize(currentMods.size() + 1);
+
+				auto& entry = currentMods[currentMods.size() - 1];
+
+				entry.folder = false;
+
+				entry.missionIndex = index;
+
+				entry.name = m->name;
+				entry.description = m->description;
+				entry.scriptName = m->scriptName;
+
+				entry.icon = m->icon;
+
+				entry.enabled = true;
+				entry.completed = false;
+
+				entry.guiSort = m->guiIndex;
+			}
+			else
+			{
+				s += m->folder[folder.size()];
+				auto found = addedFolders.find(s);
+				if (found == addedFolders.end())
+				{
+					currentMods.resize(currentMods.size() + 1);
+					auto& entry = currentMods[currentMods.size() - 1];
+
+					entry.folder = true;
+
+					entry.missionIndex = -1;
+
+					entry.folderPath = entry.name = m->folder[folder.size()];
+
+					entry.enabled = true;
+					entry.completed = false;
+					entry.guiSort = m->guiIndex;
+
+					auto info = folderInfos.find(s);
+					if (info != folderInfos.end())
+					{
+						entry.name = info->second.name;
+						entry.description = info->second.description;
+						entry.icon = info->second.icon;
+					}
+
+					addedFolders[s] = currentMods.size() - 1;
+				}
+				else
+				{
+					int index = found->second;
+					currentMods[index].guiSort = max(currentMods[index].guiSort, m->guiIndex);
+				}
+			}
+		}
+	}
+
+	std::sort(currentMods.begin(), currentMods.end(), [](const MissionTreeItem& a, const MissionTreeItem& b) -> bool
+	{
+		if (a.folder != b.folder)
+		{
+			return a.folder < b.folder;
+		}
+		else
+		{
+			return a.guiSort < b.guiSort;
+		}
+	});
+}
+
+void MissionController::addMissionFolderInfo(const nlohmann::json& j, DirentHelper::File& f)
+{
+	for (auto& it : j.get<nlohmann::json::object_t>())
+	{
+		auto& entry = folderInfos[it.first];
+
+		if (it.second.count("name"))
+		{
+			entry.name = it.second["name"].get<std::string>();
+		}
+		if (it.second.count("description"))
+		{
+			entry.description = it.second["name"].get<std::string>();
+		}
+		if (it.second.count("icon"))
+		{
+			entry.icon = it.second["icon"].get<std::string>();
+			if (entry.icon.size())
+			{
+				entry.icon = f.folder + entry.icon;
+			}
+		}
+	}
+}
 
 MissionController::MissionController(Bloodworks *bloodworks)
 {
@@ -44,6 +184,12 @@ MissionController::~MissionController()
 		SAFE_DELETE(mission);
 	}
 	missions.clear();
+
+	for (auto p : persistents)
+	{
+		SAFE_DELETE(p.second);
+	}
+	persistents.clear();
 }
 
 void MissionController::tick()
@@ -61,9 +207,13 @@ void MissionController::tick()
 	gameSpeedMultiplier.tick();
 	lua["missionTime"] = timer.getTime() - missionLoadTime;
 	lua["missionLoadTime"] = missionLoadTime;
-	scriptTable["onTick"]();
 
-	missions[loadedMission]->persistent.check();
+	if (missions[loadedMission]->onTickFunc)
+	{
+		missions[loadedMission]->onTickFunc(missions[loadedMission]);
+	}
+
+	missions[loadedMission]->persistent->check();
 
 	if (loadedMission != -1)
 	{
@@ -196,11 +346,40 @@ void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& 
 	data->scriptFile = file.folder + j["scriptFile"].get<std::string>();
 	fixFilePath(data->scriptFile);
 
-	lua[data->scriptName] = lua.create_table();
+	data->scriptTable = lua[data->scriptName] = lua.create_table();
 
 	bloodworks->loadLuaFile(data->scriptFile);
 
-	data->persistent.setFileBackup("mod_configs/" + data->scriptName + ".txt");
+	data->onTickFunc = data->scriptTable["onTick"];
+	data->initFunc = data->scriptTable["init"];
+
+	data->isEnabled = data->scriptTable["isEnabled"];
+	data->isCompleted = data->scriptTable["isCompleted"];
+
+	data->onPlayerDied = data->scriptTable["onPlayerDied"];
+	data->onMonsterDied = data->scriptTable["onMonsterDied"];
+
+	std::string pathToConfig;
+	if (j.count("configFile"))
+	{
+		pathToConfig = "mod_configs/" + j["configFile"].get<std::string>() + ".txt";
+	}
+	else
+	{
+		pathToConfig = "mod_configs/" + data->scriptName + ".txt";
+	}
+	data->persistent = getPersistent(pathToConfig);
+
+	if (j.count("folder"))
+	{
+		data->folder = split(j["folder"], '/');
+	}
+
+	data->guiIndex = missions.size();
+	if (j.count("guiIndex"))
+	{
+		data->guiIndex += j["guiIndex"].get<int>() * 1000;
+	}
 
 	missions.push_back(data);
 }
@@ -228,7 +407,10 @@ void MissionController::loadMission(const std::string& name)
 			lua["missionPath"] = mission->basePath;
 			lua["missionConfig"] = mission->persistent;
 
-			scriptTable["init"]();
+			if (mission->initFunc)
+			{
+				mission->initFunc( mission );
+			}
 
 			for (auto mod : missionMods)
 			{
@@ -277,9 +459,9 @@ void MissionController::reset()
 
 void MissionController::onPlayerDied()
 {
-	if (scriptTable["onPlayerDied"])
+	if (missions[loadedMission]->onPlayerDied)
 	{
-		scriptTable["onPlayerDied"]();
+		missions[loadedMission]->onPlayerDied(missions[loadedMission]);
 	}
 }
 
@@ -295,9 +477,9 @@ sol::table MissionController::getMissionData()
 
 void MissionController::onMonsterDied(Monster* monster)
 {
-	if (scriptTable["onMonsterDied"])
+	if (missions[loadedMission]->onMonsterDied)
 	{
-		scriptTable["onMonsterDied"](monster);
+		missions[loadedMission]->onMonsterDied(monster, missions[loadedMission]);
 	}
 }
 
@@ -333,19 +515,6 @@ void MissionController::onDebugTick()
 	}
 }
 
-bool MissionController::canExit()
-{
-	if (loadedMission != -1)
-	{
-		if (scriptTable["canExit"])
-		{
-			return scriptTable["canExit"]();
-		}
-	}
-
-	return true;
-}
-
 std::string MissionController::getCurrentMissionScript()
 {
 	if (loadedMission != -1)
@@ -370,12 +539,22 @@ MissionMod::MissionMod(Bloodworks* bloodworks, nlohmann::json& j, const DirentHe
 	initFunc = table["init"];
 	onTickFunc = table["onTick"];
 
-	persistent.setFileBackup("mod_configs/" + scriptName + ".txt");
+	std::string pathToConfig;
+	if (j.count("configFile"))
+	{
+		pathToConfig = "mod_configs/" + j["configFile"].get<std::string>() + ".txt";
+	}
+	else
+	{
+		pathToConfig = "mod_configs/" + scriptName + ".txt";
+	}
+	persistent = bloodworks->getMissionController()->getPersistent(pathToConfig);
+
 }
 
 MissionMod::~MissionMod()
 {
-	persistent.check();
+	persistent->check();
 }
 
 void MissionMod::init()
@@ -394,5 +573,5 @@ void MissionMod::onTick()
 		onTickFunc(this);
 	}
 
-	persistent.check();
+	persistent->check();
 }

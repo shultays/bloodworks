@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cGlobals.h"
+#include "MissionController.h"
 
 class Bloodworks;
 class cRenderableContainer;
@@ -19,17 +20,17 @@ class CustomGameWindow
 
 	cScrollContainer *buttonContainer;
 	cVector<cButton*> customGameButtons;
-	cVector<std::string> customGameScripts;
-	cVector<std::string> customGameNames;
-	cVector<std::string> customGameDescriptions;
 
 	void clearButtons();
 	void loadMods();
-
 public:
 	CustomGameWindow(Bloodworks *bloodworks);
 	~CustomGameWindow();
 	bool isVisible() const;
 	void show();
 	void tick();
+
+	cVector<std::string> folder;
+
+	cVector<MissionTreeItem> currentMods;
 };

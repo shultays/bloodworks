@@ -1,0 +1,19 @@
+{
+  "type": "mission_folder_info",
+
+  "folders" : {
+  
+    "campaign" : {
+      "name" : "Campaign",
+      "description" : "Default Bloodworks Campaign",
+      "icon" : ""
+    },
+    
+    "campaign/season1" : {
+      "name" : "Season 1",
+      "description" : "Season 1 Desc",
+      "icon" : ""
+    }
+    
+  }
+}

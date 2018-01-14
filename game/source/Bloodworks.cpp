@@ -1316,6 +1316,10 @@ void Bloodworks::parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOn
 	{
 		missionController->addMission(j, f);
 	}
+	else if (type == "mission_folder_info")
+	{
+		missionController->addMissionFolderInfo(j["folders"], f);
+	}
 	else if (type == "mission_mod")
 	{
 		missionController->addMissionMod(j, f);

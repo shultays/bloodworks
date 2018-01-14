@@ -1,0 +1,11 @@
+{
+  "type": "mission",
+  "name": "Episode 1",
+    
+  "scriptFile" : "CS1E1.lua",
+  "scriptName" : "CS1E1",
+  
+  "folder" : "campaign/season1",
+  
+  "configFile" : "campaign"
+}

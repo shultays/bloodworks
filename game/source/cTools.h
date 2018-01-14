@@ -193,6 +193,29 @@ inline std::string replaceAll(std::string const& original, std::string const& fr
 	return results;
 }
 
+inline cVector<std::string> split(const std::string& s, const char c)
+{
+	std::string buff;
+	cVector<std::string> v;
+
+	for (auto n : s)
+	{
+		if (n != c) buff += n; else
+		{
+			if (n == c && buff != "") 
+			{ 
+				v.push_back(buff); buff = ""; 
+			}
+		}
+	}
+	if (buff != "")
+	{
+		v.push_back(buff);
+	}
+	return v;
+}
+
+
 void printStack(bool dummyPrint = false);
 void printExceptionStack(void* pExp);
 void doBreak();

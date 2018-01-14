@@ -6,7 +6,6 @@
 #include "cFont.h"
 #include "cTexture.h"
 #include "cButton.h"
-#include "MissionController.h"
 #include "Bloodworks.h"
 #include "cScrollContainer.h"
 #include "BloodworksControls.h"
@@ -66,9 +65,6 @@ void CustomGameWindow::clearButtons()
 		SAFE_DELETE(b);
 	}
 	customGameButtons.clear();
-	customGameDescriptions.clear();
-	customGameNames.clear();
-	customGameScripts.clear();
 }
 
 bool CustomGameWindow::isVisible() const
@@ -80,9 +76,12 @@ void CustomGameWindow::show()
 {
 	window->setVisible(true);
 
+	folder.clear();
+	currentMods.clear();
+
 	loadMods();
 
-	nomods->setVisible(customGameNames.size() == 0);
+	nomods->setVisible(customGameButtons.size() == 0);
 }
 
 void CustomGameWindow::tick()
@@ -106,26 +105,42 @@ void CustomGameWindow::tick()
 
 		if (button->isHovering())
 		{
-			title->setText(customGameNames[i]);
-			currentDescription->setText(customGameDescriptions[i]);
+			title->setText(currentMods[i].name);
+			currentDescription->setText(currentMods[i].description);
 			descriptionSet = true;
 		}
 
 		if (button->isClicked())
 		{
-			window->setVisible(false);
-			bloodworks->loadMission(customGameScripts[i]);
+			if (currentMods[i].folder)
+			{
+				folder.push_back(currentMods[i].folderPath);
+				loadMods();
+			}
+			else
+			{
+				window->setVisible(false);
+				bloodworks->loadMission(currentMods[i].scriptName);
+			}
 		}
 	}
 	if (descriptionSet == false)
 	{
-		title->setText("Select a Custom Game to Play");
+		title->setText("Custom Games");
 		currentDescription->setText("");
 	}
 
 	if (mapper.isKeyPressed(GameKey::Back) || (input.isKeyPressed(mouse_button_left) && AARect(Vec2(-380, -200), Vec2(380, 200)).isOutside(game->getRelativeMousePos(input.getMousePos(), RenderableAlignment::center))))
 	{
-		window->setVisible(false);
+		if (folder.size() > 0)
+		{
+			folder.resize(folder.size() - 1);
+			loadMods();
+		}
+		else
+		{
+			window->setVisible(false);
+		}
 	}
 }
 
@@ -134,26 +149,21 @@ void CustomGameWindow::loadMods()
 	clearButtons();
 	MissionController *missionController = bloodworks->getMissionController();
 
+	missionController->getMissions(currentMods, folder);
+
 	float distance = 100.0f;
-	int modCount = missionController->getMissionCount() - 1;
-	int lastPage = modCount / 5;
+	int modCount = currentMods.size();
+	int lastRow = modCount / 5;
 
 	float rowSize = 150.0f;
 	int current = 0;
-	for (int i = 0; i < missionController->getMissionCount(); i++)
+	for (int i = 0; i < currentMods.size(); i++)
 	{
-		const std::string& script = missionController->GetMissionScriptName(i);
-		if (script == "Survival")
-		{
-			continue;
-		}
-		const std::string& name = missionController->GetMissionName(i);
-		const std::string& icon = missionController->GetMissionIcon(i);
-		const std::string& description = missionController->GetMissionDecription(i);
+		auto& mod = currentMods[i];
 
 		int page = current / 5;
 		int rowCount = 5;
-		if (page == lastPage)
+		if (page == lastRow)
 		{
 			rowCount = modCount % 5;
 		}
@@ -170,11 +180,11 @@ void CustomGameWindow::loadMods()
 		t->setHoverSpeed(10.0f);
 		t->setSounds(resources.getSoundSample("resources/sounds/click.ogg"), resources.getSoundSample("resources/sounds/hover.ogg"));
 
-		cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, icon == "" ? "resources/perks/default_icon.png" : icon, "resources/default");
+		cTexturedQuadRenderable *quad = new cTexturedQuadRenderable(bloodworks, mod.icon == "" ? mod.folder ? "resources/missions/default_folder_icon.png" : "resources/missions/default_icon.png" : mod.icon, "resources/default");
 		quad->setWorldMatrix(Mat3::scaleMatrix(40.0f));
 		t->addRenderable(quad);
 
-		cTextRenderable *nameRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), name, 14.0f);
+		cTextRenderable *nameRenderable = new cTextRenderable(bloodworks, resources.getFont("resources/fontData.txt"), mod.name, 14.0f);
 		nameRenderable->setWorldMatrix(Mat3::translationMatrix(Vec2(0.0f, -50.0f)));
 		nameRenderable->setTextAlignment(TextAlignment::center);
 		nameRenderable->setVerticalTextAlignment(VerticalTextAlignment::bottom);
@@ -185,9 +195,6 @@ void CustomGameWindow::loadMods()
 
 		buttonContainer->addRenderable(t);
 		customGameButtons.push_back(t);
-		customGameNames.push_back(name);
-		customGameDescriptions.push_back(description);
-		customGameScripts.push_back(script);
 
 		current++;
 	}

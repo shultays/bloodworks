@@ -10,6 +10,7 @@
 #include "BuffFloat.h"
 #include "json.h"
 #include "cPersistent.h"
+#include "MissionController.h"
 
 class Bloodworks;
 class cRenderable;
@@ -27,7 +28,7 @@ class MissionMod
 	sol::function onTickFunc;
 	sol::function initFunc;
 
-	cPersistent persistent;
+	cPersistent* persistent;
 
 	sol::table data;
 public:
@@ -38,24 +39,60 @@ public:
 	void onTick();
 };
 
+
+struct MissionData
+{
+	std::string name;
+	std::string icon;
+	std::string description;
+	std::string scriptName;
+	std::string scriptFile;
+	std::string basePath;
+
+	sol::table scriptTable;
+
+	sol::function onTickFunc;
+	sol::function initFunc;
+
+	sol::function isEnabled;
+	sol::function isCompleted;
+
+	sol::function onPlayerDied;
+	sol::function onMonsterDied;
+
+	cPersistent* persistent;
+
+	cVector<std::string> folder;
+
+	int guiIndex;
+};
+
+
+struct MissionTreeItem  
+{
+	bool folder;
+
+	std::string folderPath;
+
+	std::string name;
+	std::string icon;
+	std::string description;
+
+	std::string scriptName;
+
+	int missionIndex;
+	bool enabled;
+	bool completed;
+
+	int guiSort;
+};
+
 class MissionController
 {
 	Bloodworks *bloodworks;
 	sol::table scriptTable;
 	
 	std::unordered_map<int, GameObject*> gameObjects;
-
-	struct MissionData
-	{
-		std::string name;
-		std::string icon;
-		std::string description;
-		std::string scriptName;
-		std::string scriptFile;
-		std::string basePath;
-
-		cPersistent persistent;
-	};
 
 	cVector<MissionData*> missions;
 	float missionLoadTime;
@@ -69,6 +106,7 @@ class MissionController
 	BuffFloat gameSpeedMultiplier; // this can be stored in a mission class
 
 	cVector< MissionMod* > missionMods;
+
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
@@ -97,34 +135,25 @@ public:
 	{
 		return gameSpeedMultiplier;
 	}
-	bool canExit();
-
-	int getMissionCount() const
-	{
-		return missions.size();
-	}
 
 	float getMissionStartTime() const
 	{
 		return missionLoadTime;
 	}
 
-	const std::string& GetMissionName(int index) const
-	{
-		return missions[index]->name;
-	}
-	const std::string& GetMissionDecription(int index) const
-	{
-		return missions[index]->description;
-	}
-	const std::string& GetMissionIcon(int index) const
-	{
-		return missions[index]->icon;
-	}
-	const std::string& GetMissionScriptName(int index) const
-	{
-		return missions[index]->scriptName;
-	}
-
 	std::string getCurrentMissionScript();
+
+	std::unordered_map<std::string, cPersistent*> persistents;
+
+	cPersistent* getPersistent(const std::string& path);
+	void getMissions(cVector<MissionTreeItem>& currentMods, const cVector<std::string>& folder) const;
+	void addMissionFolderInfo(const nlohmann::json& j, DirentHelper::File& f);
+
+	struct FolderInfo
+	{
+		std::string name;
+		std::string icon;
+		std::string description;
+	};
+	std::unordered_map<std::string, FolderInfo> folderInfos;
 };
