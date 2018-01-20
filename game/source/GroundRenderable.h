@@ -6,8 +6,15 @@ class Bloodworks;
 
 class GroundRenderable : public cRenderable
 {
-	GLuint frameBuffer;
-	GLuint frameBufferTexture;
+	struct GroundBuffer
+	{
+		int xx;
+		int yy;
+		GLuint frameBuffer;
+		GLuint frameBufferTexture;
+	};
+	cVector<GroundBuffer> groundBuffers;
+
 
 	Bloodworks *bloodworks;
 	int groundSize;

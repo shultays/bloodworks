@@ -20,6 +20,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	bg->setUniform(uvBegin, Vec2(0.0f));
 	bg->setUniform(uvSize, Vec2(4.0f));
 
+
 	groundSize = 128;
 	float t = max(bloodworks->getMapSize().x, bloodworks->getMapSize().y) + 50;
 	while (groundSize < t)
@@ -27,48 +28,75 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		groundSize += 128;
 	}
 
-	GL_CALL(glGenFramebuffers(1, &frameBuffer));
-	GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
+	GLint maxTextureSize = 1024;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 
-	GL_CALL(glGenTextures(1, &frameBufferTexture));
-	GL_CALL(glBindTexture(GL_TEXTURE_2D, frameBufferTexture));
-	GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, groundSize, groundSize, 0, GL_RGB, GL_UNSIGNED_BYTE, 0));
+	groundSize = min(maxTextureSize, groundSize);
 
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+	Vec2 mapSize = bloodworks->getMapSize() + 50.0f;
 
-	GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture, 0));
-
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	int x = (int)ceil(mapSize.x / groundSize);
+	int y = (int)ceil(mapSize.y / groundSize);
 
 
-	GL_CALL(glDrawBuffers(1, DrawBuffers));
-	Vec4 color = Vec4::fromColor(0xFFFFFFFF);
-	glClearColor(color.r, color.g, color.b, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	int bufferCount = x * y;
+	
+	groundBuffers.resize(bufferCount);
 
-
-	GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer));
-	GL_CALL(glViewport(0, 0, groundSize, groundSize));
-	bloodworks->lastShader = nullptr;
-
+	for (int z = 0; z < groundBuffers.size(); z++)
 	{
-		cShaderShr shader = bg->getShader();
-		shader->begin();
+		int a = z % x;
+		int b = z / x;
 
-		shader->setViewMatrix(
-			Mat3::translationMatrix(-groundSize * 0.5f, -groundSize * 0.5f)
-			.scaleBy(1.0f / groundSize)
-			.translateBy(0.5f)
-			.scaleBy(2.0f));
+		groundBuffers[z].xx = (-groundSize * x) / 2 + groundSize * a + groundSize / 2;
+		groundBuffers[z].yy = (-groundSize * y) / 2 + groundSize * b + groundSize / 2;
 
-		bloodworks->lastShader = shader;
-		bloodworks->lastAlignment = bg->getAlignment();
-		bg->setColor(Vec4(0.6f, 0.6f, 0.6f, 1.0f));
-		bg->render(true, Mat3::identity(), AARect::invalid());
+		GL_CALL(glGenFramebuffers(1, &groundBuffers[z].frameBuffer));
+		GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, groundBuffers[z].frameBuffer));
+
+		GL_CALL(glGenTextures(1, &groundBuffers[z].frameBufferTexture));
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, groundBuffers[z].frameBufferTexture));
+		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, groundSize, groundSize, 0, GL_RGB, GL_UNSIGNED_BYTE, 0));
+
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+
+		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, groundBuffers[z].frameBufferTexture, 0));
+
+		GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+
+
+		GL_CALL(glDrawBuffers(1, DrawBuffers));
+		Vec4 color = Vec4::fromColor(0xFFFFFFFF);
+		glClearColor(color.r, color.g, color.b, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+
+		GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, groundBuffers[z].frameBuffer));
+		GL_CALL(glViewport(0, 0, groundSize, groundSize));
+		bloodworks->lastShader = nullptr;
+
+		{
+			cShaderShr shader = bg->getShader();
+			shader->begin();
+
+
+			shader->setViewMatrix(
+				Mat3::translationMatrix(-groundSize * 0.5f - groundBuffers[z].xx, -groundSize * 0.5f + groundBuffers[z].yy)
+				.scaleBy(1.0f / groundSize)
+				.translateBy(0.5f)
+				.scaleBy(2.0f));
+
+			bloodworks->lastShader = shader;
+			bloodworks->lastAlignment = bg->getAlignment();
+			bg->setColor(Vec4(0.6f, 0.6f, 0.6f, 1.0f));
+			bg->render(true, Mat3::identity(), AARect::invalid());
+		}
+
+		glBindTexture(GL_TEXTURE_2D, groundBuffers[z].frameBufferTexture);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	SAFE_DELETE(bg);
 
 	{
 
@@ -148,32 +176,42 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 
 		brushRenderable->setColor(Vec4(randFloat(colorMin, colorMax), randFloat(colorMin, colorMax), randFloat(colorMin, colorMax), randFloat(0.9f, 1.0f)));
 
-		shader->setViewMatrix(
-			Mat3::translationMatrix(-groundSize * 0.5f, -groundSize * 0.5f)
-			.scaleBy(1.0f / groundSize)
-			.translateBy(0.5f)
-			.scaleBy(2.0f));
-		
-		bloodworks->lastShader = shader;
-		bloodworks->lastAlignment = brushRenderable->getAlignment();
 
-		brushRenderable->render(true, Mat3::identity(), AARect::invalid());
+		for (int z = 0; z < groundBuffers.size(); z++)
+		{
+			GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, groundBuffers[z].frameBuffer));
+
+			shader->setViewMatrix(
+				Mat3::translationMatrix(-groundSize * 0.5f - groundBuffers[z].xx, -groundSize * 0.5f + groundBuffers[z].yy)
+				.scaleBy(1.0f / groundSize)
+				.translateBy(0.5f)
+				.scaleBy(2.0f));
+
+			bloodworks->lastShader = shader;
+			bloodworks->lastAlignment = brushRenderable->getAlignment();
+
+			brushRenderable->render(true, Mat3::identity(), AARect::invalid());
+		}
 	}
 
 
 	SAFE_DELETE(brushRenderable);
+	
 
 	glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
 	bloodworks->lastShader = nullptr;
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	glGenerateMipmap(GL_TEXTURE_2D);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	SAFE_DELETE(bg);
 }
 
 GroundRenderable::~GroundRenderable()
 {
-	glDeleteTextures(1, &frameBufferTexture);
-	glDeleteFramebuffers(1, &frameBuffer);
+	for (int z = 0; z < groundBuffers.size(); z++)
+	{
+		glDeleteTextures(1, &groundBuffers[z].frameBufferTexture);
+		glDeleteFramebuffers(1, &groundBuffers[z].frameBuffer);
+	}
 }
 
 void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
@@ -192,11 +230,13 @@ void GroundRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cr
 	shader->setColor(Vec4(1.0f));
 	shader->setTexture0(0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-	shader->setWorldMatrix(Mat3::scaleMatrix(groundSize * 0.5f, -groundSize * 0.5f));
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	for (int z = 0; z < groundBuffers.size(); z++)
+	{
+		glBindTexture(GL_TEXTURE_2D, groundBuffers[z].frameBufferTexture);
+		shader->setWorldMatrix(Mat3::scaleMatrix(groundSize * 0.5f, groundSize * 0.5f).translateBy((float)groundBuffers[z].xx, (float)groundBuffers[z].yy));
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 
 	bloodworks->lastShader = nullptr;
-
 }
 

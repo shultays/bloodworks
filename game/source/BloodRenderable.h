@@ -42,8 +42,8 @@ class BloodRenderable : public cRenderable
 
 	struct BloodBuffer
 	{
-		int xx;
-		int yy;
+		int x;
+		int y;
 		GLuint frameBuffer;
 		GLuint frameBufferTexture;
 	};

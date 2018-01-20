@@ -28,7 +28,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 	for (int i = 0; i < bloodBuffers.size(); i++)
 	{
-		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f).translateBy((float)bloodBuffers[i].xx, (float)bloodBuffers[i].yy));
+		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f).translateBy((float)bloodBuffers[i].x, (float)bloodBuffers[i].y));
 		glBindTexture(GL_TEXTURE_2D, bloodBuffers[i].frameBufferTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
@@ -119,7 +119,7 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 					for (int z = 0; z < bloodBuffers.size(); z++)
 					{
 						shader->setViewMatrix(
-							Mat3::translationMatrix(-bloodSize * 0.5f - bloodBuffers[z].xx, -bloodSize * 0.5f - bloodBuffers[z].yy)
+							Mat3::translationMatrix(-bloodSize * 0.5f - bloodBuffers[z].x, -bloodSize * 0.5f - bloodBuffers[z].y)
 							.scaleBy(1.0f / bloodSize)
 							.translateBy(0.5f)
 							.scaleBy(2.0f));
@@ -267,7 +267,6 @@ void BloodRenderable::init()
 		bloodSize += 128;
 	}
 
-
 	GLint maxTextureSize = 1024;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 	
@@ -289,7 +288,6 @@ void BloodRenderable::init()
 
 	cVector<GLuint> textures;
 	cVector<GLuint> buffers;
-
 
 	int bufferCount = x * y;
 	buffers.resize(bufferCount);
@@ -330,8 +328,8 @@ void BloodRenderable::init()
 		bloodBuffers[i].frameBuffer = buffers[i];
 		bloodBuffers[i].frameBufferTexture = textures[i];
 
-		bloodBuffers[i].xx = (-bloodSize * x) / 2 + bloodSize * a + bloodSize / 2;
-		bloodBuffers[i].yy = (-bloodSize * y) / 2 + bloodSize * b + bloodSize / 2;
+		bloodBuffers[i].x = (-bloodSize * x) / 2 + bloodSize * a + bloodSize / 2;
+		bloodBuffers[i].y = (-bloodSize * y) / 2 + bloodSize * b + bloodSize / 2;
 	}
 
 
