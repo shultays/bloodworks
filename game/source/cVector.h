@@ -51,4 +51,14 @@ public:
 			(*this)[i] = value;
 		}
 	}
+
+	int findIndex(const T& value)
+	{
+		auto it = std::find(begin(), end(), value);
+		if (it != end())
+		{
+			return (int)std::distance(begin(), it);;
+		}
+		return -1;
+	}
 };

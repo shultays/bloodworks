@@ -68,4 +68,5 @@ public:
 
 	Vec2 getFreePosition(float radius, unsigned ignoreFlags );
 	float getRayDistance(const Vec2& begin, const Vec2& ray, float radius, unsigned ignoreFlags);
+	void updateGrid();
 };

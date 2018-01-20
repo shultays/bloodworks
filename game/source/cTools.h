@@ -215,6 +215,12 @@ inline cVector<std::string> split(const std::string& s, const char c)
 	return v;
 }
 
+inline bool endsWith(std::string const & value, std::string const & ending)
+{
+	if (ending.size() > value.size()) return false;
+	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
 
 void printStack(bool dummyPrint = false);
 void printExceptionStack(void* pExp);

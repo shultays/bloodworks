@@ -12,10 +12,7 @@ BulletController::BulletController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	AARect rect = bloodworks->getMapLimits();
-	rect.addThreshold(550.0f);
-
-	grid.init(rect, Vec2(50.0f));
+	updateGrid();
 }
 
 BulletController::~BulletController()
@@ -124,4 +121,11 @@ void BulletController::relocateBullet(Bullet* bullet)
 void BulletController::drawDebug()
 {
 	grid.drawDebug();
+}
+
+void BulletController::updateGrid()
+{
+	AARect rect = bloodworks->getMapLimits();
+	rect.addThreshold(550.0f);
+	grid.init(rect, Vec2(50.0f));
 }

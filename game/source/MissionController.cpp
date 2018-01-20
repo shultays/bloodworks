@@ -342,6 +342,16 @@ void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& 
 		data->description = j["description"].get<std::string>();
 	}
 
+	if (j.count("mapSize"))
+	{
+		data->mapSize.w = j["mapSize"].at(0).get<float>();
+		data->mapSize.h = j["mapSize"].at(1).get<float>();
+	}
+	else
+	{
+		data->mapSize = DEFAULT_MAP_SIZE;
+	}
+
 	data->scriptName = j["scriptName"].get<std::string>();
 	data->scriptFile = file.folder + j["scriptFile"].get<std::string>();
 	fixFilePath(data->scriptFile);
@@ -397,6 +407,7 @@ void MissionController::loadMission(const std::string& name)
 		auto& mission = missions[i];
 		if (mission->scriptName == name)
 		{
+			bloodworks->setMapSize(mission->mapSize);
 			loadedMission = i;
 			scriptTable = lua[mission->scriptName];
 			missionLoadTime = timer.getTime();

@@ -79,4 +79,5 @@ public:
 	int onMonsterDamaged(Monster* monster, int damage, const Vec2& dir, sol::table& args);
 	bool shouldHit(Monster* monster, Gun* gun, Bullet *bullet);
 	void onMonsterDied(Monster* monster);
+	void updateGrid();
 };

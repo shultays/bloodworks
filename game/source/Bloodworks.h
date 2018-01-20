@@ -61,6 +61,8 @@ class PauseMenu;
 class TutorialMenu;
 struct ExplosionData;
 
+#define DEFAULT_MAP_SIZE 2500.0f
+
 class Bloodworks : public cGame
 {
 	Player *player;
@@ -106,6 +108,7 @@ class Bloodworks : public cGame
 	int nextGlobalUniqueId;
 
 	Vec2 mapSize;
+	Vec2 maxSetMapSize;
 
 	AARect mapRect;
 
@@ -127,6 +130,8 @@ class Bloodworks : public cGame
 	std::map<std::string, cAnimationTemplate*> animationTemplates;
 	std::map<std::string, GameObjectTemplate*> gameObjectTemplates;
 	std::map<std::string, PlayerTemplate*> playerTemplates;
+
+	cVector<std::string> loadedLuaFiles;
 
 	void parseJson(nlohmann::json& j, DirentHelper::File& f, bool loadOnlyModData = false);
 
@@ -163,6 +168,8 @@ protected:
 
 	void startAutoGenerating();
 	void stopAutoGenerating();
+
+	void updateEdges();
 
 	void loadResources();
 	void appendJson(Bloodworks* bloodworks, nlohmann::json& j, const std::string& fileName, bool loadInit);
@@ -361,4 +368,5 @@ public:
 	}
 
 	bool isInvalidDefault() const;
+	void setMapSize(const Vec2& size);
 };

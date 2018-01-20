@@ -7,5 +7,7 @@
   
   "folder" : "campaign/season1",
   
-  "configFile" : "campaign"
+  "configFile" : "campaign",
+  
+  "mapSize" : [ 1000, 1000]
 }

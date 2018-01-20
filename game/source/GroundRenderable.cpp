@@ -9,12 +9,15 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 {
 	this->bloodworks = bloodworks;
 
+	GLint maxTextureSize = 1024;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+
 	cShaderShr shader = resources.getShader("resources/defaultWithUVScale.vs", "resources/default.ps");
 	int uvBegin = shader->addUniform("uvBegin", TypeVec2).index;
 	int uvSize = shader->addUniform("uvSize", TypeVec2).index;
 
 	cTexturedQuadRenderable *bg = new cTexturedQuadRenderable(bloodworks, "", "");
-	bg->setTexture(resources.getTexture("resources/ground/bg_base.png", true));
+	bg->setTexture(resources.getTexture(maxTextureSize >= 2048 ? "resources/ground/bg_base.png" : "resources/ground/bg_base_small.png", true));
 	bg->setWorldMatrix(Mat3::scaleMatrix(2048.0f));
 	bg->setShader(shader);
 	bg->setUniform(uvBegin, Vec2(0.0f));
@@ -27,9 +30,6 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	{
 		groundSize += 128;
 	}
-
-	GLint maxTextureSize = 1024;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 
 	groundSize = min(maxTextureSize, groundSize);
 
@@ -125,7 +125,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	shader->begin();
 
 
-	int max = (t * t) / 150000 + 20;
+	int max = (int)(t * t) / 150000 + 20;
 
 	float grassChance = 0.3f;
 	float grass2Chance = 0.5f + grassChance;
@@ -193,9 +193,14 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 		}
 	}
 
-
 	SAFE_DELETE(brushRenderable);
-	
+
+	for (int z = 0; z < groundBuffers.size(); z++)
+	{
+		glBindTexture(GL_TEXTURE_2D, groundBuffers[z].frameBufferTexture);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
 
 	glViewport(0, 0, bloodworks->getScreenDimensions().w, bloodworks->getScreenDimensions().h);
 	bloodworks->lastShader = nullptr;

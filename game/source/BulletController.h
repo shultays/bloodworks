@@ -23,4 +23,5 @@ public:
 	void reset();
 	void relocateBullet(Bullet* bullet);
 	void drawDebug();
+	void updateGrid();
 };

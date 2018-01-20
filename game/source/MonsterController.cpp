@@ -18,10 +18,7 @@ MonsterController::MonsterController(Bloodworks *bloodworks)
 {
 	this->bloodworks = bloodworks;
 
-	AARect boundaries = bloodworks->getMapLimits();
-	boundaries.addThreshold(500.0f);
-
-	grid.init(boundaries, Vec2(NODE_SIZE));
+	updateGrid();
 
 	customMonsterTick = lua["customMonsterOnTick"];
 	customMonsterOnHit = lua["customMonsterOnHit"];
@@ -1023,6 +1020,14 @@ bool MonsterController::shouldHit(Monster* monster, Gun* gun, Bullet *bullet)
 void MonsterController::onMonsterDied(Monster* monster)
 {
 	customMonsterOnKill(monster);
+}
+
+void MonsterController::updateGrid()
+{
+	AARect boundaries = bloodworks->getMapLimits();
+	boundaries.addThreshold(500.0f);
+
+	grid.init(boundaries, Vec2(NODE_SIZE));
 }
 
 void MonsterController::damageMonstersInRange(const Vec2& pos, float range, int minRange, int maxRange)

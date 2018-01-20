@@ -64,6 +64,8 @@ struct MissionData
 
 	cVector<std::string> folder;
 
+	Vec2 mapSize;
+
 	int guiIndex;
 };
 
