@@ -80,10 +80,9 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 			cShaderShr shader = bg->getShader();
 			shader->begin();
 
-
 			shader->setViewMatrix(
-				Mat3::translationMatrix(-groundSize * 0.5f - groundBuffers[z].xx, -groundSize * 0.5f + groundBuffers[z].yy)
-				.scaleBy(1.0f / groundSize)
+				Mat3::translationMatrix(-groundSize * 0.5f - groundBuffers[z].xx, groundSize * 0.5f + groundBuffers[z].yy)
+				.scaleBy(1.0f / groundSize, -1.0f / groundSize)
 				.translateBy(0.5f)
 				.scaleBy(2.0f));
 
@@ -126,7 +125,7 @@ GroundRenderable::GroundRenderable(Bloodworks *bloodworks) : cRenderable(bloodwo
 	shader->begin();
 
 
-	int max = (groundSize * groundSize) / 150000 + 20;
+	int max = (t * t) / 150000 + 20;
 
 	float grassChance = 0.3f;
 	float grass2Chance = 0.5f + grassChance;
