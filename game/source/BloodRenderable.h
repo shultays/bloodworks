@@ -7,13 +7,9 @@ class Bloodworks;
 
 class cTexturedQuadRenderable;
 class cRenderableWithShader;
+class cPostProcess;
 
 #define USE_TEMP_BUFFER
-#ifdef USE_TEMP_BUFFER
-#define BLOOD_BUFFER_COUNT 2
-#else
-#define BLOOD_BUFFER_COUNT 1
-#endif
 
 class BloodRenderable : public cRenderable
 {
@@ -41,9 +37,21 @@ class BloodRenderable : public cRenderable
 	cShaderShr defaultShader;
 	Bloodworks *bloodworks;
 
-	GLuint frameBuffer[BLOOD_BUFFER_COUNT];
-	GLuint frameBufferTexture[BLOOD_BUFFER_COUNT];
-	cShaderShr defaultPostProcessShader;
+	// GLuint tempBuffer;
+	// GLuint tempBufferTexture;
+
+	struct BloodBuffer
+	{
+		int xx;
+		int yy;
+		GLuint frameBuffer;
+		GLuint frameBufferTexture;
+	};
+
+
+	cVector<BloodBuffer> bloodBuffers;
+
+	cPostProcess* defaultPostProcess;
 
 	Vec4 bloodColor;
 	int bloodSize;

@@ -12,9 +12,11 @@ class cPostProcess : public cUniformDataWithShader
 	int timeIndex;
 	int zoomIndex;
 	float shaderWeight;
+	bool added;
 public:
 	cPostProcess()
 	{
+		added = false;
 		game = nullptr;
 		shaderWeight = 1.0f;
 	}

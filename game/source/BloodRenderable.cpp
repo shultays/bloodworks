@@ -4,6 +4,7 @@
 #include "cShader.h"
 #include "cTexturedQuadRenderable.h"
 #include "cGlobals.h"
+#include "cPostProcess.h"
 #include <sstream>
 
 void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& crop)
@@ -24,9 +25,13 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 	shader->setColor(Vec4(1.0f));
 	shader->setTexture0(0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frameBufferTexture[0]);
-	shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	for (int i = 0; i < bloodBuffers.size(); i++)
+	{
+		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f).translateBy((float)bloodBuffers[i].xx, (float)bloodBuffers[i].yy));
+		glBindTexture(GL_TEXTURE_2D, bloodBuffers[i].frameBufferTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 
 	glDisableVertexAttribArray(0);
 
@@ -34,9 +39,6 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 	if (bodyParts.size() > 0)
 	{
-#ifndef USE_TEMP_BUFFER
-		cVector<BodyPartData*> toRender;
-#endif
 		std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
 		while (bodyPart != bodyParts.end())
 		{
@@ -90,29 +92,10 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 				bodyPart->renderable->setWorldMatrix(frame);
 			}
 
-#ifndef USE_TEMP_BUFFER
-			if (bodyPart->toBeRemove)
-			{
-				toRender.push_back(&(*bodyPart));
-			}
-
-			bodyPart->renderable->render(true, Mat3::identity(), crop);
-#endif
 			bodyPart++;
 		}
 
-#ifndef USE_TEMP_BUFFER
-		if (toRender.size())
-#endif
 		{
-#ifdef USE_TEMP_BUFFER
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[1]);
-			glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-#else
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[0]);
-#endif
-
 			Vec2 windowSize = bloodworks->getScreenDimensions().toVec();
 			float halfWidth = windowSize.w * 0.5f;
 			float halfHeight = windowSize.h * 0.5f;
@@ -126,26 +109,25 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 				cShaderShr shader = bodyPart->renderable->getShader();
 				shader->begin();
 
-				shader->setViewMatrix(
-					Mat3::translationMatrix(-bloodSize * 0.5f, -bloodSize * 0.5f)
-					.scaleBy(1.0f / bloodSize)
-					.translateBy(0.5f)
-					.scaleBy(2.0f));
-
 				bloodworks->lastShader = shader;
 				bloodworks->lastAlignment = bodyPart->renderable->getAlignment();
 
-#ifdef USE_TEMP_BUFFER
 				if (bodyPart->toBeRemove == 1)
 				{
 					bodyPart->toBeRemove = 2;
 
-					glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[0]);
-					bodyPart->renderable->render(true, Mat3::identity(), crop);
-					glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[1]);
+					for (int z = 0; z < bloodBuffers.size(); z++)
+					{
+						shader->setViewMatrix(
+							Mat3::translationMatrix(-bloodSize * 0.5f - bloodBuffers[z].xx, -bloodSize * 0.5f - bloodBuffers[z].yy)
+							.scaleBy(1.0f / bloodSize)
+							.translateBy(0.5f)
+							.scaleBy(2.0f));
+
+						glBindFramebuffer(GL_FRAMEBUFFER, bloodBuffers[z].frameBuffer);
+						bodyPart->renderable->render(true, Mat3::identity(), crop);
+					}
 				}
-#endif
-				bodyPart->renderable->render(true, Mat3::identity(), crop);
 
 				bodyPart++;
 			}
@@ -158,38 +140,44 @@ void BloodRenderable::render(bool isIdentity, const Mat3& mat, const AARect& cro
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#ifdef USE_TEMP_BUFFER
 
 	if (bodyParts.size() > 0)
 	{
-		bloodworks->resetToBackBuffer();
+		glBindFramebuffer(GL_FRAMEBUFFER, coral.getTempFrameBuffer());
+
+		glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		bloodworks->lastShader = nullptr;
 
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
 			GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-		bloodworks->lastShader = nullptr;
-		shader = defaultShader;
-		shader->begin();
+		std::list<BodyPartData>::iterator bodyPart = bodyParts.begin();
+		while (bodyPart != bodyParts.end())
+		{
+			bodyPart->renderable->render(true, Mat3::identity(), crop);
 
-		glBindBuffer(GL_ARRAY_BUFFER, defaultQuad);
-		glBindVertexArray(quadBuffer);
+			bodyPart++;
+		}
 
-		shader->setViewMatrix(bloodworks->getViewMatrix(RenderableAlignment::world));
 
-		shader->bindPosition(sizeof(float) * 8, 0);
-		shader->bindUV(sizeof(float) * 8, sizeof(float) * 2);
-		shader->bindColor(sizeof(float) * 8, sizeof(float) * 4);
-		shader->setColor(Vec4(1.0f));
-		shader->setTexture0(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, frameBufferTexture[1]);
-		shader->setWorldMatrix(Mat3::scaleMatrix(bloodSize * 0.5f, -bloodSize * 0.5f));
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		bloodworks->resetToBackBuffer();
+	
+		defaultPostProcess->bind();
 
-		glDisableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, postProcessQuad);
+		glBindVertexArray(postProcessVertex);
+
+		defaultPostProcess->getShader()->bindUV(0, 0);
+		glBindTexture(GL_TEXTURE_2D, coral.getTempFrameBufferTexture());
+
+		defaultPostProcess->getShader()->setTexture0(0);
+
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-#endif
 	bloodworks->lastShader = nullptr;
 }
 
@@ -223,10 +211,13 @@ void BloodRenderable::reset()
 	}
 	bodyParts.clear();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[0]);
 
 	glClearColor(bloodColor.r, bloodColor.g, bloodColor.b, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	for (int z = 0; z < bloodBuffers.size(); z++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, bloodBuffers[z].frameBuffer);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 
 	game->resetToBackBuffer();
 }
@@ -240,7 +231,7 @@ BloodRenderable::BloodRenderable(Bloodworks *bloodworks) : cRenderable((cGame*)b
 BloodRenderable::~BloodRenderable()
 {
 	reset();
-	for(auto& t : cachedBloods)
+	for (auto& t : cachedBloods)
 	{
 		t = nullptr;
 	}
@@ -248,8 +239,14 @@ BloodRenderable::~BloodRenderable()
 	bloodShader = nullptr;
 	defaultShader = nullptr;
 	bloodBg = nullptr;
-	glDeleteTextures(BLOOD_BUFFER_COUNT, frameBufferTexture);
-	glDeleteFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer);
+	
+	delete defaultPostProcess;
+
+	for (int i = 0; i < bloodBuffers.size(); i++)
+	{
+		glDeleteTextures(1, &bloodBuffers[i].frameBufferTexture);
+		glDeleteFramebuffers(1, &bloodBuffers[i].frameBuffer);
+	}
 }
 
 
@@ -261,33 +258,59 @@ void BloodRenderable::init()
 		ss << "resources/blood/blood" << i << ".png";
 		cachedBloods.push_back(resources.getTexture(ss.str(), true));
 	}
+
+
 	bloodSize = 128;
 	float t = max(bloodworks->getMapSize().x, bloodworks->getMapSize().y) + 50;
 	while (bloodSize < t)
 	{
 		bloodSize += 128;
 	}
-	bloodBg = resources.getTexture("resources/blood/blood_bg.png", true);
+
+
+	GLint maxTextureSize = 1024;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 	
+	bloodSize = min(maxTextureSize, bloodSize);
+
+	Vec2 mapSize = bloodworks->getMapSize() + 50.0f;
+
+	int x = (int)ceil(mapSize.x / bloodSize);
+	int y = (int)ceil(mapSize.y / bloodSize);
+
+	bloodBg = resources.getTexture("resources/blood/blood_bg.png", true);
+
 	bloodShader = resources.getShader("resources/blood/blood.vs", "resources/blood/blood.ps");
 	defaultShader = resources.getShader("resources/default.vs", "resources/default.ps");
-	defaultPostProcessShader = resources.getShader("resources/post_process/default.vs", "resources/post_process/default.ps");
 
-	GL_CALL(glGenFramebuffers(BLOOD_BUFFER_COUNT, frameBuffer));
-	GL_CALL(glGenTextures(BLOOD_BUFFER_COUNT, frameBufferTexture));
 
-	for (int i = 0; i < BLOOD_BUFFER_COUNT; i++)
+	defaultPostProcess = new cPostProcess();
+	defaultPostProcess->init(bloodworks, resources.getShader("resources/post_process/default.vs", "resources/post_process/default.ps"), -1);
+
+	cVector<GLuint> textures;
+	cVector<GLuint> buffers;
+
+
+	int bufferCount = x * y;
+	buffers.resize(bufferCount);
+	textures.resize(bufferCount);
+
+	GL_CALL(glGenFramebuffers(bufferCount, &buffers[0]));
+	GL_CALL(glGenTextures(bufferCount, &textures[0]));
+
+
+	for (int i = 0; i < bufferCount; i++)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer[i]);
+		glBindFramebuffer(GL_FRAMEBUFFER, buffers[i]);
 
-		GL_CALL(glBindTexture(GL_TEXTURE_2D, frameBufferTexture[i]));
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, textures[i]));
 		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bloodSize, bloodSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
 
 		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
 		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
 
-		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture[i], 0));
+		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[i], 0));
 
 		GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 
@@ -297,6 +320,20 @@ void BloodRenderable::init()
 
 	}
 	bloodworks->resetToBackBuffer();
+
+
+	bloodBuffers.resize(bufferCount);
+	for (int i = 0; i < bufferCount; i++)
+	{
+		int a = i % x;
+		int b = i / x;
+		bloodBuffers[i].frameBuffer = buffers[i];
+		bloodBuffers[i].frameBufferTexture = textures[i];
+
+		bloodBuffers[i].xx = (-bloodSize * x) / 2 + bloodSize * a + bloodSize / 2;
+		bloodBuffers[i].yy = (-bloodSize * y) / 2 + bloodSize * b + bloodSize / 2;
+	}
+
 
 	CHECK_GL_ERROR_X("blood renderable init");
 }
@@ -316,7 +353,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 	data.size = (randFloat() * 0.8f + 1.5f) * size;
 	data.rotation = randFloat(pi_2);
 	data.moveSpeed = moveSpeed;
-	
+
 	data.rotateSpeed = 0.0f;
 	data.addedBlood = false;
 	data.toBeRemove = 0;
