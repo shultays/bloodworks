@@ -90,7 +90,6 @@ function Survival.onTick()
     end
     
     missionData.firstTick = false
-    gameResetTick()
 end
 
 

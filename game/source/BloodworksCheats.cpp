@@ -565,7 +565,7 @@ void BloodworksCheats::onInit()
 	}
 
 	inited = true;
-	static std::string testGame = "";
+	static std::string testGame = "CS1E1";
 	if (Coral::isDebuggerPresent())
 	{
 		coral.setFullScreen(false);

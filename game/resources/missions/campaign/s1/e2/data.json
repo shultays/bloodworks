@@ -1,9 +1,9 @@
 {
   "type": "mission",
-  "name": "Episode 1",
+  "name": "Episode 2",
     
-  "scriptFile" : "CS1E1.lua",
-  "scriptName" : "CS1E1",
+  "scriptFile" : "CS1E2.lua",
+  "scriptName" : "CS1E2",
   
   "folder" : "campaign/season1",
   

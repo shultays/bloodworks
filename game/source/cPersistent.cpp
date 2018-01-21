@@ -329,7 +329,7 @@ void cPersistent::saveToFile()
 	{
 		for (auto& data : persistentData)
 		{
-			fprintf(f, "%s%s%s", data.beforeString.c_str(), data.name.c_str(), data.betweenString.c_str());
+			fprintf(f, "%s%s%s ", data.beforeString.c_str(), data.name.c_str(), data.betweenString.c_str());
 			if (data.type == TypeString)
 			{
 				fprintf(f, "\"%s\"", data.strValue.c_str());

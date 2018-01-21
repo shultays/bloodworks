@@ -499,12 +499,12 @@ function gameResetTick()
         end
         
         if isKeyPressed(keys.Space) then
-            loadMission(missionScript)
+            loadMission(nextMissionScript)
         end
     end
 end
     
-function showGameReset(title)
+function showGameReset(title, nextMission, resetText)
     if title == nil then
         title = "You Died"
     end
@@ -512,7 +512,11 @@ function showGameReset(title)
     if string.match(title, "\n") then
         space = 50.0
     end
-    
+    if nextMission == nil then
+        nextMissionScript = missionScript
+    else
+        nextMissionScript = nextMission
+    end
     local gameObject = addGameObject("FadeOutImage")
     gameObject.data.startTime = time
     gameObject.data.fadeOutStartTime = -1
@@ -529,7 +533,10 @@ function showGameReset(title)
     gameObject.data.fadeOutStartTime = -1
     gameObject.data.fadeInDuration = 1.0
     gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("Press Space to Reset", "resources/fontData.txt")
+    if resetText == nil then
+        resetText = "Press Space to Reset"
+    end
+    gameObject.data.renderable = gameObject:addText(resetText, "resources/fontData.txt")
     gameObject.data.renderable:setAlignment(RenderableAlignment.center)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(32.0)
@@ -540,7 +547,7 @@ function showGameReset(title)
     gameObject.data.fadeOutStartTime = -1
     gameObject.data.fadeInDuration = 1.0
     gameObject:setLevel(RenderableLevel.GUI + 5)
-    gameObject.data.renderable = gameObject:addText("Esc to Exit", "resources/fontData.txt")
+    gameObject.data.renderable = gameObject:addText("Press Esc to Exit", "resources/fontData.txt")
     gameObject.data.renderable:setAlignment(RenderableAlignment.center)
     gameObject.data.renderable:setTextAlignment(TextAlignment.center)
     gameObject.data.renderable:setTextSize(32.0)
@@ -560,6 +567,8 @@ function showGameReset(title)
     missionData.scoreText = gameObject.data.renderable
     
     missionData.enableReset = true
+    
+    addCustomTick(gameResetTick)
 end
 
 function missionInit(missionData)

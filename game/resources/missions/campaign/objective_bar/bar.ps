@@ -1,0 +1,17 @@
+#version 150
+uniform sampler2D uTexture0;
+in vec4 vColor;
+in vec2 vVertexUV;
+
+uniform float uScale;
+
+out vec4 outColor;
+
+void main(void) 
+{
+    if (vVertexUV.x > uScale)
+    {
+        discard;
+    }
+	outColor = texture2D(uTexture0, vVertexUV) * vColor;
+}

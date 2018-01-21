@@ -305,8 +305,7 @@ void BloodRenderable::init()
 		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bloodSize, bloodSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
 
 		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
 		GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[i], 0));
 
@@ -359,6 +358,7 @@ void BloodRenderable::addBlood(const Vec2& pos, const Vec2& moveSpeed, float siz
 
 	if (insertPos)
 	{
+		data.renderable->setWorldMatrix(Mat3::scaleMatrix(randFloat(0.01f, 0.01f)));
 		data.initialScale = 0.0f;
 		bodyParts.insert(bodyParts.begin(), data);
 	}

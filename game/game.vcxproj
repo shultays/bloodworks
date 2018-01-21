@@ -187,6 +187,7 @@
     <ClCompile Include="source\BloodworksControls.cpp" />
     <ClCompile Include="source\BloodworksCheats.cpp" />
     <ClCompile Include="source\BloodworksLuaWorld.cpp" />
+    <ClCompile Include="source\BloodworksLuaWorld2.cpp" />
     <ClCompile Include="source\BloodworksSteam.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\BulletController.cpp" />

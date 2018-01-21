@@ -355,7 +355,7 @@ function Tutorial.onTick()
         
         
         if missionData.objective == 0 then
-            showGameReset("Congrats!")
+            showGameReset("Congrats!", "Survival", "Press Space to Continue")
             missionData.state = 190
             missionData.textObject.toBeRemoved = true
             missionData.ended = true
@@ -389,7 +389,6 @@ function Tutorial.onTick()
         end
     end
     
-    gameResetTick()
 end
 
 

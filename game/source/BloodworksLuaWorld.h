@@ -13,4 +13,6 @@ public:
 	void reset();
 	void clear();
 	void tick();
+private:
+	void init2();
 };

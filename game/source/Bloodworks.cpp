@@ -1151,6 +1151,11 @@ void Bloodworks::setMapSize(const Vec2& size)
 	}
 }
 
+void Bloodworks::loadMissionNextTick(const std::string& mission)
+{
+	nextTickMission = mission;
+}
+
 void Bloodworks::updateEdges()
 {
 	for (auto& fg : fgs)
@@ -1401,6 +1406,11 @@ void Bloodworks::addDrop(const Vec2& position)
 
 void Bloodworks::tick()
 {
+	if (nextTickMission.size() > 0)
+	{
+		loadMission(nextTickMission);
+		nextTickMission = "";
+	}
 	LastEntrySet S("Bloodworks::tick");
 	ADD_SCOPED_TIME_PROFILER("Bloodworks::tick");
 	if (firstTick)

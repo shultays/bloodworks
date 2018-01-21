@@ -7,23 +7,7 @@
 
 class cPersistent
 {
-	struct Data
-	{
-		std::string name;
-
-		std::string strValue;
-		int intValue;
-		float floatValue;
-		Vec2 vec2Value;
-		IntVec2 intVec2Value;
-		int type;
-		cVector<std::string> strList;
-
-		std::string betweenString;
-		std::string beforeString;
-	};
-
-	enum 
+	enum
 	{
 		TypeFloat,
 		TypeInt,
@@ -32,6 +16,23 @@ class cPersistent
 		TypeIntVec2,
 		TypeStringList
 	};
+
+	struct Data
+	{
+		std::string name;
+
+		std::string strValue;
+		int intValue = 0;
+		float floatValue;
+		Vec2 vec2Value;
+		IntVec2 intVec2Value;
+		int type = TypeInt;
+		cVector<std::string> strList;
+
+		std::string betweenString;
+		std::string beforeString;
+	};
+
 	std::unordered_map<std::string, int> dataIndices;
 	cVector<Data> persistentData;
 

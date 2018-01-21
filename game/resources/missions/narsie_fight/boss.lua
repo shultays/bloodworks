@@ -71,7 +71,6 @@ function NarSieFight.onTick()
         HealthBar.updateBar(missionData.health, missionData.narsie.hitPoint / missionData.maxHitPoint)
         missionData.firstTick = false
     end
-    gameResetTick()
 end
 
 function NarSieFight.onNarSieKilled(monster)

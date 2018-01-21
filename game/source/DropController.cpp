@@ -117,7 +117,7 @@ void DropController::tick()
 	if (timer.getDt() > 0.0f && dontSpawnBonus == false )
 	{
 		float timeSinceLastDrop = timer.getTime() - lastRandomDropSpawn;
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 12.0f;
+		float extraDropChance = (timeSinceLastDrop - dropSpawnInterval * 0.5f) / dropSpawnInterval;
 		float r = randFloat();
 		if (r < extraDropChance)
 		{
@@ -247,6 +247,9 @@ int DropController::spawnDrop(const Vec2& position, float spawnTime)
 
 void DropController::reset()
 {
+	dropSpawnInterval = 14.0f;
+	monsterDropSpawnInterval = 20.0f;
+
 	for (auto& drop : drops)
 	{
 		SAFE_DELETE(drop.renderable);
@@ -277,7 +280,7 @@ void DropController::onMonsterDied(Monster* monster, float dropChance)
 			return;
 		}
 
-		float extraDropChance = (timeSinceLastDrop - 10.0f) / 20.0f;
+		float extraDropChance = (timeSinceLastDrop - monsterDropSpawnInterval * 0.5f) / monsterDropSpawnInterval;
 		float r = randFloat();
 		if (r < dropChance + extraDropChance)
 		{
@@ -317,5 +320,15 @@ void DropController::removeDrop(int id)
 			drop.spawnTime = 0.0f;
 		}
 	}
+}
+
+void DropController::setMonsterDropInterval(float interval)
+{
+	dropSpawnInterval = interval;
+}
+
+void DropController::setDropInterval(float interval)
+{
+	monsterDropSpawnInterval = interval;
 }
 

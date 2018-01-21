@@ -109,6 +109,7 @@ class MissionController
 
 	cVector< MissionMod* > missionMods;
 
+	cVector< sol::function > customTicks;
 public:
 	MissionController(Bloodworks *bloodworks);
 	~MissionController();
@@ -158,4 +159,9 @@ public:
 		std::string description;
 	};
 	std::unordered_map<std::string, FolderInfo> folderInfos;
+
+	void addCustomTick(sol::function& func)
+	{
+		customTicks.push_back(func);
+	}
 };

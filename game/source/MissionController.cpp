@@ -223,6 +223,11 @@ void MissionController::tick()
 		}
 	}
 
+	for (auto& t : customTicks)
+	{
+		t();
+	}
+
 	cVector<int> toBeRemoved;
 	for (auto& g : gameObjects)
 	{
@@ -385,7 +390,7 @@ void MissionController::addMission(nlohmann::json& j, const DirentHelper::File& 
 		data->folder = split(j["folder"], '/');
 	}
 
-	data->guiIndex = missions.size();
+	data->guiIndex = 999 - missions.size();
 	if (j.count("guiIndex"))
 	{
 		data->guiIndex += j["guiIndex"].get<int>() * 1000;
@@ -437,6 +442,7 @@ void MissionController::loadMission(const std::string& name)
 
 void MissionController::reset()
 {
+	customTicks.clear();
 	lua["gameObjects"] = lua.create_table();
 	lua["mission"] = lua.create_table();
 	gameSpeedMultiplier.clear();
@@ -583,6 +589,5 @@ void MissionMod::onTick()
 	{
 		onTickFunc(this);
 	}
-
 	persistent->check();
 }

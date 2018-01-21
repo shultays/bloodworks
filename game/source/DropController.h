@@ -32,6 +32,9 @@ class DropController
 
 	float lastDropSpawn;
 	float lastRandomDropSpawn;
+
+	float dropSpawnInterval;
+	float monsterDropSpawnInterval;
 public:
 	DropController(Bloodworks *bloodworks)
 	{
@@ -51,4 +54,6 @@ public:
 	float getLastSpawnTime() const;
 	void clearButHighlighted();
 	void removeDrop(int id);
+	void setMonsterDropInterval(float interval);
+	void setDropInterval(float interval);
 };
