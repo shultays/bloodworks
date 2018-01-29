@@ -31,6 +31,7 @@ function addMonsterCampaign(spawnData)
             end
         end)
     end
+    
     return monster
 end
 
@@ -50,6 +51,10 @@ function addMonsterWithParticles(spawnData)
     
     monster.data.randomMove = math.random() < spawnData.randomMoveChance
 
+    if spawnData.customFunction ~= nil then
+        spawnData.customFunction(monster)
+    end
+    
     monster.moveSpeedMultiplier:addBuffWithId(newMonsterAlphaColorID, 0.0)
     local moveBuff = monster.moveSpeedMultiplier:getBuffInfo(newMonsterAlphaColorID)
     moveBuff:setBuffDuration(0.8)
@@ -92,13 +97,15 @@ function initTimedMonster()
     timedMonsterData.randomMoveChance = 0.0
     timedMonsterData.damage = 1.0
     
-    timedMonsterData.maxRandomMonsterAtOnce = 5.0
+    timedMonsterData.maxRandomMonsterAtOnce = 5
     timedMonsterData.randomMonsterTimer = 0.0
     timedMonsterData.randomMonsterTimerInterval = 0.7
     timedMonsterData.randomMonsterCount = 0
     
     timedMonsterData.randomMonsterWaiting = true
     timedMonsterData.randomMonsterWaitTime = 2.0
+    timedMonsterData.takebreath = true
+    timedMonsterData.randomMonsterWaitTimeDefault = 4.0
     
     timedMonsterData.randomMonsterMax = 20
     timedMonsterData.randomMonsterCur = 0
@@ -119,18 +126,20 @@ function checkTimedMonster(timedMonsterData)
     if timedMonsterData.randomMonsterMax <= timedMonsterData.randomMonsterCur then
         return
     end
-    timedMonsterData.randomMonsterWaitTime = timedMonsterData.randomMonsterWaitTime - dt
-    if timedMonsterData.randomMonsterWaitTime < 0.0 then
-        if timedMonsterData.randomMonsterWaiting then
-            timedMonsterData.randomMonsterWaitTime = 4.0
-            timedMonsterData.randomMonsterWaiting = false
-        else
-            timedMonsterData.randomMonsterWaitTime = 5.0
-            timedMonsterData.randomMonsterWaiting = true
+    if timedMonsterData.takebreath then
+        timedMonsterData.randomMonsterWaitTime = timedMonsterData.randomMonsterWaitTime - dt
+        if timedMonsterData.randomMonsterWaitTime < 0.0 then
+            if timedMonsterData.randomMonsterWaiting then
+                timedMonsterData.randomMonsterWaitTime = timedMonsterData.randomMonsterWaitTimeDefault
+                timedMonsterData.randomMonsterWaiting = false
+            else
+                timedMonsterData.randomMonsterWaitTime = timedMonsterData.randomMonsterWaitTimeDefault
+                timedMonsterData.randomMonsterWaiting = true
+            end
         end
-    end
-    if timedMonsterData.randomMonsterWaiting then
-        return
+        if timedMonsterData.randomMonsterWaiting then
+            return
+        end
     end
     if timedMonsterData.randomMonsterCount >= timedMonsterData.maxRandomMonsterAtOnce then
         timedMonsterData.randomMonsterTimer = timedMonsterData.randomMonsterTimerInterval * 3.0
