@@ -38,6 +38,12 @@ function ObjectiveBar.init(gameObject, args)
     
     ObjectiveBar.updateBar(gameObject, 1.0)
     ObjectiveBar.repositionGUI(gameObject)
+    
+    if args.noBar == true then
+        gameObject.data.barBG:setVisible(false)
+        gameObject.data.bar:setVisible(false)
+        gameObject.data.barFG:setVisible(false)
+    end
 end
 
 function ObjectiveBar.repositionGUI(gameObject, size)

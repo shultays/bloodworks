@@ -9,7 +9,6 @@ function addMonsterCampaign(spawnData)
     end
     local monster = addMonster(spawnData.randomMonsterList.get())
     
-
     local r = 0.9 + 0.1 * math.random()
     local g = 0.9 + 0.1 * math.random()
     local b = 0.9 + 0.1 * math.random()
@@ -46,9 +45,11 @@ function addMonsterWithParticles(spawnData)
     monster.moveSpeedMultiplier:addBuff(spawnData.monsterSpeed)
     monster.hitPoint = math.ceil(monster.hitPoint * spawnData.hitPoint)
     
+    monster.data.minDamage = math.floor(monster.data.minDamage * spawnData.damage)
+    monster.data.maxDamage = math.floor(monster.data.maxDamage * spawnData.damage)
+    
     monster.data.randomMove = math.random() < spawnData.randomMoveChance
 
-    
     monster.moveSpeedMultiplier:addBuffWithId(newMonsterAlphaColorID, 0.0)
     local moveBuff = monster.moveSpeedMultiplier:getBuffInfo(newMonsterAlphaColorID)
     moveBuff:setBuffDuration(0.8)
@@ -89,6 +90,7 @@ function initTimedMonster()
     timedMonsterData.monsterSpeed = 1.0
     timedMonsterData.hitPoint = 1.0
     timedMonsterData.randomMoveChance = 0.0
+    timedMonsterData.damage = 1.0
     
     timedMonsterData.maxRandomMonsterAtOnce = 5.0
     timedMonsterData.randomMonsterTimer = 0.0
@@ -159,6 +161,7 @@ function initTimedLineMonster()
     timedMonsterLineData.monsterSpeed = 1.0
     timedMonsterLineData.hitPoint = 1.0
     timedMonsterLineData.randomMoveChance = 0.0
+    timedMonsterLineData.damage = 1.0
     
     timedMonsterLineData.monsterPerLine = 5
     timedMonsterLineData.randomMonsterTimer = 0.0
@@ -243,6 +246,7 @@ function initTimedRandomMonster()
     timedMonsterData.monsterSpeed = 1.0
     timedMonsterData.hitPoint = 1.0
     timedMonsterData.randomMoveChance = 0.0
+    timedMonsterData.damage = 1.0
     
     timedMonsterData.randomMonsterCur = 0
     timedMonsterData.randomMonsterMax = 60

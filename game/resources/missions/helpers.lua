@@ -390,7 +390,11 @@ end)
 
 
 function makeBossDefault(monster, forceType)
-    local min = missionTime / 60.0 +  math.random() * 1.5 + missionData.extraMin
+    local min = missionTime / 60.0 +  math.random() * 1.5
+    
+    if missionData.extraMin ~= nil then
+        min = min + missionData.extraMin
+    end
     monster.hitPoint = math.floor(monster.hitPoint * 1.5)
     
     monster.data.minDamage = math.floor(monster.data.minDamage * 1.1)

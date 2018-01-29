@@ -34,5 +34,5 @@ function CS1E4.onPlayerDied()
 end
 
 function CS1E4.isEnabled(missionConfig)
-    return missionConfig:getInt("season1", 1) >= 1
+    return missionConfig:getInt("season1", 1) >= 4
 end

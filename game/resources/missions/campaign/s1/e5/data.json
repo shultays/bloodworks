@@ -1,0 +1,13 @@
+{
+  "type": "mission",
+  "name": "Episode 5",
+    
+  "scriptFile" : "CS1E5.lua",
+  "scriptName" : "CS1E5",
+  
+  "folder" : "campaign/season1",
+  
+  "configFile" : "campaign",
+  
+  "mapSize" : [ 1500, 1000]
+}

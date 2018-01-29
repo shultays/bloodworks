@@ -33,5 +33,5 @@ function CS1E3.onPlayerDied()
 end
 
 function CS1E3.isEnabled(missionConfig)
-    return missionConfig:getInt("season1", 1) >= 1
+    return missionConfig:getInt("season1", 1) >= 3
 end
