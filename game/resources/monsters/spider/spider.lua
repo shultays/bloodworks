@@ -1,7 +1,7 @@
 
 function Spider.init(monster)
     data = monster.data
-    monster:setScale(math.random() * 0.4 + 0.5)
+    monster:setScale(math.random() * 0.3 + 0.6)
 
     local diff = player.position - monster.position
     
@@ -34,7 +34,7 @@ function Spider.init(monster)
     data.maxDamage = 14
     
     data.maxMoveSpeed = 200.0 * (math.random() * 0.1 + 1.0)
-    data.maxRotateSpeed = 0.04
+    data.maxRotateSpeed = 0.08
     data.playerSeeRange = 250.0
     
     data.tickWaitTime = 0.0

@@ -1,12 +1,14 @@
 
-function CS1E1.init()
+function CS1E4.init()
     local theSeed = os.time()
     math.randomseed( theSeed )
     missionData = {}
     
-    local d = initTimedMonster()
-    d.monsterSpeed = 0.7
-    d.randomMonsterMax = 20
+    local d = initTimedRandomMonster()
+    d.monsterSpeed = 0.8
+    d.randomMoveChance = 0.65
+    d.hitPoint = 0.8
+    d.randomMonsterMax = 60
     
     
     missionData.curObjective = 0
@@ -17,20 +19,20 @@ function CS1E1.init()
     setDropInterval(10.0)
 end
 
-function CS1E1.onTick()
+function CS1E4.onTick()
     if missionData.maxObjective == missionData.curObjective and missionData.ended ~= true then
-        missionConfig:setIntMax("season1", 2)
-        showGameReset("Congrats!", "CS1E2", "Press Space to Continue")
+        missionConfig:setIntMax("season1", 5)
+        showGameReset("Congrats!", "CS1E5", "Press Space to Continue")
         missionData.ended = true
     end
 end
 
-function CS1E1.onPlayerDied()
+function CS1E4.onPlayerDied()
     if missionData.ended ~= true then
         showGameReset()
     end
 end
 
-function CS1E1.isEnabled(missionConfig)
+function CS1E4.isEnabled(missionConfig)
     return missionConfig:getInt("season1", 1) >= 1
 end

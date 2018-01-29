@@ -342,6 +342,12 @@ void BloodworksLuaWorld::init2()
 		bloodworks->loadMissionNextTick(mission);
 	});
 
+	lua.set_function("isGoodSpawnPos",
+		[&](const Vec2& pos) 
+	{
+		return bloodworks->getMapLimits().isInside(pos, 30);
+	});
+
 	lua.set_function("addGameObject",
 		[&](const std::string& script, const sol::table& params) -> GameObject*
 	{
@@ -619,6 +625,7 @@ void BloodworksLuaWorld::init2()
 		"textureSize", sol::readonly(&MonsterTemplate::size),
 		"textureShift", sol::readonly(&MonsterTemplate::textureShift),
 		"hitPoint", sol::readonly(&MonsterTemplate::hitPoint),
+		"hitpoint", sol::readonly(&MonsterTemplate::hitPoint),
 		"collisionRadius", sol::readonly(&MonsterTemplate::collisionRadius),
 		"bulletRadius", sol::readonly(&MonsterTemplate::bulletRadius),
 		"hasBlood", sol::readonly(&MonsterTemplate::hasBlood),
@@ -692,6 +699,7 @@ void BloodworksLuaWorld::init2()
 		"textureSize", &Monster::textureSize,
 
 		"hitPoint", &Monster::hitPoint,
+		"hitpoint", &Monster::hitPoint,
 
 		"collisionRadius", &Monster::collisionRadius,
 		"bulletRadius", &Monster::bulletRadius,
@@ -796,8 +804,13 @@ void BloodworksLuaWorld::init2()
 		"isDead", sol::readonly(&Player::isDead),
 		"colorMultiplier", &Player::colorMultiplier,
 		"moveVelocity", sol::readonly(&Player::moveVelocity),
+
 		"hitPoints", sol::readonly(&Player::hitPoints),
 		"maxHitPoints", sol::readonly(&Player::maxHitPoints),
+
+		"hitpoints", sol::readonly(&Player::hitPoints),
+		"maxHitpoints", sol::readonly(&Player::maxHitPoints),
+
 		"maxSpeed", &Player::maxSpeed,
 		"maxRotateSpeed", &Player::maxRotateSpeed,
 		"doDamage", &Player::doDamage,
@@ -822,10 +835,12 @@ void BloodworksLuaWorld::init2()
 		"experience", sol::readonly(&Player::experience),
 		"experienceForNextLevel", sol::readonly(&Player::experienceForNextLevel),
 		"playShootAnimation", &Player::playShootAnimation,
+
 		"getMaxHitpoints", &Player::getMaxHitpoints,
 		"getHitpoints", &Player::getHitpoints,
 		"setMaxHitpoints", &Player::setMaxHitpoints,
 		"setHitpoints", &Player::setHitpoints,
+
 		"addKnockback", &Player::addKnockback,
 		"data", &Player::data
 		);

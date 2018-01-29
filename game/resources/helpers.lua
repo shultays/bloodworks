@@ -177,6 +177,30 @@ function deleteAll()
     end
 end
 
+function createWeightedRandomList()
+    local l = {}
+    l.list = {}
+    l.total = 0.0
+    
+    l.add = function(element, weight)
+        l.list[element] = weight
+        l.total = l.total + weight
+        l.last = element
+    end
+    
+    l.get = function()
+        local t = math.random() * l.total
+        for k,v in ipairs(l.list) do
+            t = t - v
+            if t < 0.001 then
+                return k
+            end
+        end
+        return l.last
+    end
+    return l
+end
+
 function printStack()
     print(debug.traceback())
 end
@@ -187,4 +211,3 @@ function fillDoNotDelete()
         doNotDelete[k] = true
     end
 end
-
